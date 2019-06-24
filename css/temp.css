@@ -1,0 +1,63 @@
+/*
+	This css file is made specifically for this folder. All styles that are mentioned in this file are used by the blades on this folder.
+*/
+
+.container {
+	margin: .5in;
+}
+.header {
+	text-align: center;
+	/*margin-top: 1in;*/
+}
+.header>h3,.header>h4 {
+	margin: 0;
+}
+.divider {
+	border-bottom: 2px solid black;
+}
+.heading {
+	text-align: right;
+}
+.heading>.letter-date {
+	margin: 1rem;
+}
+.address {
+	margin-bottom: 3rem;
+}
+.greeting {
+	margin-bottom: 1rem;
+}
+.clossing, .noted {
+	margin-bottom: 3rem;
+}
+.clossing,.clossing-signature {
+	text-align: right;
+}
+.table-container {
+	width: 100%;
+	margin-top: 1rem;
+}
+.table-container>.table {
+	width: 100%;
+}
+table {
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px solid black;
+}
+.text-center {
+	text-align: center;
+}
+.text-right {
+	text-align: right;
+}
+.alert-text {
+	color: red;
+}
+
+@media print {
+	.no-print, .no-print * {
+		display: none !important; 
+	} 
+}

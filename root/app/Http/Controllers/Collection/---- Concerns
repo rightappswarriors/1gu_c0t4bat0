@@ -1,0 +1,67 @@
+Kindly recheck, others tasks may be done yet not labeled as Done - Mhel
+
+---- Concerns
+	- Guihulngan
+		- Budget
+			- Allotment
+				- Auto half allocation if six months, (done)
+				- Modify tabs, use office names instead of appropriation codes (done)
+			- Appropriation
+				- when click tab, ppa automatically selected during add function (done)
+ ------ MAY 18, 2019
+----------- Collection Import Problems
+	- No Collection Code in csv
+	- No Fund Code in csv
+	- Customer not found / sometimes null
+	- Cashier not found
+	- No OR Type
+	- Have Or Number but doesnt have OR Type
+	- Reference Number is NULL
+
+---  remove/hide collection code/ default: Receivable Entries
+--- add missing in import modal
+===================================================================
+May 22, 2019
+--- Guihulngan
+	******* PRIORITY ******
+	- Collection
+		- Import
+			- remove fund in import modal (put it per line)
+			- remove journal in import model (put it per line)
+			- remove error function in import modal (put it per line)
+	******* PRIORITY ******
+	- Master File (DONE)
+		- Add Function (rssys.function) (DONE)
+			- sub of Sector
+
+	- Budget
+		- Appropriation
+			* add function for header (DONE)
+			- set function as required
+			- if header exist on the database, get b_num
+			- if lines exist with the same header update (ADD) the lines
+			- remove add item button
+			- remove modal for add function
+			- add button added on tab
+		- Allotment
+			* add function for header
+			- set function as required
+			- if header exist on the database, get b_num
+			- if lines exist with the same header update (ADD) the lines
+			- remove add item button
+			- remove modal for add function
+			- add button added on tab
+==========================================
+May 23, 2019
+--- HRIS
+	- Masterfile
+		- Changes for personnal deductions database table
+==========================================
+May 24. 2019
+--- Guihulngan
+	- Collection
+		- New
+			- Change UI (rearrange, OR No. -> OR TYPE -> CUSTOMERS)
+			- Change cashier (use hris.hr_employee instead of rssys.x08)
+			- removed required in function dropdown
+==========================================
