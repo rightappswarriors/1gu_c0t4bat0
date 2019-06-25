@@ -769,14 +769,14 @@
                    data: data,
                    success : function(flag)
                             {
-                               if(flag)
+                               if(flag == 'true')
                                {
                                  console.log(flag);
-                                 location.href= "{{route('inventory.stockin')}}";
+                                 //location.href= "{{route('inventory.stockin')}}";
                                }
                                else
                                {
-                                 alert('ERROR in saving.');
+                                 alert('SYSTEM ERROR:\n'+flag);
                                }
                             }
                    });

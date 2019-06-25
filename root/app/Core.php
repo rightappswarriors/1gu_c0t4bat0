@@ -213,7 +213,7 @@ class Core extends Model
 		}
 		catch (\Exception $e)
 		{
-			// return $e->getMessage();
+			return $e->getMessage();
 			Core::alert(0, '');
 			return false;
 		}
@@ -223,7 +223,17 @@ class Core extends Model
 	{
 		try
 		{
-			return DB::table(DB::raw('rssys.m99'))->update([$clm => $val]);
+			//return DB::table(DB::raw('rssys.m99'))->update([$clm => $val]);
+
+			if(DB::table(DB::raw('rssys.m99'))->update([$clm => $val]))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
 		}
 		catch (Exception $e) {
 			Core::alert(0, '');
@@ -273,6 +283,7 @@ class Core extends Model
 		}
 		catch (Exception $e)
 		{
+			return $e->getMessage();
 			Core::alert(0, '');
 			return false;
 		}

@@ -703,12 +703,19 @@ class Inventory extends Model
     // use for incremental of code with string
     public static function get_nextincrementwithchar($val)
     {
-    	preg_match("/([a-zA-Z]+)(\\d+)/", $val, $code);
-
-        $codeInt = Core::get_nextincrementlimitchar($code[2], 7);
-        $newCode = $code[1].$codeInt;
-
-    	return $newCode;
+    	try
+    	{
+    	  preg_match("/([a-zA-Z]+)(\\d+)/", $val, $code);
+  
+          $codeInt = Core::get_nextincrementlimitchar($code[2], 7);
+          $newCode = $code[1].$codeInt;
+  
+    	  return $newCode;
+        }
+        catch (\Exception $e)
+        {
+        	return $e->getMessage();
+        }
     }
 
     // get specific RIS Transaction header.

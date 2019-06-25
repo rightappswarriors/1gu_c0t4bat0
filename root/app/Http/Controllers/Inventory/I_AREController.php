@@ -31,11 +31,12 @@ class I_AREController extends Controller
             $itemunit = Core::getAll('rssys.itmunit');
             $costcenter = Core::getAll('rssys.m08');
             $vat = Core::getAll('rssys.vat');
+            $x08 = Core::getAll('rssys.x08');
             $isnew = true;
 
             $disp_items = Inventory::getItemSearch();
 
-            return view('inventory.are.are-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew'));
+            return view('inventory.are.are-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08'));
         }
         else if($request->isMethod('post'))
         {

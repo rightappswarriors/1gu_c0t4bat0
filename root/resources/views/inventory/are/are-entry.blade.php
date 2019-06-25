@@ -33,11 +33,12 @@
           </div>
         </div>
         <!-- /.box-header -->
+        <form id="HeaderForm" data-parsley-validate novalidate>
         <div class="box-body" style="">
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Invoice No</label>
+                <label>ARE No</label>
                 @if($isnew)
                 <input type="text" class="form-control" name="" disabled="">
                 @else
@@ -47,75 +48,123 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Invoice Date</label>
+                <label>ARE Date</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
                   @if($isnew)
-                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker">
+                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
                   @else
-                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}">
+                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
                   @endif
                 </div>
+                <span id="validate_invoicedt"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Reference</label>
                 @if($isnew)
-                <input type="text" class="form-control" name="txt_reference">
+                <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
                 @else
-                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}">
+                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
                 @endif
+                <span id="validate_txtreference"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Office</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" data-parsley-errors-container="#validate_selectcostcenter" data-parsley-required-message="<strong>Office is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Office ---</option>
+                    @foreach($costcenter as $cc)
+                    <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                    @endforeach
+                  @else 
+                    @foreach($costcenter as $cc)
+                    @if($rechdr->cc_code == $cc->cc_code)
+                    <option selected = "selected" value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                    @else
+                    <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                    @endif
+                    @endforeach
+                  @endif
+                </select>
+                <span id="validate_selectcostcenter"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Received From</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedfrom" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Received From ---</option>
+                    @foreach($x08 as $x8)
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endforeach
+                  @else
+                    @foreach($x08 as $x8)
+                    @if($rechdr->are_receivedfrom == $x8->uid)
+                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @else
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endif
+                    @endforeach
+                  @endif
+                </select>
+                <span id="validate_selectreceivedfrom"></span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Received By</label>
+                @if($isnew)
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Received By ---</option>
+                    @foreach($x08 as $x8)
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endforeach
+                  @else
+                    @foreach($x08 as $x8)
+                    @if($rechdr->are_receivedby == $x8->uid)
+                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @else
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endif
+                    @endforeach
+                  @endif
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Issued To</label>
                 @if($isnew)
                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="">
-                  <option value="" selected="selected">--- Select Office ---</option>
-                  @foreach($costcenter as $cc)
-                  <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                  <option value="" selected="selected">--- Select Issued To ---</option>
+                  @foreach($x08 as $x8)
+                  <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
                   @endforeach
                 </select>
                 @else
                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="">
-                  <option value="" selected="selected">--- Select Office ---</option>
-                  @foreach($costcenter as $cc)
-                  @if($rechdr->cc_code == $cc->cc_code)
-                  <option selected = "selected" value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                  <option value="" selected="selected">--- Select Issued To ---</option>
+                  @foreach($x08 as $x8)
+                  @if($rechdr->are_issuedto == $x8->uid)
+                  <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
                   @else
-                  <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                  <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
                   @endif
                   @endforeach
                 </select>
                 @endif
               </div>
             </div>
-            <!-- <div class="col-md-3">
-              <div class="form-group">
-                <label>Stock Location</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation">
-                  <option value="" selected="selected">--- Select Stock Location ---</option>
-                  @foreach($stock_loc as $st)
-                  <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Branch</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true", name="select_branch">
-                  <option value="" selected="selected">--- Select Branch ---</option>
-                  @foreach($branch as $b)
-                  <option value="{{$b->code}}">{{$b->name}}</option>
-                  @endforeach
-                </select>              
-              </div>
-            </div> -->
           </div>
           {{-- <div class="row"> --}}
             
@@ -142,6 +191,7 @@
           {{-- </div> --}}
           <!-- /.row -->
         </div>
+      </form>
         <!-- /.box-body -->
       </div>
       <div class="row">
@@ -668,33 +718,40 @@
       function Save()
       {
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
-        var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
 
-        var data = { 
-                      _token : $('meta[name="csrf-token"]').attr('content'),
-                      tbl_itemlist: tbl_itemdata,
-                      invoicedt: $('input[name="dtp_invoicedt"]').val(),
-                      costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
-                      reference: $('input[name="txt_reference"]').val(),
-                   };
+        if($('#HeaderForm').parsley().validate()) // check required fields of the header
+        {
+          if(tbl_itemlist.data().count() > 0) // check table items
+          {
+            var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
 
-           $.ajax({
-                  url: '{{route('inventory.are_add')}}',
-                  method: 'POST',
-                  data: data,
-                  success : function(flag)
-                           {
-                              if(flag)
-                              {
-                                console.log(flag);
-                                location.href= "{{route('inventory.are')}}";
-                              }
-                              else
-                              {
-                                alert('ERROR in saving.');
-                              }
-                           }
-                  });
+            var data = { 
+                          _token : $('meta[name="csrf-token"]').attr('content'),
+                          tbl_itemlist: tbl_itemdata,
+                          invoicedt: $('input[name="dtp_invoicedt"]').val(),
+                          costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
+                          reference: $('input[name="txt_reference"]').val(),
+                       };
+    
+               $.ajax({
+                      url: '{{route('inventory.are_add')}}',
+                      method: 'POST',
+                      data: data,
+                      success : function(flag)
+                               {
+                                  if(flag)
+                                  {
+                                    console.log(flag);
+                                    location.href= "{{route('inventory.are')}}";
+                                  }
+                                  else
+                                  {
+                                    alert('ERROR in saving.');
+                                  }
+                               }
+                      });
+          }
+         }
       }
 
       function EditSave()
