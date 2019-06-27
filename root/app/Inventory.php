@@ -1009,9 +1009,23 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, rl.item_code, rl.item_desc, rl.issued_qty as qty, it.unit_shortcode as unit_desc, i.unit_cost as price, (i.unit_cost * rl.issued_qty) as ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\'';
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, rl.item_code, rl.item_desc, rl.issued_qty as qty, it.unit_shortcode as unit_desc, i.unit_cost as price, (i.unit_cost * rl.issued_qty) as ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\' ORDER BY rl.ln_num ASC';
             
             return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function print_areheader($rec_num) // print ARE
+	{
+		try
+		{
+            $sql = 'SELECT m8.cc_desc as office, x81.opr_name as receivedfrom, x82.opr_name as receivedby, x83.opr_name as issuedto FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x81 ON rh.are_receivedfrom = x81.uid LEFT JOIN rssys.x08 x82 ON rh.are_receivedby = x82.uid LEFT JOIN rssys.x08 x83 ON rh.are_issuedto = x83.uid WHERE rec_num = \''.$rec_num.'\'';
+            
+            return DB::select(DB::raw($sql))[0];
 		}
 		catch(\Exception $e)
 		{

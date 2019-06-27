@@ -399,7 +399,8 @@ class I_AREController extends Controller
     public function print($code)
     {
       $are = Inventory::print_are($code);
+      $are_header = Inventory::print_areheader($code);
 
-      return view('inventory.are.are-print', compact('are'));
+      return view('inventory.are.are-print', compact('are', 'are_header'));
     }
 }
