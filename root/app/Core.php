@@ -281,7 +281,7 @@ class Core extends Model
 			Core::alert(2, 'occured upon deletion of data in '.$module);
 			return false;
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			return $e->getMessage();
 			Core::alert(0, '');

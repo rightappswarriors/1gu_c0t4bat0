@@ -53,6 +53,9 @@ class I_AREController extends Controller
             // $branch = $request->branch;
             $reference = $request->reference;
             $costcenter = $request->costcenter;
+            $receivedfrom = $request->receivedfrom;
+            $receivedby = $request->receivedby;
+            $issuedto = $request->issuedto;
             //$stk_ref = $this->stk_trns_type."#".$code;
             
             $data = ['rec_num' => $code,  
@@ -63,7 +66,10 @@ class I_AREController extends Controller
                      'cc_code' => $costcenter, 
                      'recipient' => strtoupper(Session::get('_user')['id']),
                      't_date' => $datetime->toDateString(),
-                     't_time' => $datetime->toTimeString()
+                     't_time' => $datetime->toTimeString(),
+                     'are_receivedby' => $receivedby,
+                     'are_receivedfrom' => $receivedfrom,
+                     'are_issuedto' => $issuedto
                      // 'branch' => $branch
                     ];
 
@@ -144,10 +150,12 @@ class I_AREController extends Controller
     
           $rechdr = Inventory::getAREHeader($code);
           $reclne = Inventory::getARELine($code);
+
+          $x08 = Core::getAll('rssys.x08');
           //$grandtotal = Inventory::getTotalAmtRIS($code);
 
     
-          return view('inventory.are.are-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'isnew'));
+          return view('inventory.are.are-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'isnew', 'x08'));
       }
       elseif($request->isMethod('post'))
       {
@@ -166,6 +174,9 @@ class I_AREController extends Controller
           // $ris_no = $request->ris_no;
           // $sai_no = $request->sai_no;
           //$stk_ref = $this->stk_trns_type."#".$code;
+          $receivedfrom = $request->receivedfrom;
+          $receivedby = $request->receivedby;
+          $issuedto = $request->issuedto;
             
           $data = ['_reference' => $reference, 
                    'trnx_date' => $invoicedt, 
@@ -175,7 +186,10 @@ class I_AREController extends Controller
                    // 'sai_no' => $sai_no, 
                    'recipient' => strtoupper(Session::get('_user')['id']),
                    't_date' => $datetime->toDateString(),
-                   't_time' => $datetime->toTimeString()
+                   't_time' => $datetime->toTimeString(),
+                   'are_receivedby' => $receivedby,
+                   'are_receivedfrom' => $receivedfrom,
+                   'are_issuedto' => $issuedto
                    // 'branch' => $branch
                   ];
 

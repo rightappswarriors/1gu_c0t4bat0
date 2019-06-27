@@ -108,11 +108,11 @@
                     @endforeach
                   @else
                     @foreach($x08 as $x8)
-                    @if($rechdr->are_receivedfrom == $x8->uid)
-                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @else
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endif
+                      @if($rechdr->are_receivedfrom == $x8->uid)
+                       <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @else
+                       <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @endif
                     @endforeach
                   @endif
                 </select>
@@ -122,8 +122,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Received By</label>
-                @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Received By ---</option>
                     @foreach($x08 as $x8)
@@ -139,30 +138,29 @@
                     @endforeach
                   @endif
                 </select>
+                <span id="validate_selectreceivedby"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Issued To</label>
-                @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="">
-                  <option value="" selected="selected">--- Select Issued To ---</option>
-                  @foreach($x08 as $x8)
-                  <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                  @endforeach
-                </select>
-                @else
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="">
-                  <option value="" selected="selected">--- Select Issued To ---</option>
-                  @foreach($x08 as $x8)
-                  @if($rechdr->are_issuedto == $x8->uid)
-                  <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Issued To ---</option>
+                    @foreach($x08 as $x8)
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endforeach
                   @else
-                  <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @foreach($x08 as $x8)
+                    @if($rechdr->are_issuedto == $x8->uid)
+                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @else
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endif
+                    @endforeach
                   @endif
-                  @endforeach
                 </select>
-                @endif
+                <span id="validate_selectissuedto"></span>
               </div>
             </div>
           </div>
@@ -353,7 +351,7 @@
                       <h4 class="modal-title"><span id="ENTER_ITEM"></span> Item</h4>
                     </div>
                     <div class="modal-body">
-                      <form id="add-form">
+                      <form id="add-form" data-parsley-validate novalidate>
                         <span class="AddMode EditMode">
                       <div class="box-body">
                         <div class="row">
@@ -413,18 +411,20 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Quantity</label>
-                                <input id="txt_qty" type="text" class="form-control" name="txt_qty" placeholder="0.00" required="">
+                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <span class="validate_iqty"></span>
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Unit Measurement</label>
-                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" required="">
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
                                   <option value="" selected="selected">--- Select Unit ---</option>
                                   @foreach($itemunit as $iu)
                                   <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
                                   @endforeach
                                 </select>
+                                <span class="validate_iitemunit"></span>
                             </div>
                           </div>
                           <!-- <div class="col-sm-4">
@@ -591,6 +591,9 @@
 
       function set_tbl_itemlist(type)
       {
+        if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
+        {
+
         var table = $('#tbl_itemlist').DataTable();
 
         var line = $('input[name="txt_lineno"]').val();
@@ -645,6 +648,7 @@
             $('#enteritem-modal').modal('toggle');
             $('#itemsearch-modal').modal('show');
         }
+      }
       }
 
       // function disp_amt_result()
@@ -731,6 +735,9 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
                           reference: $('input[name="txt_reference"]').val(),
+                          receivedby: $('select[name="select_receivedby"]').select2('data')[0].id,
+                          receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].id,
+                          issuedto: $('select[name="select_issuedto"]').select2('data')[0].id,
                        };
     
                $.ajax({
@@ -767,6 +774,9 @@
                       invoicedt: $('input[name="dtp_invoicedt"]').val(),
                       costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
                       reference: $('input[name="txt_reference"]').val(),
+                      receivedby: $('select[name="select_receivedby"]').select2('data')[0].id,
+                      receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].id,
+                      issuedto: $('select[name="select_issuedto"]').select2('data')[0].id,
                    };
 
            $.ajax({

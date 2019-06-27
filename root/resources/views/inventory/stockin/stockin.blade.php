@@ -123,8 +123,7 @@
                                 }
                                 else
                                 {
-                                  console.log(flag);
-                                  alert('ERROR.');
+                                  alert('SYSTEM ERROR:\n'+flag);
                                 }
                               } 
 

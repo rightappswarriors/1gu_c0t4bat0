@@ -211,7 +211,7 @@ class I_StockInController extends Controller
                   ];
 
           $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);
-
+          
           if($updHeader == 'true')
           {
               $del_dataln = [['rec_num', '=', $code]];
@@ -220,72 +220,60 @@ class I_StockInController extends Controller
               $delLine = Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
               $delStkcrd = Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
 
-              if($delLine != 'true')
+              
+              foreach($request->tbl_itemlist as $tb)
               {
-                 return $delLine;
-              }
+                $data2 = ['rec_num' => $code, 
+                          'ln_num' => $tb[0], 
+                          'part_no' => $tb[1], 
+                          'item_code' => $tb[2], 
+                          'item_desc' => $tb[3], 
+                          'recv_qty' => $tb[4], 
+                          'unit' => $tb[5], 
+                          'price' => $tb[7], 
+                          'discount' => $tb[8], 
+                          'ln_amnt' => $tb[9],
+                          'net_amnt' => $tb[10], 
+                          'ln_vat' => $tb[11],
+                          'ln_vatamt' => $tb[12]];
 
-              if($delStkcrd == 'true')
-              {
-                foreach($request->tbl_itemlist as $tb)
+                $insertLine = Core::insertTable($tableln, $data2, $this->module);
+                if($insertLine == 'true')
                 {
-                  $data2 = ['rec_num' => $code, 
-                            'ln_num' => $tb[0], 
-                            'part_no' => $tb[1], 
-                            'item_code' => $tb[2], 
-                            'item_desc' => $tb[3], 
-                            'recv_qty' => $tb[4], 
-                            'unit' => $tb[5], 
-                            'price' => $tb[7], 
-                            'discount' => $tb[8], 
-                            'ln_amnt' => $tb[9],
-                            'net_amnt' => $tb[10], 
-                            'ln_vat' => $tb[11],
-                            'ln_vatamt' => $tb[12]];
-  
-                  $insertLine = Core::insertTable($tableln, $data2, $this->module);
+                    $stk_qty_in = $tb[4];
+                    $stk_qty_out = "0";
 
-                  if($insertLine == 'true')
-                  {
-                      $stk_qty_in = $tb[4];
-                      $stk_qty_out = "0";
-  
-                      $stkcrd = ['item_code' => $tb[2],
-                                 'item_desc' => $tb[3],
-                                 'unit' => $tb[5],
-                                 'trnx_date' => $invoicedt,
-                                 'reference' => $stk_ref,
-                                 'qty_in' => $stk_qty_in,
-                                 'qty_out' => $stk_qty_out,
-                                 'fcp' => $tb[7],
-                                 'price' => $tb[7],
-                                 'whs_code' => $stock_loc,
-                                 'supl_code' => $supl_code,
-                                 'supl_name' => $supl_name,
-                                 'trn_type' => $this->stk_trns_type,
-                                 'branch' => $branch];
-  
-                       $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+                    $stkcrd = ['item_code' => $tb[2],
+                               'item_desc' => $tb[3],
+                               'unit' => $tb[5],
+                               'trnx_date' => $invoicedt,
+                               'reference' => $stk_ref,
+                               'qty_in' => $stk_qty_in,
+                               'qty_out' => $stk_qty_out,
+                               'fcp' => $tb[7],
+                               'price' => $tb[7],
+                               'whs_code' => $stock_loc,
+                               'supl_code' => $supl_code,
+                               'supl_name' => $supl_name,
+                               'trn_type' => $this->stk_trns_type,
+                               'branch' => $branch];
 
-                       if($insertStkcrd == 'true')
-                       {
-                         $flag = 'true';
-                       }
-                       else
-                       {
-                         return $insertStkcrd;
-                       }          
-                  }
-                  else
-                  {
-                      return $insertLine;
-                  }          
+                     $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+                     if($insertStkcrd == 'true')
+                     {
+                       $flag = 'true';
+                     }
+                     else
+                     {
+                       return $insertStkcrd;
+                     }          
                 }
+                else
+                {
+                    return $insertLine;
+                }          
               }
-              else
-              {
-                return $delStkcrd;
-              }
+              
           }
           else
           {
@@ -301,11 +289,13 @@ class I_StockInController extends Controller
       $stk_ref = $this->stk_trns_type."#".$code;
       $table = "rssys.rechdr";
       $col = "rec_num";
-      $flag = 'false';
+      $flag = 'true';
 
-      if(Inventory::cancelStockIn($code, $stk_ref, $table, $col, $this->module))
+      $cancelStkIn = Inventory::cancelStockIn($code, $stk_ref, $table, $col, $this->module);
+
+      if($cancelStkIn != 'true')
       {
-        $flag = 'true';
+        return $cancelStkIn;
       }
 
       return $flag;

@@ -665,7 +665,7 @@ class Inventory extends Model
 				        {
 				        	if (isset($module)) 
 				            {
-						    	Inventory::alert(1, 'modified  data in '.$module);
+						    	//Inventory::alert(1, 'modified  data in '.$module);
 						    }
 						    return true;
 				        }
@@ -1112,7 +1112,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, cc_code, whs_code, branch, recipient FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, cc_code, whs_code, branch, recipient, are_receivedby, are_receivedfrom, are_issuedto FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 

@@ -397,7 +397,7 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Quantity</label>
-                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
                                 <span class="validate_iqty"></span>
                             </div>
                           </div>
@@ -416,7 +416,7 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Cost Price</label>
-                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
+                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
                                <span class="validate_icostprice"></span>
                             </div>
                           </div>
@@ -425,7 +425,7 @@
                           <div class="col-sm-3">
                             <div class="form-group">
                               <label>Discount Amount</label>
-                               <input id="txt_disc" type="number" class="form-control" name="txt_disc" placeholder="0.00">
+                               <input id="txt_disc" type="number" class="form-control" name="txt_disc" step="any" placeholder="0.00">
                             </div>
                           </div>
                           <div class="col-sm-3">
@@ -772,7 +772,7 @@
                                if(flag == 'true')
                                {
                                  console.log(flag);
-                                 //location.href= "{{route('inventory.stockin')}}";
+                                 location.href= "{{route('inventory.stockin')}}";
                                }
                                else
                                {
@@ -819,14 +819,14 @@
                      data: data,
                      success : function(flag)
                               {
-                                 if(flag)
+                                 if(flag == 'true')
                                  {
                                    console.log(flag);
                                    location.href= "{{route('inventory.stockin')}}";
                                  }
                                  else
                                  {
-                                   alert('ERROR in saving.');
+                                   alert('SYSTEM ERROR:\n'+flag);
                                  }
                               }
                      });
