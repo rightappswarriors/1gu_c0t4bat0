@@ -32,7 +32,7 @@
                                                 <span class="AddMode">
                                                     <div class="box-body">
                                                         <div class="form-group">
-                                                            <label for="inputEmail3" class="col-sm-4 control-label">ID <span class="text-red">*</span></label>
+                                                            <label for="inputEmail3" class="col-sm-4 control-label">PhilGeps# <span class="text-red">*</span></label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
                                                                 <input type="text" name="txt_id" maxlength="6" class="form-control" placeholder="ID" readonly="" data-parsley-required-message="<strong>ID</strong> is required." required>
                                                             </div>

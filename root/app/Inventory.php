@@ -958,6 +958,15 @@ class Inventory extends Model
 		}
 	}
 
+	public static function check_areusers($name)
+	{
+       $sql = 'SELECT COUNT(*) FROM rssys.are_users WHERE upper(name) = \''.$name.'\' LIMIT 1';
+
+	   $check = DB::select(DB::raw($sql))[0];
+
+	   
+	}
+
 	// cancel ICS Transaction.
 	public static function cancelICS($code, $stk_ref, $table, $col, $module)
 	{

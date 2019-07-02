@@ -100,7 +100,26 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Received From</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedfrom" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                
+                <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                <datalist id="select_receivedfrom">
+                  @if($isnew)
+                    @foreach($are_users as $au)
+                    <option value="{{$au->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_users as $au)
+                      @if($rechdr->are_receivedfrom == $au->name)
+                       <option selected = "selected" value="{{$au->name}}">
+                      @else
+                       <option value="{{$au->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectreceivedfrom"></span>
+
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedfrom" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Received From ---</option>
                     @foreach($x08 as $x8)
@@ -116,13 +135,33 @@
                     @endforeach
                   @endif
                 </select>
-                <span id="validate_selectreceivedfrom"></span>
+                <span id="validate_selectreceivedfrom"></span> --}}
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Received By</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+
+                <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                <datalist id="select_receivedby">
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Received By ---</option>
+                    @foreach($are_users as $au)
+                    <option value="{{$au->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_users as $au)
+                      @if($rechdr->are_receivedby == $au->name)
+                      <option selected = "selected" value="{{$au->name}}">
+                      @else
+                      <option value="{{$au->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectreceivedby"></span>
+
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Received By ---</option>
                     @foreach($x08 as $x8)
@@ -138,13 +177,34 @@
                     @endforeach
                   @endif
                 </select>
-                <span id="validate_selectreceivedby"></span>
+                <span id="validate_selectreceivedby"></span> --}}
+
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Issued To</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+
+                <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+                <datalist id="select_issuedto">
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Issued To ---</option>
+                    @foreach($are_users as $au)
+                    <option value="{{$au->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_users as $au)
+                      @if($rechdr->are_issuedto == $au->name)
+                      <option selected = "selected" value="{{$au->name}}">
+                      @else
+                      <option value="{{$au->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectissuedto"></span>
+
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Issued To ---</option>
                     @foreach($x08 as $x8)
@@ -160,7 +220,80 @@
                     @endforeach
                   @endif
                 </select>
-                <span id="validate_selectissuedto"></span>
+                <span id="validate_selectissuedto"></span> --}}
+
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Received From Designation</label>
+
+                <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                <datalist id="select_receivedfromdesig">
+                  @if($isnew)
+                    @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_position as $ap)
+                      @if($rechdr->are_receivedfromdesig == $ap->name)
+                       <option selected = "selected" value="{{$ap->name}}">
+                      @else
+                       <option value="{{$ap->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectreceivedfromdesig"></span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Received By Designation</label>
+
+                <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
+                <datalist id="select_receivedbydesig">
+                  @if($isnew)
+                    <option value="" selected="selected">--- Select Received By ---</option>
+                    @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_position as $ap)
+                      @if($rechdr->are_receivedbydesig == $ap->name)
+                      <option selected = "selected" value="{{$ap->name}}">
+                      @else
+                      <option value="{{$ap->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectreceivedbydesig"></span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Issued To Designation</label>
+
+                <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
+                <datalist id="select_issuedtodesig">
+                  @if($isnew)
+                    @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                    @endforeach
+                  @else
+                    @foreach($are_position as $ap)
+                      @if($rechdr->are_issuedtodesig == $ap->name)
+                      <option selected = "selected" value="{{$ap->name}}">
+                      @else
+                      <option value="{{$ap->name}}">
+                      @endif
+                    @endforeach
+                  @endif
+                </datalist>
+                <span id="validate_selectissuedtodesig"></span>
               </div>
             </div>
           </div>
@@ -735,9 +868,12 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
                           reference: $('input[name="txt_reference"]').val(),
-                          receivedby: $('select[name="select_receivedby"]').select2('data')[0].id,
-                          receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].id,
-                          issuedto: $('select[name="select_issuedto"]').select2('data')[0].id,
+                          receivedby: $('select[name="select_receivedby"]').select2('data')[0].text,
+                          receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].text,
+                          issuedto: $('select[name="select_issuedto"]').select2('data')[0].text,
+                          receivedbydesig: $('select[name="select_receivedbydesig"]').select2('data')[0].text,
+                          receivedfromdesig: $('select[name="select_receivedfromdesig"]').select2('data')[0].text,
+                          issuedtodesig: $('select[name="select_issuedtodesig"]').select2('data')[0].text,
                        };
     
                $.ajax({

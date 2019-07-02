@@ -32,7 +32,7 @@
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
-                                                                <label for="inputEmail3" class="col-sm-4 control-label">Code <span class="text-red">*</span></label>
+                                                                <label for="inputEmail3" class="col-sm-4 control-label">Username <span class="text-red">*</span></label>
                                                                 <div class="col-sm-8" style="margin-bottom:10px;">
                                                                     <input type="text" maxlength="10" style="text-transform: uppercase;" name="txt_id" class="form-control" placeholder="ID" data-parsley-required-message="<strong>Code</strong> is required." required>
                                                                 </div>

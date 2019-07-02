@@ -49,7 +49,8 @@ class c_supplier extends Controller
         $c_code = Core::getm99One('c_code');
         // return dd($r);
         $data = [
-                    'c_code' => $c_code->c_code,
+                    //'c_code' => $c_code->c_code, *comment by: DAN due to the concern, not auto generate code
+                    'c_code' => $r->txt_id,
                     'c_name' => $r->txt_name,
                     'c_addr2' => $r->txt_add,
                     'c_tel' => $r->txt_phn_num,
@@ -61,7 +62,7 @@ class c_supplier extends Controller
                 ];
         if (Core::insertTable('rssys.m07', $data, 'Account Creditors'))
         {
-            Core::updatem99('c_code' , Core::get_nextincrementlimitchar($c_code->c_code, 6));
+            //Core::updatem99('c_code' , Core::get_nextincrementlimitchar($c_code->c_code, 6)); *comment by: DAN due to the concern, not auto generate code
             return back();
         }
         return back();

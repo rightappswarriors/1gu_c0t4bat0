@@ -32,11 +32,13 @@ class I_AREController extends Controller
             $costcenter = Core::getAll('rssys.m08');
             $vat = Core::getAll('rssys.vat');
             $x08 = Core::getAll('rssys.x08');
+            $are_users = Core::getAll('rssys.are_users');
+            $are_position = Core::getAll('rssys.are_position');
             $isnew = true;
 
             $disp_items = Inventory::getItemSearch();
 
-            return view('inventory.are.are-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08'));
+            return view('inventory.are.are-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08', 'are_users', 'are_position'));
         }
         else if($request->isMethod('post'))
         {
@@ -56,6 +58,9 @@ class I_AREController extends Controller
             $receivedfrom = $request->receivedfrom;
             $receivedby = $request->receivedby;
             $issuedto = $request->issuedto;
+            $receivedfromdesig = $request->receivedfromdesig;
+            $receivedbydesig = $request->receivedbydesig;
+            $issuedtodesig = $request->issuedtodesig;
             //$stk_ref = $this->stk_trns_type."#".$code;
             
             $data = ['rec_num' => $code,  
