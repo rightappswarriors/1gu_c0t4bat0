@@ -101,21 +101,16 @@
               <div class="form-group">
                 <label>Received From</label>
                 
-                <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                @else
+                  <input list="select_receivedfrom" name="select_receivedfrom" value="{{$rechdr->are_receivedfrom}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                @endif  
+
                 <datalist id="select_receivedfrom">
-                  @if($isnew)
-                    @foreach($are_users as $au)
+                  @foreach($are_users as $au)
                     <option value="{{$au->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_users as $au)
-                      @if($rechdr->are_receivedfrom == $au->name)
-                       <option selected = "selected" value="{{$au->name}}">
-                      @else
-                       <option value="{{$au->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectreceivedfrom"></span>
 
@@ -142,22 +137,16 @@
               <div class="form-group">
                 <label>Received By</label>
 
-                <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                @else
+                  <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" value = "{{$rechdr->are_receivedby}}" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
+                @endif  
+
                 <datalist id="select_receivedby">
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Received By ---</option>
-                    @foreach($are_users as $au)
+                  @foreach($are_users as $au)
                     <option value="{{$au->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_users as $au)
-                      @if($rechdr->are_receivedby == $au->name)
-                      <option selected = "selected" value="{{$au->name}}">
-                      @else
-                      <option value="{{$au->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectreceivedby"></span>
 
@@ -185,22 +174,16 @@
               <div class="form-group">
                 <label>Issued To</label>
 
-                <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+                @else
+                  <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" value = "{{$rechdr->are_issuedto}}" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
+                @endif
+
                 <datalist id="select_issuedto">
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Issued To ---</option>
-                    @foreach($are_users as $au)
+                  @foreach($are_users as $au)
                     <option value="{{$au->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_users as $au)
-                      @if($rechdr->are_issuedto == $au->name)
-                      <option selected = "selected" value="{{$au->name}}">
-                      @else
-                      <option value="{{$au->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectissuedto"></span>
 
@@ -230,21 +213,16 @@
               <div class="form-group">
                 <label>Received From Designation</label>
 
-                <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" value="{{$rechdr->are_receivedfromdesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @endif
+
                 <datalist id="select_receivedfromdesig">
-                  @if($isnew)
-                    @foreach($are_position as $ap)
+                  @foreach($are_position as $ap)
                     <option value="{{$ap->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_position as $ap)
-                      @if($rechdr->are_receivedfromdesig == $ap->name)
-                       <option selected = "selected" value="{{$ap->name}}">
-                      @else
-                       <option value="{{$ap->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectreceivedfromdesig"></span>
               </div>
@@ -253,22 +231,15 @@
               <div class="form-group">
                 <label>Received By Designation</label>
 
-                <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
+                @endif  
                 <datalist id="select_receivedbydesig">
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Received By ---</option>
-                    @foreach($are_position as $ap)
+                  @foreach($are_position as $ap)
                     <option value="{{$ap->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_position as $ap)
-                      @if($rechdr->are_receivedbydesig == $ap->name)
-                      <option selected = "selected" value="{{$ap->name}}">
-                      @else
-                      <option value="{{$ap->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectreceivedbydesig"></span>
               </div>
@@ -277,21 +248,16 @@
               <div class="form-group">
                 <label>Issued To Designation</label>
 
-                <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
+                @if($isnew)
+                  <input list="select_issuedtodesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
+                @else
+                  <input list="select_issuedtodesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" value="{{$rechdr->are_issuedtodesig}}" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
+                @endif  
+
                 <datalist id="select_issuedtodesig">
-                  @if($isnew)
-                    @foreach($are_position as $ap)
+                  @foreach($are_position as $ap)
                     <option value="{{$ap->name}}">
-                    @endforeach
-                  @else
-                    @foreach($are_position as $ap)
-                      @if($rechdr->are_issuedtodesig == $ap->name)
-                      <option selected = "selected" value="{{$ap->name}}">
-                      @else
-                      <option value="{{$ap->name}}">
-                      @endif
-                    @endforeach
-                  @endif
+                  @endforeach
                 </datalist>
                 <span id="validate_selectissuedtodesig"></span>
               </div>
@@ -333,6 +299,7 @@
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button>
+                    <button type="button" class="btn btn-warning" onclick="EnterItem_Add('', '', '', '', '', '', 'TEXT-ITEM')"><i class="fa fa-plus"></i> Add Text Item</button>
                 </div>
                 <div class="col-sm-6">
                   <!-- <h5 class="box-title">Total amount:</h5>
@@ -374,7 +341,7 @@
                             <tbody>
                               @foreach($disp_items as $di)
                             <tr>
-                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->serial_no}}', '{{$di->tag_no}}')"></td>
+                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->serial_no}}', '{{$di->tag_no}}', 'ITEM')"></td>
                               <td>{{$di->item_code}}</td>
                               <td>{{$di->qty_onhand_su}}</td>
                               <td>{{$di->part_no}}</td>
@@ -439,7 +406,7 @@
                     <td>{{$rl->qty}}</td>
                     <td>{{$rl->unit_code}}</td>
                     <td>{{$rl->unit_desc}}</td>
-                    <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
+                    <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}}, {{$rl->item_code}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}}, {{$rl->item_code}});"></i></a></center>
                   </td>
                   </tr>  
                   @endforeach
@@ -484,8 +451,9 @@
                       <h4 class="modal-title"><span id="ENTER_ITEM"></span> Item</h4>
                     </div>
                     <div class="modal-body">
-                      <form id="add-form" data-parsley-validate novalidate>
-                        <span class="AddMode EditMode">
+
+                    <span class="AddMode EditMode">
+                    <form id="add-form" data-parsley-validate novalidate>
                       <div class="box-body">
                         <div class="row">
                           <div class="col-sm-4">
@@ -560,40 +528,9 @@
                                 <span class="validate_iitemunit"></span>
                             </div>
                           </div>
-                          <!-- <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Cost Price</label>
-                               <input id="txt_cost" type="text" class="form-control" name="txt_cost" placeholder="0.00" required="">
-                            </div>
-                          </div> -->
                         </div>
-                        <!-- <div class="row">                          
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Discount Amount</label>
-                               <input id="txt_disc" type="text" class="form-control" name="txt_disc" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Line Amount</label>
-                               <input type="text" class="form-control" name="txt_lineamt" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>VAT</label>
-                               <input type="text" class="form-control" name="txt_vatamt" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Net Price</label>
-                               <input type="text" class="form-control" name="txt_netprice" placeholder="0.00">
-                            </div>
-                          </div>
-                        </div> -->
                       </div>
+                    </form>
                     </span>
                     <span class="DeleteMode">
                       <center>
@@ -601,19 +538,114 @@
                           </h4>
                       </center>
                     </span>
-                      </form>
+                    
+                    {{-- TEXT-ITEM FORM --}}
+                    <span class="AddModeText EditModeText">
+                    <form id="add-formtext" data-parsley-validate novalidate>
+                      <div class="box-body">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Line No.</label>
+                              <input type="text" class="form-control" name="txt_lineno_text" readonly="">
+                            </div>
+                          </div> 
+                          <div class="col-sm-8">
+                            <div class="form-group">
+                              <label>Item Code</label>
+                              <input type="text" class="form-control" name="txt_itemcode_text" readonly="">
+                            </div>
+                          </div>                      
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Property No.</label>
+                              <input type="text" class="form-control" name="txt_partno_text">
+                            </div>
+                          </div>  
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Serial No.</label>
+                              <input type="text" class="form-control" name="txt_serialno_text">
+                            </div>
+                          </div>  
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Tag No.</label>
+                              <input type="text" class="form-control" name="txt_tagno_text">
+                            </div>
+                          </div>  
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                              <label>Item Description</label>
+                              <input type="text" class="form-control" name="txt_itemdesc_text"> 
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Quantity</label>
+                                <input id="txt_qty_text" type="number" class="form-control" name="txt_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty_text" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <span class="validate_iqty_text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Unit Measurement</label>
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit_text" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
+                                  <option value="" selected="selected">--- Select Unit ---</option>
+                                  @foreach($itemunit as $iu)
+                                  <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
+                                  @endforeach
+                                </select>
+                                <span class="validate_iitemunit_text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    </span>
+                    <span class="DeleteModeText">
+                      <center>
+                          <h4 class="text-transform: uppercase;">Are you sure you want to delete this text-item?
+                          </h4>
+                      </center>
+                    </span>
+
                     </div>
                     <div class="modal-footer">
                       <span class="AddModeBtn">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa')">Save & add more</button>
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Save & close</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa-item', 'item')">Save & add more</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'item')">Save & close</button>
                       </span>
+
+                      <span class="AddModeBtnText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa-textitem', 'text-item')">Save & add more</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-textitem', 'text-item')">Save & close</button>
+                      </span>
+
                       <span class="EditModeBtn">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Save & close</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'item')">Save & close</button>
                       </span>
+
+                      <span class="EditModeBtnText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-textitem', 'text-item')">Save & close</button>
+                      </span>
+
                       <span class="DeleteMode">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Delete</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'remove-item')">Delete</button>
                       </span>
+
+                      <span class="DeleteModeText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'remove-item')">Delete</button>
+                      </span>
+
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                     </div>
                   </div>
@@ -661,31 +693,99 @@
       } );
 
 
-      function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no)
+      function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no, type)
       {
         clear();
-        $('#ENTER_ITEM').text('Add');
-        $('.AddMode').show();
-        $('.AddModeBtn').show();
-        $('.EditMode').show();
-        $('.EditModeBtn').hide();
-        $('.DeleteMode').hide();
-        
+
         var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
 
-        $('input[name="txt_lineno"]').val(line);
-        $('input[name="txt_itemcode"]').val(code);
-        $('input[name="txt_part_no"]').val(part_no);
-        $('input[name="txt_itemdesc"]').val(item_desc);
-        $('input[name="txt_partno"]').val(part_no);
-        $('input[name="txt_serialno"]').val(serial_no);
-        $('input[name="txt_tagno"]').val(tag_no);
-        $('select[name="select_unit"]').val(unit).trigger('change');
+        if(type == 'ITEM')
+        {
+          $('#ENTER_ITEM').text('Add');
+          $('.AddMode').show();
+          $('.AddModeBtn').show();
+          $('.EditMode').show();
+          $('.EditModeBtn').hide();
+          $('.DeleteMode').hide();
+
+          $('.AddModeText').hide();
+          $('.AddModeBtnText').hide();
+          $('.EditModeText').hide();
+          $('.EditModeBtnText').hide();
+          $('.DeleteModeText').hide();
+
+          $('input[name="txt_lineno"]').val(line);
+          $('input[name="txt_itemcode"]').val(code);
+          $('input[name="txt_part_no"]').val(part_no);
+          $('input[name="txt_itemdesc"]').val(item_desc);
+          $('input[name="txt_partno"]').val(part_no);
+          $('input[name="txt_serialno"]').val(serial_no);
+          $('input[name="txt_tagno"]').val(tag_no);
+          $('select[name="select_unit"]').val(unit).trigger('change');
+        }
+        else // TEXT ITEM
+        {
+          $('#ENTER_ITEM').text('Add Text');
+          $('.AddModeText').show();
+          $('.AddModeBtnText').show();
+          $('.EditModeText').show();
+          $('.EditModeBtnText').hide();
+          $('.DeleteModeText').hide();
+
+          $('.AddMode').hide();
+          $('.AddModeBtn').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtn').hide();
+          $('.DeleteMode').hide();
+
+          $('input[name="txt_lineno_text"]').val(line);
+          $('input[name="txt_itemcode_text"]').val('TEXT-ITEM');
+
+          $('#enteritem-modal').modal('toggle');
+        }
       }
 
-      function EnterItem_Edit(line)
+      function EnterItem_Edit(line, type)
       {
+        if(type == 'TEXT-ITEM')
+        {
+          $('#ENTER_ITEM').text('Edit Text');
+          $('.AddMode').hide();
+          $('.AddModeBtn').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtn').hide();
+          $('.DeleteMode').hide();
+
+          $('.AddModeText').show();
+          $('.AddModeBtnText').hide();
+          $('.EditModeText').show();
+          $('.EditModeBtnText').show();
+          $('.DeleteModeText').hide();
+
+          var table = $('#tbl_itemlist').DataTable();
+          var row = line - 1;
+          var data = table.row(row).data();
+          
+          $('input[name="txt_lineno_text"]').val(data[0]);
+          $('input[name="txt_itemcode_text"]').val(data[1]);
+          $('input[name="txt_partno_text"]').val(data[2]);
+          $('input[name="txt_serialno_text"]').val(data[3]);
+          $('input[name="txt_tagno_text"]').val(data[4]);
+          $('input[name="txt_itemdesc_text"]').val(data[5]);
+          $('input[name="txt_qty_text"]').val(data[6]);
+          $('select[name="select_unit_text"]').val(data[7]).trigger('change');
+
+          $('#enteritem-modal').modal('toggle');
+        }
+        else
+        {
           $('#ENTER_ITEM').text('Edit');
+          $('.AddModeText').hide();
+          $('.AddModeBtnText').hide();
+          $('.EditModeText').hide();
+          $('.EditModeBtnText').hide();
+          $('.DeleteModeText').hide();
+
           $('.AddMode').show();
           $('.AddModeBtn').hide();
           $('.EditMode').show();
@@ -706,138 +806,187 @@
           $('select[name="select_unit"]').val(data[7]).trigger('change');
 
           $('#enteritem-modal').modal('toggle');
-
-          //console.log(data);
+        }  
       }
 
-      function EnterItem_Delete(line)
+      function EnterItem_Delete(line, type)
       {
-        $('#ENTER_ITEM').text('Delete');
-        $('.AddMode').hide();
-        $('.AddModeBtn').hide();
-        $('.EditMode').hide();
-        $('.EditModeBtn').hide();
-        $('.DeleteMode').show();
-
-        $('#enteritem-modal').modal('toggle');
-      }
-
-      function set_tbl_itemlist(type)
-      {
-        if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
+        if(type == 'TEXT-ITEM')
         {
+          $('#ENTER_ITEM').text('Delete Text');
+          $('.AddMode').hide();
+          $('.AddModeBtn').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtn').hide();
 
-        var table = $('#tbl_itemlist').DataTable();
+          $('.AddModeText').hide();
+          $('.AddModeBtnText').hide();
+          $('.EditModeText').hide();
+          $('.EditModeBtnText').hide();
 
-        var line = $('input[name="txt_lineno"]').val();
-        var item_code = $('input[name="txt_itemcode"]').val();
-        var part_no = $('input[name="txt_partno"]').val();
-        var serial_no = $('input[name="txt_serialno"]').val();
-        var tag_no = $('input[name="txt_tagno"]').val();
-        var item_desc = $('input[name="txt_itemdesc"]').val();
-        var qty = $('input[name="txt_qty"]').val();
-        var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
-        var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
-        var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
-                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
-            '</center>';
+          $('.DeleteMode').hide();
 
-        if($('#ENTER_ITEM').text() == 'Add')
-        {
+          $('.DeleteModeText').show();
 
-        table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
-
-        }
-        else if($('#ENTER_ITEM').text() == 'Edit')
-        {
-          table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
-        }
-        else // remove item
-        {
-          table.row(selectedRow).remove().draw();
-          
-          var i;
-          var r = 1;
-
-          for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
-          {
-            table.cell({row:i, column:0}).data(r);
-            r++;
-          }
-
-          alert('Successfully deleted.');
-        }
-
-        //total_amount();
-        clear();
-
-        if(type == 'sc') // save and close
-        {
-            $('#enteritem-modal').modal('toggle');
+          $('#enteritem-modal').modal('toggle');
         }
         else
         {
-            $('#enteritem-modal').modal('toggle');
-            $('#itemsearch-modal').modal('show');
+          $('#ENTER_ITEM').text('Delete');
+          $('.AddMode').hide();
+          $('.AddModeBtn').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtn').hide();
+
+          $('.AddModeText').hide();
+          $('.AddModeBtnText').hide();
+          $('.EditModeText').hide();
+          $('.EditModeBtnText').hide();
+          
+          $('.DeleteModeText').hide();
+
+          $('.DeleteMode').show();
+
+          $('#enteritem-modal').modal('toggle');
         }
       }
+
+      function set_tbl_itemlist(type, typeitem)
+      {
+        var table = $('#tbl_itemlist').DataTable();
+
+        if(typeitem == 'item')
+        {
+          if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
+          {
+            //var table = $('#tbl_itemlist').DataTable();
+
+            var line = $('input[name="txt_lineno"]').val();
+            var item_code = $('input[name="txt_itemcode"]').val();
+            var part_no = $('input[name="txt_partno"]').val();
+            var serial_no = $('input[name="txt_serialno"]').val();
+            var tag_no = $('input[name="txt_tagno"]').val();
+            var item_desc = $('input[name="txt_itemdesc"]').val();
+            var qty = $('input[name="txt_qty"]').val();
+            var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
+            var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
+            var buttons = '<center>' +
+              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
+                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
+            '</center>';
+
+            if($('#ENTER_ITEM').text() == 'Add')
+            { 
+              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+            }
+            else if($('#ENTER_ITEM').text() == 'Edit')
+            {
+              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+            }
+            else // remove item
+            {
+              table.row(selectedRow).remove().draw();
+              
+              var i;
+              var r = 1;
+    
+              for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+              {
+                table.cell({row:i, column:0}).data(r);
+                r++;
+              }
+    
+              alert('Successfully deleted.');
+            }
+            
+            clear();
+
+            if(type == 'sc-item') // save and close item
+            {
+                $('#enteritem-modal').modal('toggle');
+            }
+            else if(type == 'sa-item') // save and add more item
+            {
+                $('#enteritem-modal').modal('toggle');
+                $('#itemsearch-modal').modal('show');
+            }
+          }
+        }
+        else if(typeitem == 'text-item')
+        {
+          if($('#add-formtext').parsley().validate()) // check required fields of the Add Text Item Form
+          {
+            //var table = $('#tbl_itemlist').DataTable();
+
+            var line = $('input[name="txt_lineno_text"]').val();
+            var item_code = $('input[name="txt_itemcode_text"]').val();
+            var part_no = $('input[name="txt_partno_text"]').val();
+            var serial_no = $('input[name="txt_serialno_text"]').val();
+            var tag_no = $('input[name="txt_tagno_text"]').val();
+            var item_desc = $('input[name="txt_itemdesc_text"]').val();
+            var qty = $('input[name="txt_qty_text"]').val();
+            var unit_code = $('select[name="select_unit_text"]').select2('data')[0].id;
+            var unit_desc = $('select[name="select_unit_text"]').select2('data')[0].text;
+            var buttons = '<center>' +
+              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
+                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\', \''+item_code+'\');"></i></a>' +
+            '</center>';
+
+            if($('#ENTER_ITEM').text() == 'Add Text')
+            { 
+              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+            }
+            else if($('#ENTER_ITEM').text() == 'Edit Text')
+            {
+              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+            }
+            else // remove item
+            {
+              table.row(selectedRow).remove().draw();
+              
+              var i;
+              var r = 1;
+    
+              for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+              {
+                table.cell({row:i, column:0}).data(r);
+                r++;
+              }
+    
+              alert('Successfully deleted.');
+            }
+            
+            clear();
+
+            if(type == 'sc-textitem') // save and close text item
+            {
+                $('#enteritem-modal').modal('toggle');
+            }
+            else if(type == 'sa-textitem') // save and add more text item
+            {
+                let line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+                $('input[name="txt_lineno_text"]').val(line);
+                $('input[name="txt_itemcode_text"]').val('TEXT-ITEM');
+            }
+          }
+        }
+        else if(typeitem == 'remove-item')
+        {
+          table.row(selectedRow).remove().draw();
+              
+          var i;
+          var r = 1;
+    
+          for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+          {
+            table.cell({row:i, column:0}).data(r);
+             r++;
+          }
+    
+          alert('Successfully deleted.');
+          $('#enteritem-modal').modal('toggle');
+        }
       }
-
-      // function disp_amt_result()
-      // {
-      //   var total_costamt = 0.00, net_amt = 0.00, qty = 0.00, costprice = 0.00, disc_amt = 0.00, ln_amt = 0.00;
-
-      //   qty = $('input[name="txt_qty"]').val();
-      //   costprice = $('input[name="txt_cost"]').val();
-        
-      //   if($('input[name="txt_disc"]').val() != null)
-      //   {
-      //     disc_amt = $('input[name="txt_disc"]').val();
-      //   }
-
-      //   total_costamt = qty * costprice;
-
-      //   ln_amt = parseFloat(total_costamt - disc_amt).toFixed(2);
-
-      //   $('input[name="txt_lineamt"]').val(ln_amt);
-      //   $('input[name="txt_disc"]').val(disc_amt);
-
-      //   disp_vat(ln_amt);
-      // }
-
-      // function disp_vat(total_amt)
-      // {
-      //   var vat_amt = 0.00, net_amt = 0.00;
-      //   var tax_type = $('select[name="select_vat"]').select2('data')[0].id;
-
-      //   if(tax_type == 'I')
-      //   {
-      //       net_amt = parseFloat(total_amt / 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else if(tax_type == 'E')
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       total_amt = parseFloat(total_amt * 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_lineamt"]').val(total_amt);
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       vat_amt = parseFloat(vat_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      // }
 
       function clear()
       {
@@ -849,6 +998,15 @@
         $('input[name="txt_itemdesc"]').val('');
         $('input[name="txt_qty"]').val('0');
         $('select[name="select_unit"]').val('').trigger('change');
+
+        $('input[name="txt_lineno_text"]').val('');
+        $('input[name="txt_itemcode_text"]').val('');
+        $('input[name="txt_partno_text"]').val('');
+        $('input[name="txt_serialno_text"]').val('');
+        $('input[name="txt_tagno_text"]').val('');
+        $('input[name="txt_itemdesc_text"]').val('');
+        $('input[name="txt_qty_text"]').val('0');
+        $('select[name="select_unit_text"]').val('').trigger('change');
 
       }
 
@@ -868,12 +1026,12 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
                           reference: $('input[name="txt_reference"]').val(),
-                          receivedby: $('select[name="select_receivedby"]').select2('data')[0].text,
-                          receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].text,
-                          issuedto: $('select[name="select_issuedto"]').select2('data')[0].text,
-                          receivedbydesig: $('select[name="select_receivedbydesig"]').select2('data')[0].text,
-                          receivedfromdesig: $('select[name="select_receivedfromdesig"]').select2('data')[0].text,
-                          issuedtodesig: $('select[name="select_issuedtodesig"]').select2('data')[0].text,
+                          receivedby: $('input[name="select_receivedby"]').val(),
+                          receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                          issuedto: $('input[name="select_issuedto"]').val(),
+                          receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                          receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                          issuedtodesig: $('input[name="select_issuedtodesig"]').val(),
                        };
     
                $.ajax({
@@ -882,17 +1040,20 @@
                       data: data,
                       success : function(flag)
                                {
-                                  if(flag)
+                                  if(flag == 'true')
                                   {
-                                    console.log(flag);
                                     location.href= "{{route('inventory.are')}}";
                                   }
                                   else
                                   {
-                                    alert('ERROR in saving.');
+                                    alert('SYSTEM ERROR:\n'+flag);
                                   }
                                }
                       });
+          }
+          else
+          {
+            alert("There's no item(s) to add. Please entry item(s).");
           }
          }
       }
@@ -900,54 +1061,53 @@
       function EditSave()
       {
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
-        var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
 
-        var rec_num = $('input[name="txt_code"]').val();
+        if($('#HeaderForm').parsley().validate()) // check required fields of the header
+        {
+          if(tbl_itemlist.data().count() > 0) // check table items
+          {
+             var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
 
-        var data = { 
+             var rec_num = $('input[name="txt_code"]').val();
+
+             var data = { 
                       _token : $('meta[name="csrf-token"]').attr('content'),
                       tbl_itemlist: tbl_itemdata,
                       invoicedt: $('input[name="dtp_invoicedt"]').val(),
                       costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
                       reference: $('input[name="txt_reference"]').val(),
-                      receivedby: $('select[name="select_receivedby"]').select2('data')[0].id,
-                      receivedfrom: $('select[name="select_receivedfrom"]').select2('data')[0].id,
-                      issuedto: $('select[name="select_issuedto"]').select2('data')[0].id,
+                      receivedby: $('input[name="select_receivedby"]').val(),
+                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                      issuedto: $('input[name="select_issuedto"]').val(),
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                      issuedtodesig: $('input[name="select_issuedtodesig"]').val(),
                    };
 
-           $.ajax({
+             $.ajax({
                   url: '{{asset('inventory/are/are_edit')}}/'+rec_num,
                   method: 'POST',
                   data: data,
                   success : function(flag)
                            {
-                              if(flag)
+                              if(flag == 'true')
                               {
                                 console.log(flag);
                                 location.href= "{{route('inventory.are')}}";
                               }
                               else
                               {
-                                alert('ERROR in saving.');
+                                alert('SYSTEM ERROR:\n'+flag);
                               }
                            }
                   });
+         }
+         else
+         {
+           alert("There's no item(s) to add. Please entry item(s).");
+         }
+       }
       }
-
-      // function total_amount()
-      // {
-      //   var total_amt = 0.00;
-      //   var tbl_itemlist = $('#tbl_itemlist').DataTable();
-      //   var tbl_itemdata = tbl_itemlist.data().toArray(); //get all data of the table itemlist
-
-      //   // foreach total amount
-      //   $.each(tbl_itemdata, function(){
-      //     total_amt += parseFloat(this[9]);
-      //   });
-
-      //   $('input[name="txt_grandtotalamt"]').val(total_amt.toFixed(2));
-
-      // }
 
     </script>
 

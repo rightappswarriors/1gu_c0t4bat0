@@ -43,7 +43,7 @@ class I_AREController extends Controller
         else if($request->isMethod('post'))
         {
            $datetime = Carbon::now();
-            $flag = "false";
+           $flag = "true";
 
             $table = 'rssys.rechdr';
             $tableln = "rssys.reclne";
@@ -61,7 +61,16 @@ class I_AREController extends Controller
             $receivedfromdesig = $request->receivedfromdesig;
             $receivedbydesig = $request->receivedbydesig;
             $issuedtodesig = $request->issuedtodesig;
+
             //$stk_ref = $this->stk_trns_type."#".$code;
+
+            Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedfrom);
+            Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
+            Inventory::checkIfExistInsert('rssys.are_users', 'name', $issuedto);
+
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedfromdesig);
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $issuedtodesig);
             
             $data = ['rec_num' => $code,  
                      '_reference' => $reference, 
@@ -74,27 +83,36 @@ class I_AREController extends Controller
                      't_time' => $datetime->toTimeString(),
                      'are_receivedby' => $receivedby,
                      'are_receivedfrom' => $receivedfrom,
-                     'are_issuedto' => $issuedto
+                     'are_issuedto' => $issuedto,
+                     'are_receivebydesig' => $receivedbydesig,
+                     'are_receivedfromdesig' => $receivedfromdesig,
+                     'are_issuedtodesig' => $issuedtodesig
                      // 'branch' => $branch
                     ];
 
-            if(Core::insertTable($table, $data, $this->module) == true)
+            $insertHeader = Core::insertTable($table, $data, $this->module);
+
+            if($insertHeader == 'true')
             {
-                Core::updatem99('are_code', Inventory::get_nextincrementwithchar($code));
+                $updateM99 = Core::updatem99('are_code', Inventory::get_nextincrementwithchar($code));
 
-                foreach($request->tbl_itemlist as $tb)
+                if($updateM99 == 'true')
                 {
-                    $data2 = ['rec_num' => $code, 
-                              'ln_num' => $tb[0], 
-                              'part_no' => $tb[2], 
-                              'item_code' => $tb[1], 
-                              'item_desc' => $tb[5], 
-                              'recv_qty' => $tb[6], 
-                              'issued_qty' => $tb[6], 
-                              'unit' => $tb[7]];
+                  foreach($request->tbl_itemlist as $tb)
+                  {
+                      $data2 = ['rec_num' => $code, 
+                                'ln_num' => $tb[0], 
+                                'part_no' => $tb[2], 
+                                'item_code' => $tb[1], 
+                                'item_desc' => $tb[5], 
+                                'recv_qty' => $tb[6], 
+                                'issued_qty' => $tb[6], 
+                                'unit' => $tb[7]];
 
-                    if(Core::insertTable($tableln, $data2, $this->module))
-                    {
+                      $insertLine = Core::insertTable($tableln, $data2, $this->module);
+
+                      if($insertLine == 'true')
+                      {
                          // $stk_qty_in = $tb[4];
                          // $stk_qty_out = "0";
 
@@ -120,19 +138,22 @@ class I_AREController extends Controller
                          //   $flag = 'false';
                          //   break;
                          // }          
-                    }
-                    else
-                    {
-                        $flag = 'false';
-                        break;
-                    }          
+                         $flag = 'true';
+                      }
+                      else
+                      {
+                          return $insertLine;
+                      }          
+                  }
                 }
-
-                $flag = 'true';
+                else
+                {
+                  return $updateM99;
+                }
             }
             else
             {
-                $flag = 'false';
+              return $insertHeader;
             }
 
             return $flag;    
@@ -157,15 +178,17 @@ class I_AREController extends Controller
           $reclne = Inventory::getARELine($code);
 
           $x08 = Core::getAll('rssys.x08');
+          $are_users = Core::getAll('rssys.are_users');
+          $are_position = Core::getAll('rssys.are_position');
           //$grandtotal = Inventory::getTotalAmtRIS($code);
 
     
-          return view('inventory.are.are-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'isnew', 'x08'));
+          return view('inventory.are.are-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'isnew', 'x08', 'are_users', 'are_position'));
       }
       elseif($request->isMethod('post'))
       {
           $datetime = Carbon::now();
-          $flag = "false";
+          $flag = "true";
 
           $table = 'rssys.rechdr';
           $tableln = "rssys.reclne";
@@ -182,6 +205,17 @@ class I_AREController extends Controller
           $receivedfrom = $request->receivedfrom;
           $receivedby = $request->receivedby;
           $issuedto = $request->issuedto;
+          $receivedfromdesig = $request->receivedfromdesig;
+          $receivedbydesig = $request->receivedbydesig;
+          $issuedtodesig = $request->issuedtodesig;
+
+          Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedfrom);
+          Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
+          Inventory::checkIfExistInsert('rssys.are_users', 'name', $issuedto);
+
+          Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedfromdesig);
+          Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
+          Inventory::checkIfExistInsert('rssys.are_position', 'name', $issuedtodesig);
             
           $data = ['_reference' => $reference, 
                    'trnx_date' => $invoicedt, 
@@ -194,11 +228,16 @@ class I_AREController extends Controller
                    't_time' => $datetime->toTimeString(),
                    'are_receivedby' => $receivedby,
                    'are_receivedfrom' => $receivedfrom,
-                   'are_issuedto' => $issuedto
+                   'are_issuedto' => $issuedto,
+                   'are_receivebydesig' => $receivedbydesig,
+                   'are_receivedfromdesig' => $receivedfromdesig,
+                   'are_issuedtodesig' => $issuedtodesig
                    // 'branch' => $branch
                   ];
 
-          if(Core::updateTable($table, 'rec_num', $code, $data, $this->module) == true)
+          $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);
+
+          if($updHeader == 'true')
           {
               $del_dataln = [['rec_num', '=', $code]];
               //$del_datastkcrd = [['reference', '=', $stk_ref]];
@@ -215,10 +254,13 @@ class I_AREController extends Controller
                           'item_desc' => $tb[5], 
                           'recv_qty' => $tb[6], 
                           'issued_qty' => $tb[6], 
-                          'unit' => $tb[7]];          
+                          'unit' => $tb[7]];   
 
-                if(Core::insertTable($tableln, $data2, $this->module))
+                $insertLine = Core::insertTable($tableln, $data2, $this->module);                 
+
+                if($insertLine == 'true')
                 {
+                  $flag = 'true';
                     // $stk_qty_in = $tb[4];
                     // $stk_qty_out = "0";
 
@@ -249,16 +291,13 @@ class I_AREController extends Controller
                 }
                 else
                 {
-                    $flag = 'false';
-                    break;
+                    return $insertLine;
                 }          
               }
-
-              $flag = 'true';
           }
           else
           {
-              $flag = 'false';
+              return $updHeader;
           }
 
           return $flag;   

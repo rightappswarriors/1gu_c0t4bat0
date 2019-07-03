@@ -958,15 +958,6 @@ class Inventory extends Model
 		}
 	}
 
-	public static function check_areusers($name)
-	{
-       $sql = 'SELECT COUNT(*) FROM rssys.are_users WHERE upper(name) = \''.$name.'\' LIMIT 1';
-
-	   $check = DB::select(DB::raw($sql))[0];
-
-	   
-	}
-
 	// cancel ICS Transaction.
 	public static function cancelICS($code, $stk_ref, $table, $col, $module)
 	{
@@ -1032,7 +1023,7 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT m8.cc_desc as office, x81.opr_name as receivedfrom, x82.opr_name as receivedby, x83.opr_name as issuedto FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x81 ON rh.are_receivedfrom = x81.uid LEFT JOIN rssys.x08 x82 ON rh.are_receivedby = x82.uid LEFT JOIN rssys.x08 x83 ON rh.are_issuedto = x83.uid WHERE rec_num = \''.$rec_num.'\'';
+            $sql = 'SELECT m8.cc_desc as office, are_receivedfrom as receivedfrom, are_receivedby as receivedby, are_issuedto as issuedto, are_receivedfromdesig as receivedfromdesig, are_receivebydesig as receivedbydesig, are_issuedtodesig as issuedtodesig FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rec_num = \''.$rec_num.'\'';
             
             return DB::select(DB::raw($sql))[0];
 		}
@@ -1135,7 +1126,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, cc_code, whs_code, branch, recipient, are_receivedby, are_receivedfrom, are_issuedto FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, cc_code, whs_code, branch, recipient, are_receivedby, are_receivedfrom, are_issuedto, are_receivebydesig, are_receivedfromdesig, are_issuedtodesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1157,5 +1148,19 @@ class Inventory extends Model
 		{
 			return $e->getMessage();
 		}
+	}
+
+	// check if exist, else insert
+	public static function checkIfExistInsert($table, $col, $value)
+	{
+       $sql = 'SELECT COUNT(*) FROM '.$table.' WHERE '.$col.' = \''.pg_escape_string($value).'\' LIMIT 1';
+
+	   $check = DB::select(DB::raw($sql))[0];
+
+	   if($check->count <= 0)
+	   {
+         $data = ['name' => $value];
+         Core::insertTable($table, $data, 'ARE');
+	   }
 	}
 }

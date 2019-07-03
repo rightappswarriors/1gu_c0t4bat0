@@ -19,7 +19,7 @@
                   <div class="image">
                   <th>
                     <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-                  <th colspan="6">
+                  <th colspan="8">
                     <center><h3>ACKNOWLEDGEMENT RECEIPT FOR EQUIPMENT</h3><h4>Local Government Unit – City of Guihulngan</h4><h4>General Services Office</h4></center></th>
                   <th><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
                 </div>
@@ -73,15 +73,15 @@
            <tr>
              <th colspan="3">
               <br>
-               <center><u>{{$are_header->receivedfrom}}</u></center>
+               <center><u>{{$are_header->receivedfrom}}</u></center></div><div><center>{{$are_header->receivedfromdesig}}</center></div>
              </th>
              <th colspan="2">
               <br>
-               <div><center><u>{{$are_header->receivedby}}</u></center></div><div><center>Head of Office</center></div>
+               <div><center><u>{{$are_header->receivedby}}</u></center></div><div><center>{{$are_header->receivedbydesig}}</center></div>
              </th>
              <th colspan="3">
               <br>
-               <center><u>{{$are_header->issuedto}}</u></center>
+               <center><u>{{$are_header->issuedto}}</u></center></div><div><center>{{$are_header->issuedtodesig}}</center></div>
              </th>
            </tr>
            <tr>
