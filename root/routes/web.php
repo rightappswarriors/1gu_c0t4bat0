@@ -441,7 +441,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/are_print/{code}', 'Inventory\I_AREController@print')->name('inventory.are_print');
 					Route::match(['get', 'post'], '/are_add', 'Inventory\I_AREController@add')->name('inventory.are_add');
 					Route::match(['get', 'post'], '/are_edit/{code}', 'Inventory\I_AREController@edit')->name('inventory.are_edit');
-					// Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');
+					Route::get('/are_cancel/{code}', 'Inventory\I_AREController@cancel')->name('inventory.are_cancel');
 					// Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 				});
 			});

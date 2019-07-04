@@ -80,5 +80,15 @@
 		    color: #fff;
 		    top: 5px;
 		}
+
+        @media print
+        {
+        	.no-print, .no-print*
+                {
+                  display: none !important;
+                }
+        }
+		
+
     </style>
 </head>

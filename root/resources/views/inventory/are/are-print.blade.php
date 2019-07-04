@@ -114,8 +114,6 @@
 
         #print_hide, #print_name_hide {
           display: none;
-
-
         }
       }
     </style>

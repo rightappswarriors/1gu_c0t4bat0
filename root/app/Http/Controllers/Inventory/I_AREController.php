@@ -447,4 +447,20 @@ class I_AREController extends Controller
 
       return view('inventory.are.are-print', compact('are', 'are_header'));
     }
+
+    public function cancel($code)
+    {
+      $table = "rssys.rechdr";
+      $col = "rec_num";
+      $flag = 'true';
+
+      $cancelARE = Inventory::cancelARE($code, $table, $col, $this->module);
+
+      if($cancelARE != 'true')
+      {
+        return $cancelARE;
+      }
+
+      return $flag;
+    }
 }

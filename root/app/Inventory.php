@@ -1163,4 +1163,48 @@ class Inventory extends Model
          Core::insertTable($table, $data, 'ARE');
 	   }
 	}
+
+	// cancel a ARE Transactions.
+	public static function cancelARE($code, $table, $col, $module)
+	{
+		try 
+		{
+			$datetime = Carbon::now();
+
+            $data = ['cancel' => "Y",
+                     'canc_user' => strtoupper(Session::get('_user')['id']),
+                     'canc_date' => $datetime->toDateString(),
+                     'canc_time' => $datetime->toTimeString()
+                    ];        
+
+			if (isset($table) && isset($col) && isset($code) ) 
+			{
+				if (!empty($data)) 
+				{
+					if (DB::table(DB::raw($table))->where($col, '=', $code)->update($data)) 
+					{
+						return true;
+          //               if (DB::table(DB::raw('rssys.stkcrd'))->where('reference', '=', $stk_ref)->delete())
+				      //   {
+				      //   	if (isset($module)) 
+				      //       {
+						    // 	//Inventory::alert(1, 'modified  data in '.$module);
+						    // }
+						    // return true;
+				      //   }
+					}
+				}
+			}
+			if (isset($module)) {
+			//Inventory::alert(2, 'occured upon modiification of data in '.$module);
+			}
+			return false;
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+			Inventory::alert(0, '');
+			return false;
+		}
+	}
 }
