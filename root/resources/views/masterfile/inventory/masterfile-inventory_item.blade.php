@@ -41,18 +41,29 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
+                                                                {{-- comment by: DAN 07/10/19
                                                                 <div class="form-group">
                                                                     <label  class="col-sm-4 control-label">Serial # <span class="text-red" >*</span></label>
                                                                     <div class="col-sm-8" style="margin-bottom:10px;">
                                                                         <input type="text"   name="txt_ser_no" class="form-control" placeholder="Serial #" data-parsley-required-message="<strong>Serial #</strong> is required." required>
                                                                     </div>
+                                                                </div> --}}
+                                                                <div class="form-group">
+                                                                    <label  class="col-sm-4 control-label">Serial #</label>
+                                                                    <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                        <input type="text"   name="txt_ser_no" class="form-control" placeholder="Serial #">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label  class="col-sm-4 control-label">Property # <span class="text-red" >*</span></label>
+                                                                    {{-- comment by: DAN 07/10/19 <label  class="col-sm-4 control-label">Property # <span class="text-red" >*</span></label>
                                                                     <div class="col-sm-8" style="margin-bottom:10px;">
                                                                         <input type="text"   name="txt_part_no" class="form-control" placeholder="Property #" data-parsley-required-message="<strong>Property #</strong> is required." required>
+                                                                    </div> --}}
+                                                                    <label  class="col-sm-4 control-label">Property # </label>
+                                                                    <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                        <input type="text"   name="txt_part_no" class="form-control" placeholder="Property #" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -206,10 +217,16 @@
                                                                 </div>
                                                             </div> --}}
                                                             <div class="col-sm-6">
-                                                                <div class="form-group">
+                                                                {{-- comment by: DAN 07/10/19 <div class="form-group">
                                                                     <label  class="col-sm-4 control-label">Tag # </label>
                                                                     <div class="col-sm-8" style="margin-bottom:10px;">
                                                                         <input type="text"   name="txt_tag_no" class="form-control" placeholder="Tag #" data-parsley-required-message="<strong>Seri</strong> is required." >
+                                                                    </div>
+                                                                </div> --}}
+                                                                <div class="form-group">
+                                                                    <label  class="col-sm-4 control-label">Tag # </label>
+                                                                    <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                        <input type="text"   name="txt_tag_no" class="form-control" placeholder="Tag #" >
                                                                     </div>
                                                                 </div>
                                                             </div>

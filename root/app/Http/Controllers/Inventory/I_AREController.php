@@ -103,11 +103,15 @@ class I_AREController extends Controller
                       $data2 = ['rec_num' => $code, 
                                 'ln_num' => $tb[0], 
                                 'part_no' => $tb[2], 
+                                'serial_no' => $tb[3], 
+                                'tag_no' => $tb[4], 
                                 'item_code' => $tb[1], 
                                 'item_desc' => $tb[5], 
                                 'recv_qty' => $tb[6], 
                                 'issued_qty' => $tb[6], 
-                                'unit' => $tb[7]];
+                                'unit' => $tb[7],
+                                'price' => $tb[9],
+                                'ln_amnt' => $tb[10]];
 
                       $insertLine = Core::insertTable($tableln, $data2, $this->module);
 
@@ -250,11 +254,15 @@ class I_AREController extends Controller
                 $data2 = ['rec_num' => $code, 
                           'ln_num' => $tb[0], 
                           'part_no' => $tb[2], 
+                          'serial_no' => $tb[3], 
+                          'tag_no' => $tb[4], 
                           'item_code' => $tb[1], 
                           'item_desc' => $tb[5], 
                           'recv_qty' => $tb[6], 
                           'issued_qty' => $tb[6], 
-                          'unit' => $tb[7]];   
+                          'unit' => $tb[7],
+                          'price' => $tb[9],
+                          'ln_amnt' => $tb[10]];  
 
                 $insertLine = Core::insertTable($tableln, $data2, $this->module);                 
 
@@ -302,126 +310,6 @@ class I_AREController extends Controller
 
           return $flag;   
       } 
-
-      // if($request->isMethod('get')) // for entry
-      // {
-      //     $stock_loc = Core::getAll('rssys.whouse');
-      //     $branch = Core::getAll('rssys.branch');
-      //     $itemunit = Core::getAll('rssys.itmunit');
-      //     $costcenter = Core::getAll('rssys.m08');
-      //     $vat = Core::getAll('rssys.vat');
-      //     $isnew = false;
-    
-      //     $disp_items = Inventory::getItemSearch();
-    
-      //     $rechdr = Inventory::getRISHeader($code);
-      //     $reclne = Inventory::getRISLine($code);
-      //     $grandtotal = Inventory::getTotalAmtRIS($code);
-
-    
-      //     return view('inventory.ris.ris-edit', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'grandtotal', 'isnew'));
-      // }
-      // elseif($request->isMethod('post'))
-      // {
-      //     $datetime = Carbon::now();
-      //     $flag = "false";
-
-      //     $table = 'rssys.rechdr';
-      //     $tableln = "rssys.reclne";
-
-      //     $code = $code;
-      //     $invoicedt = $request->invoicedt;
-      //     $stock_loc = $request->stock_loc;
-      //     $branch = $request->branch;
-      //     $reference = $request->reference;
-      //     $costcenter = $request->costcenter;
-      //     $ris_no = $request->ris_no;
-      //     $sai_no = $request->sai_no;
-      //     //$stk_ref = $this->stk_trns_type."#".$code;
-            
-      //     $data = ['_reference' => $reference, 
-      //              'trnx_date' => $invoicedt, 
-      //              'whs_code' => $stock_loc, 
-      //              'cc_code' => $costcenter, 
-      //              'ris_no' => $ris_no, 
-      //              'sai_no' => $sai_no, 
-      //              'recipient' => strtoupper(Session::get('_user')['id']),
-      //              't_date' => $datetime->toDateString(),
-      //              't_time' => $datetime->toTimeString(),
-      //              'branch' => $branch
-      //             ];
-
-      //     if(Core::updateTable($table, 'rec_num', $code, $data, $this->module) == true)
-      //     {
-      //         $del_dataln = [['rec_num', '=', $code]];
-      //         //$del_datastkcrd = [['reference', '=', $stk_ref]];
-
-      //         Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
-      //         //Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
-
-      //         foreach($request->tbl_itemlist as $tb)
-      //         {
-      //           $data2 = ['rec_num' => $code, 
-      //                     'ln_num' => $tb[0], 
-      //                     'part_no' => $tb[1], 
-      //                     'item_code' => $tb[2], 
-      //                     'item_desc' => $tb[3], 
-      //                     'recv_qty' => $tb[4], 
-      //                     'issued_qty' => $tb[4], 
-      //                     'unit' => $tb[5], 
-      //                     'price' => $tb[7], 
-      //                     'discount' => $tb[8], 
-      //                     'ln_amnt' => $tb[9],
-      //                     'net_amnt' => $tb[10], 
-      //                     'ln_vat' => $tb[11],
-      //                     'ln_vatamt' => $tb[12]];
-
-      //           if(Core::insertTable($tableln, $data2, $this->module))
-      //           {
-      //               // $stk_qty_in = $tb[4];
-      //               // $stk_qty_out = "0";
-
-      //               // $stkcrd = ['item_code' => $tb[2],
-      //               //            'item_desc' => $tb[3],
-      //               //            'unit' => $tb[5],
-      //               //            'trnx_date' => $invoicedt,
-      //               //            'reference' => $stk_ref,
-      //               //            'qty_in' => $stk_qty_in,
-      //               //            'qty_out' => $stk_qty_out,
-      //               //            'fcp' => $tb[7],
-      //               //            'price' => $tb[7],
-      //               //            'whs_code' => $stock_loc,
-      //               //            'supl_code' => $supl_code,
-      //               //            'supl_name' => $supl_name,
-      //               //            'trn_type' => $this->stk_trns_type,
-      //               //            'branch' => $branch];
-
-      //               //  if(Inventory::saveToStkcrd($stkcrd))
-      //               //  {
-
-      //               //  }
-      //               //  else
-      //               //  {
-      //               //    $flag = 'false';
-      //               //    break;
-      //               //  }          
-      //           }
-      //           else
-      //           {
-      //               $flag = 'false';
-      //               break;
-      //           }          
-      //         }
-
-      //         $flag = 'true';
-      //     }
-      //     else
-      //     {
-      //         $flag = 'false';
-      //     }
-
-      //     return $flag;   
-      // } 
     }
 
     public function approve($code)

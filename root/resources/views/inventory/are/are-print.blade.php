@@ -46,7 +46,7 @@
                  <td>{{$a->ln_num}}</td>
                  <td>{{$a->qty}}</td>
                  <td>{{$a->unit_desc}}</td>
-                 <td>{{$a->item_desc}}</td>
+                 <td><textarea>{{$a->item_desc}}</textarea></td>
                  <td>{{$a->serial_no}}</td>
                  <td>{{$a->part_no}}</td>
                  <td>{{$a->price}}</td>
@@ -116,15 +116,32 @@
           display: none;
         }
       }
-    </style>
-    <script>
 
-     window.onload = function() 
+      textarea {
+    border: none;
+    overflow: hidden;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    scroll-behavior: none;
+
+    resize: none; /*remove the resize handle on the bottom right*/
+    }
+    </style>
+
+    <script>
+    
+    window.onload = function() 
      {
+       $('textarea').each(function() {
+        $(this).height($(this).prop('scrollHeight'));
+        });
+
        window.print(); 
        location.href= "{{route('inventory.are')}}";
      }
-
 
     </script>
 	

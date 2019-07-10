@@ -299,7 +299,7 @@
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button>
-                    <button type="button" class="btn btn-warning" onclick="EnterItem_Add('', '', '', '', '', '', 'TEXT-ITEM')"><i class="fa fa-plus"></i> Add Text Item</button>
+                    <button type="button" class="btn btn-warning" onclick="EnterItem_Add('', '', '', '', '', '', '', 'TEXT-ITEM')"><i class="fa fa-plus"></i> Add Text Item</button>
                 </div>
                 <div class="col-sm-6">
                   <!-- <h5 class="box-title">Total amount:</h5>
@@ -341,7 +341,7 @@
                             <tbody>
                               @foreach($disp_items as $di)
                             <tr>
-                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->serial_no}}', '{{$di->tag_no}}', 'ITEM')"></td>
+                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->serial_no}}', '{{$di->tag_no}}', '{{$di->regular}}', 'ITEM')"></td>
                               <td>{{$di->item_code}}</td>
                               <td>{{$di->qty_onhand_su}}</td>
                               <td>{{$di->part_no}}</td>
@@ -390,6 +390,8 @@
                   <th>Qty</th>
                   <th>Unit Code</th>
                   <th>Unit Desc</th>
+                  <th>Cost Price</th>
+                  <th>Line Amount</th>
                   <th>Actions</th>
                 </tr>
                 </thead>
@@ -406,7 +408,9 @@
                     <td>{{$rl->qty}}</td>
                     <td>{{$rl->unit_code}}</td>
                     <td>{{$rl->unit_desc}}</td>
-                    <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}}, {{$rl->item_code}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}}, {{$rl->item_code}});"></i></a></center>
+                    <td>{{$rl->price}}</td>
+                    <td>{{$rl->ln_amnt}}</td>
+                    <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}}, '{{$rl->item_code}}');"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}}, '{{$rl->item_code}}');"></i></a></center>
                   </td>
                   </tr>  
                   @endforeach
@@ -509,14 +513,14 @@
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-3">
                             <div class="form-group">
                               <label>Quantity</label>
                                 <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
                                 <span class="validate_iqty"></span>
                             </div>
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-sm-3">
                             <div class="form-group">
                               <label>Unit Measurement</label>
                                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
@@ -526,6 +530,19 @@
                                   @endforeach
                                 </select>
                                 <span class="validate_iitemunit"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label>Cost Price</label>
+                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
+                               <span class="validate_icostprice"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label>Line Amount</label>
+                               <input type="text" class="form-control" name="txt_lineamt" placeholder="0.00" readonly="">
                             </div>
                           </div>
                         </div>
@@ -581,21 +598,21 @@
                           <div class="col-sm-12">
                             <div class="form-group">
                               <label>Item Description</label>
-                              <input type="text" class="form-control" name="txt_itemdesc_text"> 
+                              <div><textarea id="txt_itemdesc_text" class="form-control" name="txt_itemdesc_text" rows="4" cols="88"></textarea></div>
                             </div>
                           </div>
                           <div class="col-sm-3">
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-3">
                             <div class="form-group">
                               <label>Quantity</label>
                                 <input id="txt_qty_text" type="number" class="form-control" name="txt_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty_text" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
                                 <span class="validate_iqty_text"></span>
                             </div>
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-sm-3">
                             <div class="form-group">
                               <label>Unit Measurement</label>
                                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit_text" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
@@ -605,6 +622,19 @@
                                   @endforeach
                                 </select>
                                 <span class="validate_iitemunit_text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label>Cost Price</label>
+                               <input id="txt_cost_text" type="number" class="form-control" name="txt_cost_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice_text" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
+                               <span class="validate_icostprice_text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label>Line Amount</label>
+                               <input type="text" class="form-control" name="txt_lineamt_text" placeholder="0.00" readonly="">
                             </div>
                           </div>
                         </div>
@@ -692,8 +722,32 @@
       } );
       } );
 
+      // if input qty change
+      $('#txt_qty').keyup(function(event)
+      {
+        disp_amt_result();
+      });
 
-      function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no, type)
+      // if cost price change
+      $('#txt_cost').keyup(function(event)
+      {
+        disp_amt_result();
+      });
+
+      // if input qty text change
+      $('#txt_qty_text').keyup(function(event)
+      {
+        disp_amt_result_text();
+      });
+
+      // if cost price text change
+      $('#txt_cost_text').keyup(function(event)
+      {
+        disp_amt_result_text();
+      });
+
+
+      function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no, costprice, type)
       {
         clear();
 
@@ -721,6 +775,7 @@
           $('input[name="txt_partno"]').val(part_no);
           $('input[name="txt_serialno"]').val(serial_no);
           $('input[name="txt_tagno"]').val(tag_no);
+          $('input[name="txt_cost"]').val(costprice);
           $('select[name="select_unit"]').val(unit).trigger('change');
         }
         else // TEXT ITEM
@@ -747,8 +802,14 @@
 
       function EnterItem_Edit(line, type)
       {
+        var table = $('#tbl_itemlist').DataTable();
+        var row = line - 1;
+        var data = table.row(row).data();
+
         if(type == 'TEXT-ITEM')
         {
+          
+
           $('#ENTER_ITEM').text('Edit Text');
           $('.AddMode').hide();
           $('.AddModeBtn').hide();
@@ -761,19 +822,17 @@
           $('.EditModeText').show();
           $('.EditModeBtnText').show();
           $('.DeleteModeText').hide();
-
-          var table = $('#tbl_itemlist').DataTable();
-          var row = line - 1;
-          var data = table.row(row).data();
           
           $('input[name="txt_lineno_text"]').val(data[0]);
           $('input[name="txt_itemcode_text"]').val(data[1]);
           $('input[name="txt_partno_text"]').val(data[2]);
           $('input[name="txt_serialno_text"]').val(data[3]);
           $('input[name="txt_tagno_text"]').val(data[4]);
-          $('input[name="txt_itemdesc_text"]').val(data[5]);
+          $('textarea[name="txt_itemdesc_text"]').val(data[5]);
           $('input[name="txt_qty_text"]').val(data[6]);
           $('select[name="select_unit_text"]').val(data[7]).trigger('change');
+          $('input[name="txt_cost_text"]').val(data[9]);
+          $('input[name="txt_lineamt_text"]').val(data[10]);
 
           $('#enteritem-modal').modal('toggle');
         }
@@ -791,10 +850,6 @@
           $('.EditMode').show();
           $('.EditModeBtn').show();
           $('.DeleteMode').hide();
-
-          var table = $('#tbl_itemlist').DataTable();
-          var row = line - 1;
-          var data = table.row(row).data();
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_itemcode"]').val(data[1]);
@@ -804,6 +859,8 @@
           $('input[name="txt_itemdesc"]').val(data[5]);
           $('input[name="txt_qty"]').val(data[6]);
           $('select[name="select_unit"]').val(data[7]).trigger('change');
+          $('input[name="txt_cost"]').val(data[9]);
+          $('input[name="txt_lineamt"]').val(data[10]);
 
           $('#enteritem-modal').modal('toggle');
         }  
@@ -855,6 +912,7 @@
       {
         var table = $('#tbl_itemlist').DataTable();
 
+        // if form is item
         if(typeitem == 'item')
         {
           if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
@@ -870,6 +928,8 @@
             var qty = $('input[name="txt_qty"]').val();
             var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
             var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
+            var cost_price = $('input[name="txt_cost"]').val();
+            var line_amt = $('input[name="txt_lineamt"]').val();
             var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
@@ -877,11 +937,11 @@
 
             if($('#ENTER_ITEM').text() == 'Add')
             { 
-              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit')
             {
-              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
             }
             else // remove item
             {
@@ -912,6 +972,7 @@
             }
           }
         }
+        // if form is text-item
         else if(typeitem == 'text-item')
         {
           if($('#add-formtext').parsley().validate()) // check required fields of the Add Text Item Form
@@ -923,10 +984,12 @@
             var part_no = $('input[name="txt_partno_text"]').val();
             var serial_no = $('input[name="txt_serialno_text"]').val();
             var tag_no = $('input[name="txt_tagno_text"]').val();
-            var item_desc = $('input[name="txt_itemdesc_text"]').val();
+            var item_desc = $('textarea[name="txt_itemdesc_text"]').val();
             var qty = $('input[name="txt_qty_text"]').val();
             var unit_code = $('select[name="select_unit_text"]').select2('data')[0].id;
             var unit_desc = $('select[name="select_unit_text"]').select2('data')[0].text;
+            var cost_price = $('input[name="txt_cost_text"]').val();
+            var line_amt = $('input[name="txt_lineamt_text"]').val();
             var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\', \''+item_code+'\');"></i></a>' +
@@ -934,11 +997,11 @@
 
             if($('#ENTER_ITEM').text() == 'Add Text')
             { 
-              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit Text')
             {
-              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
             }
             else // remove item
             {
@@ -996,18 +1059,50 @@
         $('input[name="txt_serialno"]').val('');
         $('input[name="txt_tagno"]').val('');
         $('input[name="txt_itemdesc"]').val('');
-        $('input[name="txt_qty"]').val('0');
+        $('input[name="txt_qty"]').val('0.00');
         $('select[name="select_unit"]').val('').trigger('change');
+        $('input[name="txt_cost"]').val('0.00');
+        $('input[name="txt_lineamt"]').val('0.00');
 
         $('input[name="txt_lineno_text"]').val('');
         $('input[name="txt_itemcode_text"]').val('');
         $('input[name="txt_partno_text"]').val('');
         $('input[name="txt_serialno_text"]').val('');
         $('input[name="txt_tagno_text"]').val('');
-        $('input[name="txt_itemdesc_text"]').val('');
+        $('textarea[name="txt_itemdesc_text"]').val('');
         $('input[name="txt_qty_text"]').val('0');
         $('select[name="select_unit_text"]').val('').trigger('change');
+        $('input[name="txt_cost_text"]').val('0.00');
+        $('input[name="txt_lineamt_text"]').val('0.00');
 
+      }
+
+      function disp_amt_result()
+      {
+        var total_costamt = 0.00, qty = 0.00, costprice = 0.00, ln_amt = 0.00;
+
+        qty = $('input[name="txt_qty"]').val();
+        costprice = $('input[name="txt_cost"]').val();
+
+        total_costamt = qty * costprice;
+
+        ln_amt = parseFloat(total_costamt).toFixed(2);
+
+        $('input[name="txt_lineamt"]').val(ln_amt);
+      }
+
+      function disp_amt_result_text()
+      {
+        var total_costamt = 0.00, qty = 0.00, costprice = 0.00, ln_amt = 0.00;
+
+        qty = $('input[name="txt_qty_text"]').val();
+        costprice = $('input[name="txt_cost_text"]').val();
+
+        total_costamt = qty * costprice;
+
+        ln_amt = parseFloat(total_costamt).toFixed(2);
+
+        $('input[name="txt_lineamt_text"]').val(ln_amt);
       }
 
       function Save()
