@@ -623,6 +623,20 @@ class Inventory extends Model
 		}
 	}
 
+	// get item details of StockIn.
+    public static function getItemDetails($code)
+	{	
+		try 
+		{
+			$sql = 'SELECT part_no, item_desc, sales_unit_id, unit_cost FROM rssys.items WHERE item_code = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
     // get specific grand total amount of Stock In.
 	public static function getTotalAmtStockIn($code)
 	{
@@ -1011,7 +1025,7 @@ class Inventory extends Model
 		{
             //$sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, rl.item_code, rl.item_desc, rl.issued_qty as qty, it.unit_shortcode as unit_desc, i.unit_cost as price, (i.unit_cost * rl.issued_qty) as ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\' ORDER BY rl.ln_num ASC';
 
-            $sql = 'SELECT rl.ln_num, rl.part_no, rl.serial_no, rl.item_code, rl.item_desc, rl.issued_qty as qty, it.unit_shortcode as unit_desc, rl.price, rl.ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE rec_num = \''.$rec_num.'\' ORDER BY rl.ln_num ASC';
+            $sql = 'SELECT rl.ln_num, rl.part_no, rl.serial_no, rl.item_code, rl.item_desc, ROUND(rl.issued_qty, 2) as qty, it.unit_shortcode as unit_desc, ROUND(rl.price, 2) as price, ROUND(rl.ln_amnt, 2) as ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE rec_num = \''.$rec_num.'\' ORDER BY rl.ln_num ASC';
             
             return DB::select(DB::raw($sql));
 		}

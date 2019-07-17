@@ -203,7 +203,7 @@
                             <tbody>
                               @foreach($disp_items as $di)
                             <tr>
-                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->unit_cost}}')"></td>
+                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}')"></td>
                               <td>{{$di->item_code}}</td>
                               <td>{{$di->qty_onhand_su}}</td>
                               <td>{{$di->part_no}}</td>
@@ -364,7 +364,7 @@
                         <div class="row">
                           <div class="col-sm-9">
                             <div class="form-group">
-                              <label>Item Description</label>
+                              <label>Item Descriptions</label>
                               <input type="text" class="form-control" name="txt_itemdesc" readonly=""> 
                             </div>
                           </div>
@@ -539,9 +539,10 @@
       });
 
 
-      function EnterItem_Add(code, part_no, item_desc, unit, cost_price)
+      function EnterItem_Add(code)
       {
         clear();
+
         $('#ENTER_ITEM').text('Add');
         $('.AddMode').show();
         $('.AddModeBtn').show();
@@ -551,13 +552,19 @@
         
         var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
 
-        $('input[name="txt_lineno"]').val(line);
-        $('input[name="txt_itemcode"]').val(code);
-        $('input[name="txt_part_no"]').val(part_no);
-        $('input[name="txt_itemdesc"]').val(item_desc);
-        $('input[name="txt_partno"]').val(part_no);
-        $('input[name="txt_cost"]').val(cost_price);
-        $('select[name="select_unit"]').val(unit).trigger('change');
+        $.ajax({
+                 url: '{{asset('inventory/stockin/stockin_getitemdetails')}}/'+code,
+                 method: 'GET',
+                 success : function(data)
+                           {
+                             $('input[name="txt_lineno"]').val(line);
+                             $('input[name="txt_itemcode"]').val(code);
+                             $('input[name="txt_part_no"]').val(data[0]);
+                             $('input[name="txt_itemdesc"]').val(data[1]);
+                             $('input[name="txt_cost"]').val(data[3]);
+                             $('select[name="select_unit"]').val(data[2]).trigger('change');
+                           }
+              });
       }
 
       function EnterItem_Edit(line)

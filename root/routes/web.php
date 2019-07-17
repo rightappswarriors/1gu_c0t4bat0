@@ -396,6 +396,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get', 'post'], '/stockin_edit/{code}', 'Inventory\I_StockInController@edit')->name('inventory.stockin_edit');
 					Route::get('/stockin_cancel/{code}', 'Inventory\I_StockInController@cancel')->name('inventory.stockin_cancel');
 					Route::get('/stockin_print/{code}', 'Inventory\I_StockInController@print')->name('inventory.stockin_print');
+					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockin_getitemdetails');
 				});
 			});
 		/* ----- STOCK IN */

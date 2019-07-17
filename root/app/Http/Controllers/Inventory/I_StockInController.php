@@ -308,4 +308,18 @@ class I_StockInController extends Controller
 
       return view('inventory.receivingpo-print', compact('rechdr', 'reclne'));
     }
+
+    public function getitemdetails($code)
+    {
+      $itemdetails = Inventory::getItemDetails($code);
+
+      $part_no = $itemdetails->part_no;
+      $item_desc = $itemdetails->item_desc;
+      $unit = $itemdetails->sales_unit_id;
+      $cost = $itemdetails->unit_cost;
+
+      $itemdetailsdata = [$part_no, $item_desc, $unit, $cost];
+
+      return $itemdetailsdata;
+    }
 }

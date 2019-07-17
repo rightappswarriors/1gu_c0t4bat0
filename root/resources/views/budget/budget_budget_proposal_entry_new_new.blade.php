@@ -193,7 +193,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Budget Entries</h3>
-                    <button id="BudgetEntriesAdd" type="button" class="btn btn-primary" onclick="addMode()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Add item</button>
+                    {{-- <button id="BudgetEntriesAdd" type="button" class="btn btn-primary" onclick="addMode()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Add item</button> --}}
                     <div class="modal fade in" id="modal-default">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -322,6 +322,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+                    <form id="LineForm" data-parsley-validate novalidate>
                     @isset($data[10])
                     <ul id="TheNavBar" class="nav nav-tabs">
                         @for($i = 0; $i < count($data[10]); $i++)
@@ -335,6 +336,7 @@
                     @endisset
                     @isset($data[10])
                         <div class="tab-content">
+                            
                             @for($i = 0; $i < count($data[10]); $i++)
                                 @if($i == 0)
                                     <div data-toggle="tab" id="tab_{{$data[10][$i]->subgrpid}}" class="tab-pane fade in active">
@@ -353,8 +355,8 @@
                                             <tr>
                                                 {{-- <th style="display: none">#</th> --}}
                                                 {{-- <th>Code</th> --}}
-                                                <th>Description</th>
                                                 <th>Account Title/ PPA</th>
+                                                <th>Description</th>
                                                 <th><center>Amount</center></th>
                                                 {{-- <th><center>Allocated</center></th> --}}
                                                 <th width="10%"><center>Options</center></th>
@@ -376,10 +378,12 @@
                                     </div>
                                 </div>
                             @endfor
+                            
                         </div>
                     @endisset
                 </div>
                 <!-- /.box-body -->
+                </form>
             </div>
             <!-- /.box -->
             <div class="row">
@@ -495,6 +499,10 @@
             } );
         @endforeach
     @endisset
+
+    /* modify by: DAN 07/16/19
+     * Item Per Line Form
+     */
     function addItem()
     {
         var howMany = $('li.tabHD').length;
@@ -510,21 +518,63 @@
                 }
             }
         }
+
+        var line = ($('#table_'+SelectedTabPPA).DataTable().rows().count()) + 1;
+        var table = $('#table_'+SelectedTabPPA).DataTable();
+        table.row.add([
+                // line,<span class="cc_code" subgrpid="'+subgrpid+'" cc-code="'+code+'" desc="'+encodeURI(desc)+'">'+desc+'</span>
+                '<select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
+                '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
+                '<input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>',
+                '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="text"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
+                '<center><button class="btn btn-danger" onclick="removeItem(this)"><i class="fa fa-minus-circle"></i></button></center>'
+            ]).draw();
+        $('select.select2').select2();
+    }
+
+
+   /* Add item per line.
+    * src code of Mhel.
+    * comment by: DAN 07/16/19
+
+    function addItem()
+    {
+        var howMany = $('li.tabHD').length;
+        var SelectedTabPPA = '';
+        if(howMany > 0)
+        {
+            for(var i = 0; i < howMany;i++)
+            {
+                if($($('li.tabHD')[i]).hasClass('active'))
+                {
+                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                    break;
+                }
+            }
+        }
+
+
+
         // var line = ($('#table_'+SelectedTabPPA).DataTable().data().count()/ 5) + 1;
         var table = $('#table_'+SelectedTabPPA).DataTable();
         table.row.add([
                 // line,
-                '<input class="form-control" style="width:100%" type="text">',
-                '<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">'+
+                '<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
                 '</select>',
+                '<input class="form-control" style="width:100%" type="text">',
                 '<input class="form-control" style="width:100%" type="text">',
                 '<center><button class="btn btn-danger" onclick="removeItem(this)"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
         $('select.select2').select2();
     }
+    */
+
+
     function removeItem(ok)
     {
-        console.log($(ok).parent().parent().parent());
+        console.log(selectedId);
+        //console.log($(ok).parent().parent().parent());
+
     }
     function getFunction()
     {
@@ -774,6 +824,84 @@
 		$('.AddMode').hide();
 		$('.DeleteMode').show();
 	}
+
+    /* modify by Dan 07/16/19
+     */
+    function SaveProposal()
+    {
+     if($('input[name="hdr_bgtps01"]').val() != '')
+        {
+            if($('#HdrForm').parsley().validate())
+            {
+                if(($('.table').DataTable().data().count()/ 5) != 0)
+                {
+                    if($('#LineForm').parsley().validate())
+                    {
+                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
+                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+
+                      var desc = $('input[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                      var data = {
+                              _token : $('meta[name="csrf-token"]').attr('content'),
+                              codes : codes,
+                              amt : amt,
+                              subgrpid : subgrpid,
+                              desc: desc,
+                              fy : $('select[name="fy"]').val(),
+                              // budget_period : $('select[name="budget_period"]').val(),
+                              fid : $('select[name="hdr_fid"]').val(),
+                              cc_code : $('select[name="hdr_cc"]').val(),
+                              secid : $('select[name="hdr_sec"]').val(),
+                              funct : $('select[name="hdr_func"]').val(),
+                              // brid : $('input[name="hdr_br"]').val(),
+                              // t_date : $('input[name="hdr_date"]').val(),
+                              // t_desc : $('input[name="hdr_desc"]').val(),
+                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
+                          };
+                      $.ajax({
+                          url : '{{ url('budget/budget-proposal-entry/save') }}',
+                          method : 'POST',
+                          data : data,
+                          success : function(d){
+                              if(d == 'DONE'){
+                                  alert('Successfully Added new Budget Appropriation Entry');
+                                  location.href= "{{ url('budget/budget-proposal-entry') }}";
+                                  // javascript:history.go(-1);
+
+                              } else {
+                                  alert('ERROR! an unknown error occured during saving process.');
+                              }
+                          },
+                          error : function(a, b, c){
+                              console.log(c);
+                          }
+                      });
+                    }
+                    else
+                    {
+                        alert('Please fill the required fields in item/line entry.');
+                    }
+                }
+                else
+                {
+                    alert("There's no item(s) to add. Please entry item(s).");
+                }
+            }
+            else
+            {
+                alert('Please fill the required fields in header entry.');
+            }
+        }
+        else
+        {
+             alert('Please select Budget Appropriation ');
+        }
+    }
+
+    /* source code of Mhel
+     * comment by: DAN 07/16/19
+     *
 	function SaveProposal()
 	{
 		if($('input[name="hdr_bgtps01"]').val() != '')
@@ -834,6 +962,9 @@
              alert('Please select Budget Appropriation ');
         }
 	}
+    */
+
+
     function Loadapproved()
     {
         $.ajax({
