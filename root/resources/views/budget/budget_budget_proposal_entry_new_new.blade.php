@@ -1,12 +1,23 @@
 @extends('_main')
-@php
-    $_bc = [
-        ['link'=>'#','desc'=>'Budget','icon'=>'none','st'=>false],
-        ['link'=>url("budget/budget-proposal-entry"),'desc'=>'Appropriation Entry','icon'=>'none','st'=>true],
-        ['link'=>url("budget/budget-proposal-entry/new"),'desc'=>'New','icon'=>'none','st'=>true]
-    ];
-    $_ch = "Budget Appropriation Entry"; // Module Name
-@endphp
+@if($isnew)
+  @php
+      $_bc = [
+          ['link'=>'#','desc'=>'Budget','icon'=>'none','st'=>false],
+          ['link'=>url("budget/budget-proposal-entry"),'desc'=>'Appropriation Entry','icon'=>'none','st'=>true],
+          ['link'=>url("budget/budget-proposal-entry/new"),'desc'=>'New','icon'=>'none','st'=>true]
+      ];
+      $_ch = "Budget Appropriation Entry"; // Module Name
+  @endphp
+@else
+  @php
+      $_bc = [
+          ['link'=>'#','desc'=>'Budget','icon'=>'none','st'=>false],
+          ['link'=>url("budget/budget-proposal-entry"),'desc'=>'Appropriation Entry','icon'=>'none','st'=>true],
+          ['link'=>url("budget/budget-proposal-entry"),'desc'=>'Edit','icon'=>'none','st'=>true]
+      ];
+      $_ch = "Budget Appropriation Entry"; // Module Name
+  @endphp
+@endif
 @section('content')
 <!-- Content Header (Page header) -->
 @include('layout._contentheader')
@@ -27,161 +38,194 @@
                 <div class="col-md-4" style="display:none">
                     <div class="form-group">
                         <label>Budget Appropriation Entry #</label>
-                        <input type="text" class="form-control" name="" disabled="">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Year <span style="color:red"><strong>*</strong></span></label>
-                        {{-- <input type="text" class="form-control" name="hdr_fy_mo" disabled="" value=""> --}}
-                        <select class="form-control select2 select2-hidden-accessible" name="fy" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Year</strong> is required." data-parsley-errors-container="#budget_fy_span" required>
-                        	@isset($data[0])
-			                    <option value="">Select Year...</option>
-			                    @foreach($data[0] as $x3)
-			                      <option value="{{$x3->fy}}">{{$x3->fy}}</option>
-			                    @endforeach
-			                @else
-			                    <option value="">No Year registered...</option>
-			                @endisset
-                        </select>
-                        <span id="budget_fy_span"></span>
-                        {{-- <input type="text" name="hdr_fy" readonly="" style="display: none" value="@if(isset($data[5])){{$data[5]}}@endif">
-                        <input type="text" name="hdr_mo" readonly="" style="display: none" value="@if(isset($data[6])){{$data[6]}}@endif"> --}}
-                    </div>
-                </div>
-                {{-- <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Budget Period <span style="color:red"><strong>*</strong></span></label>
-                        <select class="form-control select2 select2-hidden-accessible" name="budget_period" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Budget Period</strong> is required." data-parsley-errors-container="#budget_period_span" required>
-                            @isset($data[11])
-                                <option value="">Select Budget Period...</option>
-                                @foreach($data[11] as $bp)
-                                  <option value="{{$bp->budget_code}}">{{$bp->budget_desc}}</option>
-                                @endforeach
-                            @else
-                                <option value="">No Budget Period registered...</option>
-                            @endisset
-                        </select>
-                        <span id="budget_period_span"></span>
-                    </div>
-                </div> --}}
-                {{-- <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Date <span style="color:red"><strong>*</strong></span></label>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="date" class="form-control pull-right" name="hdr_date" data-parsley-required-message="<strong>Date</strong> is required." required>
-                        </div>
-                    </div>
-                </div> --}}
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Fund <span style="color:red"><strong>*</strong></span></label>
-                        {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_fid_txt" disabled>
-                        <input type="text" class="form-control EditBudgetapproved" name="hdr_fid" disabled style="display: none"> --}}
-                        <select class="form-control select2 select2-hidden-accessible" name="hdr_fid" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_fid_span" data-parsley-required-message="<strong>Fund</strong> is required." required>
-                            @isset($data[1])
-                                <option value="">Select Fund...</option>
-                                @foreach($data[1] as $fund)
-                                    <option value="{{$fund->fid}}">{{$fund->fdesc}}</option>
-                                @endforeach
-                            @else
-                                <option value="">No Fund registered...</option>
-                            @endisset
-                        </select>
-                        <span id="hdr_fid_span"></span>
+                        @if($isnew)
+                          <input type="text" class="form-control" name="" disabled="">
+                        @else
+                          <input type="text" class="form-control" name="hdr_b_num" disabled="" value="@isset($approHeader){{$approHeader->b_num}}@endisset">
+                        @endif
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Year <span style="color:red"><strong>*</strong></span></label>
+                            {{-- <input type="text" class="form-control" name="hdr_fy_mo" disabled="" value=""> --}}
+                            <select class="form-control select2 select2-hidden-accessible" name="fy" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Year</strong> is required." data-parsley-errors-container="#budget_fy_span" required>
+                                @if($isnew)
+                                  @isset($data[0])
+                                      <option value="">Select Year...</option>
+                                      @foreach($data[0] as $x3)
+                                        <option value="{{$x3->fy}}">{{$x3->fy}}</option>
+                                      @endforeach
+                                  @else
+                                      <option value="">No Year registered...</option>
+                                  @endisset
+                                @else
+                                  @isset($data[0])
+                                      @foreach($data[0] as $x3)
+                                        @if($x3->fy == $approHeader->fy)
+                                          <option selected="selected" value="{{$x3->fy}}">{{$x3->fy}}</option>
+                                        @else
+                                          <option value="{{$x3->fy}}">{{$x3->fy}}</option>
+                                        @endif
+                                      @endforeach
+                                  @else
+                                      <option value="">No Year registered...</option>
+                                  @endisset
+                                @endif
+                            </select>
+                            <span id="budget_fy_span"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Function <span style="color:red"><strong>*</strong></span></label>
+                            <select class="form-control select2 select2-hidden-accessible" name="hdr_func" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_func_span" data-parsley-required-message="<strong>Function</strong> is required." required>
+                            @if(!$isnew)
+                              @isset($data[12])
+                                @foreach($data[12] as $func)
+                                  @if($func->funcid == $approHeader->funcid)
+                                    <option selected="selected" value="{{$func->funcid}}">{{$func->funcdesc}}</option>
+                                  @else
+                                    <option value="{{$func->funcid}}">{{$func->funcdesc}}</option>
+                                  @endif
+                                  @endforeach
+                              @else
+                                <option value="">No Function registered...</option>
+                              @endisset
+                            @endif
+                            </select>
+                            <span id="hdr_func_span"></span>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Fund <span style="color:red"><strong>*</strong></span></label>
+                            {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_fid_txt" disabled>
+                        <input type="text" class="form-control EditBudgetapproved" name="hdr_fid" disabled style="display: none"> --}}
+                            <select class="form-control select2 select2-hidden-accessible" name="hdr_fid" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_fid_span" data-parsley-required-message="<strong>Fund</strong> is required." required>
+                                @if($isnew)
+                                  @isset($data[1])
+                                      <option value="">Select Fund...</option>
+                                      @foreach($data[1] as $fund)
+                                          <option value="{{$fund->fid}}">{{$fund->fdesc}}</option>
+                                      @endforeach
+                                  @else
+                                      <option value="">No Fund registered...</option>
+                                  @endisset
+                                @else
+                                  @isset($data[1])
+                                      @foreach($data[1] as $fund)
+                                        @if($fund->fid == $approHeader->fid)
+                                          <option selected="selected" value="{{$fund->fid}}">{{$fund->fdesc}}</option>
+                                        @else
+                                          <option value="{{$fund->fid}}">{{$fund->fdesc}}</option>
+                                        @endif  
+                                      @endforeach
+                                  @else
+                                      <option value="">No Fund registered...</option>
+                                  @endisset
+                                @endif
+                            </select>
+                            <span id="hdr_fid_span"></span>
+                        </div>                        
+                    </div>
+                    <div class="col-md-6">
                     <div class="form-group">
                         <label>Office <span style="color:red"><strong>*</strong></span></label>
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_cc_txt" disabled> --}}
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_cc" disabled style="display: none"> --}}
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_cc" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_cc_span" data-parsley-required-message="<strong>Office</strong> is required." required>
-                            @isset($data[2])
-                            	<option value="">Select Office..</option>
-                            	@foreach($data[2] as $m08)
-                            		<option value="{{$m08->cc_code}}">{{$m08->cc_desc}}</option>
-                            	@endforeach
+                            @if($isnew)
+                              @isset($data[2])
+                                <option value="">Select Office..</option>
+                                @foreach($data[2] as $m08)
+                                    <option value="{{$m08->cc_code}}">{{$m08->cc_desc}}</option>
+                                @endforeach
+                              @else
+                                <option value="">No Office registered...</option>
+                              @endisset
                             @else
-                            	<option value="">No Office registered...</option>
-                            @endisset
+                              @isset($data[2])
+                                <option value="">Select Office..</option>
+                                @foreach($data[2] as $m08)
+                                  @if($m08->cc_code == $approHeader->cc_code)
+                                    <option selected="selected" value="{{$m08->cc_code}}">{{$m08->cc_desc}}</option>
+                                  @else
+                                    <option value="{{$m08->cc_code}}">{{$m08->cc_desc}}</option>
+                                  @endif
+                                @endforeach
+                              @else
+                                <option value="">No Office registered...</option>
+                              @endisset
+                            @endif
                         </select>
                         <span id="hdr_cc_span"></span>
                     </div>
-                </div>
-                <div class="col-md-4">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
                     <div class="form-group">
                         <label>Sector <span style="color:red"><strong>*</strong></span></label>
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec_txt" disabled> --}}
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec" disabled style="display: none"> --}}
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_sec" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_sec_span" data-parsley-required-message="<strong>Sector</strong> is required." required onchange="getFunction()">
-                            @isset($data[3])
-                            	<option value="">Select Sector...</option>
-								@foreach($data[3] as $sector)
-		                            <option value="{{$sector->secid}}">{{$sector->secdesc}}</option>
-		                        @endforeach
-                           	@else
-                           		<option value="">No Sector registered...</option>
-                            @endisset
+                            @if($isnew)
+                              @isset($data[3])
+                                <option value="">Select Sector...</option>
+                                @foreach($data[3] as $sector)
+                                      <option value="{{$sector->secid}}">{{$sector->secdesc}}</option>
+                                  @endforeach
+                              @else
+                                <option value="">No Sector registered...</option>
+                              @endisset
+                            @else
+                              @isset($data[3])
+                                @foreach($data[3] as $sector)
+                                  @if($sector->secid == $approHeader->secid)
+                                    <option selected="selected" value="{{$sector->secid}}">{{$sector->secdesc}}</option>
+                                  @else
+                                    <option value="{{$sector->secid}}">{{$sector->secdesc}}</option>
+                                  @endif
+                                  @endforeach
+                              @else
+                                <option value="">No Sector registered...</option>
+                              @endisset
+                            @endif
                         </select>
                         <span id="hdr_sec_span"></span>
+                    </div>                        
                     </div>
+                  </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Function <span style="color:red"><strong>*</strong></span></label>
-                        <select class="form-control select2 select2-hidden-accessible" name="hdr_func" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_func_span" data-parsley-required-message="<strong>Function</strong> is required." required>
-                        </select>
-                        <span id="hdr_func_span"></span>
+                    @isset($data[10])
+                    @foreach ($data[10] as $p)
+                    <div class="row">
+                       <div class="col-md-4" style="margin-bottom: 5px;">
+                            <label>{{$p->subgrpid}}</label>
+                        </div>
+                        <div class="col-md-8" style="margin-bottom: 5px;">
+                            <input type="text" class="form-control" disabled="" name="sub_total_{{$p->subgrpid}}" value="Php 0.00">
+                        </div>
+                    </div>
+                    @endforeach
+                    @endif
+                    <div class="row">
+                       <div class="col-md-4" style="margin-top: 10px;">
+                            <label>TOTAL</label>
+                        </div>
+                        <div class="col-md-8" style="margin-top: 10px;">
+                            <input type="text" class="form-control" disabled="" name="total_line" value="Php 0.00">
+                        </div>
                     </div>
                 </div>
-                {{-- <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Branch <span style="color:red"><strong>*</strong></span></label>
-                        <input type="text" class="form-control EditBudgetapproved" name="hdr_br_txt" disabled>
-                        <input type="text" class="form-control EditBudgetapproved" name="hdr_br" disabled style="display: none">
-                    </div>
-                </div> --}}
-            </div>
-            <div class="row">
-                {{-- <div class="col-md-8">
-                    <div class="form-group">
-                        <label>Description <span style="color:red"><strong>*</strong></span></label>
-                        <input type="text" class="form-control" name="hdr_desc" data-parsley-required-message="<strong>Description</strong> is required." required>
-                    </div>
-                </div> --}}
-                {{-- <div class="col-md-2">
-                    <div class="form-group">
-                        <label>Proposal Reference # <span style="color:red"><strong>*</strong></span></label>
-                        <input type="text" class="form-control" name="hdr_bgtps01" value="" disabled>
-                    </div>
-                </div> --}}
-                {{-- <div class="col-md-2">
-                    <div class="form-group">
-                        <label>Remaining Budget <span style="color:red"><strong>*</strong></span></label>
-                        <input type="text" class="form-control" name="hdr_total_view" value="" disabled>
-                        <input type="text" class="form-control" name="hdr_total" value="" disabled style="display: none">
-                    </div>
-                </div> --}}
-                {{-- <div class="col-md-5">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <button type="button" data-toggle="modal" data-target="#modal-default2" onclick="Loadapproved()" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Select Budget Appropriation</button>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn btn-block btn-default" onclick="ViewProposal()"><i class="fa fa-eye"></i> View Appropriation</button>
-                            </div>
-                        </div>
-                </div> --}}
             </div>
             </form>
             <!-- /.row -->
@@ -323,6 +367,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <form id="LineForm" data-parsley-validate novalidate>
+                    
                     @isset($data[10])
                     <ul id="TheNavBar" class="nav nav-tabs">
                         @for($i = 0; $i < count($data[10]); $i++)
@@ -363,6 +408,39 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @if(!$isnew)
+                                              @foreach($approLine as $al)
+                                               @if($data[10][$i]->subgrpid == $al->grpid)
+                                                <?php $ln_num = 1; ?>
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}" required>
+                                                          @foreach ($data[8] as $m4)
+                                                            @if($m4->at_code == $al->at_code)
+                                                              <option selected="selected" value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>
+                                                            @else
+                                                              <option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>
+                                                            @endif
+                                                          @endforeach
+                                                        </select>
+                                                        <span id="validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" value="{{$al->seq_desc}}" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
+                                                        <span id="validate_txt_desc{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any" value="{{$al->appro_amnt}}"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
+                                                        <span id="validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                    </td>
+                                                    <td>
+                                                        <center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>
+                                                    </td>
+                                                </tr>
+                                                <?php $ln_num++ ?>
+                                               @endif
+                                              @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                     <div class="row">
@@ -381,9 +459,10 @@
                             
                         </div>
                     @endisset
-                </div>
+                    </div>
+                    
                 <!-- /.box-body -->
-                </form>
+                    </form>
             </div>
             <!-- /.box -->
             <div class="row">
@@ -396,13 +475,24 @@
             		</div>
             	</div>
                 <div class="col-sm-6">
-                    <div class="col-sm-6">
-                    	{{-- <div class="form-group" style="display: flex;"> --}}
-                        <button type="button" class="btn btn-block btn-success" onclick="SaveProposal()"><i class="fa fa-save"></i> Save</button>
-                    </div>
-                    <div class="col-sm-6">
-                    	<button type="button" class="btn btn-block btn-primary" style="margin-top: 0;" onclick="javascript:history.go(-1)"><i class="fa fa-arrow-left"></i> Go Back</button>
-                    </div>
+                    @if($isnew)
+                      <div class="col-sm-4">
+                          <button type="button" class="btn btn-block btn-warning" onclick="SaveAddMoreProposal()"><i class="fa fa-save"></i> Save & Add More</button>
+                      </div>
+                      <div class="col-sm-4">
+                          <button type="button" class="btn btn-block btn-success" onclick="SaveProposal()"><i class="fa fa-save"></i> Save</button>
+                      </div>
+                      <div class="col-sm-4">
+                          <button type="button" class="btn btn-block btn-primary" style="margin-top: 0;" onclick="javascript:history.go(-1)"><i class="fa fa-arrow-left"></i> Go Back</button>
+                      </div>
+                    @else
+                      <div class="col-sm-6">
+                          <button type="button" class="btn btn-block btn-success" onclick="EditSaveProposal()"><i class="fa fa-save"></i> Save</button>
+                      </div>
+                      <div class="col-sm-6">
+                          <button type="button" class="btn btn-block btn-primary" style="margin-top: 0;" onclick="javascript:history.go(-1)"><i class="fa fa-arrow-left"></i> Go Back</button>
+                      </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -474,7 +564,26 @@
                 }
             }
         }
+
+        
+        let howMany = $('li.tabHD').length;
+        let SelectedTabPPA = '';
+        if(howMany > 0)
+        {
+            for(let i = 0; i < howMany;i++)
+            {
+                if($($('li.tabHD')[i]).hasClass('active'))
+                {
+                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                    break;
+                }
+            }
+        }
+        
+        loadTotal();
+        loadSubTotal(SelectedTabPPA);
     });
+
 	$(document).ready(function(){
 
             $('#SideBar_Budget').addClass('active');
@@ -482,7 +591,7 @@
             let today = new Date().toISOString().slice(0, 10);
 		    $('input[name="hdr_date"]').val(today);
             @if(isset($data[9]))
-            	$('select[name="hdr_fid"]').val('{{$data[9]}}').trigger('change');
+            	//$('select[name="hdr_fid"]').val('{{$data[9]}}').trigger('change');
             @endif
             @if(isset($data[5]))
                 $('select[name="fy"]').val('{{$data[5]}}').trigger('change');
@@ -490,15 +599,48 @@
             emptyHeader();
             // $('#modal-default2').modal('toggle');
             $('table').DataTable();
+
+            loadTotal();
+            @isset($data[10])
+            @foreach ($data[10] as $p)
+                loadSubTotal('{{$p->subgrpid}}');
+            @endforeach
+            @endif
         });
+
 	@isset($data[10])
         @foreach ($data[10] as $d)
             $('#table_{{$d->subgrpid}} tbody').on( 'click', 'tr', function () {
+                
                 var table = $('#table_{{$d->subgrpid}}').DataTable();
                 selectedId = table.row( this ).index() ;
             } );
         @endforeach
     @endisset
+
+    // Remove row.
+    @isset($data[10])
+        @foreach ($data[10] as $d)
+            $('#table_{{$d->subgrpid}} tbody').on( 'click', '.removebtn', function () {
+                let table = $('#table_{{$d->subgrpid}}').DataTable();
+                let index = $(this).closest('tr').index();
+                
+                removeItem(index);
+            } );
+        @endforeach
+    @endisset
+
+    // if input amount change
+      // $('#txt_amt').keyup(function(event)
+      // {
+      //   loadTotal();
+      //   @isset($data[10])
+      //   @foreach ($data[10] as $p)
+      //       loadSubTotal('{{$p->subgrpid}}');
+      //   @endforeach
+      //   alert('fromdocukeyup');
+      //   @endif
+      // });
 
     /* modify by: DAN 07/16/19
      * Item Per Line Form
@@ -526,8 +668,8 @@
                 '<select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
                 '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
                 '<input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>',
-                '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="text"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
-                '<center><button class="btn btn-danger" onclick="removeItem(this)"><i class="fa fa-minus-circle"></i></button></center>'
+                '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
+                '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
         $('select.select2').select2();
     }
@@ -570,12 +712,28 @@
     */
 
 
-    function removeItem(ok)
+    function removeItem(ln_num)
     {
-        console.log(selectedId);
-        //console.log($(ok).parent().parent().parent());
+        var howMany = $('li.tabHD').length;
+        var SelectedTabPPA = '';
+        if(howMany > 0)
+        {
+            for(var i = 0; i < howMany;i++)
+            {
+                if($($('li.tabHD')[i]).hasClass('active'))
+                {
+                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                    break;
+                }
+            }
+        }
+
+        var table = $('#table_'+SelectedTabPPA).DataTable();
+
+        table.row(ln_num).remove().draw();
 
     }
+
     function getFunction()
     {
         if($('select[name="hdr_sec"]').val() != '')
@@ -601,6 +759,31 @@
             });
         }
     }
+
+    /* modify by: DAN 07/19/19
+     */
+    function loadTotal()
+    {
+        var tempAmount = 0; 
+        var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+
+        if(amt.length > 0)
+        {
+            for(let i = 0; i < amt.length; i++)
+            {
+                if(amt[i] != null && amt[i] != '')
+                {
+                  tempAmount = tempAmount + parseFloat(amt[i]);
+                }
+            }
+            
+            $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
+        }  
+    }
+
+    /* src code of Mhel
+     * comment by: DAN 07/19/19
+     *
     function loadTotal()
     {
         var tempAmount = 0; // appr = 0, totalBal = 0
@@ -616,6 +799,40 @@
             $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
         }
     }
+    */
+
+
+    /* modify by: DAN 07/19/19
+     */
+    function loadSubTotal(acct_id)
+    {
+        var tempAmount = 0; 
+
+        var amt = $("#table_"+acct_id+" tbody td").map(function() {
+              return $('input[name="txt_amt"]', this).val(); // else return text content
+            }).get();
+
+        if(amt.length > 0)
+        {
+            for(let i = 0; i < amt.length; i++)
+            {
+                 if(amt[i] != null && amt[i] != '')
+                 {
+                   tempAmount = tempAmount + parseFloat(amt[i]);
+                 }
+            }
+            
+            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(tempAmount));
+        } 
+        else 
+        {
+            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(0));
+        }
+    }
+
+    /* src code of Mhel
+     * comment by: DAN 07/19/19
+     *
     function loadSubTotal(acct_id)
     {
         var tempAmount = 0; // , appr = 0, totalBal = 0
@@ -632,6 +849,9 @@
             $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(0));
         }
     }
+
+    */
+
     function emptyHeader()
     {
         $('input[name="hdr_fy_mo"]').val('');
@@ -833,7 +1053,7 @@
         {
             if($('#HdrForm').parsley().validate())
             {
-                if(($('.table').DataTable().data().count()/ 5) != 0)
+                if(($('.table').DataTable().rows().count()) != 0)
                 {
                     if($('#LineForm').parsley().validate())
                     {
@@ -864,13 +1084,87 @@
                           method : 'POST',
                           data : data,
                           success : function(d){
-                              if(d == 'DONE'){
+                              if(d == 'true'){
                                   alert('Successfully Added new Budget Appropriation Entry');
                                   location.href= "{{ url('budget/budget-proposal-entry') }}";
                                   // javascript:history.go(-1);
 
                               } else {
-                                  alert('ERROR! an unknown error occured during saving process.');
+                                alert('ERROR! an unknown error occured during saving process.');
+                              }
+                          },
+                          error : function(a, b, c){
+                              console.log(c);
+                          }
+                      });
+                    }
+                    else
+                    {
+                        alert('Please fill the required fields in item/line entry.');
+                    }
+                }
+                else
+                {
+                    alert("There's no item(s) to add. Please entry item(s).");
+                }
+            }
+            else
+            {
+                alert('Please fill the required fields in header entry.');
+            }
+        }
+        else
+        {
+             alert('Please select Budget Appropriation ');
+        }
+    }
+
+    function EditSaveProposal()
+    {
+     if($('input[name="hdr_bgtps01"]').val() != '')
+        {
+            if($('#HdrForm').parsley().validate())
+            {
+                if(($('.table').DataTable().rows().count()) != 0)
+                {
+                    if($('#LineForm').parsley().validate())
+                    {
+                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
+                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+
+                      var desc = $('input[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                      var data = {
+                              _token : $('meta[name="csrf-token"]').attr('content'),
+                              codes : codes,
+                              amt : amt,
+                              subgrpid : subgrpid,
+                              desc: desc,
+                              fy : $('select[name="fy"]').val(),
+                              // budget_period : $('select[name="budget_period"]').val(),
+                              fid : $('select[name="hdr_fid"]').val(),
+                              cc_code : $('select[name="hdr_cc"]').val(),
+                              secid : $('select[name="hdr_sec"]').val(),
+                              funct : $('select[name="hdr_func"]').val(),
+                              b_num :  $('input[name="hdr_b_num"]').val(),
+                              // brid : $('input[name="hdr_br"]').val(),
+                              // t_date : $('input[name="hdr_date"]').val(),
+                              // t_desc : $('input[name="hdr_desc"]').val(),
+                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
+                          };
+                      $.ajax({
+                          url : '{{ url('budget/budget-proposal-entry/update') }}',
+                          method : 'POST',
+                          data : data,
+                          success : function(d){
+                              if(d == 'true'){
+                                  alert('Successfully Modified Budget Appropriation Entry');
+                                  location.href= "{{ url('budget/budget-proposal-entry') }}";
+                                  // javascript:history.go(-1);
+
+                              } else {
+                                alert(d);
+                                //alert('ERROR! an unknown error occured during saving process.');
                               }
                           },
                           error : function(a, b, c){
@@ -1135,6 +1429,79 @@
         else
         {
             alert('Select Budget Appropriation');
+        }
+    }
+
+    function SaveAddMoreProposal()
+    {
+     if($('input[name="hdr_bgtps01"]').val() != '')
+        {
+            if($('#HdrForm').parsley().validate())
+            {
+                if(($('.table').DataTable().rows().count()) != 0)
+                {
+                    if($('#LineForm').parsley().validate())
+                    {
+                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
+                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+
+                      var desc = $('input[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                      var data = {
+                              _token : $('meta[name="csrf-token"]').attr('content'),
+                              codes : codes,
+                              amt : amt,
+                              subgrpid : subgrpid,
+                              desc: desc,
+                              fy : $('select[name="fy"]').val(),
+                              // budget_period : $('select[name="budget_period"]').val(),
+                              fid : $('select[name="hdr_fid"]').val(),
+                              cc_code : $('select[name="hdr_cc"]').val(),
+                              secid : $('select[name="hdr_sec"]').val(),
+                              funct : $('select[name="hdr_func"]').val(),
+                              // brid : $('input[name="hdr_br"]').val(),
+                              // t_date : $('input[name="hdr_date"]').val(),
+                              // t_desc : $('input[name="hdr_desc"]').val(),
+                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
+                          };
+                      $.ajax({
+                          url : '{{ url('budget/budget-proposal-entry/saveaddmore') }}',
+                          method : 'POST',
+                          data : data,
+                          success : function(d){
+                              if(d != 'false'){
+                                  alert('Successfully Added new Budget Appropriation Entry');
+                                  //location.href= "{{ url('budget/budget-proposal-entry') }}";
+                                  location.href ='{{ url('budget/budget-proposal-entry/new') }}/'+ d  + '';
+                                  // javascript:history.go(-1);
+
+                              } else {
+                                alert('ERROR! an unknown error occured during saving process.');
+                              }
+                          },
+                          error : function(a, b, c){
+                              console.log(c);
+                          }
+                      });
+                    }
+                    else
+                    {
+                        alert('Please fill the required fields in item/line entry.');
+                    }
+                }
+                else
+                {
+                    alert("There's no item(s) to add. Please entry item(s).");
+                }
+            }
+            else
+            {
+                alert('Please fill the required fields in header entry.');
+            }
+        }
+        else
+        {
+             alert('Please select Budget Appropriation ');
         }
     }
 </script>
