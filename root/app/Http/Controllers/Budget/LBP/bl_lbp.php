@@ -71,7 +71,7 @@ class bl_lbp extends Controller {
 		$arrData = [['fy', 'fid'], ['seq_desc', 'form_where', 'check_table', 'check_funds', 'check_ppa', 'check_fy', 'check_mo_from', 'check_mo_to', 'at_code', 'appro_amnt', 'group_m']];
         $validate = [[[], []], [[], []]];
         $makeHash = [[], []];
-        $haveAdd = [['sysdate'=>$sysdate, 'systime'=>$sysdatetime, 'user_id'=>$user, 'form_no'=>$form_no], []];
+        $haveAdd = [['sysdate'=>$sysdate, 'systime'=>$systime, 'user_id'=>$user, 'form_no'=>$form_no], []];
         $arrCheck = [[], []];
         $sMail = [[], []];
         $tbl = ['rssys.lbp0801', 'rssys.lbp0802'];
