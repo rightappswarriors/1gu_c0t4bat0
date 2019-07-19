@@ -524,6 +524,7 @@
 	} );
     function loadSubTotal(acct_id)
     {
+        alert('yey');
         var tempAmount = 0;
         var amt = $("#table_"+acct_id+" .amt").map(function(){return $(this).attr("amt");}).get();
         if(amt.length > 0){

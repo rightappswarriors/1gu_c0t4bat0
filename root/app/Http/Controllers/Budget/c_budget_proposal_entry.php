@@ -8,6 +8,8 @@ use Core;
 use Session;
 use Carbon\Carbon;
 use DB;
+use App\Budget;
+
 class c_budget_proposal_entry extends Controller
 {
 	public function __construct()
@@ -22,6 +24,7 @@ class c_budget_proposal_entry extends Controller
     	$sql = 'SELECt * FROM rssys.ppasubgrp ORDER BY seq';
     	$this->ppa = Core::sql($sql);
         $this->budget_period  = Core::getAll('rssys.budget_period');
+        $this->func = Core::sql("SELECT * FROM rssys.function fn WHERE fn.active = TRUE");
     }
 
     public function view() // VIEW BUDGET APPROPRIATION MODULES
@@ -52,15 +55,101 @@ class c_budget_proposal_entry extends Controller
     	$d1 = Core::sql($sql);
     	// return dd(0, 1, 2, 3, 4, 5, 6, 7);
     	$data = array($this->x03, $this->fund, $this->m08, $this->sector, $this->branch, $fy, '', '', $this->m04, '', $this->ppa, $this->budget_period);
+        $isnew = true;
     	// return dd($data[10]);
-    	return view('budget.budget_budget_proposal_entry_new_new', compact('data'));
+    	return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew'));
     }
+
     public function getFunctions(Request $r) // GET FUNCTIONS (FILTERED) MODULES
     {
         // return dd($r->all());
         $SQL = "SELECT * FROM rssys.function fn WHERE fn.secid = '".$r->id."' AND fn.active = TRUE";
         return DB::select($SQL);
     }
+
+    /* modify by: DAN 07/18/19
+     */
+    public function save(Request $r) // ADD NEW BUDGET APPROPRIATION ENTRY MODULES
+    {
+        $b_num = Core::getm99One('bgtps_bnum');
+        $b_num = $b_num->bgtps_bnum;
+
+        $dt = Carbon::now();
+        $flag = 'false';
+        $ln_num = 1;
+
+        $checkDataAppro = [$r->fy, $r->cc_code, $r->fid, $r->secid, $r->funct];
+        $checkApproIfExist = Budget::checkIfApproExist($checkDataAppro);
+
+        if($checkApproIfExist['flag'] == 'false') // if not exist, create new
+        {
+            $insertIntoBgtps01 =
+            [
+                'fy' => $r->fy,
+                'b_num' => $b_num,
+                'user_id' => strtoupper(Session::get('_user')['id']),
+                'branch' => '001',
+                'cc_code' => $r->cc_code,
+                'fid' => $r->fid,
+                'secid' => $r->secid,
+                'funcid' => $r->funct,
+                'systime' => $dt->toTimeString(),
+                'sysdate' => $dt->toDateString(),
+                'finalized' => 'Y',
+                'closed' => 'Y',
+            ];
+
+            if (Core::insertTable('rssys.bgtps01', $insertIntoBgtps01, 'Budget Proposal Entry')) 
+            {
+                Core::updatem99('bgtps_bnum', Core::get_nextincrementlimitchar($b_num, 8));
+                $flag = 'true';
+            }
+        }
+        else
+        {
+            $flag = 'true';
+            $b_num = $checkApproIfExist['b_num'];
+            $ln_num = $checkApproIfExist['ln_num'];
+        }
+
+        // insert line
+        if($flag = 'true')
+        {
+          if (count($r->codes)) 
+          {
+              for ($i=0; $i < count($r->codes); $i++, $ln_num++) 
+              {
+                  $insertIntoBgtps02 =
+                      [
+                          'b_num' => $b_num,
+                          'seq_num' => $ln_num,
+                          'seq_desc' => $r->desc[$i],
+                          'at_code' => $r->codes[$i],
+                          'sl_code' => '',
+                          'sl_name' => '',
+                          'appro_amnt' => $r->amt[$i],
+                          'grpid' => $r->subgrpid[$i],
+                      ];
+                  if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
+                  {
+                    $flag = 'true';
+                  } 
+                  else 
+                  {
+                    return 'false';
+                  }
+              }
+          }
+        }
+
+        return $flag;
+
+    }
+
+
+    /* src code of Mhel
+     * comment by: DAN 07/18/19
+
     public function save(Request $r) // ADD NEW BUDGET APPROPRIATION ENTRY MODULES
     {
     	$b_num = Core::getm99One('bgtps_bnum');
@@ -112,11 +201,17 @@ class c_budget_proposal_entry extends Controller
     	}
     	return 'ERROR';
     }
+    */
+
     // public function getAllProposals()
     // {
     //     $sql = 'SELECT * FROM rssys.bgtps01 WHERE finalized = \'Y\' AND closed = \'N\'';
     //     return Core::sql($sql);
     // }
+
+    /* src code of Mhel
+     * comment by: DAN 07/18/19
+
     public function edit($b_num) // VIEW EXISTING BUDGET APPROPRIATION ENTRY MODULES
     {
     	$sql1 = 'SELECT * FROM rssys.bgtps01
@@ -142,6 +237,88 @@ class c_budget_proposal_entry extends Controller
     	return view('budget.budget_budget_proposal_entry_view', ['fund'=> $this->fund, 'm08' => $this->m08, 'sector' => $this->sector, 'branch' => $this->branch, 'm04' => $this->m04, 'ppa' => $this->ppa, 'bgt01' => $d1[0], 'bgt02' => $d2, 'fy' => $this->x03]);
         // , 'mo_desc' => $d3[0]->month_desc
     }
+    */
+
+    /* modify by: DAN 07/18/19
+     */
+    public function edit($b_num) // VIEW EXISTING BUDGET APPROPRIATION ENTRY MODULES
+    {
+        $isnew = false;
+        $approHeader = Budget::get_approHeader($b_num);
+        $approLine = Budget::get_approLine($b_num);
+        $fy = $approHeader->fy;
+        $data = array($this->x03, $this->fund, $this->m08, $this->sector, $this->branch, $fy, '', '', $this->m04, '', $this->ppa, $this->budget_period, $this->func);
+        
+        return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew', 'approHeader', 'approLine'));
+    }
+
+    /* modify by: DAN 07/19/19
+     */
+    public function update(Request $r) // UPDATE EXISTING BUDGET APPROPRIATION ENTRY MODULES
+    {   
+        $dt = Carbon::now();
+        $flag = 'true';
+            
+        $insertIntoBgtps01 =
+        [
+            'fy' => $r->fy,
+            'b_num' => $r->b_num,
+            'user_id' => strtoupper(Session::get('_user')['id']),
+            'branch' => '001',
+            'cc_code' => $r->cc_code,
+            'fid' => $r->fid,
+            'secid' => $r->secid,
+            'funcid' => $r->funct,
+            'systime' => $dt->toTimeString(),
+            'sysdate' => $dt->toDateString(),
+            'finalized' => 'Y',
+            'closed' => 'Y',
+        ];
+            
+        $del = [['b_num', '=', $r->b_num]];
+        Core::deleteTableMultiWhere('rssys.bgtps02', $del, 'Budget Proposal Entry' );
+            
+        if (Core::updateTable('rssys.bgtps01', 'b_num', $r->b_num, $insertIntoBgtps01, 'Budget Proposal Entry')) 
+        {
+            if (count($r->codes)) 
+            {
+                for ($i=0, $j = 1; $i < count($r->codes); $i++, $j++) 
+                {
+                    $insertIntoBgtps02 =
+                    [
+                        'b_num' => $r->b_num,
+                        'seq_num' => $j,
+                        'seq_desc' => $r->desc[$i],
+                        'at_code' => $r->codes[$i],
+                        'sl_code' => '',
+                        'sl_name' => '',
+                        'appro_amnt' => $r->amt[$i],
+                        'grpid' => $r->subgrpid[$i],
+                    ];
+
+                    if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
+                    {
+                        $flag = 'true';
+                    } 
+                    else 
+                    {
+                        return 'false';
+                    }
+                }
+            }
+        }
+        else
+        {
+            $flag = 'false';
+        }
+
+        return $flag;
+    }
+
+
+    /* src code of Mhel 07/19/19
+     * comment by: DAN 07/19/19
+     *
     public function update(Request $r) // UPDATE EXISTING BUDGET APPROPRIATION ENTRY MODULES
     {   
         $dt = Carbon::now();
@@ -230,5 +407,85 @@ class c_budget_proposal_entry extends Controller
         //     return 'ERROR';
         // }
         // 
+    }
+    */
+
+    /* save and add more function
+     * -DAN 07/19/19
+     */
+    public function saveaddmore(Request $r)
+    {
+        $b_num = Core::getm99One('bgtps_bnum');
+        $b_num = $b_num->bgtps_bnum;
+
+        $dt = Carbon::now();
+        $flag = 'false';
+        $ln_num = 1;
+
+        $checkDataAppro = [$r->fy, $r->cc_code, $r->fid, $r->secid, $r->funct];
+        $checkApproIfExist = Budget::checkIfApproExist($checkDataAppro);
+
+        if($checkApproIfExist['flag'] == 'false') // if not exist, create new
+        {
+            $insertIntoBgtps01 =
+            [
+                'fy' => $r->fy,
+                'b_num' => $b_num,
+                'user_id' => strtoupper(Session::get('_user')['id']),
+                'branch' => '001',
+                'cc_code' => $r->cc_code,
+                'fid' => $r->fid,
+                'secid' => $r->secid,
+                'funcid' => $r->funct,
+                'systime' => $dt->toTimeString(),
+                'sysdate' => $dt->toDateString(),
+                'finalized' => 'Y',
+                'closed' => 'Y',
+            ];
+
+            if (Core::insertTable('rssys.bgtps01', $insertIntoBgtps01, 'Budget Proposal Entry')) 
+            {
+                Core::updatem99('bgtps_bnum', Core::get_nextincrementlimitchar($b_num, 8));
+                $flag = 'true';
+            }
+        }
+        else
+        {
+            $flag = 'true';
+            $b_num = $checkApproIfExist['b_num'];
+            $ln_num = $checkApproIfExist['ln_num'];
+        }
+
+        // insert line
+        if($flag = 'true')
+        {
+          if (count($r->codes)) 
+          {
+              for ($i=0; $i < count($r->codes); $i++, $ln_num++) 
+              {
+                  $insertIntoBgtps02 =
+                      [
+                          'b_num' => $b_num,
+                          'seq_num' => $ln_nussm,
+                          'seq_desc' => $r->desc[$i],
+                          'at_code' => $r->codes[$i],
+                          'sl_code' => '',
+                          'sl_name' => '',
+                          'appro_amnt' => $r->amt[$i],
+                          'grpid' => $r->subgrpid[$i],
+                      ];
+                  if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
+                  {
+                    $flag = 'true';
+                  } 
+                  else 
+                  {
+                    return 'false';
+                  }
+              }
+          }
+        }
+
+        return $r->fy;
     }
 }
