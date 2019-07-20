@@ -11,33 +11,36 @@
 		@include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-        <div class="col-sm-12">
-          <table id="tbl_list" class="table table-bordered table-striped">
+      <div class="graph-image graph-7">
+        <img src="{{url('images/Carabao.jpg')}}" alt="Graph Description" />
+      </div>
+      <div class="row" >
+        <div class="col-sm-12" >
+          <table style="border: 1px solid #ccc; "  id="tbl_list" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <div class="image">
-                  <th>
+                  <th style="border: none !important;">
                     <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-                  <th colspan="8">
+                  <th style="border: none !important;">
                     <center><h3>ACKNOWLEDGEMENT RECEIPT FOR EQUIPMENT</h3><h4>Local Government Unit – City of Guihulngan</h4><h4>General Services Office</h4></center></th>
-                  <th><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
                 </div>
                 </tr>
               </thead>
           </table>
 
-          <table class="table table-bordered table-striped">
+          <table  class="table table-bordered table-striped">
             <thead>
             <tr>
-                 <th>Item No.</th>
-                 <th>Qty</th>
-                 <th>Unit</th>
-                 <th>Description</th>
-                 <th>Serial No.</th>
-                 <th>Property No.</th>
-                 <th>Unit Cost</th>
-                 <th>Amount</th>
+                 <th style="white-space: nowrap;font-size:14px;">Item #</th>
+                 <th style="white-space: nowrap;font-size:14px;">Qty</th>
+                 <th style="white-space: nowrap;font-size:14px;">Unit</th>
+                 <th style="width:50%;font-size:15px;">Description</th>
+                 <th  style="width:25%;font-size:15px;">Serial No.</th>
+                 <th style="width:25%;font-size:15px;">Property No.</th>
+                 <th style="white-space: nowrap;font-size:14px;">Unit Cost</th>
+                 <th style="white-space: nowrap;font-size:14px;">Amount</th>
             </tr>
           </thead>
             <tbody>
@@ -56,7 +59,7 @@
             </tbody>
           </table>
 
-          <table class="table table-bordered table-striped">
+          <table  class="table table-bordered table-striped">
             <tfoot>
               <tr>
                 <th colspan="8">Office/Department: {{$are_header->office}}</th>
@@ -73,15 +76,15 @@
            <tr>
              <th colspan="3">
               <br>
-               <center><u>{{$are_header->receivedfrom}}</u></center></div><div><center>{{$are_header->receivedfromdesig}}</center></div>
+               <center><u>{{$are_header->receivedfrom}}</u></center><div><center>{{$are_header->receivedfromdesig}}</center></div>
              </th>
              <th colspan="2">
               <br>
-               <div><center><u>{{$are_header->receivedby}}</u></center></div><div><center>{{$are_header->receivedbydesig}}</center></div>
+               <div><center><u>{{$are_header->receivedby}}</u></center><div><center>{{$are_header->receivedbydesig}}</center></div>
              </th>
              <th colspan="3">
               <br>
-               <center><u>{{$are_header->issuedto}}</u></center></div><div><center>{{$are_header->issuedtodesig}}</center></div>
+               <center><u>{{$are_header->issuedto}}</u></center><div><center>{{$are_header->issuedtodesig}}</center></div>
              </th>
            </tr>
            <tr>
@@ -103,9 +106,16 @@
 
     <style>
       @media print {
+              .table td{
+        background-color: transparent !important;
+      }
+       .table th{
+        background-color: transparent !important;
+      }
         * {
 
         }
+        
         #Header, #Footer {display: none ! important;}
 
         #sidebar-parent {
@@ -115,8 +125,15 @@
         #print_hide, #print_name_hide {
           display: none;
         }
+         .graph-image img{
+        opacity: 0.2; /* set your opacity */ 
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        left:0;
       }
-
+      } 
       textarea {
     border: none;
     overflow: hidden;
@@ -129,6 +146,7 @@
 
     resize: none; /*remove the resize handle on the bottom right*/
     }
+      .graph-7{background: url({{url('images/Carabao.jpg')}}) no-repeat;}
     </style>
 
     <script>
