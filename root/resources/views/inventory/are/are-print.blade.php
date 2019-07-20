@@ -16,7 +16,7 @@
       </div>
       <div class="row" >
         <div class="col-sm-12" >
-          <table style="border: 1px solid #ccc; "  id="tbl_list" class="table table-bordered table-striped">
+          <table style="border: 1px solid #000;"  id="tbl_list" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <div class="image">
@@ -108,9 +108,11 @@
       @media print {
               .table td{
         background-color: transparent !important;
+        border: 1px solid #000 !important;
       }
        .table th{
         background-color: transparent !important;
+        border: 1px solid #000 !important;
       }
         * {
 
