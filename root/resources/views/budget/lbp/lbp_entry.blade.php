@@ -336,12 +336,23 @@
   function removeOneClone(thisNode) {
     if(! thisNode.parentNode.parentNode.parentNode.parentNode.hasAttribute('id')) { thisNode.parentNode.parentNode.parentNode.parentNode.removeChild(thisNode.parentNode.parentNode.parentNode); }
   }
+  // function insRevenue(samplevalue) {
+  //   let newrevenue = document.getElementById('newrevenue');
+  //   if(newrevenue != null) {
+  //     newrevenue.innerHTML += '<tr><td>'
+  //     +'<div class="row"><div class="col-md-1"><button type="button" class="btn btn-danger" onclick="removeOneClone(this)"><i class="fa fa-times-circle"></i></button></div><div class="col-md-11"><input type="text" class="form-control" name="seq_desc[]" placeholder="New Revenue Sources" value="'+samplevalue+'"></div></div><input type="hidden" class="form-control" name="form_where[]" value="newrevenue"><input type="hidden" name="check_table[]" value=""><input type="hidden" name="check_funds[]" value=""><input type="hidden" name="check_ppa[]" value=""><input type="hidden" name="check_fy[]" value=""><input type="hidden" name="check_mo_from[]" value=""><input type="hidden" name="check_mo_to[]" value=""><input type="hidden" name="at_code[]" value=""><input type="hidden" name="at_desc[]" value=""><input type="hidden" name="appro_amnt[]" value=""><input type="hidden" class="form-control" name="group_m[]" value=""></td></tr>';
+  //   }
+  // }
+
   function insRevenue(samplevalue) {
+
     let newrevenue = document.getElementById('newrevenue');
     if(newrevenue != null) {
-      newrevenue.innerHTML += '<tr><td>'
+      whatToInsert = '<tr><td>'
       +'<div class="row"><div class="col-md-1"><button type="button" class="btn btn-danger" onclick="removeOneClone(this)"><i class="fa fa-times-circle"></i></button></div><div class="col-md-11"><input type="text" class="form-control" name="seq_desc[]" placeholder="New Revenue Sources" value="'+samplevalue+'"></div></div><input type="hidden" class="form-control" name="form_where[]" value="newrevenue"><input type="hidden" name="check_table[]" value=""><input type="hidden" name="check_funds[]" value=""><input type="hidden" name="check_ppa[]" value=""><input type="hidden" name="check_fy[]" value=""><input type="hidden" name="check_mo_from[]" value=""><input type="hidden" name="check_mo_to[]" value=""><input type="hidden" name="at_code[]" value=""><input type="hidden" name="at_desc[]" value=""><input type="hidden" name="appro_amnt[]" value=""><input type="hidden" class="form-control" name="group_m[]" value=""></td></tr>';
     }
+    // $(whatToInsert).insertBefore(newrevenue);
+    $(newrevenue).append(whatToInsert);
   }
   function searchData() {
     let arrSs = ['_token', 'check_table', 'check_funds', 'check_ppa', 'check_fy', 'check_mo_from', 'check_mo_to'], arrDd = [$('meta[name="csrf-token"]').attr('content'), document.getElementById('check_table').value, document.getElementById('check_funds').value, document.getElementById('check_ppa').value, document.getElementById('check_fy').value, document.getElementById('check_mo_from').value, document.getElementById('check_mo_to').value], forLoading = document.getElementById('forLoading');
