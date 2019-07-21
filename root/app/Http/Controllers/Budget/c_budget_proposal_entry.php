@@ -466,7 +466,7 @@ class c_budget_proposal_entry extends Controller
                   $insertIntoBgtps02 =
                       [
                           'b_num' => $b_num,
-                          'seq_num' => $ln_nussm,
+                          'seq_num' => $ln_num,
                           'seq_desc' => $r->desc[$i],
                           'at_code' => $r->codes[$i],
                           'sl_code' => '',
@@ -487,5 +487,12 @@ class c_budget_proposal_entry extends Controller
         }
 
         return $r->fy;
+    }
+
+    public function getAcctDesc($code)
+    {
+        $data = Budget::get_AcctRemarks($code);
+
+        return $data->remarks;
     }
 }

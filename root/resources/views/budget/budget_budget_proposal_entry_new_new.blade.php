@@ -665,7 +665,7 @@
         var table = $('#table_'+SelectedTabPPA).DataTable();
         table.row.add([
                 // line,<span class="cc_code" subgrpid="'+subgrpid+'" cc-code="'+code+'" desc="'+encodeURI(desc)+'">'+desc+'</span>
-                '<select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
+                '<select class="form-control select2 select2-hidden-accessible selectbtn" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true"  data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
                 '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
                 '<input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>',
                 '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
@@ -1504,5 +1504,49 @@
              alert('Please select Budget Appropriation ');
         }
     }
+
+    // function getAccountTitleDesc(at_code)
+    // {
+    //     var howMany = $('li.tabHD').length;
+    //     var SelectedTabPPA = '';
+    //     if(howMany > 0)
+    //     {
+    //         for(var i = 0; i < howMany;i++)
+    //         {
+    //             if($($('li.tabHD')[i]).hasClass('active'))
+    //             {
+    //                 SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+
+    //     $('#table_'+SelectedTabPPA+' tbody').on( 'click',  function () {
+    //             let table = $('#table_'+SelectedTabPPA+'').DataTable();
+    //             let index = $(this).closest('tr').index();
+                
+    //             alert(index);
+    //         } );
+
+    //     var line = '0';
+    //     var table = $('#table_'+SelectedTabPPA).DataTable();
+        
+    //     $.ajax({
+    //       url: '{{asset('budget/get_acctdesc')}}/'+at_code,
+    //              method: 'GET',
+    //              success : function(data)
+    //                        {
+    //                          table.cell({row:0, column:1}).data('<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'"required>'+data+'</textarea> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>');
+    //                        }
+    //     });
+
+
+        
+
+    //     // <input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>
+
+        
+    // }
 </script>
 @endsection

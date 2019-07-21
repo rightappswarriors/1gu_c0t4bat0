@@ -62,4 +62,17 @@ class Budget extends Model
 			return $e->getMessage();
 		}
     }
+
+    public static function get_AcctRemarks($code)
+    {
+    	try 
+		{
+			$sql = 'SELECT remarks FROM rssys.m04 WHERE at_code = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+    }
 }

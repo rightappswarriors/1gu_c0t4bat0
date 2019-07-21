@@ -350,6 +350,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::get('budget/budget-proposal-entry/{b_num}', 'Budget\c_budget_proposal_entry@edit');
 			Route::post('budget/budget-proposal-entry/update', 'Budget\c_budget_proposal_entry@update');
 			Route::post('budget/budget-proposal-entry/saveaddmore', 'Budget\c_budget_proposal_entry@saveaddmore');
+			Route::get('budget/get_acctdesc/{at_code}', 'Budget\c_budget_proposal_entry@getAcctDesc');
 
 		/* ----- BUDGET APPROPRIATION */
 
