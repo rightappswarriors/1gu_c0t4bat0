@@ -3,9 +3,9 @@
     $_bc = [
         ['link'=>'#','desc'=>'Masterfile','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Accounting','icon'=>'none','st'=>false],
-        ['link'=>url("master-file/accounting/cost-center"),'desc'=>'Cost Center','icon'=>'none','st'=>true]
+        ['link'=>url("master-file/accounting/cost-center"),'desc'=>'Office','icon'=>'none','st'=>true]
     ];
-    $_ch = "Cost Center"; // Module Name
+    $_ch = "Office"; // Module Name
 @endphp
 @section('content')
 		<!-- Content Header (Page header) -->
@@ -16,7 +16,7 @@
         		<div class="col-xs-12">
         			<div class="box">
         				<div class="box-header">
-        					<h3 class="box-title">Cost Center List</h3>
+        					<h3 class="box-title">Offices List</h3>
         					<button type="button" class="btn btn-primary" onclick="AddMode();" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Add new</button>
         					<div class="modal fade in" id="modal-default">
         						<div class="modal-dialog">
@@ -24,7 +24,7 @@
         								<div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span></button>
-                                            <h3 class="modal-title">Cost Center <span id="MOD_MODE"></span></h3>
+                                            <h3 class="modal-title">Office <span id="MOD_MODE"></span></h3>
                                         </div>
                                         <div class="modal-body">
                                             <form id="AddForm" method="post" action="" data-parsley-validate novalidate>
@@ -43,12 +43,28 @@
                                                                 <input type="text" name="txt_name" class="form-control" placeholder="Description" data-parsley-required-message="<strong>Description</strong> is required." required>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Function <span class="text-red">*</span></label>
+                                                            <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                <select name="func_type" style="width: 100%" data-parsley-errors-container="#sel_type_span" data-parsley-required-message="<strong>Function</strong> is required." required>
+                                                                    @isset($func)
+                                                                        <option value="">Select Function..</option>
+                                                                        @foreach($func as $f)
+                                                                            <option value="{{$f->funcid}}">{{$f->funcdesc}}</option>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <option value="">No Function registered.</option>
+                                                                    @endisset
+                                                                </select>
+                                                                <span id="sel_type_span"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </span>
                                                 <span class="DeleteMode"  style="display: none">
                                                     <center>
                                                         <p class="text-transform: uppercase;">Are you sure you want to delete <strong><span id="DeleteName" class="text-red"></span></strong>
-                                                        from Cost Center list?
+                                                        from Office list?
                                                         </p>
                                                     </center>
                                                 </span>
@@ -74,6 +90,7 @@
                                     <tr>
                                         <th>Code</th>
                                         <th>Description</th>
+                                        <th>Function</th>
                                         <th width="15%"><center>Options</center></th>
                                     </tr>
                                 </thead>
@@ -83,9 +100,10 @@
                                             <tr>
                                                 <th>{{$m8->cc_code}}</th>
                                                 <td>{{$m8->cc_desc}}</td>
+                                                <td>{{$m8->funcdesc}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m8->cc_code}}', '{{$m8->cc_desc}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m8->cc_code}}', '{{$m8->cc_desc}}', {{$m8->funcid}});"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$m8->cc_code}}', '{{$m8->cc_desc}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
@@ -126,7 +144,7 @@
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc)
+        function EditMode(id, desc, funcid)
         {
             $('#MOD_MODE').text('(Edit)');
             $('#AddForm').attr('action', '{{ url('master-file/accounting/cost-center') }}/update');
@@ -135,6 +153,8 @@
             $('input[name="txt_id"]').attr('readonly', '');
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
+            $('select[name="func_type"]').attr('required', '');
+            $('select[name="func_type"]').val(funcid).trigger('change');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }

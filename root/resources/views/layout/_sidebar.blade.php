@@ -79,7 +79,7 @@
                             <li><a href="{{ url('master-file/accounting/creditors') }}"><i class="fa fa-circle-o" id="SideBar_MFile_Accounting_Creditor"></i> Creditors</a></li>
                             @endif
                             @if($LA_GRP["M1000009"]["restrict"] == 'Y')
-                            <li><a href="{{ url('master-file/accounting/cost-center') }}"><i class="fa fa-circle-o" id="SideBar_MFile_Accounting_Cost_Center"></i> Cost Center</a></li>
+                            <li><a href="{{ url('master-file/accounting/cost-center') }}"><i class="fa fa-circle-o" id="SideBar_MFile_Accounting_Cost_Center"></i> Office</a></li>
                             @endif
                             @if($LA_GRP["M1000010"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/accounting/sub-cost-center') }}"><i class="fa fa-circle-o" id="SideBar_MFile_Accounting_Sub_Cost_Center"></i> Sub Cost Center</a></li>
