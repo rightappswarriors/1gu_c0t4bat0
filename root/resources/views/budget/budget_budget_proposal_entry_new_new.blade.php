@@ -83,7 +83,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Function <span style="color:red"><strong>*</strong></span></label>
-                            <select class="form-control select2 select2-hidden-accessible" name="hdr_func" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_func_span" data-parsley-required-message="<strong>Function</strong> is required." required>
+                            <select class="form-control select2 select2-hidden-accessible" name="hdr_func" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_func_span" data-parsley-required-message="<strong>Function</strong> is required." required onchange="getOffice()">
                             @if(!$isnew)
                               @isset($data[12])
                                 @foreach($data[12] as $func)
@@ -757,6 +757,33 @@
                 },
                 error : function(a, b, c){}
             });
+        }
+    }
+
+    function getOffice()
+    {
+        if($('select[name="hdr_func"]').val() != '')
+        {
+          var selectedFunc = $('select[name="hdr_func"]').val();
+          $.ajax({
+          url: '{{asset('budget/budget-proposal-entry/getOffices')}}/'+selectedFunc,
+                 method: 'GET',
+                 success : function(d)
+                           {
+                             $('select[name="hdr_cc"]').empty();
+                             if(d.length> 0)
+                             {
+                                 $('select[name="hdr_cc"]').append('<option value="">Select Office...</option>');
+                                 for(var i = 0; i < d.length;i++)
+                                 {
+                                     $('select[name="hdr_cc"]').append('<option value="'+d[i].cc_code+'">'+d[i].cc_desc+'</option>');
+                                 }
+                             } 
+                             else {
+                               $('select[name="hdr_cc"]').append('<option value="">No Offices registered...</option>');
+                             }
+                           }
+          });
         }
     }
 

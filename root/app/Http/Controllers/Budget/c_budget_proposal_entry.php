@@ -67,6 +67,14 @@ class c_budget_proposal_entry extends Controller
         return DB::select($SQL);
     }
 
+    /* get offices where equal to function
+     */
+    public function getOffice($code) 
+    {
+        $SQL = "SELECT * FROM rssys.m08 WHERE funcid = '".$code."' AND active = TRUE";
+        return DB::select($SQL);
+    }
+
     /* modify by: DAN 07/18/19
      */
     public function save(Request $r) // ADD NEW BUDGET APPROPRIATION ENTRY MODULES
