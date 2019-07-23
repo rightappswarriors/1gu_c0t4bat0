@@ -93,9 +93,9 @@ class Budget extends Model
     {
     	try
     	{
-    		$sql = 'SELECT f.fdesc as fund, ft.funcdesc as function, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON CAST(bt1.funcid as integer) = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.b_num = \''.$code.'\' LIMIT 1';
+    		$sql = 'SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.b_num = \''.$code.'\' LIMIT 1';
 
-    		return DB::select(DB::raw($sql)[0]);
+    		return DB::select(DB::raw($sql))[0];
     	}
     	catch (\Exception $e) {
 			return $e->getMessage();
@@ -106,7 +106,7 @@ class Budget extends Model
     {
     	try
     	{
-    		$sql = 'SELECT ps.* FROM rssys.bgtps02 bt LEFT JOIN rssys.ppasubgrp ps ON bt.grpid = ps.subgrpid WHERE bt.b_num = \''.$code.'\' GROUP BY ps.subgrpid';
+    		$sql = 'SELECT ps.*, SUM(bt.appro_amnt) as total_amt FROM rssys.bgtps02 bt LEFT JOIN rssys.ppasubgrp ps ON bt.grpid = ps.subgrpid WHERE bt.b_num = \''.$code.'\' GROUP BY ps.subgrpid ORDER BY ps.seq';
 
     		return DB::select(DB::raw($sql));
     	}

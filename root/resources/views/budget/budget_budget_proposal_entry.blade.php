@@ -149,6 +149,7 @@
                                         // '<center>'+closed+'</center>',
                                         '<center>' +
                                             '<a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode(\''+data[i].b_num+'\');"></i></a>' +
+                                            '<a class="btn btn-social-icon btn-info" data-toggle="modal" data-target="#modal-default"><i class="fa fa-print" onclick="PrintMode(\''+data[i].b_num+'\');"></i></a>' +
                                             // '<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode();"><i class="fa fa-trash "></i></a>'
                                         '</center>'
                                     ]).draw();
@@ -175,6 +176,12 @@
         function EditMode(b_num)
         {
             location.href ='{{ url('budget/budget-proposal-entry') }}/'+ b_num;
+        }
+
+        function PrintMode(b_num)
+        {
+
+           location.href ='{{ url('budget/budget-proposal-entry/print') }}/'+ b_num;
         }
     </script>
 @endsection

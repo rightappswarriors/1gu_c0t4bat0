@@ -527,10 +527,12 @@ class c_budget_proposal_entry extends Controller
         return $acct_code;
     }
 
-    public function print($code)
+    public function print($b_num)
     {
-        $Header = Budget::printApproHdr($code);
-        $Line = Budget::printApproLine($code);
-        $PPA = Budget::printApproPPA($code);
+        $Header = Budget::printApproHdr($b_num);
+        $Line = Budget::printApproLine($b_num);
+        $PPA = Budget::printApproPPA($b_num);
+
+        return view('budget.budget_appro_print', compact('Header', 'Line', 'PPA'));
     }
 }
