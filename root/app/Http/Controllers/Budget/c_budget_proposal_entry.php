@@ -133,6 +133,7 @@ class c_budget_proposal_entry extends Controller
                           'seq_num' => $ln_num,
                           'seq_desc' => $r->desc[$i],
                           'at_code' => $r->codes[$i],
+                          'at_desc' => $r->at_desc[$i],
                           'sl_code' => '',
                           'sl_name' => '',
                           'appro_amnt' => $r->amt[$i],
@@ -298,6 +299,7 @@ class c_budget_proposal_entry extends Controller
                         'seq_num' => $j,
                         'seq_desc' => $r->desc[$i],
                         'at_code' => $r->codes[$i],
+                        'at_desc' => $r->at_desc[$i],
                         'sl_code' => '',
                         'sl_name' => '',
                         'appro_amnt' => $r->amt[$i],
@@ -310,9 +312,10 @@ class c_budget_proposal_entry extends Controller
                     } 
                     else 
                     {
-                        return 'false';
+                        return 'false'; 
                     }
                 }
+
             }
         }
         else
@@ -477,6 +480,7 @@ class c_budget_proposal_entry extends Controller
                           'seq_num' => $ln_num,
                           'seq_desc' => $r->desc[$i],
                           'at_code' => $r->codes[$i],
+                          'at_desc' => $r->at_desc[$i],
                           'sl_code' => '',
                           'sl_name' => '',
                           'appro_amnt' => $r->amt[$i],
@@ -499,8 +503,34 @@ class c_budget_proposal_entry extends Controller
 
     public function getAcctDesc($code)
     {
+        $remarks = "";
         $data = Budget::get_AcctRemarks($code);
 
-        return $data->remarks;
+        if(count($data) > 0)
+        {
+            $remarks = $data[0]->remarks;
+        }
+
+        return $remarks;
+    }
+
+    public function getAcctCode(Request $r)
+    {
+        $acct_code = "";
+        $data = Budget::get_AcctCode($r->at_desc);
+
+        if(count($data) > 0)
+        {
+            $acct_code = $data[0]->at_code;
+        }
+
+        return $acct_code;
+    }
+
+    public function print($code)
+    {
+        $Header = Budget::printApproHdr($code);
+        $Line = Budget::printApproLine($code);
+        $PPA = Budget::printApproPPA($code);
     }
 }

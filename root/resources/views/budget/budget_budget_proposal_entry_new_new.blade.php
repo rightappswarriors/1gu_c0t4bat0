@@ -399,7 +399,7 @@
                                         <thead>
                                             <tr>
                                                 {{-- <th style="display: none">#</th> --}}
-                                                {{-- <th>Code</th> --}}
+                                                <th>Account Code</th>
                                                 <th>Account Title/ PPA</th>
                                                 <th>Description</th>
                                                 <th><center>Amount</center></th>
@@ -413,7 +413,16 @@
                                                @if($data[10][$i]->subgrpid == $al->grpid)
                                                 <?php $ln_num = 1; ?>
                                                 <tr>
+                                                  {{-- '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
+
+                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span>', --}}
                                                     <td>
+                                                       <input list="select_acctCode" name="select_acctCode" value="{{$al->at_code}}" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>
+                                                    </td>
+                                                    <td>
+                                                      <input list="select_acctDesc" name="select_acctDesc" value="{{$al->at_desc}}" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                    </td>
+                                                    {{-- <td>
                                                         <select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}" required>
                                                           @foreach ($data[8] as $m4)
                                                             @if($m4->at_code == $al->at_code)
@@ -424,10 +433,9 @@
                                                           @endforeach
                                                         </select>
                                                         <span id="validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
-                                                    </td>
+                                                    </td> --}}
                                                     <td>
-                                                        <textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc{{$data[10][$i]->subgrpid}}{{$ln_num}}" required>{{$al->seq_desc}}</textarea> 
-                                                        <span id="validate_txt_desc{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                        <textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text">{{$al->seq_desc}}</textarea>
                                                     </td>
                                                     <td>
                                                         <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any" value="{{$al->appro_amnt}}"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
@@ -665,9 +673,14 @@
         var table = $('#table_'+SelectedTabPPA).DataTable();
         table.row.add([
                 // line,<span class="cc_code" subgrpid="'+subgrpid+'" cc-code="'+code+'" desc="'+encodeURI(desc)+'">'+desc+'</span>
-                '<select class="form-control select2 select2-hidden-accessible selectbtn" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" onchange="getAccountTitleDesc(value)" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
-                '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
-                '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required></textarea> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>',
+                '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
+
+                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span>',
+
+                // '<select class="form-control select2 select2-hidden-accessible selectbtn" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" onchange="getAccountTitleDesc(value)" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
+                // '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
+
+                '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea>',
                 '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
@@ -1084,14 +1097,17 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
-                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      //var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
+                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
                       var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                       var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
                       var data = {
                               _token : $('meta[name="csrf-token"]').attr('content'),
                               codes : codes,
+                              at_desc : at_desc,
                               amt : amt,
                               subgrpid : subgrpid,
                               desc: desc,
@@ -1106,6 +1122,7 @@
                               // t_desc : $('input[name="hdr_desc"]').val(),
                               // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
                           };
+
                       $.ajax({
                           url : '{{ url('budget/budget-proposal-entry/save') }}',
                           method : 'POST',
@@ -1156,14 +1173,16 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
-                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
                       var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                       var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
                       var data = {
                               _token : $('meta[name="csrf-token"]').attr('content'),
                               codes : codes,
+                              at_desc : at_desc,
                               amt : amt,
                               subgrpid : subgrpid,
                               desc: desc,
@@ -1179,6 +1198,7 @@
                               // t_desc : $('input[name="hdr_desc"]').val(),
                               // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
                           };
+
                       $.ajax({
                           url : '{{ url('budget/budget-proposal-entry/update') }}',
                           method : 'POST',
@@ -1190,7 +1210,7 @@
                                   // javascript:history.go(-1);
 
                               } else {
-                                alert(d);
+                                console.table(d);
                                 //alert('ERROR! an unknown error occured during saving process.');
                               }
                           },
@@ -1469,14 +1489,16 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
-                      var subgrpid = $('select[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
                       var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                       var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
                       var data = {
                               _token : $('meta[name="csrf-token"]').attr('content'),
                               codes : codes,
+                              at_desc : at_desc,
                               amt : amt,
                               subgrpid : subgrpid,
                               desc: desc,
@@ -1563,16 +1585,58 @@
                  method: 'GET',
                  success : function(data)
                            {
-                             table.cell({row:selectedId, column:1}).data('<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'"required>'+data+'</textarea> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>');
+                             if(data != null && data != '')
+                             {  
+                                table.cell({row:selectedId, column:2}).data('<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text">'+data+'</textarea>');
+                             }
                            }
         });
-
-
-        
-
-        // <input class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text" data-parsley-required-message="Desc is required." data-parsley-errors-container="#validate_txt_desc'+ SelectedTabPPA+line+'" required> <span id="validate_txt_desc'+ SelectedTabPPA+line+'"></span>
-
-        
     }
+
+    function getAccountCode(at_desc)
+    {
+        var howMany = $('li.tabHD').length;
+        var SelectedTabPPA = '';
+        if(howMany > 0)
+        {
+            for(var i = 0; i < howMany;i++)
+            {
+                if($($('li.tabHD')[i]).hasClass('active'))
+                {
+                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                    break;
+                }
+            }
+        }
+
+
+        $('#table_'+SelectedTabPPA+' tbody').on( 'click',  function () {
+                let table = $('#table_'+SelectedTabPPA+'').DataTable();
+                let index = $(this).closest('tr').index();
+                
+            } );
+
+        var line = '0';
+        var table = $('#table_'+SelectedTabPPA).DataTable();
+        var data = {  _token : $('meta[name="csrf-token"]').attr('content'),
+                      at_desc : at_desc,
+                    };
+        
+        $.ajax({
+                 data: data,
+                 url : '{{ url('budget/get_acctcode') }}',
+                 method: 'POST',
+                 success : function(data)
+                           {
+                             if(data != null && data != '')
+                             {
+                                table.cell({row:selectedId, column:0}).data('<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" value="'+data+'" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>');
+
+                                getAccountTitleDesc(data);
+                             }
+                           }
+        });
+    }
+
 </script>
 @endsection
