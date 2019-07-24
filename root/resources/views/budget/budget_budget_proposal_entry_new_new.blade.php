@@ -745,6 +745,8 @@
 
         table.row(ln_num).remove().draw();
 
+        loadTotal();
+        loadSubTotal(SelectedTabPPA);
     }
 
     function getFunction()
@@ -818,6 +820,10 @@
             }
             
             $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
+        }
+        else
+        {
+          $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
         }  
     }
 

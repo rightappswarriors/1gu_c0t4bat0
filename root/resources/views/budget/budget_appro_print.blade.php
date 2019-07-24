@@ -61,14 +61,14 @@
                   <tr class="noborder noborder2">
                     <td><center>{{$L->at_code}}</center></td>
                     <td>{{$L->at_desc}}</td>
-                    <td align="right">{{$L->appro_amnt}}</td>
+                    <td align="right">{{number_format($L->appro_amnt)}}</td>
                   </tr>
                   @endif
                   @endforeach
                   <tr class="noborder noborder3">
                     <td></td>
                     <td><b>Total {{$P->subgrpdesc}}</b></td>
-                    <td align="right">{{$P->total_amt}}</td>
+                    <td align="right"><b>{{number_format($P->total_amt, 2)}}</b></td>
                   </tr>
                 @endforeach
               @endisset
