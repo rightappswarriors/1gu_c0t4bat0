@@ -73,4 +73,10 @@ class c_cost_center extends Controller
         }
         return back();
     }
+
+    public function getupdate($code)
+    {
+        $SQL = "SELECT * FROM rssys.m08 WHERE cc_code = '".$code."'";
+        return DB::select($SQL);
+    }
 }

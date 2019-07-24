@@ -110,6 +110,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::post('', 'MFile\Accounting\c_cost_center@add');
 					Route::post('update', 'MFile\Accounting\c_cost_center@update');
 					Route::post('delete', 'MFile\Accounting\c_cost_center@delete');
+					Route::get('getupdatedetails/{code}', 'MFile\Accounting\c_cost_center@getupdate');
 				});
 				/* --- COST CENTER ----------*/
 
