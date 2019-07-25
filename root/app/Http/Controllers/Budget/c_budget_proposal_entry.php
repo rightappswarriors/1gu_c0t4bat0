@@ -302,9 +302,11 @@ class c_budget_proposal_entry extends Controller
                         'at_desc' => $r->at_desc[$i],
                         'sl_code' => '',
                         'sl_name' => '',
-                        'appro_amnt' => $r->amt[$i],
+                        'appro_amnt' => (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]),
                         'grpid' => $r->subgrpid[$i],
                     ];
+
+                    //return (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]);
 
                     if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
                     {
@@ -324,6 +326,25 @@ class c_budget_proposal_entry extends Controller
         }
 
         return $flag;
+    }
+
+    public function tofloat($num) 
+    {
+       $dotPos = strrpos($num, '.');
+       $commaPos = strrpos($num, ',');
+       $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos : 
+        ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+   
+       if (!$sep) 
+       {
+          return $num;
+          return floatval(preg_replace("/[^1-9]/", "", $num));
+       } 
+
+       return floatval(
+        preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+        preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
+       );
     }
 
 

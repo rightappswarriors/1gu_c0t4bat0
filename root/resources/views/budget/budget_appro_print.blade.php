@@ -16,7 +16,7 @@
       </div> --}}
       <div class="row">
         <div class="col-sm-12">
-          <center><b>STATUS OF APPROPRIATIONS, ALLOTMENTS, OBLIGATIONS AND BALANCES<br>
+          <center><b>Republic of the Philippines<br> Province of Negros Oriental<br> LGU-City of Guihulngan<br><br>
             <u>{{$Header->fund}}</u></b><br>
           </center>
         </div>
@@ -50,6 +50,10 @@
                 <td ></td>
               </tr>
               @isset($PPA)
+                @php
+                $total_amt = 0.00;
+                @endphp
+
                 @foreach($PPA as $P)
                   <tr class="noborder">
                     <td></td>
@@ -61,7 +65,7 @@
                   <tr class="noborder noborder2">
                     <td><center>{{$L->at_code}}</center></td>
                     <td>{{$L->at_desc}}</td>
-                    <td align="right">{{number_format($L->appro_amnt)}}</td>
+                    <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
                   </tr>
                   @endif
                   @endforeach
@@ -70,7 +74,16 @@
                     <td><b>Total {{$P->subgrpdesc}}</b></td>
                     <td align="right"><b>{{number_format($P->total_amt, 2)}}</b></td>
                   </tr>
+                  @php
+                  $total_amt += $P->total_amt;
+                  @endphp
                 @endforeach
+                  
+                  <tr class="noborder noborder3">
+                    <td></td>
+                    <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
+                    <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_amt, 2)}}</b></td>
+                  </tr>
               @endisset
             </tbody>
           </table>

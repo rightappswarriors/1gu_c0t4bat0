@@ -402,7 +402,7 @@
                                                 <th>Account Code</th>
                                                 <th>Account Title/ PPA</th>
                                                 <th>Description</th>
-                                                <th><center>Amount</center></th>
+                                                <th>Amount</th>
                                                 {{-- <th><center>Allocated</center></th> --}}
                                                 <th width="10%"><center>Options</center></th>
                                             </tr>
@@ -416,7 +416,7 @@
                                                   {{-- '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
 
                 '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span>', --}}
-                                                    <td>
+                                                    <td style="width: 100px;">
                                                        <input list="select_acctCode" name="select_acctCode" value="{{$al->at_code}}" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>
                                                     </td>
                                                     <td>
@@ -437,8 +437,8 @@
                                                     <td>
                                                         <textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text">{{$al->seq_desc}}</textarea>
                                                     </td>
-                                                    <td>
-                                                        <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any" value="{{$al->appro_amnt}}"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
+                                                    <td style="width: 100px;">
+                                                        <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="text" value="{{number_format($al->appro_amnt, 2)}}" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
                                                         <span id="validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
                                                     </td>
                                                     <td>
@@ -681,7 +681,8 @@
                 // '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
 
                 '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea>',
-                '<input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="number" step="any"data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
+
+                '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
         $('select.select2').select2();
@@ -1216,7 +1217,8 @@
                                   // javascript:history.go(-1);
 
                               } else {
-                                console.table(d);
+                                alert(d);
+                                //console.table(d);
                                 //alert('ERROR! an unknown error occured during saving process.');
                               }
                           },
