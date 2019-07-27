@@ -23,7 +23,118 @@
 @include('layout._contentheader')
 <!-- Main content -->
 <section class="content">
-    <div class="box box-default">
+
+{{-- Start Print Content --}}
+    <div class="row printable">
+      <div class="row">  
+          <div class="col-sm-12">
+            <center><b>Republic of the Philippines<br> Province of Negros Oriental<br> LGU-City of Guihulngan<br><br>
+              <u><span id="print-fund"></span></u></b><br>
+            </center>
+          </div>
+      </div>
+      <br> 
+      <div class="row">
+        <center>
+          <div class="col-sm-12">
+            <table style="border: 1px solid #000;">
+              <thead>
+              <tr>
+                <th height="50" style="border: 1px solid #000; width:15%; "><center>Account Code</center></th>
+                <th height="50" style="border: 1px solid #000; width:80%; "><center>Function/Program/Project</center></th>
+                <th height="50" style="border: 1px solid #000; width:20%; "><center>Amount</center></th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr class="noborder">
+                  <td></td>
+                  <td height="50"><b><u><center>CURRENT YEAR APPROPRIATION</center></u></b></td>
+                  <td></td>
+                </tr>
+                <tr class="noborder">
+                  <td><center><b><span id="print-funcid"></span></b></center></td>
+                  <td height="50" style="text-indent: 20px;"><b><span id="print-funcdesc"></span></b></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </center>
+      </div>
+    {{--
+      <br> 
+      <div class="row">
+        <center>
+        <div class="col-sm-12">
+          <table class="table table-bordered" style="border: 1px solid #000;">
+            <thead>
+              <tr>
+                <th height="50" style="border: 1px solid #000; width:15%; "><center>Account Code</center></th>
+                <th height="50" style="border: 1px solid #000; width:80%; "><center>Function/Program/Project</center></th>
+                <th height="50" style="border: 1px solid #000; width:20%; "><center>Amount</center></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="noborder">
+                <td></td>
+                <td height="50"><b><u><center>CURRENT YEAR APPROPRIATION</center></u></b></td>
+                <td></td>
+              </tr>
+              <tr class="noborder">
+                <td><center><b>{{$Header->funcid}}</b></center></td>
+                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($Header->function)}}</b></td>
+                <td></td>
+              </tr>
+              <tr class="noborder">
+                <td><center><b>{{$Header->office_code}}</b></center></td>
+                <td><b><u>{{strtoupper($Header->office)}}</u></b></td>
+                <td ></td>
+              </tr>
+              @isset($PPA)
+                @php
+                $total_amt = 0.00;
+                @endphp
+
+                @foreach($PPA as $P)
+                  <tr class="noborder">
+                    <td></td>
+                    <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>{{$P->subgrpdesc}}</b></td>
+                    <td></td>
+                  </tr>
+                  @foreach($Line as $L)
+                  @if($P->subgrpid == $L->grpid)
+                  <tr class="noborder noborder2">
+                    <td><center>{{$L->at_code}}</center></td>
+                    <td>{{$L->at_desc}}</td>
+                    <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
+                  </tr>
+                  @endif
+                  @endforeach
+                  <tr class="noborder noborder3">
+                    <td></td>
+                    <td><b>Total {{$P->subgrpdesc}}</b></td>
+                    <td align="right"><b>{{number_format($P->total_amt, 2)}}</b></td>
+                  </tr>
+                  @php
+                  $total_amt += $P->total_amt;
+                  @endphp
+                @endforeach
+                  
+                  <tr class="noborder noborder3">
+                    <td></td>
+                    <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
+                    <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_amt, 2)}}</b></td>
+                  </tr>
+              @endisset
+            </tbody>
+          </table>
+        </div>
+      </center>
+      </div>   --}}      
+    </div>
+{{-- End Print Here --}}
+
+    <div class="box box-default non-printable">
         <div class="box-header with-border">
             <h3 class="box-title">Header</h3>
             <div class="box-tools pull-right">
@@ -232,7 +343,7 @@
         </div>
         <!-- /.box-body -->
     </div>
-    <div class="row">
+    <div class="row non-printable">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
@@ -474,7 +585,7 @@
             </div>
             <!-- /.box -->
             <div class="row">
-            	<div class="col-sm-6">
+            	<div class="col-sm-4">
             		<div class="col-sm-3">
             			<label for="">GRAND TOTAL:</label>
             		</div>
@@ -482,8 +593,11 @@
             			<input type="text" class="form-control" disabled="" name="total_line" value="Php 0.00">
             		</div>
             	</div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     @if($isnew)
+                      {{-- <div class="col-sm-3">
+                          <button id="btnPrint" type="button" class="btn btn-default" onclick="print_preview();">Print</button>
+                      </div> --}}
                       <div class="col-sm-4">
                           <button type="button" class="btn btn-block btn-warning" onclick="SaveAddMoreProposal()"><i class="fa fa-save"></i> Save & Add More</button>
                       </div>
@@ -555,10 +669,13 @@
         </div>
     </div>
     <!-- /.row -->
+
 </section>
 <!-- /.content -->
 <script>
 	var selectedId = 0;
+  var checkAcctDescExist = true;
+
     $(document).on('keypress',function(e) {
     if(e.which == 13)
         {
@@ -671,11 +788,14 @@
 
         var line = ($('#table_'+SelectedTabPPA).DataTable().rows().count()) + 1;
         var table = $('#table_'+SelectedTabPPA).DataTable();
-        table.row.add([
-                // line,<span class="cc_code" subgrpid="'+subgrpid+'" cc-code="'+code+'" desc="'+encodeURI(desc)+'">'+desc+'</span>
-                '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
 
-                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span>',
+        if(checkAcctDescExist)
+        {
+           table.row.add([
+                // line,<span class="cc_code" subgrpid="'+subgrpid+'" cc-code="'+code+'" desc="'+encodeURI(desc)+'">'+desc+'</span>
+                '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountCode(value); getAccountTitleDesc(value);"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
+
+                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value); checkIfAcctDescExist('+line+', value);" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span> <span id="validate_ifAlreadyExist'+ SelectedTabPPA+line+'" style="color: red;"></span>',
 
                 // '<select class="form-control select2 select2-hidden-accessible selectbtn" id="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" tabindex="-1" aria-hidden="true" onchange="getAccountTitleDesc(value)" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode'+ SelectedTabPPA+line+'" required>'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
                 // '</select><span id="validate_select_acctCode'+ SelectedTabPPA+line+'"></span>',
@@ -685,7 +805,12 @@
                 '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
-        $('select.select2').select2();
+           $('select.select2').select2();
+        }
+        else
+        {
+          alert('Entered Account Title/PPA already exists.');
+        }
     }
 
 
@@ -810,13 +935,14 @@
         var tempAmount = 0; 
         var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
 
+
         if(amt.length > 0)
         {
             for(let i = 0; i < amt.length; i++)
             {
                 if(amt[i] != null && amt[i] != '')
                 {
-                  tempAmount = tempAmount + parseFloat(amt[i]);
+                  tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
                 }
             }
             
@@ -865,7 +991,7 @@
             {
                  if(amt[i] != null && amt[i] != '')
                  {
-                   tempAmount = tempAmount + parseFloat(amt[i]);
+                   tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
                  }
             }
             
@@ -976,6 +1102,7 @@
             $('select[name="itm_ppa"]').val(SelectedTabPPA).trigger('change');
         }
 	}
+
 	function InsModiItem(selected)
 	{
 		var line = $('input[name="itm_line"]').val();
@@ -1104,50 +1231,51 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      //var codes = $('select[name="select_acctCode"]').map(function(){return $(this).children("option:selected").val();}).get();
-                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
-                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
-                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      if(checkAcctDescExist) // check account title that has a double entry
+                      {
+                         var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                         var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                         var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
-                      var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
-                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
-                      var data = {
-                              _token : $('meta[name="csrf-token"]').attr('content'),
-                              codes : codes,
-                              at_desc : at_desc,
-                              amt : amt,
-                              subgrpid : subgrpid,
-                              desc: desc,
-                              fy : $('select[name="fy"]').val(),
-                              // budget_period : $('select[name="budget_period"]').val(),
-                              fid : $('select[name="hdr_fid"]').val(),
-                              cc_code : $('select[name="hdr_cc"]').val(),
-                              secid : $('select[name="hdr_sec"]').val(),
-                              funct : $('select[name="hdr_func"]').val(),
-                              // brid : $('input[name="hdr_br"]').val(),
-                              // t_date : $('input[name="hdr_date"]').val(),
-                              // t_desc : $('input[name="hdr_desc"]').val(),
-                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
-                          };
+                         var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                         var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                         var data = {
+                                 _token : $('meta[name="csrf-token"]').attr('content'),
+                                 codes : codes,
+                                 at_desc : at_desc,
+                                 amt : amt,
+                                 subgrpid : subgrpid,
+                                 desc: desc,
+                                 fy : $('select[name="fy"]').val(),
+                                 fid : $('select[name="hdr_fid"]').val(),
+                                 cc_code : $('select[name="hdr_cc"]').val(),
+                                 secid : $('select[name="hdr_sec"]').val(),
+                                 funct : $('select[name="hdr_func"]').val(),
+                             };
 
-                      $.ajax({
-                          url : '{{ url('budget/budget-proposal-entry/save') }}',
-                          method : 'POST',
-                          data : data,
-                          success : function(d){
-                              if(d == 'true'){
-                                  alert('Successfully Added new Budget Appropriation Entry');
-                                  location.href= "{{ url('budget/budget-proposal-entry') }}";
+                         $.ajax({
+                             url : '{{ url('budget/budget-proposal-entry/save') }}',
+                             method : 'POST',
+                             data : data,
+                             success : function(d){
+                                 if(d == 'true'){
+                                     alert('Successfully Added new Budget Appropriation Entry');
+                                     location.href= "{{ url('budget/budget-proposal-entry') }}";
                                   // javascript:history.go(-1);
 
-                              } else {
-                                alert('ERROR! an unknown error occured during saving process.');
-                              }
-                          },
-                          error : function(a, b, c){
-                              console.log(c);
-                          }
-                      });
+                                 } else {
+                                   alert('ERROR! an unknown error occured during saving process.');
+                                 }
+                             },
+                             error : function(a, b, c){
+                                 console.log(c);
+                             }
+                         });
+                      }
+                      else
+                      {
+                        alert('Entered Account Title/PPA already exists.');
+                      }
                     }
                     else
                     {
@@ -1180,52 +1308,53 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
-                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
-                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      if(checkAcctDescExist) // check account title that has a double entry
+                      {
+                         var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                         var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                         var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
-                      var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
-                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
-                      var data = {
-                              _token : $('meta[name="csrf-token"]').attr('content'),
-                              codes : codes,
-                              at_desc : at_desc,
-                              amt : amt,
-                              subgrpid : subgrpid,
-                              desc: desc,
-                              fy : $('select[name="fy"]').val(),
-                              // budget_period : $('select[name="budget_period"]').val(),
-                              fid : $('select[name="hdr_fid"]').val(),
-                              cc_code : $('select[name="hdr_cc"]').val(),
-                              secid : $('select[name="hdr_sec"]').val(),
-                              funct : $('select[name="hdr_func"]').val(),
-                              b_num :  $('input[name="hdr_b_num"]').val(),
-                              // brid : $('input[name="hdr_br"]').val(),
-                              // t_date : $('input[name="hdr_date"]').val(),
-                              // t_desc : $('input[name="hdr_desc"]').val(),
-                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
-                          };
+                         var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                         var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                         var data = {
+                                 _token : $('meta[name="csrf-token"]').attr('content'),
+                                 codes : codes,
+                                 at_desc : at_desc,
+                                 amt : amt,
+                                 subgrpid : subgrpid,
+                                 desc: desc,
+                                 fy : $('select[name="fy"]').val(),
+                                 fid : $('select[name="hdr_fid"]').val(),
+                                 cc_code : $('select[name="hdr_cc"]').val(),
+                                 secid : $('select[name="hdr_sec"]').val(),
+                                 funct : $('select[name="hdr_func"]').val(),
+                                 b_num :  $('input[name="hdr_b_num"]').val(),
+                             };
 
-                      $.ajax({
-                          url : '{{ url('budget/budget-proposal-entry/update') }}',
-                          method : 'POST',
-                          data : data,
-                          success : function(d){
-                              if(d == 'true'){
-                                  alert('Successfully Modified Budget Appropriation Entry');
-                                  location.href= "{{ url('budget/budget-proposal-entry') }}";
-                                  // javascript:history.go(-1);
-
-                              } else {
-                                alert(d);
-                                //console.table(d);
-                                //alert('ERROR! an unknown error occured during saving process.');
-                              }
-                          },
-                          error : function(a, b, c){
-                              console.log(c);
-                          }
-                      });
+                         $.ajax({
+                             url : '{{ url('budget/budget-proposal-entry/update') }}',
+                             method : 'POST',
+                             data : data,
+                             success : function(d){
+                                 if(d == 'true')
+                                 {
+                                     alert('Successfully Modified Budget Appropriation Entry');
+                                     location.href= "{{ url('budget/budget-proposal-entry') }}";
+                                 } 
+                                 else 
+                                 {
+                                   alert('ERROR! an unknown error occured during saving process.');
+                                 }
+                             },
+                             error : function(a, b, c){
+                                 console.log(c);
+                             }
+                         });
+                      }
+                      else
+                      {
+                        alert('Entered Account Title/PPA already exists.');
+                      }
                     }
                     else
                     {
@@ -1336,6 +1465,7 @@
             },
         });
     }
+
     function getapprovedEntries()
     {
         var b_num = $('select[name="bgt_b_num"]').val();
@@ -1497,49 +1627,51 @@
                 {
                     if($('#LineForm').parsley().validate())
                     {
-                      var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
-                      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
-                      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                      if(checkAcctDescExist) // check account title that has a double entry
+                      {
+                         var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+                         var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+                         var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
-                      var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
-                      var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
-                      var data = {
-                              _token : $('meta[name="csrf-token"]').attr('content'),
-                              codes : codes,
-                              at_desc : at_desc,
-                              amt : amt,
-                              subgrpid : subgrpid,
-                              desc: desc,
-                              fy : $('select[name="fy"]').val(),
-                              // budget_period : $('select[name="budget_period"]').val(),
-                              fid : $('select[name="hdr_fid"]').val(),
-                              cc_code : $('select[name="hdr_cc"]').val(),
-                              secid : $('select[name="hdr_sec"]').val(),
-                              funct : $('select[name="hdr_func"]').val(),
-                              // brid : $('input[name="hdr_br"]').val(),
-                              // t_date : $('input[name="hdr_date"]').val(),
-                              // t_desc : $('input[name="hdr_desc"]').val(),
-                              // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
-                          };
-                      $.ajax({
-                          url : '{{ url('budget/budget-proposal-entry/saveaddmore') }}',
-                          method : 'POST',
-                          data : data,
-                          success : function(d){
-                              if(d != 'false'){
-                                  alert('Successfully Added new Budget Appropriation Entry');
-                                  //location.href= "{{ url('budget/budget-proposal-entry') }}";
-                                  location.href ='{{ url('budget/budget-proposal-entry/new') }}/'+ d  + '';
-                                  // javascript:history.go(-1);
-
-                              } else {
-                                alert('ERROR! an unknown error occured during saving process.');
-                              }
-                          },
-                          error : function(a, b, c){
-                              console.log(c);
-                          }
-                      });
+                         var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
+                         var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+                         var data = {
+                                 _token : $('meta[name="csrf-token"]').attr('content'),
+                                 codes : codes,
+                                 at_desc : at_desc,
+                                 amt : amt,
+                                 subgrpid : subgrpid,
+                                 desc: desc,
+                                 fy : $('select[name="fy"]').val(),
+                                 fid : $('select[name="hdr_fid"]').val(),
+                                 cc_code : $('select[name="hdr_cc"]').val(),
+                                 secid : $('select[name="hdr_sec"]').val(),
+                                 funct : $('select[name="hdr_func"]').val(),
+                             };
+                         $.ajax({
+                             url : '{{ url('budget/budget-proposal-entry/saveaddmore') }}',
+                             method : 'POST',
+                             data : data,
+                             success : function(d){
+                                 if(d != 'false')
+                                 {
+                                     alert('Successfully Added new Budget Appropriation Entry');
+                                     location.href ='{{ url('budget/budget-proposal-entry/new') }}/'+ d  + '';
+                                 } 
+                                 else 
+                                 {
+                                   alert('ERROR! an unknown error occured during saving process.');
+                                 }
+                             },
+                             error : function(a, b, c){
+                                 console.log(c);
+                             }
+                         });
+                      }
+                      else
+                      {
+                        alert('Entered Account Title/PPA already exists.');
+                      }
                     }
                     else
                     {
@@ -1646,5 +1778,141 @@
         });
     }
 
+    function checkIfAcctDescExist(line, value)
+    {
+      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+      var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+
+      var howMany = $('li.tabHD').length;
+      var SelectedTabPPA = '';
+
+      if(howMany > 0)
+      {
+          for(var i = 0; i < howMany;i++)
+          {
+              if($($('li.tabHD')[i]).hasClass('active'))
+              {
+                  SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                  break;
+              }
+          }
+      }
+
+      var check = false;
+      var row = 0;
+
+      for(i=0; i < at_desc.length; i++)
+      {
+        if(subgrpid[i] == SelectedTabPPA)
+        {
+          row += 1;
+        }
+
+        // check if value already exist
+        if(at_desc[i].toUpperCase() == value.toUpperCase() && subgrpid[i] == SelectedTabPPA && row != line) 
+        {
+          check = true;
+        }
+
+        if(check) // if exist, display a message
+        {
+          checkAcctDescExist = false;
+          alert('Entered Account Title/PPA already exists.');
+          $('#validate_ifAlreadyExist'+SelectedTabPPA+line).text('Entered Account Title/PPA already exists.');
+        }
+        else
+        {
+          checkAcctDescExist = true;
+          $('#validate_ifAlreadyExist'+SelectedTabPPA+line).text('');
+        }
+      }
+    }
+
+    function print_preview()
+    {
+      // // var fund = $('select[name="hdr_fid"]').select2('data')[0].text;
+      // // var funcid = $('select[name="hdr_func"]').val();
+      // // var funcdesc = $('select[name="hdr_func"]').select2('data')[0].text;
+      // // var cc_code = $('select[name="hdr_func"]').val();
+      // // var cc_desc = $('select[name="hdr_func"]').select2('data')[0].text;
+      // var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
+
+      // // $('#print-fund').text(fund);
+      // // $('#print-funcid').text(funcid);
+      // // $('#print-funcdesc').text(funcdesc.toUpperCase());
+
+      // var data;
+      // //var data = [fund, funcid, funcdesc, cc_code, cc_desc, codes];
+
+      // var test = new Array();
+      // test['code'] = new Array(codes);
+
+
+      // data = test;
+
+      // alert(data);
+
+      // //window.print();
+
+      // //location.href ='{{ url('budget/budget-proposal-entry/print') }}/'+ b_num;
+      // window.open('{{ url('budget/budget-appro/print-entry') }}/'+ data);
+    }
+
+
+    // document.getElementById("btnPrint").onclick = function () 
+    // {
+    //    printElement(document.getElementById("printThis"));
+    
+    // var modThis = document.querySelector("#printSection");
+    // //modThis.appendChild(document.createTextNode(" new"));
+    
+    // window.print();
+    // }
+
+    // function printElement(elem) 
+    // {
+    // var domClone = elem.cloneNode(true);
+    
+    // var $printSection = document.getElementById("printSection");
+    
+    // if (!$printSection) {
+    //     var $printSection = document.createElement("div");
+    //     $printSection.id = "printSection";
+    //     document.body.appendChild($printSection);
+    // }
+    
+    // $printSection.innerHTML = "";
+    
+    // $printSection.appendChild(domClone);
+    // }
+
 </script>
+<style>
+  @media screen {
+  #printSection {
+      display: none;
+  }
+}
+.printable { display: none; }
+
+@media print {
+  body * {
+    /*visibility:hidden;*/
+  }
+  #printSection, #printSection * {
+    visibility:visible;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+  .printable { display: block; }
+
+  .non-printable { display: none; }
+}
+
+
+
+</style>
 @endsection
