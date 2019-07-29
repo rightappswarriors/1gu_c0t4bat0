@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
+use Core;
 
 class AccountingControllers extends Controller {
     public function __disbursement() {
@@ -90,6 +91,162 @@ class AccountingControllers extends Controller {
         ];
         return view('accounting.obligation_request', $arrRet);
     }
+
+
+    public function _obligation_admin (Request $request){
+        $retArr = FunctionsAccountingControllers::checkSession(true);
+        if(count($retArr) > 0) {
+            return redirect($retArr[0])->with($retArr[1], $retArr[2]);
+        }
+        if($request->isMethod('get')){
+            $arrRet = [
+                'ppe'=>FunctionsAccountingControllers::getAllFrom(['rssys.ppasubgrp',[['active',TRUE]],['subgrpid','subgrpdesc']]),
+                'cc_code'=>FunctionsAccountingControllers::getAllFrom(['rssys.m08',[['active',TRUE]],['cc_code','cc_desc']]),
+                'data' => DB::table('rssys.obrhdr')/*->join('rssys.ppasubgrp','rssys.obrhdr.fpp','rssys.ppasubgrp.subgrpid')*/->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.active',TRUE]/*,['rssys.ppasubgrp.active',TRUE]*/,['rssys.m08.active',TRUE]])->orderBy('obr_pk','DESC')->get(),
+                '_bc'=>[
+                        ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false]
+                    ],
+                '_ch'=>"Admin Obligation Entry"
+            ];
+
+            return view('accounting.obligation_request', $arrRet);
+        } else if($request->isMethod('post')){
+            $arrFields = [
+                'obr_code' => $request->obr,
+                'payee' => $request->payee,
+                't_date' => Carbon::now()->toDateString(),
+                'particulars' => $request->particulars,
+                'user_id' => strtoupper(FunctionsAccountingControllers::getSession("_user", "id")),
+                // 'fpp' => $request->fpp,
+                'cc_code' => $request->subgrpid,
+                'active' => TRUE
+            ];
+            switch ($request->action) {
+                case 'add':
+                    if(DB::table('rssys.obrhdr')->insert($arrFields)){
+                        return back();
+                    } else {
+                        return 'Unknown Error Occured. Please try to refresh page then click yes';
+                    }
+                    break;
+                case 'edit':
+                    if(DB::table('rssys.obrhdr')->where('obr_pk',$request->obr)->update($arrFields)){
+                        return back();
+                    } else {
+                        return 'Unknown Error Occured. Please try to refresh page then click yes';
+                    }
+                    break;
+                case 'delete':
+                    if(DB::table('rssys.obrhdr')->where('obr_pk',$request->deleteobr)->update(['active' => FALSE])){
+                        return back();
+                    } else {
+                        return 'Unknown Error Occured. Please try to refresh page then click yes';
+                    }
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+    }
+
+
+    public function _obligation_admin_entry (Request $request,$obr_pk){
+        $retArr = FunctionsAccountingControllers::checkSession(true);
+        if(count($retArr) > 0 || DB::table('rssys.obrhdr')->where([['obr_pk',$obr_pk],['active',TRUE]])->doesntExist()) {
+            return abort(404);
+        }
+        $obrlne = DB::table('rssys.obrlne')->join('rssys.m04','rssys.obrlne.at_code','rssys.m04.at_code')->where([['rssys.obrlne.active',TRUE],['rssys.obrlne.obr_code',$obr_pk]])->select('m04.*','rssys.obrlne.oid as id', 'rssys.obrlne.*')->get();
+        $obrhdr = json_encode( DB::table('rssys.obrhdr')/*->join('rssys.ppasubgrp','rssys.obrhdr.fpp','rssys.ppasubgrp.subgrpid')*/->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.active',TRUE]/*,['rssys.ppasubgrp.active',TRUE]*/,['rssys.m08.active',TRUE],['obr_pk',$obr_pk]])->orderBy('obr_pk','DESC')->get());
+        if($request->isMethod('get')){
+            $arrRet = [
+                'ppe'=>FunctionsAccountingControllers::getAllFrom(['rssys.ppasubgrp',[['active',TRUE]],['subgrpid','subgrpdesc']]),
+                'm04'=>FunctionsAccountingControllers::getAllFrom(['rssys.m04',[['active',TRUE]]]),
+                'cc_code'=>FunctionsAccountingControllers::getAllFrom(['rssys.m08',[['active',TRUE]],['cc_code','cc_desc']]),
+                'obrhdr'=> $obrhdr,
+                // 'obrhdr' => FunctionsAccountingControllers::getAllFrom(['rssys.obrhdr',[['active',TRUE],['obr_pk',$obr_pk]]]),
+                'data' => $obrlne,
+                '_bc'=>[
+                        ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false]
+                    ],
+                '_ch'=>"Admin Obligation Entry"
+            ];
+            return view('accounting.obligation_request_entry', $arrRet);
+        } else if($request->isMethod('post')){
+
+            switch ($request->action) {
+                case 'getobrlne':
+                    return json_encode($obrlne);
+                    break;
+
+                case 'getobrhdr':
+                    return $obrhdr;
+                    break;
+                
+                default:
+                    if(isset($request->at_code) && isset($request->fpp) && isset($request->amount) && count($request->at_code) == count($request->fpp) && count($request->fpp) == count($request->amount)){
+
+                        $arrObrhdrFields = [
+                            'obr_code' => $request->obr,
+                            'payee' => $request->payee,
+                            't_date' => Carbon::now()->toDateString(),
+                            'particulars' => $request->particulars,
+                            'user_id' => strtoupper(FunctionsAccountingControllers::getSession("_user", "id")),
+                            'cc_code' => $request->subgrpid,
+                            'active' => TRUE
+                        ];
+
+                        $module = 'RAW Report Entry';
+                        $del = [['obr_code', '=', $obr_pk]];
+                        Core::deleteTableMultiWhere('rssys.obrlne', $del, $module);
+
+                        if (Core::updateTable('rssys.obrhdr', 'obr_pk', $obr_pk, $arrObrhdrFields, $module)){
+                            for ($i=0; $i < count($request->at_code); $i++) { 
+                                $seqnum = (!empty(DB::table('rssys.obrlne')->max('seq_num')) ? DB::table('rssys.obrlne')->max('seq_num') + 1 : 1 );
+                                $arrObrlneFields = [
+                                    'obr_code' => $obr_pk,
+                                    'seq_num' => $seqnum,
+                                    'at_code' => $request->at_code[$i],
+                                    'amount' => str_replace(',', '', $request->amount[$i]),
+                                    'fpp' => $request->fpp[$i],
+                                    'active' => TRUE
+                                ];
+
+                                if (Core::insertTable('rssys.obrlne', $arrObrlneFields, $module)) 
+                                {
+                                    $flag = 'true';
+                                } 
+                                else 
+                                {
+                                    return 'false';
+                                }
+                            }
+                        }
+                        else
+                        {
+                            $flag = 'false';
+                        }
+                        return $flag;
+
+                    } else {
+                        return 'Please check data for possible empty entries!';
+                    }
+                    break;
+            }
+
+
+        }
+
+    }
+
+
+    public function generateRaoReport($obr_pk){
+        dd($obr_pk);
+    }
+
+
     public function __obr_new(Request $request) {
         $retArr = FunctionsAccountingControllers::checkSession(true);
         if(count($retArr) > 0) {

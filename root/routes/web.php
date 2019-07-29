@@ -623,6 +623,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/{obr_code}', 'Accounting\AccountingControllers@__obr_view')->name('accounting.obr_view');
 					Route::get('/edit/{obr_code}', 'Accounting\AccountingControllers@__obr_edit')->name('accounting.obr_edit');
 					Route::get('/', 'Accounting\AccountingControllers@__obligation_request')->name('accounting.obligation_request');
+					Route::match(['post','get'],'/Entry/Admin', 'Accounting\AccountingControllers@_obligation_admin');
+					Route::match(['post','get'],'/Entry/Admin/{obr}', 'Accounting\AccountingControllers@_obligation_admin_entry');
 				});
 				Route::prefix('or_issuance')->group(function() {
 					Route::get('/', 'Accounting\AccountingControllers@__obr_issuance')->name('accounting.obr_issuance');
@@ -637,7 +639,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 		Route::prefix('reports')->group(function() {
 			Route::prefix('budget')->group(function() {
 				Route::get('saaob/{all}', 'Accounting\AccountingControllers@__saob')->name('accounting.saob');
-				Route::match(['get', 'post'], 'lbp', 'Report\Budget\c_lbp@__lbp')->name('report.lbp');
+				Route::get('rao/{obr_pk}', 'Accounting\AccountingControllers@generateRaoReport');
+				Route::match(['get', 'post'], 'lbp/{formNumber}/{extraDetails?}', 'Report\Budget\c_lbp@__lbp')->name('report.lbp');
 			});
 		});
 		/* SETTING -------------------------------*/

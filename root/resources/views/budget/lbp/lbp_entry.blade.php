@@ -112,7 +112,11 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th colspan="3"><button type="button" class="btn btn-success" onclick="insRevenue('');"><i class="fa fa-plus-circle"></i></button> 1.0 New Revenue Sources</th>
+                      <th colspan="3">
+                         @if(!isset($edit))
+                        <button type="button" class="btn btn-success" onclick="insRevenue('','','');"><i class="fa fa-plus-circle"></i></button>
+                        @endif
+                        1.0 New Revenue Sources</th>
                     </tr>
                     <tr>
                       <td colspan="3">
@@ -120,7 +124,11 @@
                       </td>
                     </tr>
                     <tr>
-                      <th colspan="3"><button type="button" class="btn btn-success" onclick="curBodyIns('actualcollection');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 2.0 Actual Collection in Excess of the Estimated Income</th>
+                      <th colspan="3">
+                        @if(!isset($edit))
+                        <button type="button" class="btn btn-success" onclick="curBodyIns('actualcollection');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button>
+                        @endif 
+                      2.0 Actual Collection in Excess of the Estimated Income</th>
                     </tr>
                     <tr>
                       <td colspan="3">
@@ -128,7 +136,11 @@
                       </td>
                     </tr>
                     <tr>
-                      <th colspan="3"><button type="button" class="btn btn-success" onclick="curBodyIns('savings');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 3.0 Savings</th>
+                      <th colspan="3">
+                        @if(!isset($edit))
+                        <button type="button" class="btn btn-success" onclick="curBodyIns('savings');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 
+                        @endif
+                      3.0 Savings</th>
                     </tr>
                     <tr>
                       <td colspan="3">
@@ -136,7 +148,12 @@
                       </td>
                     </tr>
                     <tr>
-                      <th colspan="3"><button type="button" class="btn btn-success" onclick="curBodyIns('realignment');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 4.0 Realignment</th>
+                      <th colspan="3">
+                        @if(!isset($edit))
+                        <button type="button" class="btn btn-success" onclick="curBodyIns('realignment');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 
+                        @endif
+                        4.0 Realignment
+                      </th>
                     </tr>
                     <tr>
                       <td colspan="3">
@@ -144,7 +161,11 @@
                       </td>
                     </tr>
                     <tr>
-                      <th colspan="3"><button type="button" class="btn btn-success" onclick="curBodyIns('reversion');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 5.0 REVERSION</th>
+                      <th colspan="3">
+                        @if(!isset($edit))
+                        <button type="button" class="btn btn-success" onclick="curBodyIns('reversion');" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i></button> 
+                        @endif
+                      5.0 REVERSION</th>
                     </tr>
                     <tr>
                       <td colspan="3">
@@ -254,11 +275,11 @@
             </div>
             <br>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6" hidden>
                 <input type="checkbox" id="check_group">
                 <label for="check_group">Group data</label>
               </div>
-              <div class="col-md-6">
+              <div class="col-md">
                 <input type="checkbox" id="checkbox_get" onchange="forCheckboxes('checkbox_get', this.checked);">
                 <label for="checkbox_get">Select All</label>
               </div>
@@ -344,12 +365,11 @@
   //   }
   // }
 
-  function insRevenue(samplevalue) {
-
+  function insRevenue(samplevalue,bnum,seqnum) {
     let newrevenue = document.getElementById('newrevenue');
     if(newrevenue != null) {
       whatToInsert = '<tr><td>'
-      +'<div class="row"><div class="col-md-1"><button type="button" class="btn btn-danger" onclick="removeOneClone(this)"><i class="fa fa-times-circle"></i></button></div><div class="col-md-11"><input type="text" class="form-control" name="seq_desc[]" placeholder="New Revenue Sources" value="'+samplevalue+'"></div></div><input type="hidden" class="form-control" name="form_where[]" value="newrevenue"><input type="hidden" name="check_table[]" value=""><input type="hidden" name="check_funds[]" value=""><input type="hidden" name="check_ppa[]" value=""><input type="hidden" name="check_fy[]" value=""><input type="hidden" name="check_mo_from[]" value=""><input type="hidden" name="check_mo_to[]" value=""><input type="hidden" name="at_code[]" value=""><input type="hidden" name="at_desc[]" value=""><input type="hidden" name="appro_amnt[]" value=""><input type="hidden" class="form-control" name="group_m[]" value=""></td></tr>';
+      +'<div class="row"><div class="col-md-1"> @if(!isset($edit))<button type="button" class="btn btn-danger" onclick="removeOneClone(this)"><i class="fa fa-times-circle"></i></button>@endif </div><div class="col-md-11"><input type="text" class="form-control" name="seq_desc[]" placeholder="New Revenue Sources" value="'+samplevalue+'">'+(Number(bnum) >= 1 && Number(seqnum) >= 1 ? '<input type="hidden" class="form-control" name="b_num[]" value="'+bnum+'"><input type="hidden" class="form-control" name="seq_num[]" value="'+seqnum+'">' :'')+'</div></div><input type="hidden" class="form-control" name="form_where[]" value="newrevenue"><input type="hidden" name="check_table[]" value=""><input type="hidden" name="check_funds[]" value=""><input type="hidden" name="check_ppa[]" value=""><input type="hidden" name="check_fy[]" value=""><input type="hidden" name="check_mo_from[]" value=""><input type="hidden" name="check_mo_to[]" value=""><input type="hidden" name="at_code[]" value=""><input type="hidden" name="at_desc[]" value=""><input type="hidden" name="appro_amnt[]" value=""><input type="hidden" class="form-control" name="group_m[]" value=""></td></tr>';
     }
     // $(whatToInsert).insertBefore(newrevenue);
     $(newrevenue).append(whatToInsert);
@@ -375,17 +395,63 @@
       }
     });
   }
-  function moveToDivs() {
-    let check_group = ['group_check[]'], nmArrays = [['check_table1[]', 'check_funds1[]', 'check_ppa1[]', 'check_fy1[]', 'check_mo_from1[]', 'check_mo_to1[]', 'at_code1[]', 'at_desc1[]', 'amount1[]']], moveMArrays = [['check_table[]', 'check_funds[]', 'check_ppa[]', 'check_fy[]', 'check_mo_from[]', 'check_mo_to[]', 'at_code[]', 'at_desc[]', 'appro_amnt[]']], needsTotal = [['amount1[]']], arrConsole = [], groupThis = 0, insDoms = function() { for(let i = 0; i < check_group.length; i++) { let cDom = document.getElementsByName(check_group[i]); if(cDom.length > 0) { for(let k = 0; k < cDom.length; k++) { let cArrConsole = {}, cStrConsole = ""; if(cDom[k] != null) { if(cDom[k].checked) { if(nmArrays[i] != undefined) { if(Array.isArray(nmArrays[i])) { for(let j = 0; j < nmArrays[i].length; j++) { let dDom = document.getElementsByName(nmArrays[i][j])[k]; if(dDom != null) { cArrConsole[moveMArrays[i][j]] = dDom.value; cStrConsole += '<input type="hidden" name="'+moveMArrays[i][j]+'" value="'+dDom.value+'">'; } } } } arrConsole.push([cStrConsole, cArrConsole]); } } } } /* cArrConsole */ } return arrConsole; }, cBody = document.getElementById(curBody); //arrInsted.map(function(a, b, c) { tempInsted.push(a); });
+  function moveToDivs(arrData = []) {
+    let check_group = ['group_check[]'], nmArrays = [['check_table1[]', 'check_funds1[]', 'check_ppa1[]', 'check_fy1[]', 'check_mo_from1[]', 'check_mo_to1[]', 'at_code1[]', 'at_desc1[]', 'amount1[]']], moveMArrays = [['check_table[]', 'check_funds[]', 'check_ppa[]', 'check_fy[]', 'check_mo_from[]', 'check_mo_to[]', 'at_code[]', 'at_desc[]', 'appro_amnt[]']], needsTotal = [['amount1[]']], arrConsole = [], groupThis = 0, 
+    insDoms = function() { for(let i = 0; i < check_group.length; i++) { 
+    let cDom = document.getElementsByName(check_group[i]); 
+    if(cDom.length > 0) { 
+      for(let k = 0; k < cDom.length; k++) { 
+        let cArrConsole = {}, cStrConsole = ""; 
+        if(cDom[k] != null) { 
+          if(cDom[k].checked) { 
+            if(nmArrays[i] != undefined) { 
+              if(Array.isArray(nmArrays[i])) { 
+                for(let j = 0; j < nmArrays[i].length; j++) { 
+                  let dDom = document.getElementsByName(nmArrays[i][j])[k]; 
+                  if(dDom != null) { 
+                    cArrConsole[moveMArrays[i][j]] = dDom.value; 
+                    cStrConsole += '<input type="hidden" name="'+moveMArrays[i][j]+'" value="'+dDom.value+'">'; 
+                  } 
+                } 
+              } 
+            } 
+            arrConsole.push([cStrConsole, cArrConsole]); 
+          } 
+        } 
+      } 
+    } /* cArrConsole */ } return arrConsole; }, cBody = document.getElementById(curBody); //arrInsted.map(function(a, b, c) { tempInsted.push(a); });
 
-    if(cBody != null) { if(curBody != "") { if(document.getElementById('check_group') != null) { if(document.getElementById('check_group').checked) { let i = 1, csStr = "", csSum = 0, insTDom = insDoms(); for(let k = 0; k < i; k++) { if(! (i in numsUsed)) { numsUsed[i] = i; break; } else { i++; } } for(let j = 0; j < insTDom.length; j++) { csStr += insTDom[j][0] + '<input type="hidden" class="form-control" name="group_m[]" value="'+i+'"><input type="hidden" class="form-control" name="form_where[]" value="'+curBody+'">'; csSum += parseFloat(insTDom[j][1]['appro_amnt[]']); } cBody.innerHTML += '<tr> <td>'+csStr+' <div class="row"><div class="col-md-2"><button class="btn btn-danger" onclick="removeOneFromTableWithCol(this)"><i class="fa fa-minus-circle"></i></button></div><div class="col-md-10"><input type="text" class="form-control" name="seq_desc[]" placeholder="'+nameName[curBody]+' Description"></div></div></td> <td></td> <td></td> <td><b>'+csSum.toFixed(2)+'</b></td> </tr>'; } else {
+    if(cBody != null) { if(curBody != "") { 
+      if(document.getElementById('check_group') != null) { 
+        if(document.getElementById('check_group').checked) { 
+          let i = 1, csStr = "", csSum = 0, insTDom = insDoms(); 
+          for(let k = 0; k < i; k++) { 
+            if(! (i in numsUsed)) { 
+              numsUsed[i] = i; break; 
+            } else { 
+              i++; 
+            } 
+          } for(let j = 0; j < insTDom.length; j++) { 
+            csStr += insTDom[j][0] + '<input type="hidden" class="form-control" name="group_m[]" value="'+i+'"><input type="hidden" class="form-control" name="form_where[]" value="'+curBody+'">'; csSum += parseFloat(insTDom[j][1]['appro_amnt[]']); 
+          } 
+          cBody.innerHTML += '<tr> <td>'+csStr+' <div class="row"><div class="col-md-2"><button class="btn btn-danger" onclick="removeOneFromTableWithCol(this)"><i class="fa fa-minus-circle"></i></button></div><div class="col-md-10"><input type="text" class="form-control" name="seq_desc[]" placeholder="'+nameName[curBody]+' Description"></div></div></td> <td></td> <td></td> <td><b>'+csSum.toFixed(2)+'</b></td> </tr>'; 
+        } else {
       let j = 1, insTDom = insDoms();
       for(let i = 0; i < insTDom.length; i++) {
-        for(let k = 0; k < j; k++) { if(! (j in numsUsed)) { numsUsed[j] = j; break; } else { j++; } }
-        cBody.innerHTML += '<tr> <td>'+insTDom[i][0] + '<input type="hidden" class="form-control" name="group_m[]" value="'+j+'"><input type="hidden" class="form-control" name="form_where[]" value="'+curBody+'"> <div class="row"><div class="col-md-2"><button class="btn btn-danger" onclick="removeOneFromTableWithCol(this)"><i class="fa fa-minus-circle"></i></button></div><div class="col-md-10"><input type="text" class="form-control" name="seq_desc[]" placeholder="'+nameName[curBody]+' Description" value="'+insTDom[i][1]['at_desc[]']+'"></div></div></td> <td><b>'+insTDom[i][1]['at_code[]']+'</b></td> <td></td> <td><b>'+insTDom[i][1]['appro_amnt[]']+'</b></td> </tr>';
+        for(let k = 0; k < j; k++) { 
+          if(! (j in numsUsed)) { 
+            numsUsed[j] = j; break; 
+          } else { 
+            j++; 
+          } 
+        }
+        cBody.innerHTML += '<tr> <td>'+insTDom[i][0] + '<input type="hidden" class="form-control" name="group_m[]" value="'+j+'"><input type="hidden" class="form-control" name="form_where[]" value="'+curBody+'"> <div class="row"><div class="col-md-2"> @if(!isset($edit))<button class="btn btn-danger" onclick="removeOneFromTableWithCol(this)"><i class="fa fa-minus-circle"></i></button>@endif </div><div class="col-md-10"> <input type="text" class="form-control" name="seq_desc[]" placeholder="'+nameName[curBody]+' Description" value="'+insTDom[i][1]['at_desc[]']+'"></div></div></td> <td><b>'+insTDom[i][1]['at_code[]']+'</b></td> <td></td> <td><b>'+insTDom[i][1]['appro_amnt[]']+'</b></td> </tr>';
         
       }
-    } } } }
+    } 
+  } 
+} 
+}
   }
   window.addEventListener('change', function(e) {
     let dDom = document.getElementById('checkbox_get'), cDom = document.getElementsByClassName('checkbox_get');
@@ -398,17 +464,24 @@
       document.getElementsByName('fy')[0].value = appDet[i]['fy'];
       document.getElementsByName('fid')[0].value = appDet[i]['fid'];
       document.getElementsByName('t_desc')[0].value = appDet[i]['t_desc'];
+      document.getElementsByName('secid')[0].value = appDet[i]['secid'];
+      document.getElementsByName('funcid')[0].value = appDet[i]['funcid'];
+      
 
       curBodyIns(appDet[i]['form_where']);
       if(appDet[i]['form_where'] == "newrevenue") {
-        insRevenue(appDet[i]['seq_desc']);
+        insRevenue(appDet[i]['seq_desc'],appDet[i]['b_num'],appDet[i]['seq_num']);
       } else {
         let tBody = document.getElementById('tBody');
         if(tBody != null) {
           if((i - 1) > -1) { if(appDet[i-1]['group_m'] != appDet[i]['group_m']) { tBody.innerHTML = ""; } else { if(document.getElementById('check_group') != null) { document.getElementById('check_group').checked = true; } } }
           let tl_amt = (parseFloat(appDet[i]['appro_amnt'])).toFixed(2);
-          tBody.innerHTML += '<tr> <td><input type="hidden" name="check_table1[]" value="'+appDet[i]['check_table']+'"> <input type="hidden" name="check_funds1[]" value="'+appDet[i]['check_funds']+'"> <input type="hidden" name="check_ppa1[]" value="'+appDet[i]['check_ppa']+'"> <input type="hidden" name="check_fy1[]" value="'+appDet[i]['check_fy']+'"> <input type="hidden" name="check_mo_from1[]" value="'+appDet[i]['check_mo_from']+'"> <input type="hidden" name="check_mo_to1[]" value="'+appDet[i]['check_mo_to']+'"> <input type="hidden" name="at_code1[]" value="'+appDet[i]['at_code']+'"> <input type="hidden" name="at_desc1[]" value="'+appDet[i]['seq_desc']+'"> <input type="checkbox" class="checkbox_get" name="group_check[]" value="'+appDet[i]['appro_amnt']+'" checked></td> <td>'+appDet[i]['at_code']+'</td> <td><b>'+appDet[i]['at_desc']+'</b></td> <td><input type="number" class="form-control" name="amount1[]" value="'+tl_amt+'"></td> </tr>';
-          if((i + 1) < appDet.length) { if(appDet[i+1]['group_m'] != appDet[i]['group_m']) { moveToDivs(); } }
+          tBody.innerHTML += '<tr> <td><input type="hidden" name="check_table1[]" value="'+appDet[i]['check_table']+'"> <input type="hidden" name="check_funds1[]" value="'+appDet[i]['check_funds']+'"> <input type="hidden" name="check_ppa1[]" value="'+appDet[i]['check_ppa']+'"> <input type="hidden" name="check_fy1[]" value="'+appDet[i]['check_fy']+'"> <input type="hidden" name="check_mo_from1[]" value="'+appDet[i]['check_mo_from']+'"> <input type="hidden" name="check_mo_to1[]" value="'+appDet[i]['check_mo_to']+'"> <input type="hidden" name="at_code1[]" value="'+appDet[i]['at_code']+'"> <input type="hidden" name="at_desc1[]" value="'+appDet[i]['seq_desc']+'"> <input type="hidden" class="form-control" name="b_num[]" value="'+appDet[i]['b_num']+'"><input type="hidden" class="form-control" name="seq_num[]" value="'+appDet[i]['seq_num']+'">  <input type="checkbox" class="checkbox_get" name="group_check[]" value="'+appDet[i]['appro_amnt']+'" checked></td> <td>'+appDet[i]['at_code']+'</td> <td><b>'+appDet[i]['at_desc']+'</b></td> <td><input type="number" class="form-control" name="amount1[]" value="'+tl_amt+'"></td> </tr>';
+          if((i + 1) < appDet.length) { 
+            if(appDet[i+1]['group_m'] != appDet[i]['group_m']) { 
+              moveToDivs([appDet[i]['b_num'],appDet[i]['seq_num']]); 
+            } 
+          }
         }
       }
     }

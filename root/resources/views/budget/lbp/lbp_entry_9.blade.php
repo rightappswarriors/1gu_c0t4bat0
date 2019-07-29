@@ -56,7 +56,8 @@
                       <select class="form-control select2 select2-hidden-accessible" name="lbp08_b_num" onchange="curAmount = parseFloat(this.options[this.selectedIndex].id); insCurAmount();" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Year</strong> is required." data-parsley-errors-container="#budget_lbp08_b_num_span" required>
                         <option value="">Select Year...</option>
                         @foreach($getData as $gd)
-                          <option value="{{$gd->b_num}}" id="{{$gd->appro_amnt}}">{{$gd->fy}} - {{$gd->fdesc}} ({{$gd->appro_amnt}})</option>
+                         {{-- <option value="{{$gd->b_num}}" id="{{$gd->appro_amnt}}">{{$gd->fy}} - {{$gd->fdesc}} ({{$gd->appro_amnt}})</option> --}}
+                          <option value="{{$gd->fy}}" id="{{$gd->appro_amnt}}">{{$gd->fy}} - {{$gd->fdesc}} ({{$gd->appro_amnt}})</option>
                         @endforeach
                       </select>
                       <span id="budget_lbp08_b_num_span"></span>

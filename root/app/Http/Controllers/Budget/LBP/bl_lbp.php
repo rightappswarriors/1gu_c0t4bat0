@@ -63,22 +63,27 @@ class bl_lbp extends Controller {
 			'account' => DB::table(DB::raw('rssys.m04'))->get(),
 			'message' => $message,
 		];
+		// dd($arrRet);
 		return view($url[$form_no], $arrRet);
 	}
 
-	public static function saveForLBP8(Request $request, $form_no) { // function for saving LBP Form #8
+	public static function saveForLBP8(Request $request, $form_no, $requestForEdit = false) { // function for saving LBP Form #8
 		$sysdate = Carbon::now()->toDateString(); $systime = Carbon::now()->toTimeString(); $user = strtoupper(FunctionsAccountingControllers::getSession("_user", "id"));
-		$arrData = [['fy', 'fid'], ['seq_desc', 'form_where', 'check_table', 'check_funds', 'check_ppa', 'check_fy', 'check_mo_from', 'check_mo_to', 'at_code', 'appro_amnt', 'group_m']];
+		$arrData = [['fy', 'fid', 'secid', 'funcid'], ['seq_desc', 'form_where', 'check_table', 'check_funds', 'check_ppa', 'check_fy', 'check_mo_from', 'check_mo_to', 'at_code', 'appro_amnt', 'group_m']];
         $validate = [[[], []], [[], []]];
         $makeHash = [[], []];
         $haveAdd = [['sysdate'=>$sysdate, 'systime'=>$systime, 'user_id'=>$user, 'form_no'=>$form_no], []];
         $arrCheck = [[], []];
         $sMail = [[], []];
         $tbl = ['rssys.lbp0801', 'rssys.lbp0802'];
+        $whereData = [[true,['b_num']], [true,['seq_num','b_num']]];
         $count = 'seq_desc';
         $getFirstLayer = [[], ['rssys.lbp0801', [['fy', $request->fy], ['fid', $request->fid], ['sysdate', $sysdate], ['systime', $systime], ['user_id', $user]], ['b_num', 'desc'], 'b_num']]; // [['fy', $request->fy], ['fid', $request->fid], ['sysdate', $sysdate], ['systime', $systime], ['user_id', $user]]
-        $autoInc = 'seq_num';
-        return self::saveWith2Layers($request, $arrData, $validate, $makeHash, $haveAdd, $arrCheck, $sMail, $tbl, $count, $getFirstLayer, $autoInc);
+        $autoInc =  (!$requestForEdit ? 'seq_num' : null);
+        if($requestForEdit){
+        	unset($arrData[1][10]);
+        }
+        return self::saveWith2Layers($request, $arrData, $validate, $makeHash, $haveAdd, $arrCheck, $sMail, $tbl, $count, $getFirstLayer, $autoInc, $requestForEdit,$whereData);
 	}
 
 	public static function saveForLBP9(Request $request, $form_no) { // function for saving LBP Form #9
@@ -97,26 +102,58 @@ class bl_lbp extends Controller {
 		$getPKFrom2ndLayer = ['rssys.lbp0902', ['fy', 'sysdate', 'systime', 'user_id', 'cc_code', 'fid', 'secid'], ['b_num', 'desc'], ['b_num', 'b_num1']]; // [['fy', $request->fy], ['sysdate', $sysdate], ['systime', $systime], ['user_id', $user], ['cc_code', $request->cc_code[$j]], ['fid', $request->fid[$j]], ['secid', $request->secid[$j]]]
 		$count = 'cc_code';
 		$count1 = ['appro_amnt', 'cc_code'];
-		dd($request->all());
+		// dd($request->all());
 		return self::saveWith3Layers($request, $arrData, $validate, $makeHash, $haveAdd, $arrCheck, $sMail, $tbl, $count, $getPKFrom1stLayer, $arrData1, $validate1, $makeHash1, $haveAdd1, $arrCheck1, $sMail1, $tbl1, $count1, $autoInc, $getPKFrom2ndLayer);
 	}
 
-	public static function saveWith2Layers(Request $request, $arrData, $validate, $makeHash, $haveAdd, $arrCheck, $sMail, $tbl, $countFirst, $getFirstLayer, $autoInc) { // function for saving files with 2 layers (2 tables, in easier term)
+	public static function saveWith2Layers(Request $request, $arrData, $validate, $makeHash, $haveAdd, $arrCheck, $sMail, $tbl, $countFirst, $getFirstLayer, $autoInc, $requestForEdit = false, $whereData = []) { // function for saving files with 2 layers (2 tables, in easier term)
 		$n_b_num = "";
+		$whereClause = $headerChecker = [];
         $count = [1, count($request->$countFirst)]; $stat = [];
         for($i = 0; $i < count($tbl); $i++) {
         	for($j = 0; $j < $count[$i]; $j++) {
-        		if($count[$i] > 1) { $haveAdd[$i][$autoInc] = $j + 1; }
-	        	$newRequest = new \stdClass(); foreach($arrData[$i] AS $someData) { $newRequest->$someData = (($i == 1) ? $request->$someData[$j] : $request->$someData); } foreach($haveAdd[$i] AS $hKey => $hValue) { $newRequest->$hKey = $hValue; } $whereFirst = [];
+
+        		if($requestForEdit && count($whereData) > 0){
+        			foreach($whereData as $key => $forWhere){
+        				if($forWhere[0]){
+        					foreach ($forWhere[1] as $value) {
+        						if(isset($request->$value)){
+        							if(!in_array($value, $headerChecker)){
+        								array_push($whereClause,[$value => $request->$value[0]]);
+        								array_push($headerChecker,$value);
+        							}
+        						}
+        					}
+        				}
+        			}
+        		}
+
+        		if($count[$i] > 1) { 
+	        		if(isset($autoInc)){
+	        			$haveAdd[$i][$autoInc] = $j + 1; 
+	        		} 
+        		}
+	        	$newRequest = new \stdClass(); 
+	        	foreach($arrData[$i] AS $someData) { 
+	        		$newRequest->$someData = (($i == 1) ? $request->$someData[$j] : $request->$someData); 
+	        	} 
+	        	foreach($haveAdd[$i] AS $hKey => $hValue) { 
+	        		$newRequest->$hKey = $hValue; 
+	        	} 
+	        	$whereFirst = [];
         		if($count[$i] > 1) {
         			$b_num = [];
         			if(count($getFirstLayer[$i]) > 2) { $b_num = DB::table(DB::raw($getFirstLayer[$i][0]))->where($getFirstLayer[$i][1])->orderBy($getFirstLayer[$i][2][0], $getFirstLayer[$i][2][1])->first(); }
         			if(isset($b_num)) { $s_b_num = $getFirstLayer[$i][3]; $haveAdd[$i][$s_b_num] = $b_num->$s_b_num; $n_b_num = $b_num->$s_b_num; }
         		} 
-	        	$boolStat = FunctionsAccountingControllers::fInsData($newRequest, $arrData[$i], $arrCheck[$i], $makeHash[$i], $haveAdd[$i], $sMail[$i], $validate[$i], $tbl[$i]);
+        		// dd([['qwe' => 'qwe'],['qwe' => 'qwe']],$whereClause);
+	        	$boolStat = (!$requestForEdit ? FunctionsAccountingControllers::fInsData($newRequest, $arrData[$i], $arrCheck[$i], $makeHash[$i], $haveAdd[$i], $sMail[$i], $validate[$i], $tbl[$i]) : FunctionsAccountingControllers::fUpdData($newRequest, $arrData[$i], $arrCheck[$i], $makeHash[$i], $haveAdd[$i], $sMail[$i], $validate[$i], $tbl[$i], [$whereClause]));
+	        	// $boolStat = (!$requestForEdit ? dd('true') : dd('false'));
 	        	array_push($stat, $boolStat);
 	        }
+
 	    }
+	    // dd('qwe');
 	    foreach($stat AS $sEach) { if($sEach == true) {} else { return json_encode($sEach); break; } }
 	    return true;
 	}
@@ -127,7 +164,11 @@ class bl_lbp extends Controller {
         for($i = 0; $i < count($tbl); $i++) {
         	for($j = 0; $j < $count[$i]; $j++) {
         		$newRequest = new \stdClass(); foreach($arrData[$i] AS $someData) { $newRequest->$someData = (($i == 1) ? $request->$someData[$j] : $request->$someData); } foreach($haveAdd[$i] AS $hKey => $hValue) { $newRequest->$hKey = $hValue; } $whereFirst = [];
-	        	if(count($getPKFrom1stLayer[$i]) > 1) { foreach($getPKFrom1stLayer[$i][1] AS $justFirstLayer) { array_push($whereFirst, [$justFirstLayer, $newRequest->$justFirstLayer]); } }
+	        	if(count($getPKFrom1stLayer[$i]) > 1) { 
+	        		foreach($getPKFrom1stLayer[$i][1] AS $justFirstLayer) { 
+	        			array_push($whereFirst, [$justFirstLayer, $newRequest->$justFirstLayer]); 
+	        		} 
+	        	}
 	        	if($i == 1) {
 	        		$b_num = [];
 	        		if(count($getPKFrom1stLayer[$i]) > 2) { $b_num = DB::table(DB::raw($getPKFrom1stLayer[$i][0]))->where($whereFirst)->orderBy($getPKFrom1stLayer[$i][2][0], $getPKFrom1stLayer[$i][2][1])->first(); }
@@ -161,7 +202,14 @@ class bl_lbp extends Controller {
 			'9' => "SELECT lbp0801.fy, lbp0801.t_desc, lbp0801.form_no, lbp0801.lbp08_b_num, lbp0902.cc_code, lbp0902.secid, lbp0902.fid, m08.cc_desc, lbp0903.*, ppasubgrp.subgrpdesc FROM rssys.lbp0801 LEFT JOIN rssys.lbp0902 ON lbp0801.b_num = lbp0902.b_num LEFT JOIN rssys.m08 ON lbp0902.cc_code = m08.cc_code LEFT JOIN rssys.lbp0903 ON (lbp0801.b_num = lbp0903.b_num AND lbp0902.b_num1 = lbp0903.b_num1) LEFT JOIN rssys.ppasubgrp ON ppasubgrp.subgrpid = lbp0903.grpid WHERE lbp0801.b_num = '$b_num' AND lbp0801.form_no = '$form_no'",
 		];
 		if($request->isMethod('post')) {
-			dd($request->all());
+			switch($form_no) {
+				case '8':
+					$message = self::saveForLBP8($request, $form_no, true);
+					break;
+				case '9':
+					$message = self::saveForLBP9($request, $form_no, true);
+					break;
+			}
 		}
 		$arrRet = [
 			'appDet' => DB::select($sql[$form_no]),
@@ -175,7 +223,9 @@ class bl_lbp extends Controller {
 			'getData' => DB::select("SELECT *, fund.fdesc, (COALESCE(lbp0802.appro_amnt, 0.00) - COALESCE(_all.appro_amnt1, 0.00)) AS appro_amnt FROM rssys.lbp0801 LEFT JOIN rssys.fund ON lbp0801.fid = fund.fid LEFT JOIN (SELECT b_num, SUM(appro_amnt) AS appro_amnt FROM rssys.lbp0802 GROUP BY b_num) lbp0802 ON lbp0802.b_num = lbp0801.b_num LEFT JOIN (SELECT lbp0801.lbp08_b_num::integer AS b_num, SUM(_all.appro_amnt1) AS appro_amnt1 FROM rssys.lbp0801 LEFT JOIN (SELECT b_num, SUM(appro_amnt) AS appro_amnt1 FROM rssys.lbp0903 GROUP BY b_num) _all ON lbp0801.b_num = _all.b_num WHERE lbp0801.b_num != '$b_num' GROUP BY lbp0801.lbp08_b_num) _all ON lbp0801.b_num = _all.b_num WHERE form_no = '8'"),
 			'account' => DB::table(DB::raw('rssys.m04'))->get(),
 			'message' => $message,
+			'edit' => 'true'
 		];
+		// dd($arrRet);
 		if(count($arrRet['appDet']) < 1) {
 			return back()->with('alert', ["Error", "error", "No form selected."]);
 		}
