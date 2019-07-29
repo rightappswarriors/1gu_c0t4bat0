@@ -7,8 +7,8 @@
     $_ch = "Budget Appropriation"; // Module Name
 @endphp
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       {{-- <div class="graph-image graph-7">
@@ -17,7 +17,7 @@
       <div class="row">
         <div class="col-sm-12">
           <center><b>Republic of the Philippines<br> Province of Negros Oriental<br> LGU-City of Guihulngan<br><br>
-            <u>{{$Header->fund}}</u></b><br>
+            <u>{{$Header["fund"]}}</u></b><br>
           </center>
         </div>
       </div>
@@ -40,16 +40,16 @@
                 <td></td>
               </tr>
               <tr class="noborder">
-                <td><center><b>{{$Header->funcid}}</b></center></td>
-                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($Header->function)}}</b></td>
+                <td><center><b>{{$Header["funcid"]}}</b></center></td>
+                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($Header["function"])}}</b></td>
                 <td></td>
               </tr>
               <tr class="noborder">
-                <td><center><b>{{$Header->office_code}}</b></center></td>
-                <td><b><u>{{strtoupper($Header->office)}}</u></b></td>
+                <td><center><b>{{$Header["office_code"]}}</b></center></td>
+                <td><b><u>{{strtoupper($Header["office"])}}</u></b></td>
                 <td ></td>
               </tr>
-              @isset($PPA)
+              {{-- @isset($PPA)
                 @php
                 $total_amt = 0.00;
                 @endphp
@@ -84,7 +84,7 @@
                     <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
                     <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_amt, 2)}}</b></td>
                   </tr>
-              @endisset
+              @endisset --}}
             </tbody>
           </table>
         </div>
@@ -147,5 +147,5 @@ border-top:none !important;
      }
 
     </script>
-	
+  
 @endsection

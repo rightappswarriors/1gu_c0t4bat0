@@ -137,7 +137,7 @@ class FunctionsAccountingControllers extends Controller {
 		if(! empty($tbl)) {
 			$insData = self::fSave($request, $arrData, $arrCM, $makeHash, $haveAdd, $sMail, $validate, $tbl);
 			if(is_array($insData)) {
-				DB::table(DB::raw($tbl))->insert($insData);
+				$test = DB::table(DB::raw($tbl))->insert($insData);
 				return true;
 			}
 			return $insData;
@@ -148,7 +148,11 @@ class FunctionsAccountingControllers extends Controller {
 		if(! empty($tbl)) {
 			if(count($where) > 0) {
 				$insData = self::fSave($request, $arrData, $arrCM, $makeHash, $haveAdd, $sMail, $validate, $tbl);
+
 				if(is_array($insData)) {
+					if(isset($request->seq_num)){
+						dd($request->all());
+					}
 					DB::table(DB::raw($tbl))->where($where)->update($insData);
 					return true;
 				}
@@ -319,5 +323,19 @@ class FunctionsAccountingControllers extends Controller {
 		$retAmount = 0;
 		if(count($arr)) { foreach($arr AS $each) { $eachAmount = self::retColArr($each, $col, 0); $retAmount += $eachAmount; } }
 		return $retAmount;
+	}
+
+	public static function getAllFrom($arg){
+		if(!empty($arg)){
+			$toReturn = DB::table($arg[0]);
+			if(isset($arg[1])){
+				$toReturn = $toReturn->where($arg[1]);
+			}
+			if(isset($arg[2])){
+				$toReturn = $toReturn->select($arg[2]);
+			}
+			return $toReturn->get();
+		}
+		return null;
 	}
 }

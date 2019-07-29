@@ -271,6 +271,7 @@
                     {{-- <li><a href="{{ url('budget/budget-obligation-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
                     @if($LA_GRP["B4000000"]["restrict"] == 'Y')
                     <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
+                    <li><a href="{{ asset('/accounting/collection/obligation_request/Entry/Admin/') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Admin Budget Entry</a></li>
                     @endif
                     <!--             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
@@ -420,9 +421,30 @@
                             <ul class="treeview-menu">
                                 @if($LA_GRP["R2000001"]["restrict"] == 'Y')
                                 <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li>
+                                <li><a href="{{ url('reports/budget/rao/136') }}"><i class="fa fa-circle-o"></i> RAO Report</a></li>
                                 @endif
 
-                                <li><a href="{{ url('reports/budget/lbp') }}"><i class="fa fa-circle-o"></i> LBP</a></li>
+                                <li class="treeview">
+                                    {{-- <a href="{{ url('reports/budget/lbp') }}"><i class="fa fa-circle-o"></i> LBP</a> --}}
+                                    <a href="#">
+                                        <i class="fa-files-o"></i> 
+                                        <span>LBP Reports</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu" style="white-space: normal;" id="TreeView_Budget_LBP">
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 1</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 2</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 3</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 4</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 5</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 6</a></li>
+                                        <li><a href="{{ url('') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 7</a></li>
+                                        <li><a href="{{ url('reports/budget/lbp/8') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 8</a></li>
+                                        <li><a href="{{ url('reports/budget/lbp/9') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> LBP No. 9</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </a>
                     </li>

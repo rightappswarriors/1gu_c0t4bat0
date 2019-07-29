@@ -53,6 +53,9 @@
     </section>
   <script type="text/javascript">
     var appDet = JSON.parse('{!!addslashes(json_encode($appDet))!!}'), form_no = "{{$form_no}}",
+    // syrel added
+    isInCustomURL = ['8'];
+    // end of added by syrel
     form_cols = {
       '8': [
         ['Fiscal Year', 'Fund', 'Sector', 'Amount Funded'],
@@ -64,7 +67,7 @@
         ['fy', 'fdesc', 'secdesc', 'appro_amnt'],
         'b_num'
       ],
-    }, haveAdd = [['Options'], ['<button type="button" class="btn btn-warning" onclick="window.location.href = \'{{ asset('budget/lbp') }}/{{$form_no}}/edit\';"><i class="fa fa-edit"></i></button></button>']], tHead = document.getElementById('tHead'), tBody = document.getElementById('tBody');
+    }, haveAdd = [['Options'], ['<a type="button" class="btn btn-warning" href="{{ asset('budget/lbp') }}/{{$form_no}}/edit"><i class="fa fa-edit"></i></a>']], tHead = document.getElementById('tHead'), tBody = document.getElementById('tBody');
 
 
     if(form_cols[form_no] != undefined) {
@@ -76,16 +79,26 @@
           tHead.innerHTML += '<th>'+haveAdd[0][i]+'</th>';
         }
       }
-      if(tBody != null && form_cols[form_no][0] != undefined) { tBody.innerHTML = ""; if(appDet.length > 0) { for(let j = 0; j < appDet.length; j++) { tBody.innerHTML += '<tr id="'+appDet[j][form_cols[form_no][2]]+'"></tr>'; let curDom = document.getElementById(appDet[j][form_cols[form_no][2]]); if(curDom != null) { curDom.innerHTML = ""; 
+      if(tBody != null && form_cols[form_no][0] != undefined) {
+       tBody.innerHTML = ""; if(appDet.length > 0) { 
+        for(let j = 0; j < appDet.length; j++) {; tBody.innerHTML += '<tr id="'+appDet[j][form_cols[form_no][2]]+'"></tr>'; let curDom = document.getElementById(appDet[j][form_cols[form_no][2]]); if(curDom != null) { curDom.innerHTML = ""; 
         for(let i = 0; i < form_cols[form_no][0].length; i++) {
-          if(form_cols[form_no][1][i] != undefined) { if(appDet[j][form_cols[form_no][1][i]] != undefined) {
+
+          if(form_cols[form_no][1][i] != undefined) {
+           if(appDet[j][form_cols[form_no][1][i]] != undefined) {
             curDom.innerHTML += '<td>'+appDet[j][form_cols[form_no][1][i]]+'</td>';
+          } else {
+            curDom.innerHTML += '<td></td>';
           } }
         }
         for(let i = 0; i < haveAdd[0].length; i++) {
-          if(haveAdd[1] != undefined) { if(haveAdd[1][i] != undefined) {
+          // console.log([appDet[j]['b_num'],[form_cols[form_no]]]);
+          if(haveAdd[1][i] != undefined) {
             curDom.innerHTML += '<td>'+haveAdd[1][i]+'</td>';
-          } }
+            if(form_no.indexOf(isInCustomURL) >= 0){
+              $('a:last').attr('href','{{ asset('budget/lbp') }}/{{$form_no}}/'+appDet[j]['b_num']+'/edit');
+            }
+          } 
         }
       } } } else {
         let insToo = ""; for(let i = 0; i < ((form_cols[form_no][0].length - 1) + haveAdd[0].length); i++) { insToo += '<td hidden></td>'; }
