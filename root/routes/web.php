@@ -110,6 +110,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::post('', 'MFile\Accounting\c_cost_center@add');
 					Route::post('update', 'MFile\Accounting\c_cost_center@update');
 					Route::post('delete', 'MFile\Accounting\c_cost_center@delete');
+					Route::get('getupdatedetails/{code}', 'MFile\Accounting\c_cost_center@getupdate');
 				});
 				/* --- COST CENTER ----------*/
 
@@ -351,7 +352,10 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::post('budget/budget-proposal-entry/update', 'Budget\c_budget_proposal_entry@update');
 			Route::post('budget/budget-proposal-entry/saveaddmore', 'Budget\c_budget_proposal_entry@saveaddmore');
 			Route::get('budget/get_acctdesc/{at_code}', 'Budget\c_budget_proposal_entry@getAcctDesc');
+			Route::post('budget/get_acctcode', 'Budget\c_budget_proposal_entry@getAcctCode');
 			Route::get('budget/budget-proposal-entry/getOffices/{funcid}', 'Budget\c_budget_proposal_entry@getOffice');
+			Route::get('budget/budget-proposal-entry/print/{code}', 'Budget\c_budget_proposal_entry@print');
+			Route::get('budget/budget-appro/print-entry/{data}', 'Budget\c_budget_proposal_entry@print_entry');
 
 		/* ----- BUDGET APPROPRIATION */
 

@@ -98,13 +98,14 @@
                                 	@isset($m08)
                                         @foreach($m08 as $m8)
                                             <tr>
-                                                <th>{{$m8->cc_code}}</th>
+                                                <td>{{$m8->cc_code}}</td>
                                                 <td>{{$m8->cc_desc}}</td>
                                                 <td>{{$m8->funcdesc}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m8->cc_code}}', '{{$m8->cc_desc}}', {{$m8->funcid}});"></i></a>
-                                                       <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$m8->cc_code}}', '{{$m8->cc_desc}}');"><i class="fa fa-trash "></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m8->cc_code}}');"></i></a>
+
+                                                       <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$m8->cc_code}}', '');"><i class="fa fa-trash"></i></a>
                                                     </center>
                                                 </td>
                                             </tr>
@@ -144,19 +145,27 @@
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc, funcid)
+        function EditMode(id)
         {
-            $('#MOD_MODE').text('(Edit)');
-            $('#AddForm').attr('action', '{{ url('master-file/accounting/cost-center') }}/update');
-            $('input[name="txt_id"]').val(id);
-            $('input[name="txt_id"]').attr('required', '');
-            $('input[name="txt_id"]').attr('readonly', '');
-            $('input[name="txt_name"]').val(desc);
-            $('input[name="txt_name"]').attr('required', '');
-            $('select[name="func_type"]').attr('required', '');
-            $('select[name="func_type"]').val(funcid).trigger('change');
-            $('.AddMode').show();
-            $('.DeleteMode').hide();
+            $.ajax({
+                 url: '{{asset('master-file/accounting/cost-center/getupdatedetails/')}}/'+id,
+                 method: 'GET',
+                 success : function(data)
+                           {
+                             $('#MOD_MODE').text('(Edit)');
+                             $('#AddForm').attr('action', '{{ url('master-file/accounting/cost-center') }}/update');
+                             $('input[name="txt_id"]').val(data[0].cc_code);
+                             $('input[name="txt_id"]').attr('required', '');
+                             $('input[name="txt_id"]').attr('readonly', '');
+                             $('input[name="txt_name"]').val(data[0].cc_desc);
+                             $('input[name="txt_name"]').attr('required', '');
+                             $('select[name="func_type"]').attr('required', '');
+                             $('select[name="func_type"]').val(data[0].funcid).trigger('change');
+                             $('.AddMode').show();
+                             $('.DeleteMode').hide();
+                           }
+              });
+            
         }
         function DeleteMode(id, desc)
         {
@@ -166,7 +175,7 @@
             $('input[name="txt_id"]').removeAttr('required');
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
-            $('#DeleteName').text(desc);
+            $('#DeleteName').text(id);
             $('.DeleteMode').show();
             $('.AddMode').hide();
         }
