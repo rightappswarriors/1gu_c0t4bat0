@@ -100,6 +100,8 @@
                             <li><a href="{{url('master-file/accounting/sector')}}"><i class="fa fa-circle-o" id="SideBar_MFile_SECTOR"></i> Sector</a></li>
                             @endif
                             <li><a href="{{url('master-file/accounting/function')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FUNCTION"></i> Function</a></li>
+                            <li><a href="{{url('master-file/accounting/fpp')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FPP"></i> FPP</a></li>
+
                         </ul>
                     </li>
                     @endif

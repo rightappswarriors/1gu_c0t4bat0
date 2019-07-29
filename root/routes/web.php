@@ -173,6 +173,14 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::post('delete', 'MFile\Accounting\c_function@delete');
 				});
 				/* --- FUNCTION ----------*/
+				/* --- FPP ----------*/
+				Route::prefix('fpp')->group(function(){ // DONE -m
+					Route::get('', 'MFile\Accounting\c_fpp@view');
+					Route::post('', 'MFile\Accounting\c_fpp@add');
+					Route::post('update', 'MFile\Accounting\c_fpp@update');
+					Route::post('delete', 'MFile\Accounting\c_fpp@delete');
+				});
+				/* --- FPP ----------*/
 			});
 			/* --- ACCOUNTING ----------*/
 
