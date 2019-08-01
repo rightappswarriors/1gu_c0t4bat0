@@ -11,7 +11,7 @@ use DB;
 class c_fpp extends Controller
 {
     public function __construct()
-    {
+    {   
         $this->MOD_CODE = "M1000001";
         $this->m00 = Core::getAll("rssys.ppasubgrp");
         $SQLfpp = "SELECT * FROM rssys.ppasubgrp WHERE active = TRUE";
