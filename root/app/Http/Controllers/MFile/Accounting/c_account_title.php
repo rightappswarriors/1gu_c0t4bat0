@@ -44,7 +44,7 @@ class c_account_title extends Controller
            return back()->with('alert', ["Error", "error", "You don't have permission to use this function."]);
         }
     	// return dd($r);
-    	$data = ['at_code' => $r->txt_id, 'at_desc' => $r->txt_name, 'bs_pl' => 'B', 'dr_cr' => $r->sel_db, 'sl' => (isset($r->sel_sl)? 'Y' : 'N'), 'cib_acct' => (isset($r->sel_cw)? 'Y' : 'N'), 'acc_code' => $r->sel_type , 'payment' => (isset($r->sel_py) ? 'Y' : 'N'), 'acro' => urlencode(urlencode($r->txt_acro)), 'remarks' => urlencode(urlencode($r->txt_desc))];
+    	$data = ['at_code' => $r->txt_id, 'at_desc' => $r->txt_name, 'bs_pl' => 'B', 'dr_cr' => $r->sel_db, 'sl' => (isset($r->sel_sl)? 'Y' : 'N'), 'cib_acct' => (isset($r->sel_cw)? 'Y' : 'N'), 'acc_code' => $r->sel_type , 'payment' => (isset($r->sel_py) ? 'Y' : 'N'), 'acro' => urlencode(urlencode($r->txt_acro)), 'remarks' => $r->txt_desc];
     	if (Core::insertTable('rssys.m04', $data, 'Account Title'))
         {
             return back();
