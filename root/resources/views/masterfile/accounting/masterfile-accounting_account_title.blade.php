@@ -77,6 +77,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Long-Description</label>
+                                                            <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                <textarea  type="text" class="form-control" name="txt_desc"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <div class="col-sm-12">
                                                                 <label class="col-sm-4">
                                                                     <input name="sel_sl" type="checkbox" class="minimal"> Subledger Account
@@ -179,7 +185,7 @@
                                                 </td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m04->at_code}}', '{{$m04->at_desc}}', '{{$m04->acc_code}}', '{{$m04->dr_cr }}', '{{$m04->sl}}', '{{$m04->cib_acct}}', '{{$m04->payment}}', '{{$m04->acro}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$m04->at_code}}', '{{$m04->at_desc}}', '{{$m04->acc_code}}', '{{$m04->dr_cr }}', '{{$m04->sl}}', '{{$m04->cib_acct}}', '{{$m04->payment}}', '{{$m04->acro}}', '{{$m04->remarks}}');"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$m04->at_code}}', '{{$m04->at_desc}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
@@ -221,6 +227,7 @@
             $('select[name="sel_db"]').attr('required', '');
             $('select[name="sel_db"]').val('').trigger('change');
             $('input[name="txt_acro"]').val('');
+            $('input[name="txt_desc"]').val('');
 
             $('input[name="sel_sl"]').prop('checked', false);
             $('input[name="sel_cw"]').prop('checked', false);
@@ -230,8 +237,8 @@
             $('.DeleteMode').hide();
         }
         // EditMode('{{$m04->at_code}}', '{{$m04->at_desc}}', '{{$m04->acc_code}}', '{{$m04->dr_cr }}', '{{$m04->sl}}', '{{$m04->cib_acct}}', '{{$m04->payment}}');
-        function EditMode(id, desc, acc_id, dr_cr, sl, cw, py, acro)
-        {
+        function EditMode(id, desc, acc_id, dr_cr, sl, cw, py, acro, longdesc)
+        {   
             $('#MOD_MODE').text('(Edit)');
             $('#AddForm').attr('action', '{{ url('master-file/accounting/account-title') }}/update');
             $('input[name="txt_id"]').val(id);
@@ -247,6 +254,7 @@
             $('input[name="sel_cw"]').prop('checked', (cw == 'Y'? true : false));
             $('input[name="sel_py"]').prop('checked', (py == 'Y'? true : false));
             $('input[name="txt_acro"]').val(urldecode(acro));
+            $('textarea[name="txt_desc"]').text(longdesc);
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }

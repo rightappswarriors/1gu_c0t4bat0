@@ -1,4 +1,4 @@
-@extends('_main')
+ @extends('_main')
 @php
     $_bc = [
         ['link'=>'#','desc'=>'Masterfile','icon'=>'none','st'=>false],
@@ -112,15 +112,14 @@
                                         @endforeach
                                     @endisset
                                 </tbody>
-                                {{-- <tfoot>
+                                <tfoot>
                                     <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
-                                        <th>CSS grade</th>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Function</th>
+                                        <th width="15%"><center>Options</center></th>
                                     </tr>
-                                </tfoot> --}}
+                                </tfoot>
         					</table>
         				</div> <!-- /.box-body -->
         			</div> <!-- /.box -->
@@ -174,7 +173,8 @@
             $('input[name="txt_id"]').val(id);
             $('input[name="txt_id"]').removeAttr('required');
             $('input[name="txt_name"]').val(desc);
-            $('input[name="txt_name"]').attr('required', '');
+            $('input[name="txt_name"]').removeAttr('required', '');
+            $('select[name="func_type"]').removeAttr('required');
             $('#DeleteName').text(id);
             $('.DeleteMode').show();
             $('.AddMode').hide();
