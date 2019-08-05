@@ -242,8 +242,43 @@ class AccountingControllers extends Controller {
     }
 
 
-    public function generateRaoReport($obr_pk){
-        dd($obr_pk);
+    public function generateRaoReport($fpp,$cc_code){
+        if(DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrlne.fpp',$fpp],['rssys.m08.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE]])->exists()){
+
+            $arrID = $arr_atCode = $arrToReturn = $at_desc = array();
+            $runningRowSum = $runningColSum = 0.00;
+
+            $select = ['rssys.obrlne.seq_num as main_id', 'rssys.ppasubgrp.subgrpid as ppaid', 'rssys.ppasubgrp.subgrpdesc as ppadesc', 'rssys.obrhdr.cc_code as cc_code', 'rssys.obrlne.at_code as at_code', 'rssys.m04.at_desc as at_desc', 'rssys.obrhdr.t_date as t_date', 'rssys.obrhdr.obr_code as obr_code', 'rssys.obrhdr.particulars as particulars', 'rssys.obrlne.amount as amount'];
+            
+
+            $dataFromDB = DB::table('rssys.obrhdr')->where([['rssys.obrhdr.cc_code',$cc_code],['rssys.obrhdr.active',TRUE]])->select('obr_code','payee','t_date','particulars','cc_code','obr_pk')->distinct()->get();
+
+            foreach ($dataFromDB as $d) {
+                $obrlne = DB::table('rssys.obrlne')->join('rssys.m04','rssys.m04.at_code','rssys.obrlne.at_code')->where([['obrlne.active',TRUE],['m04.active',TRUE],['obrlne.fpp',$fpp],['obr_code',$d->obr_code]]);
+                
+                if(isset($obrlne)){
+                    $arrToReturn[$d->obr_pk]['rowTotal'] = $obrlne->sum('amount');
+                    $arrToReturn[$d->obr_pk]['data'] = $obrlne->get();
+                    foreach ($obrlne->select('obrlne.*','m04.at_desc')->get() as $obr) {
+
+                        if(!in_array($obr->at_code, $arr_atCode)){
+                            array_push($arr_atCode,$obr->at_code);
+                            array_push($at_desc,$obr->at_desc);
+                            // $runningColSum += $obr->amount;
+                        }
+                        $arrToReturn['otherDetails'][$obr->at_code]['colAmount'] = (isset ($arrToReturn['otherDetails'][$obr->at_code]['colAmount']) ? $arrToReturn['otherDetails'][$obr->at_code]['colAmount'] + $obr->amount : $obr->amount);
+                    }
+                    $arrToReturn['otherDetails']['lines'] = array_combine($arr_atCode,$at_desc);
+                    
+                }
+                
+            }
+            
+             dd($arrToReturn);
+
+
+        }
+        return abort(404);
     }
 
 
