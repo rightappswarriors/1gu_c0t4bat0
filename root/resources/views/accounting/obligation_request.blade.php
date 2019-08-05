@@ -64,11 +64,24 @@
                                     <div class="form-group">
                                         <label for="responsibility" class="col-sm-4 control-label">Responsibility Center <span class="text-red">*</span></label>
                                         <div class="col-sm-8" style="margin-bottom:10px;">
-                                          <select name="subgrpid" id="responsibility" class="form-control" style="width: 100%" data-parsley-required-message="<strong>oOffice</strong> is required." required>
+                                          <select name="subgrpid" id="responsibility" class="form-control" style="width: 100%" data-parsley-required-message="<strong>Office</strong> is required." required>
                                             <option value="" hidden disabled selected>Please Select</option>
                                             @isset($cc_code)
                                               @foreach($cc_code as $cc)
                                               <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
+                                              @endforeach
+                                            @endisset
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fund" class="col-sm-4 control-label">Fund<span class="text-red">*</span></label>
+                                        <div class="col-sm-8" style="margin-bottom:10px;">
+                                          <select name="fund" id="fund" class="form-control" style="width: 100%" data-parsley-required-message="<strong>Fund</strong> is required." required>
+                                            <option value="" hidden disabled selected>Please Select</option>
+                                            @isset($funds)
+                                              @foreach($funds as $cc)
+                                              <option value="{{$cc->fid}}">{{$cc->fdesc}}</option>
                                               @endforeach
                                             @endisset
                                           </select>
@@ -278,6 +291,7 @@
                 <th>OBR Code</th>
                 <th>Payee</th>
                 <th>Particulars</th>
+                <th>Fund</th>
                 <th width="10%">Options</th>
               </tr>
               </thead>
@@ -291,6 +305,7 @@
                       <td>{{$d->obr_code}}</td>
                       <td>{{$d->payee}}</td>
                       <td>{{$d->particulars}}</td>
+                      <td>{{$d->fdesc}}</td>
                       <td>
                           <center>
                              {{-- <a title="add new entry" href="{{url('accounting/collection/obligation_request/Entry/Admin/'.$d->obr_pk)}}" target="_blank" class="btn btn-social-icon btn-success"><i class="fa fa-plus"></i></a> --}}
