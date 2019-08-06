@@ -112,34 +112,81 @@
             			</tr>
 
             			@isset($obrlne)
-	            			@foreach($obrlne as $key => $data)
-	            				<tr>
-									<td>{{$key}}</td>
-									<td>{{$data[0]->obr_code}}</td>
-									<td colspan="3">{{$data[0]->particulars}}</td>
-									@foreach($data as $obr)
-									<td>
-										
-										@foreach($headerDet as $key => $data)
-										@if(array_search($obr->at_code,array_keys($headerDet)))
-											@for($i = 0; $i < array_search($obr->at_code,array_keys($headerDet)); $i++)
-												<?php $dom = null; ?>
-												@if($i == array_search($obr->at_code,array_keys($headerDet)))
-												<?php $dom .= '<td>'.$data->amount.'</td>'; ?>
-												@else
-												<?php $dom .= '<td></td>'; ?>
-												@endif
-
-											@endfor
-										@endif
-										{{$dom}}
-										@endforeach
-									</td>
-	            					@endforeach
-								</tr>
-	            				
+            				<?php $headerDetRW = array_values($headerDet);$obrlneRW = array_values($obrlne);$runDown = array();
+							$runningCol = 0; $curDate = null;?>
+							{{-- @for($m = 1; $m < 12; $m++) --}}
 								
-	            			@endforeach
+	            				@for($i = 0; $i < count($obrlneRW); $i++)
+									<?php $j = $runningRow = 0;?>
+									<tr>
+										<td>{{$obrlneRW[$i][0]->t_date}}</td>
+										<td>{{$obrlneRW[$i][0]->obr_code}}</td>
+										<td colspan="3">{{$obrlneRW[$i][0]->particulars}}</td>
+										@foreach($headerDet as $key => $value)
+											@if(isset($obrlneRW[$i][$j]))
+												@if($obrlneRW[$i][$j]->at_code == $key)
+												<?php 
+												$runningRow += $obrlneRW[$i][$j]->amount;
+												$runDown[$key] = (isset($runDown[$key]) ? $runDown[$key] + $obrlneRW[$i][$j]->amount : $obrlneRW[$i][$j]->amount);
+												?>
+												<td>{{$obrlneRW[$i][$j]->amount}}</td>
+												@else
+													@for($k = $j; $k < count($headerDet); $k++)
+														@if($obrlneRW[$i][$j]->at_code == $headerDetRW[$k][2])
+															<?php 
+															$runningRow += $obrlneRW[$i][$j]->amount; 
+															$runDown[$headerDetRW[$k][2]] = (isset($runDown[$headerDetRW[$k][2]]) ? $runDown[$headerDetRW[$k][2]] + $obrlneRW[$i][$j]->amount : $obrlneRW[$i][$j]->amount);
+															?>
+															<td>{{$obrlneRW[$i][$j]->amount}}</td>
+														@else
+															<td></td>
+														@endif
+													@endfor
+												@endif
+											@endisset
+											<?php $j++; ?>
+										@endforeach
+										<td>
+											
+											{{number_format($runningRow,2)}}
+											<?php $runningCol += $runningRow; ?>
+										</td>
+									</tr>
+									@if(Date('m',strtotime($obrlneRW[$i][0]->t_date)) != Date('m',strtotime($curDate)))
+									
+									<tr bgcolor="#93CDDD">	
+										<td></td>
+										<td></td>
+										<td colspan="3" style="font-weight: bold">TOTAL as of {{Date('F Y',strtotime($obrlneRW[$i][0]->t_date))}}</td>
+										@foreach($headerDet as $key => $value)
+											@if(isset($runDown[$key]))
+											<td>{{$runDown[$key]}}</td>
+											@else
+											<td></td>
+											@endif
+										@endforeach
+										<td>{{number_format($runningCol,2)}}</td>
+									</tr>
+
+									<tr bgcolor="#93CDDD" class="text-danger">	
+										<td></td>
+										<td></td>
+										<td colspan="3" style="font-weight: bold">BALANCES</td>
+										@foreach($headerDet as $key => $value)
+											@if(isset($runDown[$key]))
+											<td>{{number_format($value[0] - $runDown[$key] ,2)}}</td>
+											@else
+											<td> - </td>
+											@endif
+										@endforeach
+										<td>{{number_format($approSum - $runningCol,2)}}</td>
+									</tr>
+									
+									@endif
+									<?php $curDate = $obrlneRW[$i][0]->t_date; ?>
+	            				@endfor
+            				{{-- @endfor --}}
+	            			
             			@endisset
             			
             		</tbody>

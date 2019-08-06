@@ -198,7 +198,7 @@ class AccountingControllers extends Controller {
                 
                 default:
                     if(isset($request->at_code) && isset($request->fpp) && isset($request->amount) && count($request->at_code) == count($request->fpp) && count($request->fpp) == count($request->amount)){
-
+                        $extraDataForSecFun = DB::table('rssys.m08')->join('rssys.function','rssys.function.funcid','rssys.m08.funcid')->where([['m08.active',TRUE],['m08.cc_code',$request->subgrpid],['function.active',TRUE]])->first();
                         $arrObrhdrFields = [
                             'obr_code' => $request->obr,
                             'payee' => $request->payee,
@@ -206,6 +206,9 @@ class AccountingControllers extends Controller {
                             'particulars' => $request->particulars,
                             'user_id' => strtoupper(FunctionsAccountingControllers::getSession("_user", "id")),
                             'cc_code' => $request->subgrpid,
+                            'fid' => $request->fund,
+                            'secid' => ($extraDataForSecFun->secid ?? null),
+                            'funcid' => ($extraDataForSecFun->funcid ?? null),
                             'active' => TRUE
                         ];
 
@@ -266,7 +269,7 @@ class AccountingControllers extends Controller {
             if(isset($dataFromDB)){
                 foreach ($dataFromDB as $key) {
                     if(!array_key_exists($key->at_code, $arr_bgtps)){
-                        $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc];
+                        $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc,$key->at_code];
                     }
 
                     $arrToReturn[$key->t_date][] = $key;
