@@ -239,7 +239,7 @@ class B_AllotmentController extends Controller
     {
         $Header = Budget::printAllotHdr($b_num);
         $Line = Budget::printAllotLine($b_num);
-        $PPA = Budget::printAllotPPA($b_num);
+        $PPA = Budget::printAllotPPA($b_num); 
 
         return view('budget.allotment.budget_allot_print', compact('Header', 'Line', 'PPA'));
     }
