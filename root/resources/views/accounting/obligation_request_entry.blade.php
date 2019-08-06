@@ -68,6 +68,20 @@
 
             </div>
 
+            <div class="col-md-6" style="padding-top:10px;">
+              <div class="col-md font-weight-bold" style="font-weight: bold;">Fund <span class="text-danger">*</span></div>
+
+              <select name="fund" id="editfund" class="form-control" style="width: 100%" data-parsley-required-message="<strong>oOffice</strong> is required." required>
+                <option value="" hidden disabled>Please Select</option>
+                @isset($funds)
+                  @foreach($funds as $cc)
+                  <option value="{{$cc->fid}}">{{$cc->fdesc}}</option>
+                  @endforeach
+                @endisset
+              </select>
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -470,7 +484,7 @@
         if(a){
           let obrhdr = JSON.parse(a);
 
-          let domWithValuesHeader = [['editdate','editobr','editpayee','editparticulars','editfpp','editresponsibility'],['t_date','obr_pk','payee','particulars','fpp','cc_code']];
+          let domWithValuesHeader = [['editdate','editobr','editpayee','editparticulars','editfpp','editresponsibility','editfund'],['t_date','obr_pk','payee','particulars','fpp','cc_code','fid']];
           if(domWithValuesHeader[0].length == domWithValuesHeader[1].length){
             var i;
             for (i = 0; i < domWithValuesHeader[0].length; i++) {
