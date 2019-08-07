@@ -298,4 +298,17 @@ class Budget extends Model
             return $e->getMessage();
         }
     }
+
+    public static function generateSAAOBHdr($fy, $fund)
+    {
+        try
+        {
+            $sql = 'SELECT hb.fund, hb.funcid, hb.function, hb.office_code, hb.office FROM ((SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fund.'\') UNION ALL (SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgt01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fund.'\') UNION ALL (SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.obrhdr oh LEFT JOIN rssys.fund f ON oh.fid = f.fid LEFT JOIN rssys.function ft ON oh.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON oh.cc_code = m8.cc_code WHERE SUBSTRING(CAST(oh.t_date as text),0,5) = \''.$fy.'\' AND oh.fid = \''.$fund.'\')) as hb GROUP BY hb.fund, hb.funcid, hb.function, hb.office_code, hb.office ORDER BY office_code';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
