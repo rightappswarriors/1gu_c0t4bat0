@@ -343,4 +343,29 @@ class Core extends Model
       }
    }
 	/* ---------- MISCELLANEOUS ---------------------------------------------------*/
+
+	// added by Syrel, for returning last entry ID
+	public static function insertTableGetlastId($table, $data = [], $module, $customReturn = false)
+	{	// Table, Data
+		try 
+		{
+			if ($table!=null) {
+				if (!empty($data) && !empty($module)) {
+					$toReturnIfSuccess = DB::table(DB::raw($table))->insert($data);
+					if ($toReturnIfSuccess) {
+						Core::alert(1, 'addition of  data in '.$module);
+						return ($customReturn ? $data[$customReturn] : DB::getPdo()->lastInsertId());
+					}
+				}
+			}
+			Core::alert(2, 'occured upon addition of data in '.$module);
+			return false;
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+			Core::alert(0, '');
+			return false;
+		}
+	}
 }

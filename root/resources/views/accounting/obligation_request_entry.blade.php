@@ -5,7 +5,7 @@
   <section class="content">
     <div class="box box-default">
 
-      
+      <input type="hidden" name="action" value="{{(isset($action) ? $action : 'add')}}">
       <div class="box-header with-border">
         <h3 class="box-title">Header</h3>
 
@@ -58,7 +58,7 @@
               <div class="col-md font-weight-bold" style="font-weight: bold;">Responsibility Center <span class="text-danger">*</span></div>
 
               <select name="subgrpid" id="editresponsibility" class="form-control" style="width: 100%" data-parsley-required-message="<strong>oOffice</strong> is required." required>
-                <option value="" hidden disabled>Please Select</option>
+                <option value="" hidden disabled selected>Please Select</option>
                 @isset($cc_code)
                   @foreach($cc_code as $cc)
                   <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
@@ -72,7 +72,7 @@
               <div class="col-md font-weight-bold" style="font-weight: bold;">Fund <span class="text-danger">*</span></div>
 
               <select name="fund" id="editfund" class="form-control" style="width: 100%" data-parsley-required-message="<strong>oOffice</strong> is required." required>
-                <option value="" hidden disabled>Please Select</option>
+                <option value="" hidden disabled selected>Please Select</option>
                 @isset($funds)
                   @foreach($funds as $cc)
                   <option value="{{$cc->fid}}">{{$cc->fdesc}}</option>
@@ -484,7 +484,7 @@
         if(a){
           let obrhdr = JSON.parse(a);
 
-          let domWithValuesHeader = [['editdate','editobr','editpayee','editparticulars','editfpp','editresponsibility','editfund'],['t_date','obr_pk','payee','particulars','fpp','cc_code','fid']];
+          let domWithValuesHeader = [['editdate','editobr','editpayee','editparticulars','editfpp','editresponsibility','editfund'],['t_date','obr_code','payee','particulars','fpp','cc_code','fid']];
           if(domWithValuesHeader[0].length == domWithValuesHeader[1].length){
             var i;
             for (i = 0; i < domWithValuesHeader[0].length; i++) {

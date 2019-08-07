@@ -636,7 +636,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/edit/{obr_code}', 'Accounting\AccountingControllers@__obr_edit')->name('accounting.obr_edit');
 					Route::get('/', 'Accounting\AccountingControllers@__obligation_request')->name('accounting.obligation_request');
 					Route::match(['post','get'],'/Entry/Admin', 'Accounting\AccountingControllers@_obligation_admin');
-					Route::match(['post','get'],'/Entry/Admin/{obr}', 'Accounting\AccountingControllers@_obligation_admin_entry');
+					Route::match(['post','get'],'/Entry/Admin/{action}/{operationOpt?}/', 'Accounting\AccountingControllers@_obligation_admin_operation');
 				});
 				Route::prefix('or_issuance')->group(function() {
 					Route::get('/', 'Accounting\AccountingControllers@__obr_issuance')->name('accounting.obr_issuance');
