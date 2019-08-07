@@ -162,32 +162,48 @@ class AccountingControllers extends Controller {
     }
 
 
-    public function _obligation_admin_entry (Request $request,$obr_pk){
+    public function _obligation_admin_operation (Request $request,$action,$obr_pk = null){
         $retArr = FunctionsAccountingControllers::checkSession(true);
-        if(count($retArr) > 0 || DB::table('rssys.obrhdr')->where([['obr_pk',$obr_pk],['active',TRUE]])->doesntExist()) {
-            return abort(404);
+        $obrlne = $obrhdr = null;
+        $shouldCheck = false;
+        switch (strtolower($action)) {
+            case 'edit':
+                if(isset($obr_pk)){
+                    $shouldCheck = true;
+                    $action = 'edit';
+                }
+                break;
+            
+            default:
+                $shouldCheck = false;
+                $action = 'add';
+                break;
         }
-        $obrlne = DB::table('rssys.obrlne')->join('rssys.m04','rssys.obrlne.at_code','rssys.m04.at_code')->where([['rssys.obrlne.active',TRUE],['rssys.obrlne.obr_code',$obr_pk]])->select('m04.*','rssys.obrlne.oid as id', 'rssys.obrlne.*')->get();
-        $obrhdr = json_encode( DB::table('rssys.obrhdr')/*->join('rssys.ppasubgrp','rssys.obrhdr.fpp','rssys.ppasubgrp.subgrpid')*/->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->join('rssys.fund','rssys.obrhdr.fid','rssys.fund.fid')->where([['rssys.fund.active',TRUE],['rssys.obrhdr.active',TRUE]/*,['rssys.ppasubgrp.active',TRUE]*/,['rssys.m08.active',TRUE],['obr_pk',$obr_pk]])->orderBy('obr_pk','DESC')->get());
+        if($shouldCheck){
+            if(count($retArr) > 0 || DB::table('rssys.obrhdr')->where([['obr_pk',$obr_pk],['active',TRUE]])->doesntExist()) {
+                return abort(404);
+            }
+
+            $obrlne = DB::table('rssys.obrlne')->join('rssys.m04','rssys.obrlne.at_code','rssys.m04.at_code')->where([['rssys.obrlne.active',TRUE],['rssys.obrlne.obr_code',$obr_pk]])->select('m04.*','rssys.obrlne.oid as id', 'rssys.obrlne.*')->get();
+            $obrhdr = json_encode( DB::table('rssys.obrhdr')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->join('rssys.fund','rssys.obrhdr.fid','rssys.fund.fid')->where([['rssys.fund.active',TRUE],['rssys.obrhdr.active',TRUE],['rssys.m08.active',TRUE],['obr_pk',$obr_pk]])->orderBy('obr_pk','DESC')->get());
+        }
         if($request->isMethod('get')){
             $arrRet = [
                 'ppe'=>FunctionsAccountingControllers::getAllFrom(['rssys.ppasubgrp',[['active',TRUE]],['subgrpid','subgrpdesc']]),
                 'm04'=>FunctionsAccountingControllers::getAllFrom(['rssys.m04',[['active',TRUE]]]),
                 'cc_code'=>FunctionsAccountingControllers::getAllFrom(['rssys.m08',[['active',TRUE]],['cc_code','cc_desc']]),
                 'obrhdr'=> $obrhdr,
-                // 'obrhdr' => FunctionsAccountingControllers::getAllFrom(['rssys.obrhdr',[['active',TRUE],['obr_pk',$obr_pk]]]),
                 'data' => $obrlne,
                 '_bc'=>[
                         ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false]
                     ],
                 '_ch'=>"Admin Obligation Entry",
                 'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
+                'action' => $action
             ];
-            // dd($arrRet);
             return view('accounting.obligation_request_entry', $arrRet);
         } else if($request->isMethod('post')){
-
-            switch ($request->action) {
+            switch (strtolower($request->action)) {
                 case 'getobrlne':
                     return json_encode($obrlne);
                     break;
@@ -195,8 +211,10 @@ class AccountingControllers extends Controller {
                 case 'getobrhdr':
                     return $obrhdr;
                     break;
-                
-                default:
+
+                case 'add':
+
+                case 'edit':
                     if(isset($request->at_code) && isset($request->fpp) && isset($request->amount) && count($request->at_code) == count($request->fpp) && count($request->fpp) == count($request->amount)){
                         $extraDataForSecFun = DB::table('rssys.m08')->join('rssys.function','rssys.function.funcid','rssys.m08.funcid')->where([['m08.active',TRUE],['m08.cc_code',$request->subgrpid],['function.active',TRUE]])->first();
                         $arrObrhdrFields = [
@@ -211,16 +229,19 @@ class AccountingControllers extends Controller {
                             'funcid' => ($extraDataForSecFun->funcid ?? null),
                             'active' => TRUE
                         ];
-
                         $module = 'RAW Report Entry';
-                        $del = [['obr_code', '=', $obr_pk]];
-                        Core::deleteTableMultiWhere('rssys.obrlne', $del, $module);
-
-                        if (Core::updateTable('rssys.obrhdr', 'obr_pk', $obr_pk, $arrObrhdrFields, $module)){
+                        if($action == 'edit'){
+                            $del = [['obr_code', '=', $obr_pk]];
+                            Core::deleteTableMultiWhere('rssys.obrlne', $del, $module);
+                            $flagForSubmit = Core::updateTable('rssys.obrhdr', 'obr_pk', $obr_pk, $arrObrhdrFields, $module);
+                        } else if($action == 'add'){
+                            $flagForSubmit = Core::insertTableGetlastId('rssys.obrhdr',$arrObrhdrFields,$module);
+                        }
+                        if ($flagForSubmit){
                             for ($i=0; $i < count($request->at_code); $i++) { 
                                 $seqnum = (!empty(DB::table('rssys.obrlne')->max('seq_num')) ? DB::table('rssys.obrlne')->max('seq_num') + 1 : 1 );
                                 $arrObrlneFields = [
-                                    'obr_code' => $obr_pk,
+                                    'obr_code' => ($action == 'edit' ? $obr_pk : $flagForSubmit),
                                     'seq_num' => $seqnum,
                                     'at_code' => $request->at_code[$i],
                                     'amount' => str_replace(',', '', $request->amount[$i]),
@@ -247,6 +268,10 @@ class AccountingControllers extends Controller {
                     } else {
                         return 'Please check data for possible empty entries!';
                     }
+                    break;
+                
+                default:
+                    
                     break;
             }
 

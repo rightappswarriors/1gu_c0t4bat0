@@ -19,7 +19,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <center><label>&nbsp;</label></center>
-              <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> New Admin Entry</button>
+              <a type="button" class="btn btn-block btn-primary" href="{{url('accounting/collection/obligation_request/Entry/Admin/add')}}"><i class="fa fa-plus"></i> New Admin Entry</a>
 
 
               <div class="modal fade in" id="modal-default">
@@ -309,7 +309,7 @@
                       <td>
                           <center>
                              {{-- <a title="add new entry" href="{{url('accounting/collection/obligation_request/Entry/Admin/'.$d->obr_pk)}}" target="_blank" class="btn btn-social-icon btn-success"><i class="fa fa-plus"></i></a> --}}
-                             <a title="edit new entry" target="_blank" href="{{url('accounting/collection/obligation_request/Entry/Admin/'.$d->obr_pk)}}" class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" {{-- onclick="EditMode('{{$d->t_date}}','{{$d->obr_pk}}','{{addslashes($d->payee)}}','{{addslashes($d->particulars)}}','{{addslashes($d->cc_code)}}', '{{addslashes($d->subgrpid)}}');" --}}></i></a>
+                             <a title="edit new entry" href="{{url('accounting/collection/obligation_request/Entry/Admin/Edit/'.$d->obr_pk)}}" class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" {{-- onclick="EditMode('{{$d->t_date}}','{{$d->obr_pk}}','{{addslashes($d->payee)}}','{{addslashes($d->particulars)}}','{{addslashes($d->cc_code)}}', '{{addslashes($d->subgrpid)}}');" --}}></i></a>
                              <a title="delete this entry" class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#delete-default" onclick="DeleteMode('{{$d->obr_pk}}', '{{$d->particulars}}');"><i class="fa fa-trash "></i></a>
                           </center>
                       </td>
