@@ -281,38 +281,59 @@ class AccountingControllers extends Controller {
     }
 
 
-    public function generateRaoReport($fpp,$cc_code){
-        if(DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrlne.fpp',$fpp],['rssys.m08.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE]])->exists()){
+    public function generateRaoReport($fpp = null,$cc_code = null, $date = null){
+        if(isset($fpp) && isset($cc_code) && isset($date)){
+            if(count(DB::SELECT("select * from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrlne.fpp = '$fpp' and rssys.m08.cc_code = '$cc_code' and rssys.obrhdr.active = TRUE and rssys.obrlne.active = TRUE)"))){
 
-            $arrID = $arr_atCode = $arrToReturn = $at_desc = $arr_bgtps = array();
-            $runningRowSum = $runningColSum = $bgtps02 = 0.00;
+                $arrID = $arr_atCode = $arrToReturn = $at_desc = $arr_bgtps = array();
+                $runningRowSum = $runningColSum = $bgtps02 = 0.00;
+                
 
-            $select = ['rssys.obrlne.seq_num as main_id', 'rssys.ppasubgrp.subgrpid as ppaid', 'rssys.ppasubgrp.subgrpdesc as ppadesc', 'rssys.obrhdr.cc_code as cc_code', 'rssys.obrlne.at_code as at_code', 'rssys.m04.at_desc as at_desc', 'rssys.obrhdr.t_date as t_date', 'rssys.obrhdr.obr_code as obr_code', 'rssys.obrhdr.particulars as particulars', 'rssys.obrlne.amount as amount'];
-            
+                // $dataFromDB = DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m04','rssys.m04.at_code','rssys.obrlne.at_code')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE],['m04.active',TRUE],['m08.active',TRUE],['ppasubgrp.active',TRUE]])->select('rssys.obrhdr.obr_pk','rssys.obrhdr.t_date','rssys.obrhdr.obr_code','rssys.obrhdr.particulars','rssys.obrlne.at_code','rssys.obrlne.amount','rssys.obrhdr.obr_code','m04.at_desc','m08.cc_desc','ppasubgrp.subgrpdesc')->orderBy('rssys.obrhdr.t_date','ASC')->distinct()->tosql();
+                $dataFromDB = DB::select("select distinct rssys.obrhdr.obr_pk, rssys.obrhdr.t_date, rssys.obrhdr.obr_code, rssys.obrhdr.particulars, rssys.obrlne.at_code, rssys.obrlne.amount, rssys.obrhdr.obr_code, m04.at_desc, m08.cc_desc, ppasubgrp.subgrpdesc from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m04 on rssys.m04.at_code = rssys.obrlne.at_code inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrhdr.cc_code = '$cc_code' and rssys.obrhdr.active = TRUE and rssys.obrlne.active = TRUE and m04.active = TRUE and m08.active = TRUE and ppasubgrp.active = TRUE and date_part('year',rssys.obrhdr.t_date) = '$date') order by rssys.obrhdr.t_date asc");
+                if(isset($dataFromDB)){
+                    foreach ($dataFromDB as $key) {
+                        if(!array_key_exists($key->at_code, $arr_bgtps)){
+                            $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc,$key->at_code];
+                        }
 
-            $dataFromDB = DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m04','rssys.m04.at_code','rssys.obrlne.at_code')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE],['m04.active',TRUE],['m08.active',TRUE],['ppasubgrp.active',TRUE]])->select('rssys.obrhdr.obr_pk','rssys.obrhdr.t_date','rssys.obrhdr.obr_code','rssys.obrhdr.particulars','rssys.obrlne.at_code','rssys.obrlne.amount','rssys.obrhdr.obr_code','m04.at_desc','m08.cc_desc','ppasubgrp.subgrpdesc')->orderBy('rssys.obrhdr.t_date','ASC')->distinct()->get();
-            if(isset($dataFromDB)){
-                foreach ($dataFromDB as $key) {
-                    if(!array_key_exists($key->at_code, $arr_bgtps)){
-                        $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc,$key->at_code];
+                        $arrToReturn[$key->t_date][] = $key;
                     }
+                }
+                // dd($arrToReturn);
 
-                    $arrToReturn[$key->t_date][] = $key;
+                $arrRet = [
+                    'cc_code' => $cc_code,
+                    'data'=> $dataFromDB,
+                    'headerDet' => $arr_bgtps,
+                    'obrlne' => $arrToReturn
+                ];
+                return view('accounting.raoreport', $arrRet);
+
+
+            }
+            return abort(404);
+        } else {
+            $subgrpid = $cc_code = $t_date = [];
+            $query = DB::SELECT('select ppasubgrp.subgrpid, obrhdr.cc_code, obrhdr.t_date from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code');
+            if(isset($query)){
+                foreach($query as $key => $val){
+                    if(!in_array($val->subgrpid, $subgrpid)){
+                        array_push($subgrpid, $val->subgrpid);
+                    }
+                    if(!in_array($val->cc_code, $cc_code)){
+                        array_push($cc_code, $val->cc_code);
+                    }
+                    if(!in_array(Date('Y',strtotime($val->t_date)), $t_date)){
+                        array_push($t_date, Date('Y',strtotime($val->t_date)));
+                    }
                 }
             }
-            // dd($arrToReturn);
-
             $arrRet = [
-                'cc_code' => $cc_code,
-                'data'=> $dataFromDB,
-                'headerDet' => $arr_bgtps,
-                'obrlne' => $arrToReturn
+                'dataAll' => [$subgrpid,$cc_code,$t_date]
             ];
-            return view('accounting.raoreport', $arrRet);
-
-
+            return view('accounting.raopicker',$arrRet);
         }
-        return abort(404);
     }
 
 
