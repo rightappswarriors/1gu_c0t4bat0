@@ -268,6 +268,7 @@
                     @if($LA_GRP["B3000000"]["restrict"] == 'Y')
                     <li><a href="{{ url('budget/budget-approved-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> Budget Allotment</a></li>
                     @endif
+                    <li><a href="{{ route('budget.allotment') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> New Budget Allotment</a></li>
                     {{-- <li><a href="{{ url('budget/budget-obligation-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
                     @if($LA_GRP["B4000000"]["restrict"] == 'Y')
                     <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>

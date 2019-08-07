@@ -381,6 +381,18 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::post('budget/budget-approved-entry/save2', 'Budget\c_budget_approved_entry@save2');
 			Route::post('budget/budget-approved-entry/getRemainingBalance', 'Budget\c_budget_approved_entry@getRemainingBalance');
 			Route::get('budget/budget-approved-entry/{b_num}', 'Budget\c_budget_approved_entry@edit');
+
+			// New Allotment
+			Route::prefix('budget')->group(function() {
+				Route::prefix('allotment')->group(function() {
+					Route::get('/', 'Budget\B_AllotmentController@view')->name('budget.allotment');
+					Route::post('loaddatafromappro', 'Budget\B_AllotmentController@loaddatafromappro')->name('budget.loaddatafromappro');
+					Route::get('loaddatafromoblig', 'Budget\B_AllotmentController@loaddatafromoblig')->name('budget.loaddatafromoblig');
+					Route::post('getdatafromappro', 'Budget\B_AllotmentController@getdatafromappro')->name('budget.getdatafromappro');
+					Route::post('savemanual', 'Budget\B_AllotmentController@savemanual')->name('budget.savemanual');
+					Route::get('print-allot/{data}', 'Budget\B_AllotmentController@print');
+				});
+			});
 		/* ----- BUDGET ALLOTMENT */
 
 		/* ----- BUDGET OBLIGATION */
