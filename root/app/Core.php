@@ -163,14 +163,16 @@ class Core extends Model
 	/* ---------- INSERT ---------------------------------------------------*/
 	// Created Update function - Mhel Jan 10, 2019
 	// 
-	public static function insertTable($table, $data = [], $module)
+	public static function insertTable($table, $data = [], $module = null)
 	{	// Table, Data
 		try 
 		{
 			if ($table!=null) {
-				if (!empty($data) && !empty($module)) {
+				if (!empty($data)) {
 					if (DB::table(DB::raw($table))->insert($data)) {
-						Core::alert(1, 'addition of  data in '.$module);
+						if(isset($module)){
+							Core::alert(1, 'addition of  data in '.$module);
+						}
 						return true;
 					}
 				}
@@ -345,15 +347,17 @@ class Core extends Model
 	/* ---------- MISCELLANEOUS ---------------------------------------------------*/
 
 	// added by Syrel, for returning last entry ID
-	public static function insertTableGetlastId($table, $data = [], $module, $customReturn = false)
+	public static function insertTableGetlastId($table, $data = [], $module = null, $customReturn = false)
 	{	// Table, Data
 		try 
 		{
 			if ($table!=null) {
-				if (!empty($data) && !empty($module)) {
+				if (!empty($data)) {
 					$toReturnIfSuccess = DB::table(DB::raw($table))->insert($data);
 					if ($toReturnIfSuccess) {
-						Core::alert(1, 'addition of  data in '.$module);
+						if(isset($module)){
+							Core::alert(1, 'addition of  data in '.$module);
+						}
 						return ($customReturn ? $data[$customReturn] : DB::getPdo()->lastInsertId());
 					}
 				}

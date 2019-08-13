@@ -334,6 +334,9 @@ class FunctionsAccountingControllers extends Controller {
 			if(isset($arg[2])){
 				$toReturn = $toReturn->select($arg[2]);
 			}
+			if(isset($arg[3])){
+				$toReturn = $toReturn->distinct();
+			}
 			return $toReturn->get();
 		}
 		return null;

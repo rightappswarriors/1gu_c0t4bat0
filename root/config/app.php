@@ -159,6 +159,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -209,7 +210,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'FunctionsAccountingControllers'=>App\Http\Controllers\Accounting\FunctionsAccountingControllers::class,
-
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'OfficeExport' => App\Exports\OfficeExport::class,
         // Custom Aliases
         'Core' => App\Core::class,
     ],
