@@ -4,7 +4,10 @@
   <form method="POST" id="submitEntries">
   {{csrf_field()}}
   <section class="content">
-    <div class="box box-default">
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+            <div class="box box-default">
 
       <input type="hidden" name="action" value="{{(isset($action) ? $action : 'add')}}">
       <div class="box-header with-border">
@@ -15,29 +18,27 @@
         </div>
       </div>
       <div class="box-body" style="padding-bottom: 10px;">
-         <div class="container">
           <div class="row">
-
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">Date <span class="text-danger">*</span></div>
               <input type="date" id="editdate" name="date" class="form-control" data-parsley-required-message="<strong>Date</strong> is required." required>
             </div>
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">OBR Number <span class="text-danger">*</span></div>
               <input name="obr" id="editobr" placeholder="OBR Number" name="text" class="form-control" data-parsley-required-message="<strong>OBR Number</strong> is required." required >
             </div>
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">Payee <span class="text-danger">*</span></div>
               <input name="payee" id="editpayee" placeholder="Payee" name="text" class="form-control" data-parsley-required-message="<strong>Payee</strong> is required." required>
             </div>
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
                 <div class="col-md font-weight-bold" style="font-weight: bold;">Particulars <span class="text-danger">*</span></div>
                 <input name="particulars" id="editparticulars" placeholder="Particulars" name="text" class="form-control" data-parsley-required-message="<strong>Particulars</strong> is required." required>
             </div>
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">Responsibility Center <span class="text-danger">*</span></div>
 
               <select name="subgrpid" id="editresponsibility" onchange="getATDetails(this.value)" class="form-control" style="width: 100%" data-parsley-required-message="<strong>oOffice</strong> is required." required>
@@ -65,7 +66,7 @@
 
             </div> --}}
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">F.P.P <span class="text-danger">*</span></div>
 
               <select name="fpp[]" class="form-control" style="width: 100%" data-parsley-required-message="<strong>F.P.P</strong> is required." required>
@@ -79,7 +80,7 @@
 
             </div>
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">Account Code <span class="text-danger">*</span></div>
 
               <select name="at_code[]" class="form-control" style="width: 100%" data-parsley-required-message="<strong>Account Code</strong> is required." required>
@@ -93,16 +94,19 @@
 
             </div>
 
-            <div class="col-md" style="padding-top:10px;">
+            <div class="col-md-12" style="padding-top:10px;">
               <div class="col-md font-weight-bold" style="font-weight: bold;">Amount <span class="text-danger">*</span></div>
 
               <input name="amount[]" class="form-control" style="width: 100%" value="0.00" placeholder="Amount" type="text" data-parsley-required-message="<strong>Amount</strong> is required." required>
             </div>
 
           </div>
-         </div>
       </div>
     </div>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+
 
     <div class="row">
       <div class="col-xs-12">
@@ -164,12 +168,14 @@
         </div> --}}
 
         <div class="row">
-          <div class="col-sm-4" style="float: right;">
-              <button type="button" class="btn btn-block btn-primary" style="margin-top: 0;" onclick="window.location.href= '{{url('accounting/collection/obligation_request/Entry/Admin')}}'"><i class="fa fa-arrow-left"></i> Go Back</button>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-3">
+              <button type="button" class="btn btn-block btn-primary"  onclick="window.location.href= '{{url('accounting/collection/obligation_request/Entry/Admin')}}'"><i class="fa fa-arrow-left"></i> Go Back</button>
           </div>
-          <div class="col-sm-4" style="float: right;">
-            <button type="submit" class="btn btn-block btn-success"><i class="fa fa-save"></i> Save</button>
+          <div class="col-sm-3">
+             <button  type="submit" class="btn btn-block btn-success" ><i class="fa fa-save"></i> Save</button>
           </div>
+          <div class="col-sm-3"></div>
         </div>
 
       </div>
