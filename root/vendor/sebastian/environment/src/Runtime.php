@@ -20,12 +20,12 @@ final class Runtime
     private static $binary;
 
     /**
-     * Returns true when Xdebug is supported or
+     * Returns true when Xdebug or PCOV is available or
      * the runtime used is PHPDBG.
      */
     public function canCollectCodeCoverage(): bool
     {
-        return $this->hasXdebug() || $this->hasPHPDBGCodeCoverage();
+        return $this->hasXdebug() || $this->hasPCOV() || $this->hasPHPDBGCodeCoverage();
     }
 
     /**
@@ -106,6 +106,29 @@ final class Runtime
         return $this->getName() . ' ' . $this->getVersion();
     }
 
+    public function getNameWithVersionAndCodeCoverageDriver(): string
+    {
+        if (!$this->canCollectCodeCoverage() || $this->hasPHPDBGCodeCoverage()) {
+            return $this->getNameWithVersion();
+        }
+
+        if ($this->hasXdebug()) {
+            return \sprintf(
+                '%s with Xdebug %s',
+                $this->getNameWithVersion(),
+                \phpversion('xdebug')
+            );
+        }
+
+        if ($this->hasPCOV()) {
+            return \sprintf(
+                '%s with PCOV %s',
+                $this->getNameWithVersion(),
+                \phpversion('pcov')
+            );
+        }
+    }
+
     public function getName(): string
     {
         if ($this->isHHVM()) {
@@ -180,11 +203,63 @@ final class Runtime
     /**
      * Returns true when the runtime used is PHP with the PHPDBG SAPI
      * and the phpdbg_*_oplog() functions are available (PHP >= 7.0).
-     *
-     * @codeCoverageIgnore
      */
     public function hasPHPDBGCodeCoverage(): bool
     {
         return $this->isPHPDBG();
+    }
+
+    /**
+     * Returns true when the runtime used is PHP with PCOV loaded and enabled
+     */
+    public function hasPCOV(): bool
+    {
+        return $this->isPHP() && \extension_loaded('pcov') && \ini_get('pcov.enabled');
+    }
+
+    /**
+     * Parses the loaded php.ini file (if any) as well as all
+     * additional php.ini files from the additional ini dir for
+     * a list of all configuration settings loaded from files
+     * at startup. Then checks for each php.ini setting passed
+     * via the `$values` parameter whether this setting has
+     * been changed at runtime. Returns an array of strings
+     * where each string has the format `key=value` denoting
+     * the name of a changed php.ini setting with its new value.
+     *
+     * @return string[]
+     */
+    public function getCurrentSettings(array $values): array
+    {
+        $diff  = [];
+        $files = [];
+
+        if ($file = \php_ini_loaded_file()) {
+            $files[] = $file;
+        }
+
+        if ($scanned = \php_ini_scanned_files()) {
+            $files = \array_merge(
+                $files,
+                \array_map(
+                    'trim',
+                    \explode(",\n", $scanned)
+                )
+            );
+        }
+
+        foreach ($files as $ini) {
+            $config = \parse_ini_file($ini, true);
+
+            foreach ($values as $value) {
+                $set = \ini_get($value);
+
+                if (isset($config[$value]) && $set != $config[$value]) {
+                    $diff[] = \sprintf('%s=%s', $value, $set);
+                }
+            }
+        }
+
+        return $diff;
     }
 }
