@@ -54,9 +54,9 @@
                     <i class="fa fa-calendar"></i>
                   </div>
                   @if($isnew)
-                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" {{-- data-parsley-required-message="<strong>ARE date is required.</strong>" required --}}>
                   @else
-                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}" data-parsley-errors-container="#validate_invoicedt" {{-- data-parsley-required-message="<strong>ARE date is required.</strong>" required --}}>
                   @endif
                 </div>
                 <span id="validate_invoicedt"></span>
@@ -66,9 +66,9 @@
               <div class="form-group">
                 <label>Reference</label>
                 @if($isnew)
-                <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
+                <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_txtreference" {{-- data-parsley-required-message="<strong>Reference is required.</strong>" required --}}>
                 @else
-                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
+                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" data-parsley-errors-container="#validate_txtreference" {{-- data-parsley-required-message="<strong>Reference is required.</strong>" required --}}>
                 @endif
                 <span id="validate_txtreference"></span>
               </div>
@@ -578,7 +578,8 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Property No.</label>
-                              <input type="text" class="form-control" name="txt_partno_text">
+                             {{--  <input type="text" class="form-control" name="txt_partno_text"> --}}
+                              <div><textarea id="txt_partno_text" class="form-control" name="txt_partno_text" rows="4" cols="88"></textarea></div>
                             </div>
                           </div>  
                           <div class="col-sm-4">
@@ -825,7 +826,7 @@
           
           $('input[name="txt_lineno_text"]').val(data[0]);
           $('input[name="txt_itemcode_text"]').val(data[1]);
-          $('input[name="txt_partno_text"]').val(data[2]);
+          $('textarea[name="txt_partno_text"]').val(data[2]);
           $('input[name="txt_serialno_text"]').val(data[3]);
           $('input[name="txt_tagno_text"]').val(data[4]);
           $('textarea[name="txt_itemdesc_text"]').val(data[5]);
@@ -981,7 +982,7 @@
 
             var line = $('input[name="txt_lineno_text"]').val();
             var item_code = $('input[name="txt_itemcode_text"]').val();
-            var part_no = $('input[name="txt_partno_text"]').val();
+            var part_no = $('textarea[name="txt_partno_text"]').val();
             var serial_no = $('input[name="txt_serialno_text"]').val();
             var tag_no = $('input[name="txt_tagno_text"]').val();
             var item_desc = $('textarea[name="txt_itemdesc_text"]').val();
@@ -1066,7 +1067,7 @@
 
         $('input[name="txt_lineno_text"]').val('');
         $('input[name="txt_itemcode_text"]').val('');
-        $('input[name="txt_partno_text"]').val('');
+        $('textarea[name="txt_partno_text"]').val('');
         $('input[name="txt_serialno_text"]').val('');
         $('input[name="txt_tagno_text"]').val('');
         $('textarea[name="txt_itemdesc_text"]').val('');
