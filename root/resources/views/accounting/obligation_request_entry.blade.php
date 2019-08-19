@@ -185,7 +185,12 @@
     }
 
     function DeleteMode(whichElement){
-      $(whichElement).parent().parent().remove()
+      var myTable = $('#example1').DataTable();
+ 
+      myTable
+        .row( $(whichElement).parents('tr') )
+        .remove()
+        .draw();
     }
 
     $('body').on('keyup blur', 'input[name="amount[]"]', function(event) {
@@ -273,6 +278,7 @@
         }
       })
     });
+
 
     function addItem()
     {

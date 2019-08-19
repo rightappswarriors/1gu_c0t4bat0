@@ -203,6 +203,7 @@ class AccountingControllers extends Controller {
                 // 'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
                 'action' => $action
             ];
+            // dd($obrlne);
             return view('accounting.obligation_request_entry', $arrRet);
         } else if($request->isMethod('post')){
             switch (strtolower($request->action)) {
