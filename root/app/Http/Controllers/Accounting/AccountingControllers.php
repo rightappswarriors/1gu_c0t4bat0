@@ -203,6 +203,7 @@ class AccountingControllers extends Controller {
                 // 'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
                 'action' => $action
             ];
+            // dd($obrlne);
             return view('accounting.obligation_request_entry', $arrRet);
         } else if($request->isMethod('post')){
             switch (strtolower($request->action)) {
@@ -266,7 +267,6 @@ class AccountingControllers extends Controller {
                                     'fpp' => $request->fpp[$i],
                                     'active' => TRUE
                                 ];
-
                                 if (Core::insertTable('rssys.obrlne', $arrObrlneFields, null)) 
                                 {
                                     $flag = 'true';

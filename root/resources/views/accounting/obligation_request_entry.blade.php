@@ -191,7 +191,12 @@
     }
 
     function DeleteMode(whichElement){
-      $(whichElement).parent().parent().remove()
+      var myTable = $('#example1').DataTable();
+ 
+      myTable
+        .row( $(whichElement).parents('tr') )
+        .remove()
+        .draw();
     }
 
     $('body').on('keyup blur', 'input[name="amount[]"]', function(event) {
@@ -280,6 +285,7 @@
       })
     });
 
+
     function addItem()
     {
       var table = $('#example1').DataTable();
@@ -311,6 +317,7 @@
       $('select[name="at_code[]"]').select2({
           ajax: {
             method: 'POST',
+            async: false,
             data: {action: 'get-at_code', _token: '{{ csrf_token() }}', cc_code: value},
             dataType: 'json'
           }
