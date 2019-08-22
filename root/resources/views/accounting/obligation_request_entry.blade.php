@@ -317,6 +317,7 @@
       $('select[name="at_code[]"]').select2({
           ajax: {
             method: 'POST',
+            async: false,
             data: {action: 'get-at_code', _token: '{{ csrf_token() }}', cc_code: value},
             dataType: 'json'
           }

@@ -267,7 +267,6 @@ class AccountingControllers extends Controller {
                                     'fpp' => $request->fpp[$i],
                                     'active' => TRUE
                                 ];
-
                                 if (Core::insertTable('rssys.obrlne', $arrObrlneFields, null)) 
                                 {
                                     $flag = 'true';
