@@ -24,7 +24,7 @@
         <div class="box-body" style="">
           <form id="PerFundCheck" data-parsley-validate novalidate>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label>Year</label>
                 <select class="form-control select2 select2-hidden-accessible" name="sel_fy_mo" onchange="getEntries()" style="width: 100%;" tabindex="-1" data-parsley-errors-container="#sel_fy_span" aria-hidden="true" data-parsley-required-message="<strong>Year</strong> is required." required>
@@ -40,7 +40,7 @@
                 <span id="sel_fy_span"></span>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group" style="display: none">
                 <label>Fund</label>
                 <select class="form-control select2 select2-hidden-accessible" name="sel_fid" onchange="getEntries()" data-parsley-required-message="<strong>Fund</strong> is required." style="width: 100%;" data-parsley-errors-container="#sel_fid_span" tabindex="-1" aria-hidden="true">
@@ -56,16 +56,17 @@
                 <span id="sel_fid_span"></span>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-sm-2 pull-right">
+              <div class="form-group">
+                <center><label>&nbsp;</label></center>
+                {{-- <button type="button" class="btn btn-block btn-info"><i class="fa fa-print"></i> Print</button> --}}
+                <a class="btn btn-block btn-info" data-toggle="modal" data-target="#printall-modal"><i class="fa fa-print"></i> Print</a>
+              </div>
+            </div>
+            <div class="col-md-3 pull-right">
               <div class="form-group">
                 <center><label>&nbsp;</label></center>
                 <button type="button" class="btn btn-block btn-primary" onclick="newBudgetEntry()"><i class="fa fa-plus"></i> New Budget Appropriation</button>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                <center><label>&nbsp;</label></center>
-                <button type="button" class="btn btn-block btn-info"    ><i class="fa fa-print"></i> Print</button>
               </div>
             </div>
           </div>
@@ -85,14 +86,12 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th width="10%">Ref. #</th>
-                  {{-- <th>Description</th> --}}
-                  {{-- <th>Branch</th> --}}
-                  <th>Office</th>
+                  <th width="10%">Code</th>
+                  <th>Year</th>
+                  <th>Fund</th>
                   <th>Sector</th>
-                  {{-- <th>Date</th> --}}
-                  {{-- <th><center>Finalized</center></th> --}}
-                  {{-- <th><center>Approved</center></th> --}}
+                  <th>Function</th>
+                  <th>Office</th>
                   <th width="10%">Options</th>
                 </tr>
                 </thead>
@@ -108,6 +107,63 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
+      <div class="row">
+      <div class="modal fade in" id="printall-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Print All Budget Appropriation</h4>
+            </div>
+            <div class="modal-body">
+            <form id="printall" data-parsley-validate novalidate>
+            <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Year</label>
+                <select class="form-control select2 select2-hidden-accessible" name="select_fy" style="width: 100%;" tabindex="-1" data-parsley-errors-container="#select_fy" aria-hidden="true" data-parsley-required-message="<strong>Year</strong> is required." required>
+                  @isset($data[0])
+                    <option value="">Select Year...</option>
+                    @foreach($data[0] as $x03)
+                      <option value="{{$x03->fy}}">{{$x03->fy}}</option>
+                    @endforeach
+                  @else
+                    <option value="">No Year registered...</option>
+                  @endisset
+                </select>
+                <span id="select_fy"></span>
+              </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Fund</label>
+                <select class="form-control select2 select2-hidden-accessible" name="select_fid" data-parsley-required-message="<strong>Fund</strong> is required." style="width: 100%;" data-parsley-errors-container="#select_fid" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." required>
+                    @isset($data[1])
+                        <option value="">Select Fund...</option>
+                        @foreach($data[1] as $fund)
+                            <option value="{{$fund->fid}}">{{$fund->fdesc}}</option>
+                        @endforeach
+                    @else
+                         <option value="">No Fund registered...</option>
+                    @endisset
+                </select>
+                <span id="select_fid"></span>
+              </div>
+            </div>
+            </div>
+             </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" onclick="printAll()">Generate</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
     </section>
 	<script type="text/javascript">
         $(document).ready(function(){
@@ -121,7 +177,7 @@
 
             var table = $('#example1').DataTable();
             var fymo =  $('select[name="sel_fy_mo"]').val();
-            var fid = $('select[name="sel_fid"]').val();
+            // var fid = $('select[name="sel_fid"]').val();
             table.clear().draw();
             //  && fid != ''
             if (fymo != '') {
@@ -137,16 +193,14 @@
                                             : '<i class="fa fa-times" style="font-size:25px;color:red"></i>';
                                 var isclosed = (data[i].closed != 'Y') ? 'btn-info' : 'btn-warning';
                                 var isIcon = (data[i].closed != 'Y') ? 'fa-eye' : 'fa-pencil';
+
                                 table.row.add([
                                         data[i].b_num,
-                                        // data[i].t_desc,
-                                        // data[i].name,
-                                        // data[i].fdesc,
-                                        data[i].cc_desc,
-                                        data[i].secdesc,
-                                        // stringToDateFormat(data[i].t_date),
-                                        // '<center>'+finalized+'</center>',
-                                        // '<center>'+closed+'</center>',
+                                        data[i].fy,
+                                        data[i].fund,
+                                        data[i].sector,
+                                        data[i].function,
+                                        data[i].office,
                                         '<center>' +
                                             '<a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode(\''+data[i].b_num+'\');"></i></a>' +
                                             '<a class="btn btn-social-icon btn-info" data-toggle="modal" data-target="#modal-default"><i class="fa fa-print" onclick="PrintMode(\''+data[i].b_num+'\');"></i></a>' +
@@ -183,5 +237,36 @@
 
            location.href ='{{ url('budget/budget-proposal-entry/print') }}/'+ b_num;
         }
+
+        function printAll()
+        {
+           if ($('#printall').parsley().validate()) 
+           {
+                var fy =  $('select[name="select_fy"]').val();
+                var fid = $('select[name="select_fid"]').val();
+
+                $.ajax({
+                  url: '{{ url('budget/printallappro') }}',
+                  method: 'POST',
+                  data : {_token : $('meta[name="csrf-token"]').attr('content'), fy : fy, fid : fid},
+                  success : function(data){
+                      alert(data);
+                  }
+                });
+           }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 @endsection

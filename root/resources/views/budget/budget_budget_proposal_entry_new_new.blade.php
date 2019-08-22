@@ -806,49 +806,15 @@
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
            $('select.select2').select2();
+
+           loadTotal();
+           loadSubTotal(SelectedTabPPA);
         }
         else
         {
           alert('Entered Account Title/PPA already exists.');
         }
     }
-
-
-   /* Add item per line.
-    * src code of Mhel.
-    * comment by: DAN 07/16/19
-
-    function addItem()
-    {
-        var howMany = $('li.tabHD').length;
-        var SelectedTabPPA = '';
-        if(howMany > 0)
-        {
-            for(var i = 0; i < howMany;i++)
-            {
-                if($($('li.tabHD')[i]).hasClass('active'))
-                {
-                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
-                    break;
-                }
-            }
-        }
-
-
-
-        // var line = ($('#table_'+SelectedTabPPA).DataTable().data().count()/ 5) + 1;
-        var table = $('#table_'+SelectedTabPPA).DataTable();
-        table.row.add([
-                // line,
-                '<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">'+ '<option value="">Select Account Title...</option>@foreach ($data[8] as $m4)<option value="{{$m4->at_code}}" id="at_{{$m4->at_code}}" m04_at_desc="{{urlencode($m4->at_desc)}}">{{$m4->at_code}} - {{$m4->at_desc}}</option>@endforeach' +
-                '</select>',
-                '<input class="form-control" style="width:100%" type="text">',
-                '<input class="form-control" style="width:100%" type="text">',
-                '<center><button class="btn btn-danger" onclick="removeItem(this)"><i class="fa fa-minus-circle"></i></button></center>'
-            ]).draw();
-        $('select.select2').select2();
-    }
-    */
 
 
     function removeItem(ln_num)
@@ -953,26 +919,6 @@
           $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
         }  
     }
-
-    /* src code of Mhel
-     * comment by: DAN 07/19/19
-     *
-    function loadTotal()
-    {
-        var tempAmount = 0; // appr = 0, totalBal = 0
-        // var truebal = $(".truebal").map(function(){return $(this).attr("truebal");}).get();
-        // var appro = $(".appro").map(function(){return $(this).attr("appro");}).get();
-        var amt = $(".amt").map(function(){return $(this).attr("amt");}).get();
-        if(amt.length > 0){
-            for(let i = 0; i < amt.length; i++){
-                tempAmount = tempAmount + parseFloat(amt[i]);
-                // appr = appr + parseFloat(appro[i]);
-            }
-            // totalBal = parseFloat(appr) - parseFloat(tempAmount);
-            $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
-        }
-    }
-    */
 
 
     /* modify by: DAN 07/19/19
@@ -1202,10 +1148,6 @@
 		$('.AddMode').show();
 		$('#ItemButtonName').text('Save');
 		$('#MOD_MODE').text('(EDIT)');
-        // $('input[name="itm_amt"]').attr('readonly', '');
-        // $('input[name="itm_alot"]').val(allot);
-        // $('input[name="itm_acc_title_txt"]').val($('select[name="itm_acc_title"]').select2('data')[0].text);
-        // $('input[name="itm_ppa_txt"]').val($('select[name="itm_ppa"]').select2('data')[0].text);
 		$('#modal-default').modal('toggle');
 	}
 	function DeleteMode(desc, acc_title_id, amt, subgrpid)
@@ -1376,71 +1318,6 @@
              alert('Please select Budget Appropriation ');
         }
     }
-
-    /* source code of Mhel
-     * comment by: DAN 07/16/19
-     *
-	function SaveProposal()
-	{
-		if($('input[name="hdr_bgtps01"]').val() != '')
-        {
-            if($('#HdrForm').parsley().validate())
-            {
-                if(($('.table').DataTable().data().count()/ 5) != 0)
-                {
-                    var codes = $(".cc_code").map(function(){return $(this).attr("cc-code");}).get();
-                    var amt = $(".amt").map(function(){return $(this).attr("amt");}).get();
-                    // var at_code = $(".at_code").map(function(){return $(this).attr("at_code");}).get();
-                    var subgrpid = $(".cc_code").map(function(){return $(this).attr("subgrpid");}).get();
-                    var desc = $(".cc_code").map(function(){return urldecode($(this).attr("desc"));}).get();
-                    var data = {
-                            _token : $('meta[name="csrf-token"]').attr('content'),
-                            codes : codes,
-                            amt : amt,
-                            subgrpid : subgrpid,
-                            desc: desc,
-                            fy : $('select[name="fy"]').val(),
-                            // budget_period : $('select[name="budget_period"]').val(),
-                            fid : $('select[name="hdr_fid"]').val(),
-                            cc_code : $('select[name="hdr_cc"]').val(),
-                            secid : $('select[name="hdr_sec"]').val(),
-                            funct : $('select[name="hdr_func"]').val(),
-                            // brid : $('input[name="hdr_br"]').val(),
-                            // t_date : $('input[name="hdr_date"]').val(),
-                            // t_desc : $('input[name="hdr_desc"]').val(),
-                            // bgtps_bnum : $('input[name="hdr_bgtps01"]').val(),
-                        };
-                    $.ajax({
-                        url : '{{ url('budget/budget-proposal-entry/save') }}',
-                        method : 'POST',
-                        data : data,
-                        success : function(d){
-                            if(d == 'DONE'){
-                                alert('Successfully Added new Budget Appropriation Entry');
-                                location.href= "{{ url('budget/budget-proposal-entry') }}";
-                                // javascript:history.go(-1);
-
-                            } else {
-                                alert('ERROR! an unknown error occured during saving process.');
-                            }
-                        },
-                        error : function(a, b, c){
-                            console.log(c);
-                        }
-                    });
-                }
-                else
-                {
-                    alert('No items to be saved.');
-                }
-            }
-        }
-        else
-        {
-             alert('Please select Budget Appropriation ');
-        }
-	}
-    */
 
 
     function Loadapproved()
@@ -1826,6 +1703,59 @@
           $('#validate_ifAlreadyExist'+SelectedTabPPA+line).text('');
         }
       }
+    }
+
+    $('body').on('keyup blur', 'input[name="txt_amt"]', function(event) {
+      formatCurrency($(this));
+    })
+
+    function formatCurrency(input, blur) {
+
+      var input_val = input.val();
+      
+      if (input_val === "") { return; }
+      
+      var original_len = input_val.length;
+
+      var caret_pos = input.prop("selectionStart");
+        
+      if (input_val.indexOf(".") >= 0) {
+
+        var decimal_pos = input_val.indexOf(".");
+
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+
+        left_side = formatNumber(left_side);
+
+        right_side = formatNumber(right_side);
+        
+        if (blur === "blur") {
+          right_side += "00";
+        }
+        
+        right_side = right_side.substring(0, 2);
+
+        input_val = left_side + "." + right_side;
+
+      } else {
+        input_val = formatNumber(input_val);
+        input_val = input_val;
+        
+        if (blur === "blur") {
+          input_val += ".00";
+        }
+      }
+      
+      input.val(input_val);
+
+      var updated_len = input_val.length;
+      caret_pos = updated_len - original_len + caret_pos;
+      input[0].setSelectionRange(caret_pos, caret_pos);
+    }
+
+    function formatNumber(n) {
+      return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
 
     function print_preview()
