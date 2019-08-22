@@ -159,8 +159,8 @@
         $(this).height($(this).prop('scrollHeight'));
         });
 
-       window.print(); 
-       location.href= "{{route('inventory.are')}}";
+       // window.print(); 
+       // location.href= "{{route('inventory.are')}}";
      }
 
     </script>
