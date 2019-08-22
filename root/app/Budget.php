@@ -128,6 +128,32 @@ class Budget extends Model
 		}
     }
 
+    public static function printApproHdrAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt1.b_num, f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\'';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproLineAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bgt2.b_num, bgt2.at_code, bgt2.at_desc, bgt2.appro_amnt, bgt2.grpid FROM rssys.bgtps02 bgt2 LEFT JOIN rssys.bgtps01 bgt1 ON bgt2.b_num = bgt1.b_num WHERE bgt1.fy = \''.$fy.'\' AND bgt1.fid = \''.$fid.'\' ORDER BY CAST(bgt2.seq_num as integer)';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public static function getX03()
     {
         try

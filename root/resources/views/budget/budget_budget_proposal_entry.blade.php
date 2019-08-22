@@ -244,15 +244,22 @@
            {
                 var fy =  $('select[name="select_fy"]').val();
                 var fid = $('select[name="select_fid"]').val();
+                var fund = $('select[name="select_fid"]').select2('data')[0].text;
 
-                $.ajax({
-                  url: '{{ url('budget/printallappro') }}',
-                  method: 'POST',
-                  data : {_token : $('meta[name="csrf-token"]').attr('content'), fy : fy, fid : fid},
-                  success : function(data){
-                      alert(data);
-                  }
-                });
+                var data = [fy, fid, fund];
+
+                //alert(data);
+
+                location.href ='{{ url('budget/printallappro') }}/'+ data;
+
+                // $.ajax({
+                //   url: '{{ url('budget/printallappro') }}',
+                //   method: 'POST',
+                //   data : {_token : $('meta[name="csrf-token"]').attr('content'), fy : fy, fid : fid, fund : fund},
+                //   success : function(data){
+                //       alert(data);
+                //   }
+                // });
            }
         }
 

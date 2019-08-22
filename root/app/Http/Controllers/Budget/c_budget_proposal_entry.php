@@ -372,11 +372,17 @@ class c_budget_proposal_entry extends Controller
         return view('budget.budget_appro_print_entry', compact('Header'));
     }
 
-    public function printall(Request $r)
+    public function printall($data)
     {
-        $fy = $request->fy;
-        $fid = $request->fid;
+        $d = explode(',', $data);
 
-        
+        $fy = $d[0];
+        $fid = $d[1];
+        $fund = $d[2];
+
+        $Header = Budget::printApproHdrAll($fy, $fid);
+        $Line = Budget::printApproLineAll($fy, $fid);
+
+        return view('budget.budget_appro_printall', compact('Header', 'Line', 'fund'));
     }
 }

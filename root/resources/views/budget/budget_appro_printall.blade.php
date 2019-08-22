@@ -17,7 +17,7 @@
       <div class="row">
         <div class="col-sm-12">
           <center><b>Republic of the Philippines<br> Province of Negros Oriental<br> LGU-City of Guihulngan<br><br>
-            <u>{{$Header->fund}}</u></b><br>
+            <u>{{$fund}}</u></b><br>
           </center>
         </div>
       </div>
@@ -39,29 +39,31 @@
                 <td height="50"><b><u><center>CURRENT YEAR APPROPRIATION</center></u></b></td>
                 <td></td>
               </tr>
+              @isset($Header)
+              @foreach($Header as $h)
               <tr class="noborder">
-                <td><center><b>{{$Header->funcid}}</b></center></td>
-                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($Header->function)}}</b></td>
+                <td><center><b>{{$h->funcid}}</b></center></td>
+                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($h->function)}}</b></td>
                 <td></td>
               </tr>
               <tr class="noborder">
-                <td><center><b>{{$Header->office_code}}</b></center></td>
-                <td><b><u>{{strtoupper($Header->office)}}</u></b></td>
+                <td><center><b>{{$h->office_code}}</b></center></td>
+                <td><b><u>{{strtoupper($h->office)}}</u></b></td>
                 <td ></td>
               </tr>
-              @isset($PPA)
+              {{-- @isset($PPA) --}}
                 @php
                 $total_amt = 0.00;
                 @endphp
 
-                @foreach($PPA as $P)
+                {{-- @foreach($PPA as $P) --}}
                   <tr class="noborder">
                     <td></td>
-                    <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>{{$P->subgrpdesc}}</b></td>
+                    <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>PPA HERE{{-- {{$P->subgrpdesc}} --}}</b></td>
                     <td></td>
                   </tr>
                   @foreach($Line as $L)
-                  @if($P->subgrpid == $L->grpid)
+                  @if($h->b_num == $L->b_num)
                   <tr class="noborder noborder2">
                     <td><center>{{$L->at_code}}</center></td>
                     <td>{{$L->at_desc}}</td>
@@ -71,20 +73,22 @@
                   @endforeach
                   <tr class="noborder noborder3">
                     <td></td>
-                    <td><b>Total {{$P->subgrpdesc}}</b></td>
-                    <td align="right"><b>{{number_format($P->total_amt, 2)}}</b></td>
+                    <td><b>Total PPA HERE{{-- {{$P->subgrpdesc}} --}}</b></td>
+                    <td align="right"><b>{{-- {{number_format($P->total_amt, 2)}} --}}</b></td>
                   </tr>
                   @php
-                  $total_amt += $P->total_amt;
+                  // $total_amt += $P->total_amt;
                   @endphp
-                @endforeach
-                  
+                {{-- @endforeach --}}
+              {{-- @endisset --}}
+              @endforeach
+              @endisset    
                   <tr class="noborder noborder3">
                     <td></td>
                     <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
                     <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_amt, 2)}}</b></td>
                   </tr>
-              @endisset
+              
             </tbody>
           </table>
         </div>
