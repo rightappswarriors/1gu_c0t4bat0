@@ -422,8 +422,12 @@
                             <ul class="treeview-menu">
                                 @if($LA_GRP["R2000001"]["restrict"] == 'Y')
                                 <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li>
+<<<<<<< HEAD
                                 <li><a href="{{ route('report.saaob') }}"><i class="fa fa-circle-o"></i> New SAAOB</a></li>
                                 <li><a href="{{ url('reports/budget/rao/PS/1011') }}"><i class="fa fa-circle-o"></i> RAO Report</a></li>
+=======
+                                <li><a href="{{ url('reports/budget/rao/') }}"><i class="fa fa-circle-o"></i> RAO Report</a></li>
+>>>>>>> b82d3e675ba9ebb7a899dbfa6571b4020e84db65
                                 @endif
 
                                 <li class="treeview">

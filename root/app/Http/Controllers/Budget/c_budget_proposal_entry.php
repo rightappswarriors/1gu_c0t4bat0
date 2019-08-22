@@ -164,6 +164,8 @@ class c_budget_proposal_entry extends Controller
         $approLine = Budget::get_approLine($b_num);
         $fy = $approHeader->fy;
         $data = array($this->x03, $this->fund, $this->m08, $this->sector, $this->branch, $fy, '', '', $this->m04, '', $this->ppa, $this->budget_period, $this->func);
+
+        //dd($data);
         
         return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew', 'approHeader', 'approLine'));
     }

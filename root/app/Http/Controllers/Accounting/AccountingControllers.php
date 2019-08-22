@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
 use Core;
+use Excel;
+use OfficeExport;
 
 class AccountingControllers extends Controller {
     public function __disbursement() {
@@ -103,13 +105,12 @@ class AccountingControllers extends Controller {
                 'ppe'=>FunctionsAccountingControllers::getAllFrom(['rssys.ppasubgrp',[['active',TRUE]],['subgrpid','subgrpdesc']]),
                 'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
                 'cc_code'=>FunctionsAccountingControllers::getAllFrom(['rssys.m08',[['active',TRUE]],['cc_code','cc_desc']]),
-                'data' => DB::table('rssys.obrhdr')->join('rssys.fund','rssys.obrhdr.fid','rssys.fund.fid')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.active',TRUE]/*,['rssys.ppasubgrp.active',TRUE]*/,['rssys.m08.active',TRUE],['rssys.fund.active',TRUE]])->orderBy('obr_pk','DESC')->get(),
+                'data' => DB::select('select t_date,rssys.obrhdr.obr_code,payee,obrhdr.particulars,obr_pk from rssys.obrhdr inner join rssys.obrlne on rssys.obrhdr.obr_pk = rssys.obrlne.obr_code::integer inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrhdr.active = TRUE and rssys.m08.active = TRUE) order by obr_pk desc'),
                 '_bc'=>[
                         ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false]
                     ],
                 '_ch'=>"Admin Obligation Entry"
             ];
-
             return view('accounting.obligation_request', $arrRet);
         } else if($request->isMethod('post')){
             if(!empty(trim($request->subgrpid))){
@@ -184,13 +185,14 @@ class AccountingControllers extends Controller {
                 return abort(404);
             }
 
-            $obrlne = DB::table('rssys.obrlne')->join('rssys.m04','rssys.obrlne.at_code','rssys.m04.at_code')->where([['rssys.obrlne.active',TRUE],['rssys.obrlne.obr_code',$obr_pk]])->select('m04.*','rssys.obrlne.oid as id', 'rssys.obrlne.*')->get();
-            $obrhdr = json_encode( DB::table('rssys.obrhdr')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->join('rssys.fund','rssys.obrhdr.fid','rssys.fund.fid')->where([['rssys.fund.active',TRUE],['rssys.obrhdr.active',TRUE],['rssys.m08.active',TRUE],['obr_pk',$obr_pk]])->orderBy('obr_pk','DESC')->get());
+            $obrlne = DB::table('rssys.obrlne')->join('rssys.bgtps02','rssys.obrlne.at_code','rssys.bgtps02.at_code')->where([['rssys.obrlne.active',TRUE],['rssys.obrlne.obr_code',$obr_pk],['at_desc','<>',null]])->select('bgtps02.at_code','bgtps02.at_desc','rssys.obrlne.oid as id', 'rssys.obrlne.*')->distinct()->first();
+            $obrhdr = json_encode( DB::select('select rssys.obrhdr.* from rssys.obrhdr inner join rssys.obrlne on rssys.obrhdr.obr_pk = rssys.obrlne.obr_code::integer inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrhdr.active = TRUE and rssys.m08.active = TRUE) order by obr_pk desc'));
+
         }
         if($request->isMethod('get')){
             $arrRet = [
                 'ppe'=>FunctionsAccountingControllers::getAllFrom(['rssys.ppasubgrp',[['active',TRUE]],['subgrpid','subgrpdesc']]),
-                'm04'=>FunctionsAccountingControllers::getAllFrom(['rssys.m04',[['active',TRUE]]]),
+                'bgtps02'=>FunctionsAccountingControllers::getAllFrom(['rssys.bgtps02',[['at_desc','<>',null]],['at_code','at_desc'],true]),
                 'cc_code'=>FunctionsAccountingControllers::getAllFrom(['rssys.m08',[['active',TRUE]],['cc_code','cc_desc']]),
                 'obrhdr'=> $obrhdr,
                 'data' => $obrlne,
@@ -198,7 +200,7 @@ class AccountingControllers extends Controller {
                         ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false]
                     ],
                 '_ch'=>"Admin Obligation Entry",
-                'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
+                // 'funds'=>FunctionsAccountingControllers::getAllFrom(['rssys.fund',[['active',TRUE]]]),
                 'action' => $action
             ];
             return view('accounting.obligation_request_entry', $arrRet);
@@ -212,11 +214,27 @@ class AccountingControllers extends Controller {
                     return $obrhdr;
                     break;
 
+                case 'get-at_code':
+                    $toReturn = [];
+                    $getBasicFilter = DB::table('rssys.m08')->join('rssys.function','rssys.function.funcid','rssys.m08.funcid')->where([['m08.active',TRUE],['function.active',TRUE],['cc_code',$request->cc_code]])->select('cc_code','secid','function.funcid')->distinct()->first();
+                    if(isset($getBasicFilter)){
+                        $data = DB::table('rssys.bgtps01')->join('rssys.bgtps02','rssys.bgtps01.b_num','rssys.bgtps02.b_num')->where([['cc_code',$getBasicFilter->cc_code],['secid',$getBasicFilter->secid],['funcid',$getBasicFilter->funcid]])->select('at_code','at_desc')->get();
+                        if(isset($data)){
+                            foreach($data as $d){
+                                $toReturn['results'][] = ['id' => $d->at_code,'text' => $d->at_desc];
+                            }
+                        }
+                    }
+
+                    return json_encode($toReturn);
+                    break;
+
+
                 case 'add':
 
                 case 'edit':
-                    if(isset($request->at_code) && isset($request->fpp) && isset($request->amount) && count($request->at_code) == count($request->fpp) && count($request->fpp) == count($request->amount)){
-                        $extraDataForSecFun = DB::table('rssys.m08')->join('rssys.function','rssys.function.funcid','rssys.m08.funcid')->where([['m08.active',TRUE],['m08.cc_code',$request->subgrpid],['function.active',TRUE]])->first();
+                    if(isset($request->at_code) && isset($request->fpp) && isset($request->amount) && count($request->at_code) == count($request->fpp) && count($request->fpp) == count($request->amount) && isset($request->at_code)){
+                        $extraData = [DB::table('rssys.m08')->join('rssys.function','rssys.function.funcid','rssys.m08.funcid')->where([['m08.active',TRUE],['m08.cc_code',$request->subgrpid],['function.active',TRUE]])->first(),DB::table('rssys.bgtps02')->join('rssys.bgtps01','rssys.bgtps01.b_num','rssys.bgtps01.b_num')->where('rssys.bgtps02.at_code',$request->at_code)->select('rssys.bgtps01.fid')->first()];
                         $arrObrhdrFields = [
                             'obr_code' => $request->obr,
                             'payee' => $request->payee,
@@ -224,18 +242,18 @@ class AccountingControllers extends Controller {
                             'particulars' => $request->particulars,
                             'user_id' => strtoupper(FunctionsAccountingControllers::getSession("_user", "id")),
                             'cc_code' => $request->subgrpid,
-                            'fid' => $request->fund,
-                            'secid' => ($extraDataForSecFun->secid ?? null),
-                            'funcid' => ($extraDataForSecFun->funcid ?? null),
+                            'fid' => ($extraData[1]->fid ?? null),
+                            'secid' => ($extraData[0]->secid ?? null),
+                            'funcid' => ($extraData[0]->funcid ?? null),
                             'active' => TRUE
                         ];
-                        $module = 'RAW Report Entry';
+                        $module = 'RAO Report Entry';
                         if($action == 'edit'){
                             $del = [['obr_code', '=', $obr_pk]];
                             Core::deleteTableMultiWhere('rssys.obrlne', $del, $module);
                             $flagForSubmit = Core::updateTable('rssys.obrhdr', 'obr_pk', $obr_pk, $arrObrhdrFields, $module);
                         } else if($action == 'add'){
-                            $flagForSubmit = Core::insertTableGetlastId('rssys.obrhdr',$arrObrhdrFields,$module);
+                            $flagForSubmit = Core::insertTableGetlastId('rssys.obrhdr',$arrObrhdrFields);
                         }
                         if ($flagForSubmit){
                             for ($i=0; $i < count($request->at_code); $i++) { 
@@ -249,7 +267,7 @@ class AccountingControllers extends Controller {
                                     'active' => TRUE
                                 ];
 
-                                if (Core::insertTable('rssys.obrlne', $arrObrlneFields, $module)) 
+                                if (Core::insertTable('rssys.obrlne', $arrObrlneFields, null)) 
                                 {
                                     $flag = 'true';
                                 } 
@@ -281,38 +299,60 @@ class AccountingControllers extends Controller {
     }
 
 
-    public function generateRaoReport($fpp,$cc_code){
-        if(DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrlne.fpp',$fpp],['rssys.m08.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE]])->exists()){
+    public function generateRaoReport($fpp = null,$cc_code = null, $date = null){
+        if(isset($fpp) && isset($cc_code) && isset($date)){
+            if(count(DB::SELECT("select * from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrlne.fpp = '$fpp' and rssys.m08.cc_code = '$cc_code' and rssys.obrhdr.active = TRUE and rssys.obrlne.active = TRUE)"))){
 
-            $arrID = $arr_atCode = $arrToReturn = $at_desc = $arr_bgtps = array();
-            $runningRowSum = $runningColSum = $bgtps02 = 0.00;
+                $arrID = $arr_atCode = $arrToReturn = $at_desc = $arr_bgtps = array();
+                $runningRowSum = $runningColSum = $bgtps02 = 0.00;
+                
 
-            $select = ['rssys.obrlne.seq_num as main_id', 'rssys.ppasubgrp.subgrpid as ppaid', 'rssys.ppasubgrp.subgrpdesc as ppadesc', 'rssys.obrhdr.cc_code as cc_code', 'rssys.obrlne.at_code as at_code', 'rssys.m04.at_desc as at_desc', 'rssys.obrhdr.t_date as t_date', 'rssys.obrhdr.obr_code as obr_code', 'rssys.obrhdr.particulars as particulars', 'rssys.obrlne.amount as amount'];
-            
+                // $dataFromDB = DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m04','rssys.m04.at_code','rssys.obrlne.at_code')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE],['m04.active',TRUE],['m08.active',TRUE],['ppasubgrp.active',TRUE]])->select('rssys.obrhdr.obr_pk','rssys.obrhdr.t_date','rssys.obrhdr.obr_code','rssys.obrhdr.particulars','rssys.obrlne.at_code','rssys.obrlne.amount','rssys.obrhdr.obr_code','m04.at_desc','m08.cc_desc','ppasubgrp.subgrpdesc')->orderBy('rssys.obrhdr.t_date','ASC')->distinct()->tosql();
+                $dataFromDB = DB::select("select distinct rssys.obrhdr.obr_pk, rssys.obrhdr.t_date, rssys.obrhdr.obr_code, rssys.obrhdr.particulars, rssys.obrlne.at_code, rssys.obrlne.amount, rssys.obrhdr.obr_code, m04.at_desc, m08.cc_desc, ppasubgrp.subgrpdesc from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m04 on rssys.m04.at_code = rssys.obrlne.at_code inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code where (rssys.obrhdr.cc_code = '$cc_code' and rssys.obrhdr.active = TRUE and rssys.obrlne.active = TRUE and m04.active = TRUE and m08.active = TRUE and ppasubgrp.active = TRUE and date_part('year',rssys.obrhdr.t_date) = '$date') order by rssys.obrhdr.t_date asc");
+                if(isset($dataFromDB)){
+                    foreach ($dataFromDB as $key) {
+                        if(!array_key_exists($key->at_code, $arr_bgtps)){
+                            $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc,$key->at_code];
+                        }
 
-            $dataFromDB = DB::table('rssys.obrhdr')->join('rssys.obrlne','rssys.obrlne.obr_code','rssys.obrhdr.obr_code')->join('rssys.ppasubgrp','rssys.ppasubgrp.subgrpid','rssys.obrlne.fpp')->join('rssys.m04','rssys.m04.at_code','rssys.obrlne.at_code')->join('rssys.m08','rssys.m08.cc_code','rssys.obrhdr.cc_code')->where([['rssys.obrhdr.cc_code',$cc_code],['rssys.obrhdr.active',TRUE],['rssys.obrlne.active',TRUE],['m04.active',TRUE],['m08.active',TRUE],['ppasubgrp.active',TRUE]])->select('rssys.obrhdr.obr_pk','rssys.obrhdr.t_date','rssys.obrhdr.obr_code','rssys.obrhdr.particulars','rssys.obrlne.at_code','rssys.obrlne.amount','rssys.obrhdr.obr_code','m04.at_desc','m08.cc_desc','ppasubgrp.subgrpdesc')->orderBy('rssys.obrhdr.t_date','ASC')->distinct()->get();
-            if(isset($dataFromDB)){
-                foreach ($dataFromDB as $key) {
-                    if(!array_key_exists($key->at_code, $arr_bgtps)){
-                        $arr_bgtps[$key->at_code] = [(DB::table('rssys.bgtps02')->where('rssys.bgtps02.at_code',$key->at_code)->sum('appro_amnt') ?? 0.00),$key->at_desc,$key->at_code];
+                        $arrToReturn[$key->t_date][] = $key;
                     }
+                }
 
-                    $arrToReturn[$key->t_date][] = $key;
+                $arrRet = [
+                    'cc_code' => $cc_code,
+                    'data'=> $dataFromDB,
+                    'headerDet' => $arr_bgtps,
+                    'obrlne' => $arrToReturn
+                ];
+                return Excel::download(new OfficeExport('officeReport.raoreport',$arrRet), 'RAO-Report-'.$fpp.'-'.$cc_code.'-'.$date.'.xlsx');
+
+                return view('accounting.raoreport', $arrRet);
+
+
+            }
+            return abort(404);
+        } else {
+            $subgrpid = $cc_code = $t_date = [];
+            $query = DB::SELECT('select ppasubgrp.subgrpid, obrhdr.cc_code, obrhdr.t_date from rssys.obrhdr inner join rssys.obrlne on rssys.obrlne.obr_code::integer = rssys.obrhdr.obr_pk inner join rssys.ppasubgrp on rssys.ppasubgrp.subgrpid = rssys.obrlne.fpp inner join rssys.m08 on rssys.m08.cc_code = rssys.obrhdr.cc_code');
+            if(isset($query)){
+                foreach($query as $key => $val){
+                    if(!in_array($val->subgrpid, $subgrpid)){
+                        array_push($subgrpid, $val->subgrpid);
+                    }
+                    if(!in_array($val->cc_code, $cc_code)){
+                        array_push($cc_code, $val->cc_code);
+                    }
+                    if(!in_array(Date('Y',strtotime($val->t_date)), $t_date)){
+                        array_push($t_date, Date('Y',strtotime($val->t_date)));
+                    }
                 }
             }
-            // dd($arrToReturn);
-
             $arrRet = [
-                'cc_code' => $cc_code,
-                'data'=> $dataFromDB,
-                'headerDet' => $arr_bgtps,
-                'obrlne' => $arrToReturn
+                'dataAll' => [$subgrpid,$cc_code,$t_date]
             ];
-            return view('accounting.raoreport', $arrRet);
-
-
+            return view('accounting.raopicker',$arrRet);
         }
-        return abort(404);
     }
 
 
