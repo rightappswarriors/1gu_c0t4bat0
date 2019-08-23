@@ -154,6 +154,45 @@ class Budget extends Model
         }
     }
 
+    public static function printApproFuncAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT b1.funcid, f.funcdesc FROM rssys.bgtps01 b1 LEFT JOIN rssys.function f ON b1.funcid = f.funcid WHERE b1.fy = \''.$fy.'\' AND b1.fid = \''.$fid.'\' GROUP BY b1.funcid, f.funcdesc ORDER BY b1.funcid';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproPPAAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt2.grpid, ps.subgrpdesc, bt2.b_num FROM rssys.bgtps02 bt2 LEFT JOIN rssys.ppasubgrp ps ON bt2.grpid = ps.subgrpid LEFT JOIN rssys.bgtps01 bt1 ON bt2.b_num = bt1.b_num WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\' GROUP BY bt2.grpid, ps.seq, ps.subgrpdesc, bt2.b_num ORDER BY ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office, bgt2.b_num, bgt2.seq_num, bgt2.at_code, bgt2.at_desc, bgt2.appro_amnt, bgt2.grpid as ppa_code, ps.subgrpdesc as ppa FROM rssys.bgtps02 bgt2 LEFT JOIN rssys.bgtps01 bgt1 ON bgt2.b_num = bgt1.b_num LEFT JOIN rssys.fund f ON bgt1.fid = f.fid LEFT JOIN rssys.function ft ON bgt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bgt1.cc_code = m8.cc_code LEFT JOIN rssys.ppasubgrp ps ON bgt2.grpid = ps.subgrpid WHERE bgt1.fy = \''.$fy.'\' AND bgt1.fid = \''.$fid.'\' ORDER BY ft.funcid, m8.cc_code, ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public static function getX03()
     {
         try

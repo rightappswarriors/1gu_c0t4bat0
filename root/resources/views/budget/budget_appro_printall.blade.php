@@ -39,58 +39,101 @@
                 <td height="50"><b><u><center>CURRENT YEAR APPROPRIATION</center></u></b></td>
                 <td></td>
               </tr>
-              @isset($Header)
-              @foreach($Header as $h)
+
+              @php
+                $grandtotal = 0.00;
+              @endphp
+
+              @isset($Function)
+              @foreach($Function as $F)
               <tr class="noborder">
-                <td><center><b>{{$h->funcid}}</b></center></td>
-                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($h->function)}}</b></td>
+                <td><center><b>{{$F->funcid}}</b></center></td>
+                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($F->funcdesc)}}</b></td>
                 <td></td>
               </tr>
+              @isset($Header)
+              @foreach($Header as $h)
+
+              @if($F->funcid == $h->funcid)
               <tr class="noborder">
                 <td><center><b>{{$h->office_code}}</b></center></td>
                 <td><b><u>{{strtoupper($h->office)}}</u></b></td>
                 <td ></td>
               </tr>
-              {{-- @isset($PPA) --}}
+                
+
+                @foreach($PPA as $P) {{-- PPA --}}
+
                 @php
-                $total_amt = 0.00;
+                $total_ppaamt = 0.00;
                 @endphp
 
-                {{-- @foreach($PPA as $P) --}}
+                @if($h->b_num == $P->b_num) {{-- HEADER == PPA --}}
+                  
                   <tr class="noborder">
                     <td></td>
-                    <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>PPA HERE{{-- {{$P->subgrpdesc}} --}}</b></td>
+                    <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>{{$P->subgrpdesc}}</b></td>
                     <td></td>
                   </tr>
-                  @foreach($Line as $L)
+
+                  @foreach($Line as $L) {{-- LINE --}}
                   @if($h->b_num == $L->b_num)
+                  @if($P->grpid == $L->grpid)
                   <tr class="noborder noborder2">
                     <td><center>{{$L->at_code}}</center></td>
                     <td>{{$L->at_desc}}</td>
                     <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
                   </tr>
+
+                  @php
+                  $total_ppaamt += $L->appro_amnt;
+                  $grandtotal += $L->appro_amnt;
+                  @endphp
+
                   @endif
-                  @endforeach
+                  @endif
+                  @endforeach {{-- LINE --}}
+
                   <tr class="noborder noborder3">
                     <td></td>
-                    <td><b>Total PPA HERE{{-- {{$P->subgrpdesc}} --}}</b></td>
-                    <td align="right"><b>{{-- {{number_format($P->total_amt, 2)}} --}}</b></td>
+                    <td><b>Total {{$P->subgrpdesc}}</b></td>
+                    <td align="right"><b>{{number_format($total_ppaamt, 2)}}</b></td>
                   </tr>
                   @php
                   // $total_amt += $P->total_amt;
                   @endphp
-                {{-- @endforeach --}}
+
+                @endif  {{-- HEADER == PPA --}}
+                @endforeach {{-- PPA --}}
               {{-- @endisset --}}
+              @endif    
+              @endforeach
+              @endisset  
               @endforeach
               @endisset    
                   <tr class="noborder noborder3">
                     <td></td>
                     <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
-                    <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_amt, 2)}}</b></td>
+                    <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($grandtotal, 2)}}</b></td>
                   </tr>
               
             </tbody>
           </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
         </div>
       </center>
       </div>

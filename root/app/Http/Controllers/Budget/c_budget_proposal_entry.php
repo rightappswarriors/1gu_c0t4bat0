@@ -382,7 +382,10 @@ class c_budget_proposal_entry extends Controller
 
         $Header = Budget::printApproHdrAll($fy, $fid);
         $Line = Budget::printApproLineAll($fy, $fid);
+        $Function = Budget::printApproFuncAll($fy, $fid);
+        $PPA = Budget::printApproPPAAll($fy, $fid);
+        $appro = Budget::printApproAll($fy, $fid);
 
-        return view('budget.budget_appro_printall', compact('Header', 'Line', 'fund'));
+        return view('budget.budget_appro_printall', compact('Header', 'Line', 'fund', 'Function', 'PPA', 'appro'));
     }
 }
