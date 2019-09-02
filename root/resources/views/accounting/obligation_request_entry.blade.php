@@ -427,7 +427,7 @@
 
 
     $('body').on('load', 'select', function(event) {
-      $('select.select2').select2();
+      $('select.select2').select2('enable',false);
     })
 
     $("#submitEntries").submit(function(event) {

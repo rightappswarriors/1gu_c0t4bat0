@@ -395,6 +395,11 @@
                     <li><a href="{{route('inventory.itemsearch')}}"><i class="fa fa-circle-o"></i>Item Search</a></li>
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Journalize Stock Transactions</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Journalize Purchases Transactions</a></li> -->
+                    <hr>
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.itemrepair')}}"><i class="fa fa-circle-o"></i>Item Repair</a></li>
+                    @endif
+                    <hr>
                 </ul>
             </li>
             @endif
