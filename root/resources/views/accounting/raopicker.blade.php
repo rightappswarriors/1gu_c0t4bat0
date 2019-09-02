@@ -33,11 +33,11 @@
       </div>
       <!-- /.box-body -->
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="box">
-        	<div class="row">
-            <div class="col-md-4">
+      <div class="box box-default">
+ 
+      <!-- /.box-header -->
+      <div class="box-body" style="">
+        <div class="col-md-4">
               <div class="col-md font-weight-bold" style="font-weight: bold;">FPP <span class="text-danger">*</span></div>
 
                 <select name="fpp" class="form-control" style="width: 100%" data-parsley-required-message="<strong>FPP</strong> is required." required>
@@ -74,20 +74,16 @@
                   @endisset
                 </select>
             </div> 
-          </div>
-          <div class="row mt-5 mb-5">
-            <div class="col-md-12">
-              <div class="container text-center">
-                <a id="generate" class="btn btn-primary">Generate Report</a>
-              </div>
+            <div class="row" >
+              <div class="col-md-4" style="padding-top: 1%;"></div>
+              <div class="col-md-4" style="padding-top: 1%;"> <a id="generate" class="btn btn-block btn-primary">Generate Report</a></div>
+              <div class="col-md-4" style="padding-top: 1%;"></div>
             </div>
-          </div>
-        </div>
-        <!-- /.box -->
       </div>
-      <!-- /.col -->
+      <!-- /.box-body -->
     </div>
-    <!-- /.row -->
+
+        
   </section>
   <script type="text/javascript" src="{{ asset('root/public/js/forall.js') }}"></script>
 	<script type="text/javascript">

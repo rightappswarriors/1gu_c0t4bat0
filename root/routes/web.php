@@ -364,6 +364,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::get('budget/budget-proposal-entry/getOffices/{funcid}', 'Budget\c_budget_proposal_entry@getOffice');
 			Route::get('budget/budget-proposal-entry/print/{code}', 'Budget\c_budget_proposal_entry@print');
 			Route::get('budget/budget-appro/print-entry/{data}', 'Budget\c_budget_proposal_entry@print_entry');
+			Route::get('budget/printallappro/{data}', 'Budget\c_budget_proposal_entry@printall');
 
 		/* ----- BUDGET APPROPRIATION */
 
@@ -679,6 +680,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('saaob/{all}', 'Accounting\AccountingControllers@__saob')->name('accounting.saob');
 				Route::get('rao/{fpp?}/{cc_code?}/{date?}', 'Accounting\AccountingControllers@generateRaoReport');
 				Route::match(['get', 'post'], 'lbp/{formNumber}/{extraDetails?}', 'Report\Budget\c_lbp@__lbp')->name('report.lbp');
+				Route::get('newsaaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
+				Route::post('newsaaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
 		});
 		/* SETTING -------------------------------*/

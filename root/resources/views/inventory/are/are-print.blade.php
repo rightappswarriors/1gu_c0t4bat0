@@ -37,7 +37,7 @@
                  <th style="white-space: nowrap;font-size:14px;">Qty</th>
                  <th style="white-space: nowrap;font-size:14px;">Unit</th>
                  <th style="width:50%;font-size:15px;">Description</th>
-                 <th  style="width:25%;font-size:15px;">Serial No.</th>
+                 <th nowspan style="width:25%;font-size:15px;">Serial No.</th>
                  <th style="width:25%;font-size:15px;">Property No.</th>
                  <th style="white-space: nowrap;font-size:14px;">Unit Cost</th>
                  <th style="white-space: nowrap;font-size:14px;">Amount</th>
@@ -51,7 +51,7 @@
                  <td>{{$a->unit_desc}}</td>
                  <td><textarea>{{$a->item_desc}}</textarea></td>
                  <td>{{$a->serial_no}}</td>
-                 <td>{{$a->part_no}}</td>
+                 <td><textarea>{{$a->part_no}}</textarea></td>
                  <td>{{$a->price}}</td>
                  <td>{{$a->ln_amnt}}</td>
             </tr>
@@ -111,6 +111,7 @@
         border: 1px solid #000 !important;
       }
        .table th{
+        white-space: nowrap;
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
@@ -152,7 +153,7 @@
     </style>
 
     <script>
-    
+  
     window.onload = function() 
      {
        $('textarea').each(function() {
@@ -160,8 +161,10 @@
         });
 
        window.print(); 
-       location.href= "{{route('inventory.are')}}";
+       //location.href= "{{route('inventory.are')}}";
      }
+
+
 
     </script>
 	

@@ -1169,7 +1169,8 @@ class Inventory extends Model
 	// check if exist, else insert
 	public static function checkIfExistInsert($table, $col, $value)
 	{
-       $sql = 'SELECT COUNT(*) FROM '.$table.' WHERE '.$col.' = \''.pg_escape_string($value).'\' LIMIT 1';
+       
+		$sql = 'SELECT COUNT(*) FROM '.$table.' WHERE '.$col.' = \''.$value.'\' LIMIT 1';
 
 	   $check = DB::select(DB::raw($sql))[0];
 

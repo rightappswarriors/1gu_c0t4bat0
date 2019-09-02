@@ -128,6 +128,71 @@ class Budget extends Model
 		}
     }
 
+    public static function printApproHdrAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt1.b_num, f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\'';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproLineAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bgt2.b_num, bgt2.at_code, bgt2.at_desc, bgt2.appro_amnt, bgt2.grpid FROM rssys.bgtps02 bgt2 LEFT JOIN rssys.bgtps01 bgt1 ON bgt2.b_num = bgt1.b_num WHERE bgt1.fy = \''.$fy.'\' AND bgt1.fid = \''.$fid.'\' ORDER BY CAST(bgt2.seq_num as integer)';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproFuncAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT b1.funcid, f.funcdesc FROM rssys.bgtps01 b1 LEFT JOIN rssys.function f ON b1.funcid = f.funcid WHERE b1.fy = \''.$fy.'\' AND b1.fid = \''.$fid.'\' GROUP BY b1.funcid, f.funcdesc ORDER BY b1.funcid';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproPPAAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt2.grpid, ps.subgrpdesc, bt2.b_num FROM rssys.bgtps02 bt2 LEFT JOIN rssys.ppasubgrp ps ON bt2.grpid = ps.subgrpid LEFT JOIN rssys.bgtps01 bt1 ON bt2.b_num = bt1.b_num WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\' GROUP BY bt2.grpid, ps.seq, ps.subgrpdesc, bt2.b_num ORDER BY ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function printApproAll($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office, bgt2.b_num, bgt2.seq_num, bgt2.at_code, bgt2.at_desc, bgt2.appro_amnt, bgt2.grpid as ppa_code, ps.subgrpdesc as ppa FROM rssys.bgtps02 bgt2 LEFT JOIN rssys.bgtps01 bgt1 ON bgt2.b_num = bgt1.b_num LEFT JOIN rssys.fund f ON bgt1.fid = f.fid LEFT JOIN rssys.function ft ON bgt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bgt1.cc_code = m8.cc_code LEFT JOIN rssys.ppasubgrp ps ON bgt2.grpid = ps.subgrpid WHERE bgt1.fy = \''.$fy.'\' AND bgt1.fid = \''.$fid.'\' ORDER BY ft.funcid, m8.cc_code, ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public static function getX03()
     {
         try
@@ -291,6 +356,19 @@ class Budget extends Model
         try
         {
             $sql = 'SELECT ps.*, SUM(bt.appro_amnt) as total_approamt, SUM(bt.allot_amnt) as total_allotamt, SUM(bt.oblig_amnt) as total_obligamt FROM rssys.bgt02 bt LEFT JOIN rssys.ppasubgrp ps ON bt.grpid = ps.subgrpid WHERE bt.b_num = \''.$code.'\' GROUP BY ps.subgrpid ORDER BY ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function generateSAAOBHdr($fy, $fund)
+    {
+        try
+        {
+            $sql = 'SELECT hb.fund, hb.funcid, hb.function, hb.office_code, hb.office FROM ((SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fund.'\') UNION ALL (SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgt01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fund.'\') UNION ALL (SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.obrhdr oh LEFT JOIN rssys.fund f ON oh.fid = f.fid LEFT JOIN rssys.function ft ON oh.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON oh.cc_code = m8.cc_code WHERE SUBSTRING(CAST(oh.t_date as text),0,5) = \''.$fy.'\' AND oh.fid = \''.$fund.'\')) as hb GROUP BY hb.fund, hb.funcid, hb.function, hb.office_code, hb.office ORDER BY office_code';
 
             return DB::select(DB::raw($sql));
         }

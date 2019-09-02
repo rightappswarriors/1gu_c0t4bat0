@@ -266,7 +266,7 @@
           <div class="col-md-1">
             <div class="form-group">
               <center><label>&nbsp;</label></center>
-              <button type="button" class="btn btn-block btn-info"><i class="fa fa-print"></i> Print</button>
+              {{-- <button type="button" class="btn btn-block btn-info"><i class="fa fa-print"></i> Print</button> --}}
             </div>
           </div>
         </div>
@@ -291,7 +291,7 @@
                 <th>OBR Code</th>
                 <th>Payee</th>
                 <th>Particulars</th>
-                <th>Fund</th>
+                {{-- <th>Fund</th> --}}
                 <th width="10%">Options</th>
               </tr>
               </thead>
@@ -305,7 +305,7 @@
                       <td>{{$d->obr_code}}</td>
                       <td>{{$d->payee}}</td>
                       <td>{{$d->particulars}}</td>
-                      <td>{{$d->fdesc}}</td>
+                      {{-- <td>{{$d->fdesc}}</td> --}}
                       <td>
                           <center>
                              {{-- <a title="add new entry" href="{{url('accounting/collection/obligation_request/Entry/Admin/'.$d->obr_pk)}}" target="_blank" class="btn btn-social-icon btn-success"><i class="fa fa-plus"></i></a> --}}
