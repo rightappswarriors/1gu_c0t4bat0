@@ -372,4 +372,27 @@ class Core extends Model
 			return false;
 		}
 	}
+
+	/** 
+     * Increment code with string.
+     * @param $val = string.
+     * @param $limit = int.
+     * note: return = string+numberOfInt ex. A00001
+    */
+	public static function get_nextincrementwithString($val, $limit)
+    {
+    	try
+    	{
+    	  preg_match("/([a-zA-Z]+)(\\d+)/", $val, $code);
+
+          $codeInt = self::get_nextincrementlimitchar($code[2], $limit);
+          $newCode = $code[1].$codeInt;
+  
+    	  return $newCode;
+        }
+        catch (\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
 }
