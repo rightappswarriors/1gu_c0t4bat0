@@ -55,7 +55,7 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code WHERE rec_num = \''.$rec_num.'\'';
+            $sql = 'SELECT rl.ln_num, rl.part_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code WHERE rec_num = \''.$rec_num.'\' ORDER BY CAST(rl.ln_num as integer)';
             
             return DB::select(DB::raw($sql));
 		}
@@ -978,7 +978,13 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\'';
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, 
+rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, 
+rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc 
+FROM rssys.reclne rl 
+LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code 
+LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code 
+LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_num.'\'';
             
             return DB::select(DB::raw($sql));
 		}

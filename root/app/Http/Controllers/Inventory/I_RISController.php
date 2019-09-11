@@ -272,6 +272,6 @@ class I_RISController extends Controller
       $rechdr = Inventory::getReceivingPOHeader($code);
       $reclne = Inventory::getReceivingPOLine($code);
 
-      return view('inventory.receivingpo-print', compact('rechdr', 'reclne'));
+      return view('inventory.ris.ris-print', compact('rechdr', 'reclne'));
     }
 }
