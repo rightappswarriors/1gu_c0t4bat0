@@ -26,7 +26,9 @@
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">Item Repair Info</h3>
-            <input type="hidden" name="text_code" >
+          @if(!$isnew)
+            <input type="hidden" name="txt_code" value="{{$rechdr->rec_num}}">
+          @endif
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -39,37 +41,67 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Model</label>
-                <input type="text" class="form-control" name="ir_model" >
+                 @if($isnew)
+                  <input type="text" class="form-control" name="ir_model" data-parsley-errors-container="#validate_ir_model">
+                 @else
+                  <input type="text" class="form-control" name="ir_model" value="{{$rechdr->ir_model}}" data-parsley-errors-container="#validate_ir_model">
+                 @endif
+                  <span id="#validate_ir_model"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Unit Serial No.</label>
-                <input type="text" class="form-control" name="ir_unitserialno" >
+                 @if($isnew)
+                <input type="text" class="form-control" name="ir_unitserialno" data-parsley-errors-container="#validate_ir_unitserialno">
+                @else
+                <input type="text" class="form-control" name="ir_unitserialno" value="{{$rechdr->ir_unitserialno}}" data-parsley-errors-container="#validate_ir_unitserialno">
+                @endif
+                  <span id="#validate_ir_unitserialno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Engine Serial No.</label>
-                <input type="text" class="form-control" name="ir_engineserialno" >
+                @if($isnew)
+                  <input type="text" class="form-control" name="ir_engineserialno" data-parsley-errors-container="#validate_ir_engineserialno">
+                @else
+                  <input type="text" class="form-control" name="ir_engineserialno" value="{{$rechdr->ir_engineserialno}}" data-parsley-errors-container="#validate_ir_engineserialno">
+                @endif
+                  <span id="#validate_ir_engineserialno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Plate No.</label>
-                <input type="text" class="form-control" name="ir_plateno" >
+              @if($isnew)
+                <input type="text" class="form-control" name="ir_plateno" data-parsley-errors-container="#validate_ir_plateno">
+              @else
+                <input type="text" class="form-control" name="ir_plateno" value="{{$rechdr->ir_plateno}}" data-parsley-errors-container="#validate_ir_plateno">
+              @endif
+                  <span id="#validate_ir_plateno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>User ID</label>
-                <input type="text" class="form-control" name="recipient" >
+              @if($isnew)
+                <input type="text" class="form-control" name="recipient" data-parsley-errors-container="#validate_recipient" readonly="">
+              @else
+                <input type="text" class="form-control" name="recipient" value="{{$rechdr->recipient}}" data-parsley-errors-container="#validate_recipient" readonly="">
+              @endif
+                  <span id="#validate_recipient"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Designation</label>
-                <input type="text" class="form-control" name="ir_designation" >
+                @if($isnew)
+                <input type="text" class="form-control" name="ir_designation" data-parsley-errors-container="#validate_ir_designation">
+                @else
+                <input type="text" class="form-control" name="ir_designation" value="{{$rechdr->recipient}}" data-parsley-errors-container="#validate_ir_designation">
+                @endif
+                  <span id="#validate_ir_designation"></span>
               </div>
             </div>
             <div class="col-md-3">
@@ -101,9 +133,13 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="date" name="ir_dateofare" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                  @if($isnew)
+                  <input type="date" name="ir_dateofare" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_ir_dateofare" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                   @else
+                  <input type="date" name="ir_dateofare" class="form-control pull-right" id="datepicker" value="{{$rechdr->ir_dateofare}}" data-parsley-errors-container="#validate_ir_dateofare" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                   @endif
+                  <span id="#validate_ir_dateofare"></span> 
                 </div>
-                <span id="validate_invoicedt"></span>
               </div>
             </div>
         </div>
@@ -142,9 +178,10 @@
                   <th>Invoice/Delivery Date</th>
                   <th>Name of Auto Supply/Supplier</th>
                   <th>Qty</th>
+                  <th>Unit Code</th>
                   <th>Unit</th>
-                  <th>Materials</th>
                   <th>Cost</th>
+                  <th>Materials</th>                  
                   <th>Remarks</th>
                   <th>Option</th>
                 </tr>
@@ -163,7 +200,8 @@
                     <td>{{$rl->ir_delvdate}}</td>
                     <td>{{$rl->ir_supplier}}</td>
                     <td>{{$rl->recv_qty}}</td>
-                    <td>{{$rl->unit}}</td>
+                    <td>{{$rl->unit_code}}</td>
+                    <td>{{$rl->unit_desc}}</td>
                     <td>{{$rl->price}}</td>
                     <td>{{$rl->ir_material}}</td>
                     <td>{{$rl->notes}}</td>
@@ -182,7 +220,7 @@
           <div class="row">
             <div class="col-sm-3">
               <div class="form-group" style="display: flex;">
-                <a href="{{route('inventory.are')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
+                <a href="{{route('inventory.itemrepair')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
               </div>
             </div>
             <div class="col-sm-3">
@@ -226,15 +264,10 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Item Code</label>
-                              <input type="text" class="form-control" name="txt_itemcode" >
+                              <input type="text" class="form-control" name="txt_itemcode" readonly=""> 
                             </div>
                           </div>
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Job Order</label>
-                              <input type="text" class="form-control" name="txt_ir_joborder" >
-                            </div>
-                          </div>
+                          
                         </div>
                         <div class="row">
                           <div class="col-sm-4">
@@ -248,11 +281,11 @@
                               <label>Pre-Post No.</label>
                               <input type="text" class="form-control" name="txt_ir_prepost">
                             </div>
-                          </div>  
+                          </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Post-Repair Date</label>
-                              <input type="date" class="form-control" name="txt_ir_postdate">
+                              <label>Job Order</label>
+                              <input type="text" class="form-control" name="txt_ir_joborder" >
                             </div>
                           </div> 
                         </div>
@@ -271,8 +304,8 @@
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Name of Auto Supplier</label>
-                              <input type="text" class="form-control" name="txt_ir_supplier">
+                              <label>Post-Repair Date</label>
+                              <input type="date" class="form-control" name="txt_ir_postdate">
                             </div>
                           </div>
                         </div>
@@ -287,7 +320,7 @@
                           <div class="col-sm-3">
                             <div class="form-group">
                               <label>Unit Measurement</label>
-                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
                                   <option value="" selected="selected">--- Select Unit ---</option>
                                   @foreach($itemunit as $iu)
                                   <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
@@ -300,6 +333,12 @@
                             <div class="form-group">
                               <label>Price</label>
                               <input type="text" class="form-control" name="txt_price">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Name of Auto Supplier</label>
+                              <input type="text" class="form-control" name="txt_ir_supplier">
                             </div>
                           </div>
                           <div class="col-sm-4">
@@ -339,13 +378,7 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Item Code</label>
-                              <input type="text" class="form-control" name="txt_itemcode_text" >
-                            </div>
-                          </div>
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Job Order</label>
-                              <input type="text" class="form-control" name="txt_ir_joborder_text" >
+                              <input type="text" class="form-control" name="txt_itemcode_text" readonly=""> 
                             </div>
                           </div>
                         </div>
@@ -361,13 +394,13 @@
                               <label>Pre-Post No.</label>
                               <input type="text" class="form-control" name="txt_ir_prepost_text">
                             </div>
-                          </div>  
+                          </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Post-Repair Date</label>
-                              <input type="date" class="form-control" name="txt_ir_postdate_text">
+                              <label>Job Order</label>
+                              <input type="text" class="form-control" name="txt_ir_joborder_text" >
                             </div>
-                          </div> 
+                          </div>                            
                         </div>
                         <div class="row">
                           <div class="col-sm-4">
@@ -384,35 +417,43 @@
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Name of Auto Supplier</label>
-                              <input type="text" class="form-control" name="txt_ir_supplier_text">
+                              <label>Post-Repair Date</label>
+                              <input type="date" class="form-control" name="txt_ir_postdate_text">
                             </div>
                           </div>
+                          
+
                         </div>
                         <div class="row">
-                          <div class="col-sm-3">
+                          <div class="col-sm-4">
                             <div class="form-group">
                               <label>Quantity</label>
                                 <input id="txt_qty" type="number" class="form-control" name="txt_recv_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
                                 <span class="validate_iqty"></span>
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-4">
                             <div class="form-group">
                               <label>Unit Measurement</label>
-                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit_text" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
                                   <option value="" selected="selected">--- Select Unit ---</option>
                                   @foreach($itemunit as $iu)
                                   <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
                                   @endforeach
                                 </select>
-                                <span class="validate_iitemunit"></span>
+                                <span class="validate_iitemunit_text"></span>
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Price</label>
                               <input type="text" class="form-control" name="txt_price_text">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Name of Auto Supplier</label>
+                              <input type="text" class="form-control" name="txt_ir_supplier_text">
                             </div>
                           </div>
                           <div class="col-sm-4">
@@ -504,7 +545,7 @@
       $('#tbl_itemlist').DataTable( {
         "columnDefs": [
             {
-                "targets": [ 7 ], // hide unit code col
+                "targets": [ 10 ], // hide unit code col
                 "visible": false,
                 "searchable": false
             }
@@ -628,10 +669,10 @@
           $('input[name="txt_ir_delvdate_text"]').val(data[7]);
           $('input[name="txt_ir_supplier_text"]').val(data[8]);
           $('input[name="txt_recv_qty_text"]').val(data[9]);
-          $('select[name="select_unit_text_text"]').val(data[10]).trigger('change');
-          $('input[name="txt_price_text"]').val(data[11]);
-          $('input[name="txt_ir_material_text"]').val(data[12]);
-          $('input[name="txt_notes_text"]').val(data[13]); 
+          $('select[name="select_unit_text"]').val(data[10]).trigger('change');
+          $('input[name="txt_price_text"]').val(data[12]);
+          $('input[name="txt_ir_material_text"]').val(data[13]);
+          $('input[name="txt_notes_text"]').val(data[14]); 
 
           $('#enteritem-modal').modal('toggle');
         }
@@ -650,20 +691,20 @@
           $('.EditModeBtn').show();
           $('.DeleteMode').hide();
           
-          $('input[name="txt_lineno_text"]').val(data[0]);
-          $('input[name="txt_itemcode_text"]').val(data[1]);
-          $('input[name="txt_ir_joborder_text"]').val(data[2]);
-          $('input[name="txt_ir_date_text"]').val(data[3]);
-          $('input[name="txt_ir_prepost_text"]').val(data[4]);
-          $('input[name="txt_ir_postdate_text"]').val(data[5]);
-          $('input[name="txt_ir_invoice_text"]').val(data[6]);
-          $('input[name="txt_ir_delvdate_text"]').val(data[7]);
-          $('input[name="txt_ir_supplier_text"]').val(data[8]);
-          $('input[name="txt_recv_qty_text"]').val(data[9]);
-          $('select[name="select_unit_text_text"]').val(data[10]).trigger('change');
-          $('input[name="txt_price_text"]').val(data[11]);
-          $('input[name="txt_ir_material_text"]').val(data[12]);
-          $('input[name="txt_notes_text"]').val(data[13]); 
+          $('input[name="txt_lineno"]').val(data[0]);
+          $('input[name="txt_itemcode"]').val(data[1]);
+          $('input[name="txt_ir_joborder"]').val(data[2]);
+          $('input[name="txt_ir_date"]').val(data[3]);
+          $('input[name="txt_ir_prepost"]').val(data[4]);
+          $('input[name="txt_ir_postdate"]').val(data[5]);
+          $('input[name="txt_ir_invoice"]').val(data[6]);
+          $('input[name="txt_ir_delvdate"]').val(data[7]);
+          $('input[name="txt_ir_supplier"]').val(data[8]);
+          $('input[name="txt_recv_qty"]').val(data[9]);
+          $('select[name="select_unit"]').val(data[10]).trigger('change');
+          $('input[name="txt_price"]').val(data[12]);
+          $('input[name="txt_ir_material"]').val(data[13]);
+          $('input[name="txt_notes"]').val(data[14]); 
 
           $('#enteritem-modal').modal('toggle');
         }  
@@ -744,11 +785,11 @@
 
             if($('#ENTER_ITEM').text() == 'Add')
             { 
-              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_desc,  price, ir_material, notes, buttons]).draw();
+              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc,  price, ir_material, notes, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit')
             {
-              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_desc,  price, ir_material, notes, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc,  price, ir_material, notes, buttons]).draw();
             }
             else // remove item
             {
@@ -808,14 +849,14 @@
 
             if($('#ENTER_ITEM').text() == 'Add Text')
             { 
-              var test = [line, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_desc, price, ir_material, notes, buttons];
+              var test = [line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons];
 
               console.log(test);
-              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_desc,  price, ir_material, notes, buttons]).draw();
+              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit Text')
             {
-              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_desc,  price, ir_material, notes, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons]).draw();
             }
             else // remove item
             {
@@ -942,7 +983,7 @@
                           tbl_itemlist: tbl_itemdata,
                           ir_model: $('input[name="ir_model"]').val(),
                           ir_unitserialno: $('input[name="ir_unitserialno"]').val(),
-                          ir_enginerserialno: $('input[name="ir_enginerserialno"]').val(),
+                          ir_engineserialno: $('input[name="ir_engineserialno"]').val(),
                           ir_plateno: $('input[name="ir_plateno"]').val(),
                           recipient: $('input[name="recipient"]').val(),
                           ir_designation: $('input[name="ir_designation"]').val(),
@@ -992,7 +1033,7 @@
                       tbl_itemlist: tbl_itemdata,
                       ir_model: $('input[name="ir_model"]').val(),
                       ir_unitserialno: $('input[name="ir_unitserialno"]').val(),
-                      ir_enginerserialno: $('input[name="ir_enginerserialno"]').val(),
+                      ir_engineserialno: $('input[name="ir_engineserialno"]').val(),
                       ir_plateno: $('input[name="ir_plateno"]').val(),
                       recipient: $('input[name="recipient"]').val(),
                       ir_designation: $('input[name="ir_designation"]').val(),
@@ -1001,7 +1042,7 @@
                    };
 
              $.ajax({
-                  url: '{{asset('inventory/itemrepair/itemrepair_edit')}}/'+rec_num,
+                  url: '{{asset('inventory/itemrepair/itemrepair_edit')}}/' +rec_num,
                   method: 'POST',
                   data: data,
                   success : function(flag)

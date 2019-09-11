@@ -31,10 +31,10 @@
                                                 @csrf
                                                 <span class="AddMode">
                                                     <div class="box-body">
-                                                        <div class="form-group" hidden>
-                                                            <label for="inputEmail3" class="col-sm-4 control-label">ID <span class="text-red">*</span></label>
+                                                        <div class="form-group">
+                                                            <label for="inputEmail3" class="col-sm-4 control-label">Code <span class="text-red">*</span></label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
-                                                                <input type="number" name="txt_id" class="form-control" placeholder="ID" readonly="" data-parsley-required-message="<strong>ID</strong> is required.">
+                                                                <input type="text" name="txt_id" class="form-control" placeholder="Code" readonly="" data-parsley-required-message="<strong>ID</strong> is required.">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -88,7 +88,7 @@
         					<table id="example1" class="table table-bordered table-striped">
         						<thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Code</th>
                                         <th>Description</th>
                                         <th>Sector</th>
                                         <th width="15%"><center>Options</center></th>

@@ -884,6 +884,22 @@ class Inventory extends Model
         }
     }
 
+    public static function getIR()
+    {
+    	try
+    	{
+    		$data = "SELECT * FROM rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code WHERE rec_num LIKE 'IR%' AND (cancel != 'Y' OR cancel isnull)";
+
+
+   
+    	   return DB::select(DB::raw($data));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
     // get all ICS Transactions Header.
 	public static function getICS()
     {
@@ -1166,6 +1182,37 @@ class Inventory extends Model
 		}
 	}
 
+	public static function getIRHeader($rec_num)
+	{	
+		try 
+		{
+			$sql = 'Select rec_num, ir_model, ir_unitserialno, ir_engineserialno, ir_plateno, recipient, ir_designation, cc_code, ir_dateofare From rssys.rechdr Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	/*
+	 * Get all lines of Item Repair with specific code.
+	 */
+	public static function getItemRepairLine($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.item_code, rl.ir_joborder, rl.ir_date, rl.ir_prepost, rl.ir_postdate, rl.ir_delvdate, rl.ir_supplier, rl.recv_qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.ir_material, rl.notes, rl.ir_invoice FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE rl.rec_num = \''.$rec_num.'\' ORDER BY CAST(ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+
 	// check if exist, else insert
 	public static function checkIfExistInsert($table, $col, $value)
 	{
@@ -1224,4 +1271,49 @@ class Inventory extends Model
 			return false;
 		}
 	}
+
+	//cancel a IR
+	public static function cancelIR($code, $table, $col, $module)
+	{
+		try 
+		{
+			$datetime = Carbon::now();
+
+            $data = ['cancel' => "Y",
+                     'canc_user' => strtoupper(Session::get('_user')['id']),
+                     'canc_date' => $datetime->toDateString(),
+                     'canc_time' => $datetime->toTimeString()
+                    ];        
+
+			if (isset($table) && isset($col) && isset($code) ) 
+			{
+				if (!empty($data)) 
+				{
+					if (DB::table(DB::raw($table))->where($col, '=', $code)->update($data)) 
+					{
+						return true;
+          //               if (DB::table(DB::raw('rssys.stkcrd'))->where('reference', '=', $stk_ref)->delete())
+				      //   {
+				      //   	if (isset($module)) 
+				      //       {
+						    // 	//Inventory::alert(1, 'modified  data in '.$module);
+						    // }
+						    // return true;
+				      //   }
+					}
+				}
+			}
+			if (isset($module)) {
+			//Inventory::alert(2, 'occured upon modiification of data in '.$module);
+			}
+			return false;
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+			Inventory::alert(0, '');
+			return false;
+		}
+	}
+	
 }
