@@ -24,25 +24,25 @@
               <table id="tbl_list" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Job Order</th>
+                  <th>Code No.</th>
+                  <th>Reference</th>
                   <th>Date</th>
-                  <th>Pre-Post</th>
-                  <th>Post-Repair Date</th>
-                  <th>Invoiced</th>
-                  <th>Name of Auto Supply/Supplier</th>
+                  <th>Office</th>
+                  <th>Date of A.R.E</th>
+                  <th>Option</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($data as $d)
                 <tr>
                   <td>{{$d->rec_num}}</td>
-                  <td>{{$d->_reference}}</td>
-                  <td>{{$d->trnx_date}}</td>
-                  <td>{{$d->cc_code}}</td>
                   <td>{{$d->recipient}}</td>
+                  <td>{{$d->t_date}}</td>
+                  <td>{{$d->cc_desc}}</td>
+                  <td>{{$d->ir_dateofare}}</td>
                   <td>
                     <center>
-                      <a class="btn btn-social-icon btn-warning" href="{{route('inventory.are_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.are_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;
+                      <a class="btn btn-social-icon btn-warning" href="{{route('inventory.itemrepair_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>{{-- &nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.itemrepair_print', $d->rec_num)}}"><i class="fa fa-print"></i> --}}</a>&nbsp;
                       <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a>
                     </center>  
                   </td>
@@ -98,7 +98,7 @@
               </center>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" onclick="cancel()">Yes</button>
+               <button type="button" class="btn btn-primary" onclick="cancel()">Yes</button>
               <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
             </div>
           </div>
@@ -118,31 +118,32 @@
                 console.log('rowindex: '+selectedRow);
             } );
 
-        function approve()
-        {
-           var tbl_list = $('#tbl_list').DataTable();
-           var data = tbl_list.row(selectedRow).data();
-           var code = data[0];
-           
-           $.ajax({
-                     url: '{{asset('inventory/are/are_approve')}}/'+code,
-                     method: 'GET',
-                     success: function(flag)
-                              {
-                                if(flag == 'true')
-                                {
-                                  console.log(flag);
-                                  location.href = "{{route('inventory.are')}}";
-                                }
-                                else
-                                {
-                                  console.log(flag);
-                                  alert('ERROR.');
-                                }
-                              } 
 
-                  });
-        }
+        // function approve()
+        // {
+        //    var tbl_list = $('#tbl_list').DataTable();
+        //    var data = tbl_list.row(selectedRow).data();
+        //    var code = data[0];
+           
+        //    $.ajax({
+        //              url: '{{asset('inventory/itemrepair/itemrepair_approve')}}/'+code,
+        //              method: 'GET',
+        //              success: function(flag)
+        //                       {
+        //                         if(flag == 'true')
+        //                         {
+        //                           console.log(flag);
+        //                           location.href = "{{route('inventory.itemrepair')}}";
+        //                         }
+        //                         else
+        //                         {
+        //                           console.log(flag);
+        //                           alert('ERROR.');
+        //                         }
+        //                       } 
+
+        //           });
+        // }
 
         function cancel()
         {
@@ -151,14 +152,14 @@
            var code = data[0];
            
            $.ajax({
-                     url: '{{asset('inventory/are/are_cancel')}}/'+code,
+                     url: '{{asset('inventory/itemrepair/itemrepair_cancel')}}/'+code,
                      method: 'GET',
                      success: function(flag)
                               {
                                 if(flag == 'true')
                                 {
                                   console.log(flag);
-                                  location.href = "{{route('inventory.are')}}";
+                                  location.href = "{{route('inventory.itemrepair')}}";
                                 }
                                 else
                                 {
@@ -168,6 +169,34 @@
 
                   });
         }
+
+        //  function approve()
+        // {
+        //    var tbl_list = $('#tbl_list').DataTable();
+        //    var data = tbl_list.row(selectedRow).data();
+        //    var code = data[0];
+           
+        //    $.ajax({
+        //              url: '{{asset('inventory/itemrepair/itemrepair_approve')}}/'+code,
+        //              method: 'GET',
+        //              success: function(flag)
+        //                       {
+        //                         if(flag == 'true')
+        //                         {
+        //                           console.log(flag);
+        //                           location.href = "{{route('inventory.itemrepair')}}";
+        //                         }
+        //                         else
+        //                         {
+        //                           console.log(flag);
+        //                           alert('ERROR.');
+        //                         }
+        //                       } 
+
+        //           });
+        // }
+
+
 
       </script>
     </section>

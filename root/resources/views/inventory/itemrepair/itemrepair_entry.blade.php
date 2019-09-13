@@ -19,14 +19,16 @@
 @endphp
 @endif
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">Item Repair Info</h3>
-
+          @if(!$isnew)
+            <input type="hidden" name="txt_code" value="{{$rechdr->rec_num}}">
+          @endif
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -39,99 +41,73 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Model</label>
-                <input type="text" class="form-control" name="" >
+                 @if($isnew)
+                  <input type="text" class="form-control" name="ir_model" data-parsley-errors-container="#validate_ir_model">
+                 @else
+                  <input type="text" class="form-control" name="ir_model" value="{{$rechdr->ir_model}}" data-parsley-errors-container="#validate_ir_model">
+                 @endif
+                  <span id="#validate_ir_model"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Unit Serail No.</label>
-                <input type="text" class="form-control" name="" >
+                <label>Unit Serial No.</label>
+                 @if($isnew)
+                <input type="text" class="form-control" name="ir_unitserialno" data-parsley-errors-container="#validate_ir_unitserialno">
+                @else
+                <input type="text" class="form-control" name="ir_unitserialno" value="{{$rechdr->ir_unitserialno}}" data-parsley-errors-container="#validate_ir_unitserialno">
+                @endif
+                  <span id="#validate_ir_unitserialno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Engine Serail No.</label>
-                <input type="text" class="form-control" name="" >
+                <label>Engine Serial No.</label>
+                @if($isnew)
+                  <input type="text" class="form-control" name="ir_engineserialno" data-parsley-errors-container="#validate_ir_engineserialno">
+                @else
+                  <input type="text" class="form-control" name="ir_engineserialno" value="{{$rechdr->ir_engineserialno}}" data-parsley-errors-container="#validate_ir_engineserialno">
+                @endif
+                  <span id="#validate_ir_engineserialno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Plate No.</label>
-                <input type="text" class="form-control" name="" >
+              @if($isnew)
+                <input type="text" class="form-control" name="ir_plateno" data-parsley-errors-container="#validate_ir_plateno">
+              @else
+                <input type="text" class="form-control" name="ir_plateno" value="{{$rechdr->ir_plateno}}" data-parsley-errors-container="#validate_ir_plateno">
+              @endif
+                  <span id="#validate_ir_plateno"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>User ID</label>
-                <input type="text" class="form-control" name="" >
+              @if($isnew)
+                <input type="text" class="form-control" name="recipient" data-parsley-errors-container="#validate_recipient" readonly="">
+              @else
+                <input type="text" class="form-control" name="recipient" value="{{$rechdr->recipient}}" data-parsley-errors-container="#validate_recipient" readonly="">
+              @endif
+                  <span id="#validate_recipient"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Designation</label>
-                <input type="text" class="form-control" name="" >
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>CC Code</label>
-                <input type="text" class="form-control" name="" >
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Date of A.R.E</label>
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
-                </div>
-                <span id="validate_invoicedt"></span>
-              </div>
-            </div>
-
-            {{-- <div class="col-md-3">
-              <div class="form-group">
-                <label>ARE No</label>
                 @if($isnew)
-                <input type="text" class="form-control" name="" disabled="">
+                <input type="text" class="form-control" name="ir_designation" data-parsley-errors-container="#validate_ir_designation">
                 @else
-                <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" disabled="">
+                <input type="text" class="form-control" name="ir_designation" value="{{$rechdr->recipient}}" data-parsley-errors-container="#validate_ir_designation">
                 @endif
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>ARE Date</label>
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  @if($isnew)
-                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
-                  @else
-                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
-                  @endif
-                </div>
-                <span id="validate_invoicedt"></span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Reference</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
-                @else
-                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" data-parsley-errors-container="#validate_txtreference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
-                @endif
-                <span id="validate_txtreference"></span>
+                  <span id="#validate_ir_designation"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Office</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" data-parsley-errors-container="#validate_selectcostcenter" data-parsley-required-message="<strong>Office is required.</strong>" required>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="cc_code" data-parsley-errors-container="#validate_selectcostcenter" data-parsley-required-message="<strong>Office is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Office ---</option>
                     @foreach($costcenter as $cc)
@@ -149,199 +125,23 @@
                 </select>
                 <span id="validate_selectcostcenter"></span>
               </div>
-            </div> --}}
-          </div>
-          {{-- <div class="row"> --}}
-            {{-- <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
               <div class="form-group">
-                <label>Received From</label>
-                
-                @if($isnew)
-                  <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
-                @else
-                  <input list="select_receivedfrom" name="select_receivedfrom" value="{{$rechdr->are_receivedfrom}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
-                @endif  
-
-                <datalist id="select_receivedfrom">
-                  @foreach($are_users as $au)
-                    <option value="{{$au->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectreceivedfrom"></span>
-
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedfrom" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                <label>Date of A.R.E</label>
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
                   @if($isnew)
-                    <option value="" selected="selected">--- Select Received From ---</option>
-                    @foreach($x08 as $x8)
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endforeach
-                  @else
-                    @foreach($x08 as $x8)
-                      @if($rechdr->are_receivedfrom == $x8->uid)
-                       <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                      @else
-                       <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                      @endif
-                    @endforeach
-                  @endif
-                </select>
-                <span id="validate_selectreceivedfrom"></span>
-              </div>
-            </div> --}}
-            {{-- <div class="col-md-3">
-              <div class="form-group">
-                <label>Received By</label>
-
-                @if($isnew)
-                  <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
-                @else
-                  <input list="select_receivedby" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" value = "{{$rechdr->are_receivedby}}" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
-                @endif  
-
-                <datalist id="select_receivedby">
-                  @foreach($are_users as $au)
-                    <option value="{{$au->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectreceivedby"></span>
-
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedby" data-parsley-errors-container="#validate_selectreceivedby" data-parsley-required-message="<strong>Received By is required.</strong>" required>
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Received By ---</option>
-                    @foreach($x08 as $x8)
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endforeach
-                  @else
-                    @foreach($x08 as $x8)
-                    @if($rechdr->are_receivedby == $x8->uid)
-                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @else
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endif
-                    @endforeach
-                  @endif
-                </select>
-                <span id="validate_selectreceivedby"></span>
-
-              </div>
-            </div> --}}
-            {{-- <div class="col-md-3">
-              <div class="form-group">
-                <label>Issued To</label>
-
-                @if($isnew)
-                  <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
-                @else
-                  <input list="select_issuedto" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" value = "{{$rechdr->are_issuedto}}" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
-                @endif
-
-                <datalist id="select_issuedto">
-                  @foreach($are_users as $au)
-                    <option value="{{$au->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectissuedto"></span>
-
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedto" data-parsley-errors-container="#validate_selectissuedto" data-parsley-required-message="<strong>Issued To is required.</strong>" required>
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Issued To ---</option>
-                    @foreach($x08 as $x8)
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endforeach
-                  @else
-                    @foreach($x08 as $x8)
-                    @if($rechdr->are_issuedto == $x8->uid)
-                    <option selected = "selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @else
-                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                    @endif
-                    @endforeach
-                  @endif
-                </select>
-                <span id="validate_selectissuedto"></span>
-
-              </div>
-            </div> --}}
-          {{-- </div> --}}
-          {{-- <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Received From Designation</label>
-
-                @if($isnew)
-                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
-                @else
-                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" value="{{$rechdr->are_receivedfromdesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
-                @endif
-
-                <datalist id="select_receivedfromdesig">
-                  @foreach($are_position as $ap)
-                    <option value="{{$ap->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectreceivedfromdesig"></span>
+                  <input type="date" name="ir_dateofare" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_ir_dateofare" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                   @else
+                  <input type="date" name="ir_dateofare" class="form-control pull-right" id="datepicker" value="{{$rechdr->ir_dateofare}}" data-parsley-errors-container="#validate_ir_dateofare" data-parsley-required-message="<strong>ARE date is required.</strong>" required>
+                   @endif
+                  <span id="#validate_ir_dateofare"></span> 
+                </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Received By Designation</label>
-
-                @if($isnew)
-                  <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
-                @else
-                  <input list="select_receivedbydesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" data-parsley-errors-container="#validate_selectreceivedbydesig" data-parsley-required-message="<strong>Received By Designation is required.</strong>" required>
-                @endif  
-                <datalist id="select_receivedbydesig">
-                  @foreach($are_position as $ap)
-                    <option value="{{$ap->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectreceivedbydesig"></span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Issued To Designation</label>
-
-                @if($isnew)
-                  <input list="select_issuedtodesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
-                @else
-                  <input list="select_issuedtodesig" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_issuedtodesig" value="{{$rechdr->are_issuedtodesig}}" data-parsley-errors-container="#validate_selectissuedtodesig" data-parsley-required-message="<strong>Issued To Designation is required.</strong>" required>
-                @endif  
-
-                <datalist id="select_issuedtodesig">
-                  @foreach($are_position as $ap)
-                    <option value="{{$ap->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectissuedtodesig"></span>
-              </div>
-            </div>
-          </div> --}}
-          {{-- <div class="row"> --}}
-            
-            {{-- <div class="col-md-3">
-              <div class="form-group">
-                <label>RIS NO</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_ris_no">
-                @else
-                <input type="text" class="form-control" name="txt_ris_no" value="{{$rechdr->ris_no}}">
-                @endif
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>SAI NO</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_sai_no">
-                @else
-                <input type="text" class="form-control" name="txt_sai_no" value="{{$rechdr->sai_no}}">
-                @endif
-              </div>
-            </div> --}}
-          {{-- </div> --}}
-          <!-- /.row -->
         </div>
       </form>
         <!-- /.box-body -->
@@ -353,7 +153,6 @@
               <div class="row">
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
-                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button> --}}
                     <button type="button" class="btn btn-warning" onclick="EnterItem_Add('', '', '', '', '', '', '', 'TEXT-ITEM')"><i class="fa fa-plus"></i> Add Text Item</button>
                 </div>
                 <div class="col-sm-6">
@@ -362,74 +161,7 @@
                 </div>
               </div>
               <!-- Modal -->
-            <div class="row">
-              <div class="modal fade" id="itemsearch-modal">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title">Item Search</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="box-body">
-                          <div class="table-responsive">
-                          <table id="example1" class="table table-hover table-bordered table-striped">
-                            <thead>
-                            <tr>
-                              <th></th>
-                              <th>Item Code</th>
-                              <th>Quantity</th>
-                              <th>Property No</th>
-                              <th>Serial No</th>
-                              <th>Tag No</th>
-                              <th>Item Description</th>
-                              <th>Unit</th>
-                              <th>Brand</th>
-                              <th>Price</th>
-                              <th>Rack Location</th>
-                              <th>Item Category</th>
-                              <th>Stock Location</th>
-                              <th>Branch</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                              @foreach($disp_items as $di)
-                            <tr>
-                              <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}', '{{$di->part_no}}', '{{$di->item_desc}}', '{{$di->sales_unit_id}}', '{{$di->serial_no}}', '{{$di->tag_no}}', '{{$di->regular}}', 'ITEM')"></td>
-                              <td>{{$di->item_code}}</td>
-                              <td>{{$di->qty_onhand_su}}</td>
-                              <td>{{$di->part_no}}</td>
-                              <td>{{$di->serial_no}}</td>
-                              <td>{{$di->tag_no}}</td>
-                              <td>{{$di->item_desc}}</td>
-                              <td>{{$di->sale_unit}}</td>
-                              <td>{{$di->brd_name}}</td>
-                              <td>{{$di->regular}}</td>
-                              <td>{{$di->bin_loc}}</td>
-                              <td>{{$di->grp_desc}}</td>
-                              <td>{{$di->whs_desc}}</td>
-                              <td>{{$di->branchname}}</td>
-                            </tr>
-                            @endforeach
-                            </tfoot>
-                          </table>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#enteritem-modal"><i class="fa fa-plus"></i> Add Item</button>
-                    </div>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-            </div>  
-
-
-            </div>
+            
             <!-- /.box-header -->
             <div class="box-body">
               <div class="table-responsive">
@@ -437,17 +169,21 @@
                 <thead>
                 <tr>
                   <th>Line</th>
+                  <th>ITEM Code</th>
                   <th>Job Order</th>
                   <th>Date</th>
                   <th>Pre-Post No</th>
                   <th>Post-Repair Date</th>
-                  <th>Invoice/Delivery</th>
+                  <th>Invoice/Delivery No</th>
+                  <th>Invoice/Delivery Date</th>
                   <th>Name of Auto Supply/Supplier</th>
                   <th>Qty</th>
+                  <th>Unit Code</th>
                   <th>Unit</th>
-                  <th>Materials</th>
                   <th>Cost</th>
+                  <th>Materials</th>                  
                   <th>Remarks</th>
+                  <th>Option</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -456,15 +192,19 @@
                   <tr>  
                     <td>{{$rl->ln_num}}</td>
                     <td>{{$rl->item_code}}</td>
-                    <td>{{$rl->part_no}}</td>
-                    <td>{{$rl->serial_no}}</td>
-                    <td>{{$rl->tag_no}}</td>
-                    <td>{{$rl->item_desc}}</td>
-                    <td>{{$rl->qty}}</td>
+                    <td>{{$rl->ir_joborder}}</td>
+                    <td>{{$rl->ir_date}}</td>
+                    <td>{{$rl->ir_prepost}}</td>
+                    <td>{{$rl->ir_postdate}}</td>
+                    <td>{{$rl->ir_invoice}}</td>
+                    <td>{{$rl->ir_delvdate}}</td>
+                    <td>{{$rl->ir_supplier}}</td>
+                    <td>{{$rl->recv_qty}}</td>
                     <td>{{$rl->unit_code}}</td>
                     <td>{{$rl->unit_desc}}</td>
                     <td>{{$rl->price}}</td>
-                    <td>{{$rl->ln_amnt}}</td>
+                    <td>{{$rl->ir_material}}</td>
+                    <td>{{$rl->notes}}</td>
                     <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}}, '{{$rl->item_code}}');"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}}, '{{$rl->item_code}}');"></i></a></center>
                   </td>
                   </tr>  
@@ -520,50 +260,52 @@
                               <label>Line No.</label>
                               <input type="text" class="form-control" name="txt_lineno" readonly="">
                             </div>
-                          </div> 
-                          <div class="col-sm-8">
-                            <div class="form-group">
-                              <label>Job Order</label>
-                              <input type="text" class="form-control" name="txt_itemcode" >
-                            </div>
-                          </div>                      
-                        </div>
-                        <div class="row">
+                          </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Property No.</label>
-                              <input type="text" class="form-control" name="txt_partno" readonly="">
-                            </div>
-                          </div>  
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Serial No.</label>
-                              <input type="text" class="form-control" name="txt_serialno" readonly="">
-                            </div>
-                          </div>  
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Tag No.</label>
-                              <input type="text" class="form-control" name="txt_tagno" readonly="">
-                            </div>
-                          </div>  
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-9">
-                            <div class="form-group">
-                              <label>Item Description</label>
-                              <input type="text" class="form-control" name="txt_itemdesc" readonly=""> 
+                              <label>Item Code</label>
+                              <input type="text" class="form-control" name="txt_itemcode" readonly=""> 
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Item Search</label>
-                              <span class="AddModeBtn">
-                                 <button class="btn btn-block btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-search"></i> Item Search</button>
-                              </span>
-                              <span class="EditModeBtn">
-                                 <button class="btn btn-block btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#itemsearch-modal" disabled=""><i class="fa fa-search"></i> Item Search</button>
-                              </span>
+                              <label>Date</label>
+                              <input type="date" class="form-control" name="txt_ir_date">
+                            </div>
+                          </div>  
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Pre-Post No.</label>
+                              <input type="text" class="form-control" name="txt_ir_prepost">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Job Order</label>
+                              <input type="text" class="form-control" name="txt_ir_joborder" >
+                            </div>
+                          </div> 
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Invoice/Delivery No.</label>
+                              <input type="text" class="form-control" name="txt_ir_invoice">
+                            </div>
+                          </div>  
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Invoice/Delivery Date</label>
+                              <input type="date" class="form-control" name="txt_ir_delvdate">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Post-Repair Date</label>
+                              <input type="date" class="form-control" name="txt_ir_postdate">
                             </div>
                           </div>
                         </div>
@@ -571,7 +313,7 @@
                           <div class="col-sm-3">
                             <div class="form-group">
                               <label>Quantity</label>
-                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <input id="txt_qty" type="number" class="form-control" name="txt_recv_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
                                 <span class="validate_iqty"></span>
                             </div>
                           </div>
@@ -587,17 +329,28 @@
                                 <span class="validate_iitemunit"></span>
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Cost Price</label>
-                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
-                               <span class="validate_icostprice"></span>
+                              <label>Price</label>
+                              <input type="text" class="form-control" name="txt_price">
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Line Amount</label>
-                               <input type="text" class="form-control" name="txt_lineamt" placeholder="0.00" readonly="">
+                              <label>Name of Auto Supplier</label>
+                              <input type="text" class="form-control" name="txt_ir_supplier">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Spare Parts</label>
+                              <input type="text" class="form-control" name="txt_ir_material">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Remarks</label>
+                              <input type="text" class="form-control" name="txt_notes">
                             </div>
                           </div>
                         </div>
@@ -621,90 +374,99 @@
                               <label>Line No.</label>
                               <input type="text" class="form-control" name="txt_lineno_text" readonly="">
                             </div>
-                          </div> 
-                          <div class="col-sm-8">
+                          </div>
+                          <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Job Order</label>
-                              <input type="text" class="form-control" name="txt_itemcode_text" >
+                              <label>Item Code</label>
+                              <input type="text" class="form-control" name="txt_itemcode_text" readonly=""> 
                             </div>
-                          </div>                      
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Date</label>
-                              <input type="Date" class="form-control" name="txt_partno_text">
+                              <input type="date" class="form-control" name="txt_ir_date_text">
                             </div>
                           </div>  
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Pre-Post No.</label>
-                              <input type="text" class="form-control" name="txt_serialno_text">
-                            </div>
-                          </div>  
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Post-Repair Date</label>
-                              <input type="Date" class="form-control" name="txt_tagno_text">
-                            </div>
-                          </div>  
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Invoice No.</label>
-                              <input type="text" class="form-control" name="txt_serialno_text">
-                            </div>
-                          </div>  
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Delivery Date</label>
-                              <input type="Date" class="form-control" name="txt_tagno_text">
+                              <input type="text" class="form-control" name="txt_ir_prepost_text">
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Name of Auto Supplier</label>
-                              <input type="text" class="form-control" name="txt_serialno_text">
+                              <label>Job Order</label>
+                              <input type="text" class="form-control" name="txt_ir_joborder_text" >
+                            </div>
+                          </div>                            
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Invoice/Delivery No.</label>
+                              <input type="text" class="form-control" name="txt_ir_invoice_text">
                             </div>
                           </div>  
-                        </div>                        
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Invoice/Delivery Date</label>
+                              <input type="date" class="form-control" name="txt_ir_delvdate_text">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Post-Repair Date</label>
+                              <input type="date" class="form-control" name="txt_ir_postdate_text">
+                            </div>
+                          </div>
+                          
+
+                        </div>
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Quantity</label>
-                                <input id="txt_qty_text" type="number" class="form-control" name="txt_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty_text" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
-                                <span class="validate_iqty_text"></span>
+                                <input id="txt_qty" type="number" class="form-control" name="txt_recv_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <span class="validate_iqty"></span>
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Unit Measurement</label>
-                                 <input type="text" class="form-control" name="txt_serialno_text">
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit_text" data-parsley-errors-container="#validate_iitemunit_text" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
+                                  <option value="" selected="selected">--- Select Unit ---</option>
+                                  @foreach($itemunit as $iu)
+                                  <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
+                                  @endforeach
+                                </select>
+                                <span class="validate_iitemunit_text"></span>
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Cost Price</label>
-                               <input id="txt_cost_text" type="number" class="form-control" name="txt_cost_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice_text" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
-                               <span class="validate_icostprice_text"></span>
+                              <label>Price</label>
+                              <input type="text" class="form-control" name="txt_price_text">
                             </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-6">
+                          <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Material</label>
-                                 <input type="text" class="form-control" name="txt_serialno_text">
+                              <label>Name of Auto Supplier</label>
+                              <input type="text" class="form-control" name="txt_ir_supplier_text">
                             </div>
                           </div>
-                          <div class="col-sm-6">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Spare Parts</label>
+                              <input type="text" class="form-control" name="txt_ir_material_text">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
                             <div class="form-group">
                               <label>Remarks</label>
-                              <div><textarea id="txt_itemdesc_text" class="form-control" name="txt_itemdesc_text" rows="4" cols="88"></textarea></div>
+                              <input type="text" class="form-control" name="txt_notes_text">
                             </div>
-                          </div>
-                          <div class="col-sm-3">
                           </div>
                         </div>
                       </div>
@@ -783,7 +545,7 @@
       $('#tbl_itemlist').DataTable( {
         "columnDefs": [
             {
-                "targets": [ 7 ], // hide unit code col
+                "targets": [ 10 ], // hide unit code col
                 "visible": false,
                 "searchable": false
             }
@@ -816,7 +578,7 @@
       });
 
 
-      function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no, costprice, type)
+      function EnterItem_Add(code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit, price, ir_material, notes, type)
       {
         clear();
 
@@ -839,13 +601,18 @@
 
           $('input[name="txt_lineno"]').val(line);
           $('input[name="txt_itemcode"]').val(code);
-          $('input[name="txt_part_no"]').val(part_no);
-          $('input[name="txt_itemdesc"]').val(item_desc);
-          $('input[name="txt_partno"]').val(part_no);
-          $('input[name="txt_serialno"]').val(serial_no);
-          $('input[name="txt_tagno"]').val(tag_no);
-          $('input[name="txt_cost"]').val(costprice);
+          $('input[name="txt_ir_joborder"]').val(ir_joborder);
+          $('input[name="txt_ir_date"]').val(ir_date);
+          $('input[name="txt_ir_prepost"]').val(ir_prepost);
+          $('input[name="txt_ir_postdate"]').val(ir_postdate);
+          $('input[name="txt_ir_invoice"]').val(ir_invoice);
+          $('input[name="txt_ir_delvdate"]').val(ir_delvdate);
+          $('input[name="txt_ir_supplier"]').val(ir_supplier);
+          $('input[name="txt_recv_qty"]').val(recv_qty);
           $('select[name="select_unit"]').val(unit).trigger('change');
+          $('input[name="txt_price"]').val(price);
+          $('input[name="txt_ir_material"]').val(ir_material);
+          $('input[name="txt_notes"]').val(notes);          
         }
         else // TEXT ITEM
         {
@@ -894,14 +661,18 @@
           
           $('input[name="txt_lineno_text"]').val(data[0]);
           $('input[name="txt_itemcode_text"]').val(data[1]);
-          $('input[name="txt_partno_text"]').val(data[2]);
-          $('input[name="txt_serialno_text"]').val(data[3]);
-          $('input[name="txt_tagno_text"]').val(data[4]);
-          $('textarea[name="txt_itemdesc_text"]').val(data[5]);
-          $('input[name="txt_qty_text"]').val(data[6]);
-          $('select[name="select_unit_text"]').val(data[7]).trigger('change');
-          $('input[name="txt_cost_text"]').val(data[9]);
-          $('input[name="txt_lineamt_text"]').val(data[10]);
+          $('input[name="txt_ir_joborder_text"]').val(data[2]);
+          $('input[name="txt_ir_date_text"]').val(data[3]);
+          $('input[name="txt_ir_prepost_text"]').val(data[4]);
+          $('input[name="txt_ir_postdate_text"]').val(data[5]);
+          $('input[name="txt_ir_invoice_text"]').val(data[6]);
+          $('input[name="txt_ir_delvdate_text"]').val(data[7]);
+          $('input[name="txt_ir_supplier_text"]').val(data[8]);
+          $('input[name="txt_recv_qty_text"]').val(data[9]);
+          $('select[name="select_unit_text"]').val(data[10]).trigger('change');
+          $('input[name="txt_price_text"]').val(data[12]);
+          $('input[name="txt_ir_material_text"]').val(data[13]);
+          $('input[name="txt_notes_text"]').val(data[14]); 
 
           $('#enteritem-modal').modal('toggle');
         }
@@ -922,14 +693,18 @@
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_itemcode"]').val(data[1]);
-          $('input[name="txt_partno"]').val(data[2]);
-          $('input[name="txt_serialno"]').val(data[3]);
-          $('input[name="txt_tagno"]').val(data[4]);
-          $('input[name="txt_itemdesc"]').val(data[5]);
-          $('input[name="txt_qty"]').val(data[6]);
-          $('select[name="select_unit"]').val(data[7]).trigger('change');
-          $('input[name="txt_cost"]').val(data[9]);
-          $('input[name="txt_lineamt"]').val(data[10]);
+          $('input[name="txt_ir_joborder"]').val(data[2]);
+          $('input[name="txt_ir_date"]').val(data[3]);
+          $('input[name="txt_ir_prepost"]').val(data[4]);
+          $('input[name="txt_ir_postdate"]').val(data[5]);
+          $('input[name="txt_ir_invoice"]').val(data[6]);
+          $('input[name="txt_ir_delvdate"]').val(data[7]);
+          $('input[name="txt_ir_supplier"]').val(data[8]);
+          $('input[name="txt_recv_qty"]').val(data[9]);
+          $('select[name="select_unit"]').val(data[10]).trigger('change');
+          $('input[name="txt_price"]').val(data[12]);
+          $('input[name="txt_ir_material"]').val(data[13]);
+          $('input[name="txt_notes"]').val(data[14]); 
 
           $('#enteritem-modal').modal('toggle');
         }  
@@ -990,15 +765,19 @@
 
             var line = $('input[name="txt_lineno"]').val();
             var item_code = $('input[name="txt_itemcode"]').val();
-            var part_no = $('input[name="txt_partno"]').val();
-            var serial_no = $('input[name="txt_serialno"]').val();
-            var tag_no = $('input[name="txt_tagno"]').val();
-            var item_desc = $('input[name="txt_itemdesc"]').val();
-            var qty = $('input[name="txt_qty"]').val();
+            var ir_joborder = $('input[name="txt_ir_joborder"]').val();
+            var ir_date = $('input[name="txt_ir_date"]').val();
+            var ir_prepost = $('input[name="txt_ir_prepost"]').val();
+            var ir_postdate = $('input[name="txt_ir_postdate"]').val();
+            var ir_invoice = $('input[name="txt_ir_invoice"]').val();
+            var ir_delvdate = $('input[name="txt_ir_delvdate"]').val();
+            var ir_supplier = $('input[name="txt_ir_supplier"]').val();
+            var recv_qty = $('input[name="txt_recv_qty"]').val();
             var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
             var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
-            var cost_price = $('input[name="txt_cost"]').val();
-            var line_amt = $('input[name="txt_lineamt"]').val();
+            var price = $('input[name="txt_price"]').val();
+            var ir_material = $('input[name="txt_ir_material"]').val();
+            var notes = $('input[name="txt_notes"]').val();
             var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
@@ -1006,11 +785,11 @@
 
             if($('#ENTER_ITEM').text() == 'Add')
             { 
-              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
+              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc,  price, ir_material, notes, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit')
             {
-              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc,  price, ir_material, notes, buttons]).draw();
             }
             else // remove item
             {
@@ -1050,27 +829,34 @@
 
             var line = $('input[name="txt_lineno_text"]').val();
             var item_code = $('input[name="txt_itemcode_text"]').val();
-            var part_no = $('input[name="txt_partno_text"]').val();
-            var serial_no = $('input[name="txt_serialno_text"]').val();
-            var tag_no = $('input[name="txt_tagno_text"]').val();
-            var item_desc = $('textarea[name="txt_itemdesc_text"]').val();
-            var qty = $('input[name="txt_qty_text"]').val();
+            var ir_joborder = $('input[name="txt_ir_joborder_text"]').val();
+            var ir_date = $('input[name="txt_ir_date_text"]').val();
+            var ir_prepost = $('input[name="txt_ir_prepost_text"]').val();
+            var ir_postdate = $('input[name="txt_ir_postdate_text"]').val();
+            var ir_invoice = $('input[name="txt_ir_invoice_text"]').val();
+            var ir_delvdate = $('input[name="txt_ir_delvdate_text"]').val();
+            var ir_supplier = $('input[name="txt_ir_supplier_text"]').val();
+            var recv_qty = $('input[name="txt_recv_qty_text"]').val();
             var unit_code = $('select[name="select_unit_text"]').select2('data')[0].id;
             var unit_desc = $('select[name="select_unit_text"]').select2('data')[0].text;
-            var cost_price = $('input[name="txt_cost_text"]').val();
-            var line_amt = $('input[name="txt_lineamt_text"]').val();
+            var price = $('input[name="txt_price_text"]').val();
+            var ir_material = $('input[name="txt_ir_material_text"]').val();
+            var notes = $('input[name="txt_notes_text"]').val();
             var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
-                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\', \''+item_code+'\');"></i></a>' +
+                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
             '</center>';
 
             if($('#ENTER_ITEM').text() == 'Add Text')
             { 
-              table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
+              var test = [line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons];
+
+              console.log(test);
+              table.row.add([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons]).draw();
             }
             else if($('#ENTER_ITEM').text() == 'Edit Text')
             {
-              table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, cost_price, line_amt, buttons]).draw();
+              table.row(selectedRow).data([line, item_code, ir_joborder, ir_date, ir_prepost, ir_postdate, ir_invoice, ir_delvdate, ir_supplier, recv_qty, unit_code, unit_desc, price, ir_material, notes, buttons]).draw();
             }
             else // remove item
             {
@@ -1124,27 +910,35 @@
       {
         $('input[name="txt_lineno"]').val('');
         $('input[name="txt_itemcode"]').val('');
-        $('input[name="txt_partno"]').val('');
-        $('input[name="txt_serialno"]').val('');
-        $('input[name="txt_tagno"]').val('');
-        $('input[name="txt_itemdesc"]').val('');
-        $('input[name="txt_qty"]').val('0.00');
+        $('input[name="txt_ir_joborder"]').val('');
+        $('input[name="txt_ir_date"]').val('');
+        $('input[name="txt_ir_prepost"]').val('');
+        $('input[name="txt_ir_postdate"]').val('');
+        $('input[name="txt_ir_invoice"]').val('');
+        $('input[name="txt_ir_delvdate"]').val('');
+        $('input[name="txt_ir_supplier"]').val('');
+        $('input[name="txt_recv_qty"]').val('0.00');
         $('select[name="select_unit"]').val('').trigger('change');
-        $('input[name="txt_cost"]').val('0.00');
-        $('input[name="txt_lineamt"]').val('0.00');
+        $('input[name="txt_price"]').val('0.00');
+        $('input[name="txt_ir_material"]').val('');
+        $('input[name="txt_notes"]').val('');
 
         $('input[name="txt_lineno_text"]').val('');
         $('input[name="txt_itemcode_text"]').val('');
-        $('input[name="txt_partno_text"]').val('');
-        $('input[name="txt_serialno_text"]').val('');
-        $('input[name="txt_tagno_text"]').val('');
-        $('textarea[name="txt_itemdesc_text"]').val('');
-        $('input[name="txt_qty_text"]').val('0');
+        $('input[name="txt_ir_joborder_text"]').val('');
+        $('input[name="txt_ir_date_text"]').val('');
+        $('input[name="txt_ir_prepost_text"]').val('');
+        $('input[name="txt_ir_postdat_texte"]').val('');
+        $('input[name="txt_ir_invoice_text"]').val('');
+        $('input[name="txt_ir_delvdate_text"]').val('');
+        $('input[name="txt_ir_supplier_text"]').val('');
+        $('input[name="txt_recv_qty_text"]').val('0.00');
         $('select[name="select_unit_text"]').val('').trigger('change');
-        $('input[name="txt_cost_text"]').val('0.00');
-        $('input[name="txt_lineamt_text"]').val('0.00');
+        $('input[name="txt_price_text"]').val('0.00');
+        $('input[name="txt_ir_material_text"]').val('');
+        $('input[name="txt_notes_text"]').val('');
 
-      }
+      } 
 
       function disp_amt_result()
       {
@@ -1187,26 +981,25 @@
             var data = { 
                           _token : $('meta[name="csrf-token"]').attr('content'),
                           tbl_itemlist: tbl_itemdata,
-                          invoicedt: $('input[name="dtp_invoicedt"]').val(),
-                          costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
-                          reference: $('input[name="txt_reference"]').val(),
-                          receivedby: $('input[name="select_receivedby"]').val(),
-                          receivedfrom: $('input[name="select_receivedfrom"]').val(),
-                          issuedto: $('input[name="select_issuedto"]').val(),
-                          receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
-                          receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
-                          issuedtodesig: $('input[name="select_issuedtodesig"]').val(),
+                          ir_model: $('input[name="ir_model"]').val(),
+                          ir_unitserialno: $('input[name="ir_unitserialno"]').val(),
+                          ir_engineserialno: $('input[name="ir_engineserialno"]').val(),
+                          ir_plateno: $('input[name="ir_plateno"]').val(),
+                          recipient: $('input[name="recipient"]').val(),
+                          ir_designation: $('input[name="ir_designation"]').val(),
+                          cc_code: $('select[name="cc_code"]').select2('data')[0].id,
+                          ir_dateofare: $('input[name="ir_dateofare"]').val(),
                        };
     
                $.ajax({
-                      url: '{{route('inventory.are_add')}}',
+                      url: '{{route('inventory.itemrepair_entry')}}',
                       method: 'POST',
                       data: data,
                       success : function(flag)
                                {
                                   if(flag == 'true')
                                   {
-                                    location.href= "{{route('inventory.are')}}";
+                                    location.href= "{{route('inventory.itemrepair')}}";
                                   }
                                   else
                                   {
@@ -1221,6 +1014,7 @@
           }
          }
       }
+
 
       function EditSave()
       {
@@ -1237,19 +1031,18 @@
              var data = { 
                       _token : $('meta[name="csrf-token"]').attr('content'),
                       tbl_itemlist: tbl_itemdata,
-                      invoicedt: $('input[name="dtp_invoicedt"]').val(),
-                      costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
-                      reference: $('input[name="txt_reference"]').val(),
-                      receivedby: $('input[name="select_receivedby"]').val(),
-                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
-                      issuedto: $('input[name="select_issuedto"]').val(),
-                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
-                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
-                      issuedtodesig: $('input[name="select_issuedtodesig"]').val(),
+                      ir_model: $('input[name="ir_model"]').val(),
+                      ir_unitserialno: $('input[name="ir_unitserialno"]').val(),
+                      ir_engineserialno: $('input[name="ir_engineserialno"]').val(),
+                      ir_plateno: $('input[name="ir_plateno"]').val(),
+                      recipient: $('input[name="recipient"]').val(),
+                      ir_designation: $('input[name="ir_designation"]').val(),
+                      cc_code: $('select[name="cc_code"]').select2('data')[0].id,
+                      ir_dateofare: $('input[name="ir_dateofare"]').val(),
                    };
 
              $.ajax({
-                  url: '{{asset('inventory/are/are_edit')}}/'+rec_num,
+                  url: '{{asset('inventory/itemrepair/itemrepair_edit')}}/' +rec_num,
                   method: 'POST',
                   data: data,
                   success : function(flag)
@@ -1257,7 +1050,7 @@
                               if(flag == 'true')
                               {
                                 console.log(flag);
-                                location.href= "{{route('inventory.are')}}";
+                                location.href= "{{route('inventory.itemrepair')}}";
                               }
                               else
                               {
@@ -1277,5 +1070,5 @@
 
     </section>
     <!-- /.content -->
-	
+  
 @endsection
