@@ -1,14 +1,15 @@
 @extends('_main')
 @php
     $_bc = [
-        ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>url("budget/budget-proposal-entry"),'desc'=>'Appropriation Entry','icon'=>'none','st'=>true]
+        ['link'=>'#','desc'=>'Budget','icon'=>'none','st'=>false],
+        ['link'=>'#','desc'=>'Report','icon'=>'none','st'=>false],
+        ['link'=>'#','desc'=>'SAAOB','icon'=>'none','st'=>true]
     ];
-    $_ch = "Budget Appropriation"; // Module Name
+    $_ch = "Budget SAAOB"; // Module Name
 @endphp
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       {{-- <div class="graph-image graph-7">
@@ -17,7 +18,7 @@
       <div class="row">
         <div class="col-sm-12">
           <center><b>Republic of the Philippines<br> Province of Negros Oriental<br> LGU-City of Guihulngan<br><br>
-            <u>{{$Header->fund}}</u></b><br>
+            <u>{{$fund->fdesc}}</u></b><br>
           </center>
         </div>
       </div>
@@ -29,92 +30,151 @@
             <thead>
               <tr>
                 <th height="50" style="border: 1px solid #000; width:15%; "><center>Account Code</center></th>
-                <th height="50" style="border: 1px solid #000; width:80%; "><center>Function/Program/Project</center></th>
-                @if($Header->type == 'O')
-                   <th height="50" style="border: 1px solid #000; width:20%; "><center>Obligation</center></th>
-                @else
-                   <th height="50" style="border: 1px solid #000; width:20%; "><center>Appropriation</center></th>
-                @endif
+                <th height="50" style="border: 1px solid #000; width:90%; "><center>Function/Program/Project</center></th>
+                <th height="50" style="border: 1px solid #000; width:20%; "><center>Appropriation</center></th>
                 <th height="50" style="border: 1px solid #000; width:20%; "><center>Allotment</center></th>
+                <th height="50" style="border: 1px solid #000; width:20%; "><center>Obligation</center></th>
+                <th height="50" style="border: 1px solid #000; width:20%; " colspan="2"><center>Balances of</center></th>
               </tr>
             </thead>
             <tbody>
               <tr class="noborder">
                 <td></td>
-                <td height="50"><b><u><center>CURRENT YEAR ALLOTMENT</center></u></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>APPROPRIATIONS</b></td>
+                <td><b>ALLOTMENTS</b></td>
+              </tr>
+              <tr class="noborder">
+                <td></td>
+                <td height="50"><b><u><center>CURRENT YEAR APPROPRIATION</center></u></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
               </tr>
+
+              @php
+                $grandtotal = 0.00;
+              @endphp
+
+              @isset($Function)
+              @foreach($Function as $F)
               <tr class="noborder">
-                <td><center><b>{{$Header->funcid}}</b></center></td>
-                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($Header->function)}}</b></td>
+                <td><center><b>{{$F->funcid}}</b></center></td>
+                <td height="50" style="text-indent: 20px;"><b>{{strtoupper($F->funcdesc)}}</b></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
               </tr>
+              @isset($Header)
+              @foreach($Header as $h)
+
+              @if($F->funcid == $h->funcid)
               <tr class="noborder">
-                <td><center><b>{{$Header->office_code}}</b></center></td>
-                <td><b><u>{{strtoupper($Header->office)}}</u></b></td>
+                <td><center><b>{{$h->office_code}}</b></center></td>
+                <td><b><u>{{strtoupper($h->office)}}</u></b></td>
                 <td ></td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
-              @isset($PPA)
+                
+
+                @foreach($PPA as $P) {{-- PPA --}}
+
                 @php
-                $total_allotamt = 0.00;
-                $total_approamt = 0.00;
-                $total_obligamt = 0.00;
+                $total_ppaamt = 0.00;
                 @endphp
 
-                @foreach($PPA as $P)
+                @if($h->b_num == $P->b_num) {{-- HEADER == PPA --}}
+                  
                   <tr class="noborder">
                     <td></td>
                     <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>{{$P->subgrpdesc}}</b></td>
                     <td></td>
                     <td></td>
+                    <td></td>
+                    <td></td>
+                     <td></td>
                   </tr>
-                  @foreach($Line as $L)
-                  @if($P->subgrpid == $L->grpid)
+
+                  @foreach($Line as $L) {{-- LINE --}}
+                  @if($h->b_num == $L->b_num)
+                  @if($P->grpid == $L->grpid)
                   <tr class="noborder noborder2">
                     <td><center>{{$L->at_code}}</center></td>
                     <td>{{$L->at_desc}}</td>
-                    @if($Header->type == 'O')
-                       <td align="right">{{number_format($L->oblig_amnt, 2)}}</td>
-                    @else
-                       <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
-                    @endif   
+                    <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
                     <td align="right">{{number_format($L->allot_amnt, 2)}}</td>
+                    <td align="right">{{number_format($L->obr, 2)}}</td>
+                    <td align="right">{{number_format($L->appro_amnt - $L->allot_amnt, 2)}}</td>
+                    <td align="right">{{number_format($L->allot_amnt - $L->obr, 2)}}</td>
                   </tr>
+
+                  @php
+                  $total_ppaamt += $L->appro_amnt;
+                  $grandtotal += $L->appro_amnt;
+                  @endphp
+
                   @endif
-                  @endforeach
+                  @endif
+                  @endforeach {{-- LINE --}}
+
                   <tr class="noborder noborder3">
                     <td></td>
                     <td><b>Total {{$P->subgrpdesc}}</b></td>
-                    @if($Header->type == 'O')
-                       <td align="right"><b>{{number_format($P->total_obligamt, 2)}}</b></td>
-                    @else
-                       <td align="right"><b>{{number_format($P->total_approamt, 2)}}</b></td>
-                    @endif
-                    <td align="right"><b>{{number_format($P->total_allotamt, 2)}}</b></td>
+                    <td align="right"><b>{{number_format($total_ppaamt, 2)}}</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                   @php
-                  $total_allotamt += $P->total_allotamt;
-                  $total_approamt += $P->total_approamt;
-                  $total_obligamt += $P->total_obligamt;
+                  // $total_amt += $P->total_amt;
                   @endphp
-                @endforeach
-                  
+
+                @endif  {{-- HEADER == PPA --}}
+                @endforeach {{-- PPA --}}
+              {{-- @endisset --}}
+              @endif    
+              @endforeach
+              @endisset  
+              @endforeach
+              @endisset    
                   <tr class="noborder noborder3">
                     <td></td>
                     <td height="50" style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
-                    @if($Header->type == 'O')
-                      <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_obligamt, 2)}}</b></td>
-                    @else
-                      <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_approamt, 2)}}</b></td>
-                    @endif  
-                      <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($total_allotamt, 2)}}</b></td>
+                    <td align="right" height="50" style="vertical-align: bottom;"><b>{{number_format($grandtotal, 2)}}</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
-              @endisset
+              
             </tbody>
           </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
         </div>
       </center>
       </div>
@@ -171,8 +231,9 @@ border-top:none !important;
         });
 
        window.print(); 
+       //location.href= "{{url("budget/budget-proposal-entry")}}";
      }
 
     </script>
-	
+  
 @endsection

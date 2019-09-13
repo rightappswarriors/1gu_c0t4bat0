@@ -14,7 +14,8 @@
  <div class="box box-default">
  <div class="box-header with-border">
     <br>
-    <form id="generate-form" data-parsley-validate novalidate>
+    <form id="generate-form" action="{{route('report.generatesaaob')}}" method="POST" data-parsley-validate novalidate>
+    {{csrf_field()}}
     <div class="row">
       <div class="col-sm-3">
         <div class="form-group">
@@ -41,13 +42,57 @@
         </div>
       </div>
     </div>
-    </form>
+    <div class="row">
+      <div class="col-md-3">
+          <div class="form-group">
+              <label>From</label>
+              <select type="text" class="form-control" name="mo1" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#sel_from_span" aria-hidden="true" data-parsley-required-message="<strong>From month</strong> is required." required>
+                  <option value="">Select from month..</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+              </select>
+              <span id="sel_from_span"></span>
+          </div>
+      </div>
+      <div class="col-md-3">
+          <div class="form-group">
+              <label>To</label>
+              <select type="text" class="form-control" name="mo2" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#sel_to_span" aria-hidden="true" data-parsley-required-message="<strong>To month</strong> is required." required>
+                  <option value="">Select from month..</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+              </select>
+              <span id="sel_to_span"></span>
+          </div>
+      </div>
+    </div>
     <hr>
     <div class="row">
       <div class="col-md-3">
-        <button type="button" class="btn btn-block btn-success" onclick="generate();"><i class="fa fa-plus"></i> Generate SAAOB Report</button>
+        <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Generate SAAOB Report</button>
       </div>
     </div>
+    </form>
 
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

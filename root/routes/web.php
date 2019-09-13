@@ -680,8 +680,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('saaob/{all}', 'Accounting\AccountingControllers@__saob')->name('accounting.saob');
 				Route::get('rao/{fpp?}/{cc_code?}/{date?}', 'Accounting\AccountingControllers@generateRaoReport');
 				Route::match(['get', 'post'], 'lbp/{formNumber}/{extraDetails?}', 'Report\Budget\c_lbp@__lbp')->name('report.lbp');
-				Route::get('newsaaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
-				Route::post('newsaaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
+				Route::get('saaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
+				Route::post('saaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
 		});
 		/* SETTING -------------------------------*/
