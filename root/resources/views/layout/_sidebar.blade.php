@@ -359,22 +359,13 @@
                 <ul class="treeview-menu" style="white-space: normal;">
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Purchase Request</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Purchase Orders</a></li> -->
-                    @if($LA_GRP["I1000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li>
-                    @endif
-                    @if($LA_GRP["I2000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
-                    @endif
+                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
-                    @if($LA_GRP["I3000000"]["restrict"] == 'Y')
                     <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
-                    @endif
-                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
-                    @endif
-                    @if($LA_GRP["I5000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
-                    @endif
+                    <hr>
+                    <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
                     <hr>
                     <li><a href="{{route('inventory.wastematerial')}}"><i class="fa fa-circle-o"></i>Waste Material</a></li>
                     <!-- <hr>
