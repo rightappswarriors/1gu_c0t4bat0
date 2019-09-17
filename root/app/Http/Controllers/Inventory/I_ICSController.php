@@ -292,10 +292,10 @@ class I_ICSController extends Controller
 
     public function print($code)
     {
-      $rechdr = Inventory::getReceivingPOHeader($code);
-      $reclne = Inventory::getReceivingPOLine($code);
+      $rechdr = Inventory::getICSHeader($code);
+      $reclne = Inventory::getICSLine($code);
 
-      return view('inventory.receivingpo-print', compact('rechdr', 'reclne'));
+      return view('inventory.ics.ics-print', compact('rechdr', 'reclne'));
     }
 
     public function getDataFromRIS($ris_code)

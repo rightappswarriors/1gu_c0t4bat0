@@ -35,7 +35,7 @@ class c_function extends Controller
         if($grp[$this->MOD_CODE]["add"] != 'Y') {
            return back()->with('alert', ["Error", "error", "You don't have permission to use this function."]);
         }
-        $data = ['funcdesc' => $r->txt_name, 'secid' => $r->sel_type, 'active' => TRUE];
+        $data = ['funcid' => $r->txt_id, 'funcdesc' => $r->txt_name, 'secid' => $r->sel_type, 'active' => TRUE];
         // return dd(Core::insertTable('rssys.function', $data, 'Function'));
     	if (Core::insertTable('rssys.function', $data, 'Function'))
         {

@@ -37,14 +37,17 @@ class c_budget_proposal_entry extends Controller
     {
     	// $year = explode('-', $r->prd)[0];
         // $month = explode('-', $r->prd)[1];
-    	$sql = "SELECT * FROM rssys.bgtps01
-    			LEFT JOIN rssys.branch ON rssys.bgtps01.branch = rssys.branch.code
-    			LEFT JOIN rssys.m08 ON rssys.bgtps01.cc_code = rssys.m08.cc_code
-    			LEFT JOIN rssys.fund ON rssys.bgtps01.fid = rssys.fund.fid
-    			LEFT JOIN rssys.sector ON rssys.bgtps01.secid = rssys.sector.secid
-    			WHERE rssys.bgtps01.fy = '".$r->prd."'
-    			ORDER BY rssys.bgtps01.b_num ASC";
+    	// $sql = "SELECT * FROM rssys.bgtps01
+    	// 		LEFT JOIN rssys.branch ON rssys.bgtps01.branch = rssys.branch.code
+    	// 		LEFT JOIN rssys.m08 ON rssys.bgtps01.cc_code = rssys.m08.cc_code
+    	// 		LEFT JOIN rssys.fund ON rssys.bgtps01.fid = rssys.fund.fid
+    	// 		LEFT JOIN rssys.sector ON rssys.bgtps01.secid = rssys.sector.secid
+    	// 		WHERE rssys.bgtps01.fy = '".$r->prd."'
+    	// 		ORDER BY rssys.bgtps01.b_num ASC";
                 //  AND rssys.bgtps01.fid = '".$r->fid."'
+
+        $sql = "SELECT b1.b_num, b1.fy, fd.fdesc as fund, s.secdesc as sector, ft.funcdesc as function, m8.cc_desc as office FROM rssys.bgtps01 b1 LEFT JOIN rssys.fund fd ON b1.fid = fd.fid LEFT JOIN rssys.sector s ON b1.secid = s.secid LEFT JOIN rssys.function ft ON b1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON b1.cc_code = m8.cc_code WHERE b1.fy = '".$r->prd."'  ORDER BY b1.b_num ASC";
+
     	$data = Core::sql($sql);
     	return $data;
         //AND rssys.bgtps01.mo = '0'
@@ -164,6 +167,8 @@ class c_budget_proposal_entry extends Controller
         $approLine = Budget::get_approLine($b_num);
         $fy = $approHeader->fy;
         $data = array($this->x03, $this->fund, $this->m08, $this->sector, $this->branch, $fy, '', '', $this->m04, '', $this->ppa, $this->budget_period, $this->func);
+
+        //dd($data);
         
         return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew', 'approHeader', 'approLine'));
     }
@@ -365,5 +370,22 @@ class c_budget_proposal_entry extends Controller
                   ];          
         dd($data);
         return view('budget.budget_appro_print_entry', compact('Header'));
+    }
+
+    public function printall($data)
+    {
+        $d = explode(',', $data);
+
+        $fy = $d[0];
+        $fid = $d[1];
+        $fund = $d[2];
+
+        $Header = Budget::printApproHdrAll($fy, $fid);
+        $Line = Budget::printApproLineAll($fy, $fid);
+        $Function = Budget::printApproFuncAll($fy, $fid);
+        $PPA = Budget::printApproPPAAll($fy, $fid);
+        $appro = Budget::printApproAll($fy, $fid);
+
+        return view('budget.budget_appro_printall', compact('Header', 'Line', 'fund', 'Function', 'PPA', 'appro'));
     }
 }

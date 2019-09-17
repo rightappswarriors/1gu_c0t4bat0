@@ -364,6 +364,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::get('budget/budget-proposal-entry/getOffices/{funcid}', 'Budget\c_budget_proposal_entry@getOffice');
 			Route::get('budget/budget-proposal-entry/print/{code}', 'Budget\c_budget_proposal_entry@print');
 			Route::get('budget/budget-appro/print-entry/{data}', 'Budget\c_budget_proposal_entry@print_entry');
+			Route::get('budget/printallappro/{data}', 'Budget\c_budget_proposal_entry@printall');
 
 		/* ----- BUDGET APPROPRIATION */
 
@@ -495,6 +496,20 @@ Route::group(['middleware'=>['checkauth']], function () {
 				});
 			});
 		/* ----- Item Search */
+
+		/* ----- Item Repair */
+			Route::prefix('inventory')->group(function() {
+				Route::prefix('itemrepair')->group(function() {
+					Route::get('/', 'Inventory\I_ItemRepairController@view')->name('inventory.itemrepair');
+					Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
+					Route::get('/itemrepair_print/{code}', 'Inventory\I_ItemRepairController@print')->name('inventory.itemrepair_print');
+					Route::match(['get', 'post'], '/itemrepair_entry', 'Inventory\I_ItemRepairController@add')->name('inventory.itemrepair_entry');
+					Route::match(['get', 'post'], '/itemrepair_edit/{code}', 'Inventory\I_ItemRepairController@edit')->name('inventory.itemrepair_edit');
+					Route::get('/itemrepair_cancel/{code}', 'Inventory\I_ItemRepairController@cancel')->name('inventory.itemrepair_cancel');
+					// Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
+				});
+			});
+		/* ----- Item Repair */
 
         /* ----- Stock Transaction Card */
 		Route::prefix('inventory')->group(function() {
@@ -665,6 +680,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('saaob/{all}', 'Accounting\AccountingControllers@__saob')->name('accounting.saob');
 				Route::get('rao/{fpp?}/{cc_code?}/{date?}', 'Accounting\AccountingControllers@generateRaoReport');
 				Route::match(['get', 'post'], 'lbp/{formNumber}/{extraDetails?}', 'Report\Budget\c_lbp@__lbp')->name('report.lbp');
+				Route::get('saaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
+				Route::post('saaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
 		});
 		/* SETTING -------------------------------*/

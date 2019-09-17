@@ -161,8 +161,10 @@
         });
 
        window.print(); 
-       location.href= "{{route('inventory.are')}}";
+       //location.href= "{{route('inventory.are')}}";
      }
+
+
 
     </script>
 	

@@ -265,10 +265,10 @@
                     @if($LA_GRP["B2000000"]["restrict"] == 'Y')
                     <li><a href="{{ url('budget/budget-proposal-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Proposal_Entry"></i> Budget Appropriation</a></li>
                     @endif
-                    @if($LA_GRP["B3000000"]["restrict"] == 'Y')
+                    {{-- @if($LA_GRP["B3000000"]["restrict"] == 'Y')
                     <li><a href="{{ url('budget/budget-approved-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> Budget Allotment</a></li>
-                    @endif
-                    <li><a href="{{ route('budget.allotment') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> New Budget Allotment</a></li>
+                    @endif --}}
+                    <li><a href="{{ route('budget.allotment') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> Budget Allotment</a></li>
                     {{-- <li><a href="{{ url('budget/budget-obligation-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
                     @if($LA_GRP["B4000000"]["restrict"] == 'Y')
                     <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
@@ -359,22 +359,13 @@
                 <ul class="treeview-menu" style="white-space: normal;">
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Purchase Request</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Purchase Orders</a></li> -->
-                    @if($LA_GRP["I1000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li>
-                    @endif
-                    @if($LA_GRP["I2000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
-                    @endif
+                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
-                    @if($LA_GRP["I3000000"]["restrict"] == 'Y')
                     <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
-                    @endif
-                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
-                    @endif
-                    @if($LA_GRP["I5000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
-                    @endif
+                    <hr>
+                    <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
                     <hr>
                     <li><a href="{{route('inventory.wastematerial')}}"><i class="fa fa-circle-o"></i>Waste Material</a></li>
                     <!-- <hr>
@@ -395,6 +386,11 @@
                     <li><a href="{{route('inventory.itemsearch')}}"><i class="fa fa-circle-o"></i>Item Search</a></li>
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Journalize Stock Transactions</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Journalize Purchases Transactions</a></li> -->
+                    <hr>
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.itemrepair')}}"><i class="fa fa-circle-o"></i>Item Repair</a></li>
+                    @endif
+                    <hr>
                 </ul>
             </li>
             @endif
@@ -420,15 +416,16 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                             <ul class="treeview-menu">
-                                @if($LA_GRP["R2000001"]["restrict"] == 'Y')
-                                <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li>
+                                {{-- @if($LA_GRP["R2000001"]["restrict"] == 'Y') --}}
+                                {{-- <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li> --}}
+                                <li><a href="{{ route('report.saaob') }}"><i class="fa fa-circle-o"></i>SAAOB</a></li>
                                 <li><a href="{{ url('reports/budget/rao/') }}"><i class="fa fa-circle-o"></i> RAO Report</a></li>
-                                @endif
+                                {{-- @endif --}}
 
                                 <li class="treeview">
                                     {{-- <a href="{{ url('reports/budget/lbp') }}"><i class="fa fa-circle-o"></i> LBP</a> --}}
                                     <a href="#">
-                                        <i class="fa-files-o"></i> 
+                                        <i class="fa-circle-o"></i> 
                                         <span>LBP Reports</span>
                                         <span class="pull-right-container">
                                             <i class="fa fa-angle-left pull-right"></i>
