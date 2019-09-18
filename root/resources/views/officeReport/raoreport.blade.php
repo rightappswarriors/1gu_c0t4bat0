@@ -21,9 +21,9 @@
 							
 								<?php foreach($headerDet as $key => $data): ?>
 									<th>	
-										<div>{{$data[1]}}</div>
-										<div>{{$key}}</div>
-										<div>{{$data[0]}}</div>
+										{!!$data[1]!!}
+										{{$key}}
+										{{$data[0]}}
 									</th>
 								<?php endforeach; ?>
 							

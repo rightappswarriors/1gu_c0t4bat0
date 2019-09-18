@@ -464,7 +464,6 @@
          test = data;
          $('select[name="hdr_cash"]').select2();
          var exists = header.chk_ofc.length > 0 ? true : false ;
-         // console.log(exists);
           if(!exists){
             $('#CASHIER_ERROR').append(
                 '<div class="callout callout-danger">' +
