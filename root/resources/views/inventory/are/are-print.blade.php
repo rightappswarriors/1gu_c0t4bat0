@@ -16,29 +16,29 @@
       </div>
       <div class="row" >
         <div class="col-sm-12" >
-          <table style="border: 1px solid #000;"  id="tbl_list" class="table table-bordered table-striped">
+          <table style="border: 1px solid #000;margin:10px 0 10px 0 !important;"  id="tbl_list" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <div class="image">
                   <th style="border: none !important;">
-                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="width: 145px;"></th>
                   <th style="border: none !important;">
-                    <center><h3>ACKNOWLEDGEMENT RECEIPT FOR EQUIPMENT</h3><h4>Local Government Unit – City of Guihulngan</h4><h4>General Services Office</h4></center></th>
-                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+                    <center><h3>ACKNOWLEDGEMENT RECEIPT FOR EQUIPMENT</h3><h4>Local Government Unit â€“ City of Guihulngan</h4><h4>General Services Office</h4></center></th>
+                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle logo" alt="logo" style="width:152px;"></th>
                 </div>
                 </tr>
               </thead>
           </table>
 
-          <table  class="table table-bordered table-striped">
+          <table  class="table table-bordered table-striped" style="margin:10px 0 10px 0 !important;">
             <thead>
             <tr>
                  <th style="white-space: nowrap;font-size:14px;">Item #</th>
                  <th style="white-space: nowrap;font-size:14px;">Qty</th>
                  <th style="white-space: nowrap;font-size:14px;">Unit</th>
-                 <th style="width:50%;font-size:15px;">Description</th>
-                 <th nowspan style="width:25%;font-size:15px;">Serial No.</th>
-                 <th style="width:25%;font-size:15px;">Property No.</th>
+                 <th width="75%" style="font-size:14px;">Description</th>
+                 <th nowspan style="font-size:14px;">Serial No.</th>
+                 <th width="40%" style="font-size:14px;">Property No.</th>
                  <th style="white-space: nowrap;font-size:14px;">Unit Cost</th>
                  <th style="white-space: nowrap;font-size:14px;">Amount</th>
             </tr>
@@ -59,7 +59,7 @@
             </tbody>
           </table>
 
-          <table  class="table table-bordered table-striped">
+          <table  class="table table-bordered table-striped" style="margin:8px 0 8px 0 !important;">
             <tfoot>
               <tr>
                 <th colspan="8">Office/Department: {{$are_header->office}}</th>
@@ -106,6 +106,9 @@
 
     <style>
       @media print {
+	.logo{
+		margin-top: -95%;
+	}
               .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
