@@ -91,6 +91,9 @@
 												$runDown[$key] = (isset($runDown[$key]) ? $runDown[$key] + $obrlneRW[$i][$j]->amount : $obrlneRW[$i][$j]->amount);
 												?>
 												<td style="border: 1px solid #000000;">{{number_format($obrlneRW[$i][$j]->amount,2)}}</td>
+												@if($j == 1)
+												<td style="border: 1px solid #000000;"></td>
+												@endif
 												@else
 													@for($k = $j; $k < count($headerDet); $k++)
 														@if($obrlneRW[$i][$j]->at_code == $headerDetRW[$k][2])
@@ -108,7 +111,6 @@
 											<?php $j++; ?>
 										@endforeach
 										<td style="border: 1px solid #000000;">
-											
 											{{number_format($runningRow,2)}}
 											<?php $runningCol += $runningRow; ?>
 										</td>
@@ -116,31 +118,31 @@
 									@if(Date('m',strtotime($obrlneRW[$i][0]->t_date)) != Date('m',strtotime($curDate)))
 									
 									<tr bgcolor="#93CDDD">	
-										<td style="border: 1px solid #000000;"></td>
-										<td style=""></td>
-										<td style="border: 1px solid #000000;font-weight: bold">TOTAL as of {{Date('F Y',strtotime($obrlneRW[$i][0]->t_date))}}</td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;"></td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;"></td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;font-weight: bold">TOTAL as of {{Date('F Y',strtotime($obrlneRW[$i][0]->t_date))}}</td>
 										@foreach($headerDet as $key => $value)
 											@if(isset($runDown[$key]))
-											<td style="border: 1px solid #000000">{{number_format($runDown[$key],2)}}</td>
+											<td style="border: 1px solid #000000;background-color: #93CDDD;">{{number_format($runDown[$key],2)}}</td>
 											@else
-											<td style="border: 1px solid #000000"></td>
+											<td style="border: 1px solid #000000;background-color: #93CDDD;"></td>
 											@endif
 										@endforeach
-										<td style="border: 1px solid #000000;">{{number_format($runningCol,2)}}</td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;">{{number_format($runningCol,2)}}</td>
 									</tr>
 
 									<tr bgcolor="#93CDDD" class="text-danger">	
-										<td style="border: 1px solid #000000;"></td>
-										<td style="border: 1px solid #000000;"></td>
-										<td style="border: 1px solid #000000;font-weight: bold">BALANCES</td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;"></td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;"></td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;font-weight: bold">BALANCES</td>
 										@foreach($headerDet as $key => $value)
 											@if(isset($runDown[$key]))
-											<td style="border: 1px solid #000000">{{number_format($value[0] - $runDown[$key] ,2  )}}</td>
+											<td style="border: 1px solid #000000;background-color: #93CDDD;">{{number_format($value[0] - $runDown[$key] ,2  )}}</td>
 											@else
-											<td style="border: 1px solid #000000"> - </td>
+											<td style="border: 1px solid #000000;background-color: #93CDDD;"> - </td>
 											@endif
 										@endforeach
-										<td style="border: 1px solid #000000;">{{number_format($approSum - $runningCol,2)}}</td>
+										<td style="border: 1px solid #000000;background-color: #93CDDD;">{{number_format($approSum - $runningCol,2)}}</td>
 									</tr>
 									
 									@endif
