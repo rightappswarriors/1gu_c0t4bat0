@@ -511,6 +511,19 @@ Route::group(['middleware'=>['checkauth']], function () {
 			});
 		/* ----- Item Repair */
 
+		/* ----- Turn Over */
+			Route::prefix('inventory')->group(function() {
+				Route::prefix('turnover')->group(function() {
+					Route::get('/', 'Inventory\I_TurnOverController@view')->name('inventory.turnover');
+					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
+					Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
+					Route::match(['get', 'post'], '/turnover_entry', 'Inventory\I_TurnOverController@add')->name('inventory.turnover_entry');
+					Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
+					Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
+				});
+			});
+		/* ----- Turn Over */
+
         /* ----- Stock Transaction Card */
 		Route::prefix('inventory')->group(function() {
 			Route::prefix('stocktransactcard')->group(function() {

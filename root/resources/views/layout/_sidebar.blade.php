@@ -399,6 +399,9 @@
                     @if($LA_GRP["I4000000"]["restrict"] == 'Y')
                     <li><a href="{{route('inventory.itemrepair')}}"><i class="fa fa-circle-o"></i>Item Repair</a></li>
                     @endif
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.turnover')}}"><i class="fa fa-circle-o"></i>Turn Over</a></li>
+                    @endif
                     <hr>
                 </ul>
             </li>

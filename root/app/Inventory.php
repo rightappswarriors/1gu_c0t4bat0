@@ -65,6 +65,7 @@ class Inventory extends Model
 		}
 	}
 
+
     public static function saveToStkcrd($data = []) // save to stkcrd
 	{
         try 
@@ -900,6 +901,21 @@ class Inventory extends Model
         }
     }
 
+    public static function getTO()
+    {
+    	try
+    	{
+    		$data = "SELECT * FROM rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code WHERE rec_num LIKE 'TO%' AND (cancel != 'Y' OR cancel isnull)";
+
+   
+    	   return DB::select(DB::raw($data));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
     // get all ICS Transactions Header.
 	public static function getICS()
     {
@@ -1219,6 +1235,35 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 	}
 
 
+	public static function getTOHeader($rec_num)
+	{	
+		try 
+		{
+			//$sql = 'Select rec_num, _reference, to_date, to_by, cc_code, to_receivedby, trn_type, recipient, t_date, t_time From rssys.rechdr Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+	public static function getTOLine($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT ln_num, item_code, item_desc, item_code, to_article, recv_qty, notes FROM rssys.reclne WHERE rec_num = \''.$rec_num.'\' ORDER BY CAST(ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+
 	// check if exist, else insert
 	public static function checkIfExistInsert($table, $col, $value)
 	{
@@ -1280,6 +1325,50 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 
 	//cancel a IR
 	public static function cancelIR($code, $table, $col, $module)
+	{
+		try 
+		{
+			$datetime = Carbon::now();
+
+            $data = ['cancel' => "Y",
+                     'canc_user' => strtoupper(Session::get('_user')['id']),
+                     'canc_date' => $datetime->toDateString(),
+                     'canc_time' => $datetime->toTimeString()
+                    ];        
+
+			if (isset($table) && isset($col) && isset($code) ) 
+			{
+				if (!empty($data)) 
+				{
+					if (DB::table(DB::raw($table))->where($col, '=', $code)->update($data)) 
+					{
+						return true;
+          //               if (DB::table(DB::raw('rssys.stkcrd'))->where('reference', '=', $stk_ref)->delete())
+				      //   {
+				      //   	if (isset($module)) 
+				      //       {
+						    // 	//Inventory::alert(1, 'modified  data in '.$module);
+						    // }
+						    // return true;
+				      //   }
+					}
+				}
+			}
+			if (isset($module)) {
+			//Inventory::alert(2, 'occured upon modiification of data in '.$module);
+			}
+			return false;
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+			Inventory::alert(0, '');
+			return false;
+		}
+	}
+
+	//cancel a TO
+	public static function cancelTO($code, $table, $col, $module)
 	{
 		try 
 		{
