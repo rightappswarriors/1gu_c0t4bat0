@@ -41,7 +41,7 @@
 
     {{-- initiate sums --}}
     <?php 
-    	$approSum = 0.00;
+    	$approSum = $firstSum = 0.00;
     ?>
     <div class="row">
       <div class="col-xs-12">
@@ -85,10 +85,15 @@
 										<div>{{$key}}</div>
 										<div>{{number_format($data[0],2)}}</div>
 									</th>
+									<?php $firstSum += $data[0]; ?>
 								<?php endforeach; ?>
 							
 	            			<?php endif; ?>
-	            			<th>Total</th>
+	            			<th>
+	            				<div>Total</div>
+								<div></div>
+								<div>{{number_format($firstSum,2)}}</div>
+	            			</th>
             			</tr>
             		</thead>
             		<tbody>

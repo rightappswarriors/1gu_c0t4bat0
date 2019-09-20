@@ -22,15 +22,17 @@ class SaaobReportController extends Controller
 
   public function generate(Request $request)
   {
-      $fy = $request->fy;
-      $fund = $request->fund;
+      $fy = $request->select_fy;
+      $fid = $request->select_fund;
+      $mo1 = $request->mo1;
+      $mo2 = $request->mo2;
+      $fund = Budget::printSAAOBGetFund($fid);
 
-      $Header = Budget::generateSAAOBHdr($fy, $fund);
+      $Header = Budget::printSAAOBHdr($fy, $fid);
+      $Line = Budget::printSAAOBLine($fy, $fid, $mo1, $mo2);
+      $Function = Budget::printSAAOBFunc($fy, $fid);
+      $PPA = Budget::printSAAOBPPA($fy, $fid);
 
-      dd($Header);
-      $Line = Budget::printApproLine($b_num);
-      $PPA = Budget::printApproPPA($b_num);
-
-      return view('report.saaob.saaob-print', compact('Header', 'Line', 'PPA'));
+      return view('report.saaob.saaob-print', compact('Header', 'Line', 'fund', 'Function', 'PPA'));
   }
 }

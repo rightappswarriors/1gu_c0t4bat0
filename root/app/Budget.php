@@ -376,4 +376,83 @@ class Budget extends Model
             return $e->getMessage();
         }
     }
+
+    public static function printSAAOBLine($fy, $fid, $mo1, $mo2)
+    {
+        try
+        {
+            // $sql = 'SELECT approln.b_num, approln.at_code, approln.at_desc, approln.appro_amnt, allot.allot_amnt, obl.amount as obr, approln.grpid FROM rssys.bgtps02 approln LEFT JOIN rssys.bgtps01 approhdr ON approln.b_num = approhdr.b_num LEFT JOIN rssys.bgt02 allot ON approln.at_code = allot.at_code LEFT JOIN rssys.obrlne obl ON approln.at_code = obl.at_code WHERE approhdr.fy = \''.$fy.'\' AND approhdr.fid = \''.$fid.'\' ORDER BY CAST(approln.seq_num as integer)';
+
+            $sql = 'SELECT approln.b_num, approln.at_code, approln.at_desc, approln.appro_amnt, CASE WHEN allot.allot_amnt isnull THEN 0.00 ELSE allot.allot_amnt END, CASE WHEN oblig.amount isnull THEN 0.00 ELSE oblig.amount END as obr, approln.grpid FROM rssys.bgtps02 approln LEFT JOIN rssys.bgtps01 approhd ON approln.b_num = approhd.b_num LEFT JOIN (SELECT * FROM rssys.bgt02 bgt2 LEFT JOIN rssys.bgt01 bgt1 ON bgt2.b_num = bgt1.b_num WHERE bgt1.fy = \''.$fy.'\' AND bgt1.fid = \''.$fid.'\' AND bgt1.mo1 = \''.$mo1.'\' AND bgt1.mo2 = \''.$mo2.'\') allot ON approln.at_code = allot.at_code LEFT JOIN (SELECT * FROM rssys.obrlne ob2 LEFT JOIN rssys.obrhdr ob1 ON CAST(ob2.obr_code as integer) = ob1.obr_pk WHERE EXTRACT(YEAR FROM ob1.t_date) = \''.$fy.'\' AND ob1.fid = \''.$fid.'\' AND EXTRACT(MONTH FROM t_date) BETWEEN \''.$mo1.'\' AND \''.$mo2.'\') as oblig ON approln.at_code = oblig.at_code WHERE approhd.fy = \''.$fy.'\' AND approhd.fid = \''.$fid.'\' ORDER BY CAST(approln.seq_num as integer)';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /* 
+     * Get description of fund using fid.
+     */
+    public static function printSAAOBGetFund($code)
+    {
+        try
+        {
+            $sql = 'SELECT * FROM rssys.fund WHERE fid = \''.$code.'\' LIMIT 1';
+
+            return DB::select(DB::raw($sql))[0];
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /*
+     * Get SAAOB Header.
+     */
+    public static function printSAAOBHdr($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt1.b_num, f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\' ORDER BY office_code';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /*
+     * Get SAAOB Function.
+     */
+    public static function printSAAOBFunc($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT b1.funcid, f.funcdesc FROM rssys.bgtps01 b1 LEFT JOIN rssys.function f ON b1.funcid = f.funcid WHERE b1.fy = \''.$fy.'\' AND b1.fid = \''.$fid.'\' GROUP BY b1.funcid, f.funcdesc ORDER BY b1.funcid';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /*
+     * Get SAAOB PPA.
+     */
+    public static function printSAAOBPPA($fy, $fid)
+    {
+        try
+        {
+            $sql = 'SELECT bt2.grpid, ps.subgrpdesc, bt2.b_num FROM rssys.bgtps02 bt2 LEFT JOIN rssys.ppasubgrp ps ON bt2.grpid = ps.subgrpid LEFT JOIN rssys.bgtps01 bt1 ON bt2.b_num = bt1.b_num WHERE bt1.fy = \''.$fy.'\' AND bt1.fid = \''.$fid.'\' GROUP BY bt2.grpid, ps.seq, ps.subgrpdesc, bt2.b_num ORDER BY ps.seq';
+
+            return DB::select(DB::raw($sql));
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
