@@ -297,6 +297,38 @@ Route::group(['middleware'=>['checkauth']], function () {
 			});
 			/* --- INVENTORY ----------*/
 
+
+			/* --- COLLECTION ----------*/
+			Route::prefix('tax')->group(function(){
+				/* --- TAX GROUP ----------*/
+				Route::prefix('group')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\c_tax_group@view');
+					Route::post('/', 'Collection\c_tax_group@add');
+					Route::post('/update', 'Collection\c_tax_group@update');
+					Route::post('/delete', 'Collection\c_tax_group@delete');
+				});
+				/* --- TAX GROUP ----------*/
+
+				/* --- TAX TYPE ----------*/
+				Route::prefix('type')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\c_tax_type@view');
+					Route::post('/', 'Collection\c_tax_type@add');
+					Route::post('/update', 'Collection\c_tax_type@update');
+					Route::post('/delete', 'Collection\c_tax_type@delete');
+				});
+				/* --- TAX TYPE ----------*/
+			});
+
+			Route::prefix('real-property-classification')->group(function(){
+				Route::get('/', 'Collection\c_real_class@view');
+				Route::post('/', 'Collection\c_real_class@add');
+				Route::post('/update', 'Collection\c_real_class@update');
+				Route::post('/delete', 'Collection\c_real_class@delete');
+			});
+			/* --- COLLECTION ----------*/
+
+
+
 			/* --- GENERAL ----------*/
 			Route::prefix('general')->group(function(){ // DONE -m
 				Route::prefix('barangay')->group(function(){
