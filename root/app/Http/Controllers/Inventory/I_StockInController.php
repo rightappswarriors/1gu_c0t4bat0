@@ -303,10 +303,14 @@ class I_StockInController extends Controller
 
     public function print($code)
     {
-      $rechdr = Inventory::getReceivingPOHeader($code);
-      $reclne = Inventory::getReceivingPOLine($code);
+      // $rechdr = Inventory::getReceivingPOHeader($code);
+      // $reclne = Inventory::getReceivingPOLine($code);
 
-      return view('inventory.receivingpo-print', compact('rechdr', 'reclne'));
+      $rechdr = Inventory::getStockInHeaderPrint($code);
+      $reclne = Inventory::getStockInLinePrint($code);
+      $total = Inventory::getStockInLinePrintTOTAL($code);
+        // dd($total[0]->total);
+      return view('inventory.stockin.stockin_print', compact('rechdr', 'reclne', 'total'));
     }
 
     public function getitemdetails($code)
