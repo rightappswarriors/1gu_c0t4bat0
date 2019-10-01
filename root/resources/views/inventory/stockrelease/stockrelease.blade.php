@@ -70,7 +70,7 @@
                   <th>Date</th>
                   <th>Office</th>
                   <th>Stock Location</th>
-                  <th>Branch</th>
+                 <!-- <th>Branch</th> -->
                   <th>Request</th>
                   <th>Status</th>
                   <th>Actions</th>

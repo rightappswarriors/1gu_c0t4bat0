@@ -12,17 +12,17 @@
             	<table class="table table-bordered" >
             		<thead>
             			<tr>
-	            			<th style="border: 1px solid #000000;background-color: #93CDDD;"></th>
-	            			<th style="border: 1px solid #000000;background-color: #93CDDD;"></th>
-	            			<th align="center" style="border: 1px solid #000000;background-color: #93CDDD;">Particulars</th>
+	            			<th style="width:10;border: 1px solid #000000;background-color: #93CDDD;"></th>
+	            			<th style="width:10;border: 1px solid #000000;background-color: #93CDDD;"></th>
+	            			<th align="center" style="width:60;border: 1px solid #000000;background-color: #93CDDD;">Particulars</th>
 	            			<?php if(isset($headerDet)): ?>
 							
 								<?php foreach($headerDet as $key => $data): ?>
-									<th align="center" style="border: 1px solid #000000;background-color: #93CDDD;">{{$data[1]}}</th>
+									<th align="center" style="width:20;border: 1px solid #000000;background-color: #93CDDD;">{{$data[1]}}</th>
 								<?php endforeach; ?>
 							
 	            			<?php endif; ?>
-	            			<th style="border: 1px solid #000000;background-color: #93CDDD;"></th>
+	            			<th style="width:15;border: 1px solid #000000;background-color: #93CDDD;"></th>
             			</tr>
             			<tr>    
             				<th style="border: 1px solid #000000;background-color: #93CDDD;" align="center">Date</th>

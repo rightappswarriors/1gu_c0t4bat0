@@ -22,6 +22,7 @@
                 <tr>
                      <th>Item No.</th>
                      <th>QTY</th>
+                     
                      <th>UNIT</th>
                      <th>DESCRIPTION</th>
                      <th>SERIAL NO./PROPERTY NO.</th>

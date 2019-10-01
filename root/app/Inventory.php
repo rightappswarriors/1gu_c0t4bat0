@@ -624,6 +624,50 @@ class Inventory extends Model
 		}
 	}
 
+	// get specific Stock In Transaction header.
+    public static function getStockInHeaderPrint($rec_num)
+	{	
+		try 
+		{
+			$sql = 'SELECT rh.purc_ord, rh.supl_name as supplier, rh.trnx_date as date, wh.whs_desc as office FROM rssys.rechdr rh LEFT JOIN rssys.whouse wh ON rh.whs_code = wh.whs_code WHERE rh.rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+    // get specific Stock In Transaction line.
+	public static function getStockInLinePrint($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.item_desc, it.unit_shortcode as unit, rl.recv_qty as qty, rl.price, rl.ln_amnt FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE rec_num = \''.$rec_num.'\' ORDER BY CAST(ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function getStockInLinePrintTOTAL($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT SUM(ln_amnt) as total FROM rssys.reclne WHERE rec_num = \''.$rec_num.'\'';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+
 	// get item details of StockIn.
     public static function getItemDetails($code)
 	{	

@@ -29,16 +29,16 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th rowspan="2" nowrap style="padding: 0rem 10px 3rem 10px;" class="text-center">Account Code</th>
-                <th rowspan="2" style="padding: 0rem 10px 3rem 10px;" class="text-center fpp">Function/Program/Project</th>
-                <th rowspan="2" style="font-size: 12px !important;padding: 0rem 10px 3rem 10px;" class="text-center">Appropriation</th>
-                <th rowspan="2" style="font-size: 12px !important;padding: 0rem 10px 3rem 10px;" class="text-center">Allotment</th>
-                <th rowspan="2" style="font-size: 12px !important;padding: 0rem 10px 3rem 10px;" class="text-center">Obligation</th>
-                <th colspan="2" class="text-center">Balances of</th>
+                <th rowspan="2" nowrap style="width: 8% !important;padding: 0rem 5px 2rem 5px;" class="text-center">Account Code</th>
+                <th rowspan="2" style="width: 60% !important;padding: 0rem 5px 2rem 5px;" class="text-center fpp">Function/Program/Project</th>
+                <th rowspan="2" style="width: 8% !important;padding: 0rem 5px 2rem 5px;" class="text-center">Appropriation</th>
+                <th rowspan="2" style="width: 8% !important;padding: 0rem 5px 2rem 5px;" class="text-center">Allotment</th>
+                <th rowspan="2" style="width: 8% !important;padding: 0rem 5px 2rem 5px;" class="text-center">Obligation</th>
+                <th colspan="2"  style="width: 8% !important;" class="text-center">Balances of</th>
               </tr>
               <tr>
-                <th style="font-size: 12px !important;"><center>APPROPRIATIONS</center></th>
-                <th style="font-size: 12px !important;"><center>ALLOTMENTS</center></th>
+                <th style="width: 8% !important;"><center>APPROPRIATIONS</center></th>
+                <th style="width: 8% !important;"><center>ALLOTMENTS</center></th>
               </tr>
             </thead>          
             <tbody>
@@ -169,12 +169,13 @@
         .table th{
         background-color: transparent !important;
         border: 1px solid !important;
-        font-size: 13px !important;
+        font-size: 8px !important;
       }
 
       .table td{
         background-color: transparent !important;
         border: 1px solid !important;
+        font-size: 8px !important;
         /*border-right:none !important;
 border-left:none !important;*/
 
