@@ -34,6 +34,7 @@
 		                </tr>
 		                </thead>
 		                <tbody>
+						  @isset($data)
 		                  @foreach($data as $d)
 		                <tr>
 		                  <td>{{$d->rec_num}}</td>
@@ -49,6 +50,8 @@
 		                  </td>
 		                </tr>
 		                @endforeach
+		                @endisset
+
 		                </tbody>
 		              </table>
 		            </div>
@@ -94,7 +97,7 @@
 		            </div>
 		            <div class="modal-body">
 		              <center>
-		                  <h4 class="text-transform: uppercase;">Are you sure you want to cancel this transaction {{$d->rec_num}}?
+		                  <h4 class="text-transform: uppercase;">Are you sure you want to cancel this transaction?
 		                  </h4>
 		              </center>
 		            </div>
