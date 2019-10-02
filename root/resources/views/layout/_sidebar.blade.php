@@ -176,6 +176,23 @@
                         </ul>
                     </li> --}}
                     @endif
+                    @if($LA_GRP["M2000000"]["restrict"] == 'Y')
+                    <li class="treeview" id="TreeView_MasterFile_Others">
+                        <a href="#">
+                            <i class="fa fa-circle-o" id="SideBar_MFile_Inventory"></i>
+                            <span>Miscellaneous</span>
+                            <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                              <!-- <span class="label label-primary pull-right">4</span> -->
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="white-space: normal;" id="TreeView_MasterFile_Others2">
+                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
+                            <li><a href="{{ url('master-file/Miscellaneous/bank') }}"><i class="fa fa-circle-o" id="SideBar_MFile_BRAND_NAME"></i> Banks</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
                     {{-- <li class="treeview" id="TreeView_MasterFile_General_Menu">
                         <a href="#">
                             <i class="fa fa-circle-o" id="SideBar_MFile_General"></i>
@@ -331,8 +348,11 @@
                             @if($LA_GRP["C1000003"]["restrict"] == 'Y')
                             <li><a href="#"><i class="fa fa-circle-o"></i> Posting</a></li>
                             @endif
+                            @if($LA_GRP["C1000003"]["restrict"] == 'Y')
+                            <li><a href="{{ url('collection/ROCAD/') }}"><i class="fa fa-circle-o"></i> ROCAD</a></li>
+                            @endif
                             @if($LA_GRP["C1000004"]["restrict"] == 'Y')
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Verification of Liquidating Office</a></li>
+                            <li><a href="{{ url('collection/Liquidating-officer/') }}"><i class="fa fa-circle-o"></i> Verification of Liquidating Office</a></li>
                             @endif
                             @if($LA_GRP["C1000005"]["restrict"] == 'Y')
                             <li><a href=""><i class="fa fa-circle-o"></i> Bank deposit</a></li>
