@@ -309,8 +309,8 @@
                     <li><a href="{{ route('budget.allotment') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> Budget Allotment</a></li>
                     {{-- <li><a href="{{ url('budget/budget-obligation-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
                     @if($LA_GRP["B4000000"]["restrict"] == 'Y')
-                    <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
-                    <li><a href="{{ asset('/accounting/collection/obligation_request/Entry/Admin/') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Admin Budget Entry</a></li>
+                   {{--  <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
+                    <li><a href="{{ asset('/accounting/collection/obligation_request/Entry/Admin/') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
                     @endif
                     <!--             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
@@ -433,6 +433,16 @@
                     @endif
                     @if($LA_GRP["I4000000"]["restrict"] == 'Y')
                     <li><a href="{{route('inventory.turnover')}}"><i class="fa fa-circle-o"></i>Turn Over</a></li>
+                    @endif
+                    <hr>
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Acqusition</a></li>
+                    @endif
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Birth of Offspring</a></li>
+                    @endif
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Disposition</a></li>
                     @endif
                     <hr>
                 </ul>
