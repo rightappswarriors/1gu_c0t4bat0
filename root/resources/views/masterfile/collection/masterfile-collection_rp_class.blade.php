@@ -2,10 +2,10 @@
 @php
     $_bc = [
         ['link'=>'#','desc'=>'Masterfile','icon'=>'none','st'=>false],
-        ['link'=>'#','desc'=>'Accounting','icon'=>'none','st'=>false],
-        ['link'=>url("master-file/accounting/or_types"),'desc'=>'OR Type','icon'=>'none','st'=>true]
+        ['link'=>'#','desc'=>'Collection','icon'=>'none','st'=>false],
+        ['link'=>url("master-file/real-property-classification"),'desc'=>'Real type Classification','icon'=>'none','st'=>true]
     ];
-    $_ch = "OR Types"; // Module Name
+    $_ch = "Real type Classification"; // Module Name
 @endphp
 @section('content')
 		<!-- Content Header (Page header) -->
@@ -16,7 +16,7 @@
         		<div class="col-xs-12">
         			<div class="box">
         				<div class="box-header">
-        					<h3 class="box-title">OR Type List</h3>
+        					<h3 class="box-title">Real type Classification List</h3>
         					<button type="button" class="btn btn-primary" onclick="AddMode();" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Add new</button>
         					<div class="modal fade in" id="modal-default">
         						<div class="modal-dialog">
@@ -24,7 +24,7 @@
         								<div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span></button>
-                                            <h3 class="modal-title">OR Types <span id="MOD_MODE"></span></h3>
+                                            <h3 class="modal-title">Real type Classification <span id="MOD_MODE"></span></h3>
                                         </div>
                                         <div class="modal-body">
                                             <form id="AddForm" method="post" action="" data-parsley-validate novalidate>
@@ -32,21 +32,15 @@
                                                 <span class="AddMode">
                                                     <div class="box-body">
                                                         <div class="form-group">
-                                                            <label for="inputEmail3" class="col-sm-4 control-label">Code <span class="text-red">*</span></label>
-                                                            <div class="col-sm-8" style="margin-bottom:10px;">
-                                                                <input type="text" name="txt_id" class="form-control" placeholder="ID" data-parsley-required-message="<strong>Code</strong> is required." required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
                                                             <label class="col-sm-4 control-label">Description <span class="text-red">*</span></label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
                                                                 <input type="text" name="txt_name" class="form-control" placeholder="Description" data-parsley-required-message="<strong>Description</strong> is required." required>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="col-sm-4 control-label">Suggestive OR to <span class="text-red">*</span></label>
+                                                         <div class="form-group" hidden>
+                                                            <label class="col-sm-4 control-label">id <span class="text-red">*</span></label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
-                                                                <input type="number" name="suggestive" class="form-control" placeholder="Suggestive OR to" data-parsley-required-message="<strong>Suggestive OR to</strong> is required." required>
+                                                                <input type="text" name="txt_id" class="form-control" placeholder="id" data-parsley-required-message="<strong>id</strong> is required." required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -54,7 +48,7 @@
                                                 <span class="DeleteMode"  style="display: none">
                                                     <center>
                                                         <p class="text-transform: uppercase;">Are you sure you want to delete <strong><span id="DeleteName" class="text-red"></span></strong>
-                                                        from OR Types list?
+                                                        from Real type Classification list?
                                                         </p>
                                                     </center>
                                                 </span>
@@ -78,23 +72,19 @@
         					<table id="example1" class="table table-bordered table-striped">
         						<thead>
                                     <tr>
-                                        <th>Code</th>
                                         <th>Description</th>
-                                        <th>Suggestive OR upto</th>
                                         <th width="15%"><center>Options</center></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                	@isset($or_types)
-                                        @foreach($or_types as $fund)
+                                	@isset($rp_class)
+                                        @foreach($rp_class as $rp)
                                             <tr>
-                                                <th>{{$fund->or_type}}</th>
-                                                <td>{{$fund->or_code}}</td>
-                                                <td>{{$fund->suggestiveORto}}</td>
+                                                <td>{{$rp->rp_desc}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$fund->or_type}}', '{{$fund->or_code}}', '{{$fund->suggestiveORto}}');"></i></a>
-                                                       <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$fund->or_type}}', '{{$fund->or_code}}');"><i class="fa fa-trash "></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$rp->rpid}}', '{{$rp->rp_desc}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$rp->rpid}}', '{{$rp->rp_desc}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
                                             </tr>
@@ -120,39 +110,32 @@
         $(document).ready(function(){
             $('#SideBar_MFile').addClass('active');
             $('#SideBar_MFile_Accounting').addClass('text-green');
-            $('#SideBar_MFile_OR_TYPE').addClass('text-green');
+            $('#SideBar_MFile_TAXGROUP').addClass('text-green');
         });
         function AddMode()
         {
             $('#MOD_MODE').text('(New)');
-            $('#AddForm').attr('action', '{{ url('master-file/accounting/or_types') }}');
-            $('input[name="txt_id"]').val('');
-            $('input[name="txt_id"]').removeAttr('readonly');
+            $('#AddForm').attr('action', '{{ url('master-file/real-property-classification') }}');
             $('input[name="txt_name"]').val('');
             $('input[name="txt_name"]').attr('required', '');
-            $('input[name="suggestive"]').val('');
-            $('input[name="suggestive"]').attr('required', '');
+            $('input[name="txt_id"]').removeAttr('required');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc, suggest)
+        function EditMode(id, desc)
         {
             $('#MOD_MODE').text('(Edit)');
-            $('#AddForm').attr('action', '{{ url('master-file/accounting/or_types') }}/update');
+            $('#AddForm').attr('action', '{{ url('master-file/real-property-classification') }}/update');
             $('input[name="txt_id"]').val(id);
-            $('input[name="txt_id"]').attr('required', '');
-            $('input[name="txt_id"]').attr('readonly', '');
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
-            $('input[name="suggestive"]').val(suggest);
-            $('input[name="suggestive"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
         function DeleteMode(id, desc)
         {
             $('#MOD_MODE').text('(Delete)');
-            $('#AddForm').attr('action', '{{ url('master-file/accounting/or_types') }}/delete');
+            $('#AddForm').attr('action', '{{ url('master-file/real-property-classification') }}/delete');
             $('input[name="txt_id"]').val(id);
             $('input[name="txt_id"]').removeAttr('required');
             $('input[name="txt_name"]').val(desc);

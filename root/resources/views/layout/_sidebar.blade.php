@@ -101,6 +101,15 @@
                             @endif
                             <li><a href="{{url('master-file/accounting/function')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FUNCTION"></i> Function</a></li>
                             <li><a href="{{url('master-file/accounting/fpp')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FPP"></i> FPP</a></li>
+                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
+                            <li><a href="{{ url('master-file/tax/group') }}"><i class="fa fa-circle-o" id="SideBar_MFile_TAXGROUP"></i> Tax Group</a></li>
+                            @endif
+                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
+                            <li><a href="{{ url('master-file/tax/type') }}"><i class="fa fa-circle-o" id="SideBar_MFile_TAXTYPE"></i> Tax Type </a></li>
+                            @endif
+                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
+                            <li><a href="{{ url('master-file/real-property-classification') }}"><i class="fa fa-circle-o" id="SideBar_MFile_RPCLASS"></i> Real type classification </a></li>
+                            @endif
 
                         </ul>
                     </li>
@@ -154,6 +163,18 @@
                             <li><a href="#"><i class="fa fa-circle-o"></i> Print Bar Code 2</a></li> --}}
                         </ul>
                     </li>
+                    {{-- <li class="treeview" id="TreeView_MasterFile_Collection">
+                        <a href="#">
+                            <i class="fa fa-circle-o" id="SideBar_MFile_Collection"></i>
+                            <span>Collection</span>
+                            <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                              <!-- <span class="label label-primary pull-right">4</span> -->
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="white-space: normal;" id="TreeView_MasterFile_Collection2">
+                        </ul>
+                    </li> --}}
                     @endif
                     {{-- <li class="treeview" id="TreeView_MasterFile_General_Menu">
                         <a href="#">
@@ -271,8 +292,8 @@
                     <li><a href="{{ route('budget.allotment') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Approved_Entry"></i> Budget Allotment</a></li>
                     {{-- <li><a href="{{ url('budget/budget-obligation-entry') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
                     @if($LA_GRP["B4000000"]["restrict"] == 'Y')
-                    <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
-                    <li><a href="{{ asset('/accounting/collection/obligation_request/Entry/Admin/') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Admin Budget Entry</a></li>
+                   {{--  <li><a href="{{ asset('accounting/collection/obligation_request') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li> --}}
+                    <li><a href="{{ asset('/accounting/collection/obligation_request/Entry/Admin/') }}"><i class="fa fa-circle-o" id="SideBar_Budget_Budget_Obligation_Entry"></i> Budget Obligation</a></li>
                     @endif
                     <!--             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
