@@ -394,6 +394,16 @@
                     <li><a href="{{route('inventory.turnover')}}"><i class="fa fa-circle-o"></i>Turn Over</a></li>
                     @endif
                     <hr>
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Acqusition</a></li>
+                    @endif
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Birth of Offspring</a></li>
+                    @endif
+                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Disposition</a></li>
+                    @endif
+                    <hr>
                 </ul>
             </li>
             @endif

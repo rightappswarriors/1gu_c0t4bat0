@@ -2,21 +2,21 @@
 @php
     $_bc = [
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>'#','desc'=>'Biological','icon'=>'none','st'=>true]
+        ['link'=>'#','desc'=>'Item Repair','icon'=>'none','st'=>true]
     ];
-    $_ch = "Biological"; // Module Name
+    $_ch = "Biology"; // Module Name
 @endphp
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
         <!-- Main content -->
         <section class="content">
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Biological List</h3>
-              <a href="{{route('inventory.are_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+              <h3 class="box-title">Biology List</h3>
+              <a href="{{route('inventory.biologyacqusition')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
               <!-- <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button> -->
             </div>
             <!-- /.box-header -->
@@ -24,38 +24,30 @@
               <table id="tbl_list" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Code #</th>
+                  <th>Code No.</th>
                   <th>Reference</th>
-                  {{-- <th>RIS NO</th>
-                  <th>SAI NO</th> --}}
                   <th>Date</th>
                   <th>Office</th>
-                  <!-- <th>Stock Location</th>
-                  <th>Branch</th> -->
-                  <th>Request</th>
-                  <th>Actions</th>
+                  <th>Date of A.R.E</th>
+                  <th>Option</th>
                 </tr>
                 </thead>
                 <tbody>
-                  @foreach($data as $d)
+                  {{-- @foreach($data as $d)
                 <tr>
                   <td>{{$d->rec_num}}</td>
-                  <td>{{$d->_reference}}</td>
-                  {{-- <td>{{$d->ris_no}}</td>
-                  <td>{{$d->sai_no}}</td> --}}
-                  <td>{{$d->trnx_date}}</td>
-                  <td>{{$d->cc_code}}</td>
-                  <!-- <td>{{$d->whs_code}}</td>
-                  <td>{{$d->branch}}</td> -->
                   <td>{{$d->recipient}}</td>
+                  <td>{{$d->t_date}}</td>
+                  <td>{{$d->cc_desc}}</td>
+                  <td>{{$d->ir_dateofare}}</td>
                   <td>
-                    <center>
-                      <a class="btn btn-social-icon btn-warning" href="{{route('inventory.are_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.are_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;
-                      <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a>
+                    <center> --}}
+                      {{-- <a class="btn btn-social-icon btn-warning" href="{{route('inventory.itemrepair_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.itemrepair_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp; --}}
+                      {{-- <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a>
                     </center>  
                   </td>
                 </tr>
-                @endforeach
+                @endforeach --}}
                 </tbody>
               </table>
             </div>
@@ -106,7 +98,7 @@
               </center>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" onclick="cancel()">Yes</button>
+               <button type="button" class="btn btn-primary" onclick="cancel()">Yes</button>
               <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
             </div>
           </div>
@@ -126,32 +118,6 @@
                 console.log('rowindex: '+selectedRow);
             } );
 
-        function approve()
-        {
-           var tbl_list = $('#tbl_list').DataTable();
-           var data = tbl_list.row(selectedRow).data();
-           var code = data[0];
-           
-           $.ajax({
-                     url: '{{asset('inventory/are/are_approve')}}/'+code,
-                     method: 'GET',
-                     success: function(flag)
-                              {
-                                if(flag == 'true')
-                                {
-                                  console.log(flag);
-                                  location.href = "{{route('inventory.are')}}";
-                                }
-                                else
-                                {
-                                  console.log(flag);
-                                  alert('ERROR.');
-                                }
-                              } 
-
-                  });
-        }
-
         function cancel()
         {
            var tbl_list = $('#tbl_list').DataTable();
@@ -159,14 +125,14 @@
            var code = data[0];
            
            $.ajax({
-                     url: '{{asset('inventory/are/are_cancel')}}/'+code,
+                     url: '{{asset('inventory/itemrepair/itemrepair_cancel')}}/'+code,
                      method: 'GET',
                      success: function(flag)
                               {
                                 if(flag == 'true')
                                 {
                                   console.log(flag);
-                                  location.href = "{{route('inventory.are')}}";
+                                  location.href = "{{route('inventory.itemrepair')}}";
                                 }
                                 else
                                 {
@@ -176,8 +142,7 @@
 
                   });
         }
-
       </script>
     </section>
-	
+  
 @endsection
