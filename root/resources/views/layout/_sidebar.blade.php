@@ -355,7 +355,7 @@
                             <li><a href="{{ url('collection/Liquidating-officer/') }}"><i class="fa fa-circle-o"></i> Verification of Liquidating Office</a></li>
                             @endif
                             @if($LA_GRP["C1000005"]["restrict"] == 'Y')
-                            <li><a href=""><i class="fa fa-circle-o"></i> Bank deposit</a></li>
+                            <li><a href="{{ url('collection/Bank-Deposit/') }}"><i class="fa fa-circle-o"></i> Bank deposit</a></li>
                             @endif
                         </ul>
                     </li>

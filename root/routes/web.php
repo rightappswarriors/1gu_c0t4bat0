@@ -710,6 +710,10 @@ Route::group(['middleware'=>['checkauth']], function () {
 			/* ----- USERS */
 		});
 
+
+
+		// collection area
+
 		Route::prefix('collection')->group(function(){
 			Route::prefix('ROCAD')->group(function(){ // DONE -m
 				Route::get('/', 'Collection\ROCADController@view');
@@ -719,7 +723,15 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('/', 'Collection\ROCADController@viewLiquidate');
 				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@liquidate');
 			});
+			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewToDiposit');
+				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
+			});
 		});
+		// collection area
+
+
+
 		// Reancy
 		Route::prefix('accounting')->group(function() {
 			Route::prefix('disbursement')->group(function() {
