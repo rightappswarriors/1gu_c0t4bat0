@@ -575,7 +575,7 @@
                           </div>                      
                         </div>
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-6">
                             <div class="form-group">
                               <label>Property No.</label>
                              {{--  <input type="text" class="form-control" name="txt_partno_text"> --}}
@@ -585,15 +585,13 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Serial No.</label>
-                              <input type="text" class="form-control" name="txt_serialno_text">
+                              <input style="width: 259px;" type="text" class="form-control" name="txt_serialno_text">
                             </div>
-                          </div>  
-                          <div class="col-sm-4">
                             <div class="form-group">
                               <label>Tag No.</label>
-                              <input type="text" class="form-control" name="txt_tagno_text">
+                              <input style="width: 259px;" type="text" class="form-control" name="txt_tagno_text">
                             </div>
-                          </div>  
+                          </div>                          
                         </div>
                         <div class="row">
                           <div class="col-sm-12">

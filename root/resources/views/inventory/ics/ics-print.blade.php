@@ -17,24 +17,24 @@
 		      </div>
 		      <div class="row" >
 		        <div class="col-sm-12" >
-		          <table style="border: 1px solid #000;"  id="tbl_list" class="table table-bordered table-striped">
+		          <table style="border: 1px solid #000;margin-bottom: 5px !important"  id="tbl_list" class="table table-bordered table-striped">
 		              <thead>
 		                <tr>
 		                  <div class="image">
 		                  <th style="border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-		                  <th style="border: none !important;">
+		                    <img src="{{url('images/logo1.jpg')}}" width="148" class="img-circle" alt="logo" ></th>
+		                  <th style="border: none !important;padding: 10px 0 3rem 10px;">
 		                    <center><h3>CITY OF GUIHULNGAN</h3><h4>Local Government Unit – City of Guihulngan</h4><h4>General Services Office</h4></center></th>
-		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" width="129" class="img-circle" alt="logo"></th>
 		                </div>
 		                </tr>
 		              </thead>
 		          </table>
 <div class="col-sm-12">
 	<div class="row">
-		<div><center><b><h3>INVENTORY CUSTODIAN SLIP</h3></b></center></div>
+		<div ><center><b><h3>INVENTORY CUSTODIAN SLIP</h3></b></center></div>
 	
-           <table  border="0">
+           		<table  border="0">
 		            <tfoot>
 		              <tr>
 		                <th colspan="8">ICS No: {{$rechdr->rec_num}}</th>
@@ -43,10 +43,7 @@
 		          </table>
 		      </div>
 		      </div>
-		           <br>
-		           <br>
-
-		          <table  class="table table-bordered table-striped">
+		          <table class="table table-bordered table-striped">
 		            <thead>
 		            <tr>
 		                 <th style="white-space: nowrap;font-size:14px;"><center>Qty.</center> No.</th>
