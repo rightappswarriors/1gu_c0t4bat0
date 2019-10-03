@@ -21,11 +21,11 @@
 		              <thead>
 		                <tr>
 		                  <div class="image">
-		                  <th style="border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-		                  <th style="border: none !important;">
+		                  <th style="text-align:center !important;border: none !important;">
+		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" width="145"></th>
+		                  <th style="border: none !important;padding:5px 0 3rem 5px;">
 		                    <center><h3>CITY OF GUIHULNGAN</h3><h4>Local Government Unit</h4><h4>General Services Office</h4></center></th>
-		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="text-align:center !important;border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo"  width="129"></th>
 		                </div>
 		                </tr>
 		              </thead>

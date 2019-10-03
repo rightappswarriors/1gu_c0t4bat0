@@ -68,7 +68,7 @@
 		          <div class="modal-content">
 		            <div class="modal-header">
 		              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                <span aria-hidden="true">×</span></button>
+		                <span aria-hidden="true">Ã—</span></button>
 		              <h4 class="modal-title">Approve Transaction</h4>
 		            </div>
 		            <div class="modal-body">
@@ -92,7 +92,7 @@
 		          <div class="modal-content">
 		            <div class="modal-header">
 		              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                <span aria-hidden="true">×</span></button>
+		                <span aria-hidden="true">Ã—</span></button>
 		              <h4 class="modal-title">Cancel Transaction</h4>
 		            </div>
 		            <div class="modal-body">
