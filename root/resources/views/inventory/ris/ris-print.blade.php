@@ -22,23 +22,23 @@
 		                <tr>
 		                  <div class="image">
 		                  <th style="border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                    <img src="{{url('images/logo1.jpg')}}" width="145" class="img-circle" alt="logo"></th>
 		                  <th style="border: none !important;">
 		                    <center><h3>REQUISTION AND ISSUANCE SLIP</h3><h4>Local Government Unit – City of Guihulngan</h4><h4>General Services Office</h4></center></th>
-		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" width="129" class="img-circle" alt="logo"></th>
 		                </div>
 		                </tr>
 		              </thead>
 		          </table>
 
-		          <table  class="table table-bordered table-striped">
+		          <table style="margin-bottom: 10px !important;" class="table table-bordered table-striped">
 		            <thead>
 		            <tr>
-		                 <th style="white-space: nowrap;font-size:14px;"><center>Stock</center> No.</th>
-		                 <th style="white-space: nowrap;font-size:14px;"><center>Unit</center></th>
+		                 <th nowrap style="font-size:14px;">Stock #</th>
+		                 <th style="font-size:14px;"><center>Unit</center></th>
 		                 <th style="width:50%;font-size:15px;"><center>Description</center></th>
-		                 <th nowspan style="width:25%;font-size:15px;"><center>Quantity</center></th>
-		                 <th nowspan style="width:25%;font-size:15px;"><center>Quantity</center></th>
+		                 <th nowrap style="width:25%;font-size:15px;"><center>Quantity</center></th>
+		                 <th nowrap style="width:25%;font-size:15px;"><center>Quantity</center></th>
 		                 <th style="width:25%;font-size:15px;"><center>Remarks</center></th>
 
 		            </tr>
@@ -56,15 +56,13 @@
 		            @endforeach 	
 		            </tbody>
 		          </table>
-
+				<div class="row">	
 				  <div class="col-sm-12" >
-		          <div class="row">
-		          	<h4>Purpose: </h4>
-		          	<p></p>
+		           	<h4>Purpose: </h4>		          	
 		          </div>
 		      	  </div>
 
-		          <table  class="table table-bordered table-striped">
+		          <table style="margin-top: -10px !important;" class="table table-bordered table-striped">
 		            <tfoot>
 		              <tr>
 		                {{-- <th colspan="8">Office/Department: {{$are_header->office}}</th> --}}
