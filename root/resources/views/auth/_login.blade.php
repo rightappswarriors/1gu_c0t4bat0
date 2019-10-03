@@ -40,11 +40,20 @@
 
         </div>
     </div> --}}
+
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
                 <form action="{{url('/login')}}" method="post" class="login100-form validate-form">
                     {{csrf_field()}}
+                    {{-- @foreach ($errors->all() as $error)
+
+                    <div class="alert alert-danger alert-dismissible " id="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <label><b><i class="icon fa fa-ban"></i></b>{{ $error }}</label>
+                    </div>
+
+                    @endforeach --}}
                     <span class="login100-form-title p-b-20" style="margin-top: -8%;">
                        <strong>Account Login</strong>
                     </span>

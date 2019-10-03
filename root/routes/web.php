@@ -319,6 +319,9 @@ Route::group(['middleware'=>['checkauth']], function () {
 				/* --- TAX TYPE ----------*/
 			});
 
+
+			
+
 			Route::prefix('real-property-classification')->group(function(){
 				Route::get('/', 'Collection\c_real_class@view');
 				Route::post('/', 'Collection\c_real_class@add');
@@ -339,6 +342,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 				});
 			});
 			/* --- GENERAL ----------*/
+
+
+			// Miscellenioiqweqtqwrqasdasqweksqwe
+			Route::prefix('Miscellaneous')->group(function(){
+				Route::prefix('bank')->group(function(){
+					Route::get('/', 'MFile\Miscellaneous\bankController@view');
+					Route::post('/', 'MFile\Miscellaneous\bankController@add');
+					Route::post('/update', 'MFile\Miscellaneous\bankController@update');
+					Route::post('/delete', 'MFile\Miscellaneous\bankController@delete');
+				});
+			});
 
 		});
 	/* MASTER FILE --------------------------*/
@@ -694,6 +708,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::post('update', 'Settings\c_users@update');
 			});
 			/* ----- USERS */
+		});
+
+		Route::prefix('collection')->group(function(){
+			Route::prefix('ROCAD')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@view');
+				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@viewOR');
+			});
+			Route::prefix('Liquidating-officer')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewLiquidate');
+				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@liquidate');
+			});
 		});
 		// Reancy
 		Route::prefix('accounting')->group(function() {
