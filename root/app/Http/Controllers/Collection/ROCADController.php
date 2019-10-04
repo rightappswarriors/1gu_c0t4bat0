@@ -13,7 +13,7 @@ class ROCADController extends Controller
 
     private $currentDate;
 
-    public function __construct(){
+    public function __construct(){  
         $this->currentDate = Date('Y-m-d');
     }
     //
@@ -136,7 +136,7 @@ class ROCADController extends Controller
         }
         if($request->isMethod('post')){
             try {
-                if (Core::insertTable('rssys.deposittobank', ['b_code' => $request->bank, 'accountnumber' => $request->acct, 'collector' => $data[0]->uid ,'t_date' => $this->currentDate, 't_time' => Date('H:i:s'), 'uid' => session()->get('_user')['id'], 'amount' => str_replace( ',', '', $request->amount ), 'depositdate' => Date('Y-m-d',strtotime($request->dateDep)) , 'deposittime' => Date('H:i:s',strtotime($request->timeDep))], 'Deposit to bank'))
+                if (Core::insertTable('rssys.deposittobank', ['b_code' => $request->bank, 'accountnumber' => $request->acct, 'collector' => $data[0]->uid ,'t_date' => $this->currentDate, 't_time' => Date('H:i:s'), 'uid' => session()->get('_user')['id'], 'amount' => str_replace( ',', '', $request->amount ), 'depositdate' => Date('Y-m-d',strtotime($request->dateDep)) , 'deposittime' => Date('H:i:s',strtotime($request->timeDep)), 'liquidateid' => $liquidateid], 'Deposit to bank'))
                 {
                     return redirect('collection/Bank-Deposit');
                 }

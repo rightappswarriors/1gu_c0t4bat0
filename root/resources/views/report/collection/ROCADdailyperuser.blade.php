@@ -42,10 +42,10 @@
 		            </tr>
 		            <tr>
 
-		            	<td class="text-center" colspan="7"> </td>
-		                <td class="text-center" colspan="5"> </td>
-		                <td class="text-center" colspan="5"> </td>
-		                 <td class="text-center" colspan="5"> </td>
+		            	<td class="text-center" colspan="7"> qwe</td>
+		                <td class="text-center" colspan="5"> qwe</td>
+		                <td class="text-center" colspan="5"> qwe</td>
+		                 <td class="text-center" colspan="5">qw </td>
 
 		            </tr>
 		            <tr>
@@ -186,21 +186,5 @@
     }
       .graph-7{background: url({{url('images/Carabao.jpg')}}) no-repeat;}
     </style>
-
-    <script>
-  
-    window.onload = function() 
-     {
-       $('textarea').each(function() {
-        $(this).height($(this).prop('scrollHeight'));
-        });
-
-       window.print(); 
-       //location.href= "{{route('inventory.are')}}";
-     }
-
-
-
-    </script>
 	
 @endsection

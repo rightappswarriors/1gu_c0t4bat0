@@ -791,7 +791,7 @@ Route::get('temporary/{page}', 'HomeController@tempPage');
 // Link to get all session
 Route::get('session-all', 'HomeController@SessionAll');
 Route::get('/test', function(){
-	return view('report.collection.test');
+	return view('report.collection.ROCADdailyperuser');
 });
 // Link to pages with no controller (Must be at the bottom)
 Route::get('{page}', 'HomeController@page');
