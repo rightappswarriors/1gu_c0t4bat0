@@ -112,7 +112,118 @@
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
 		            </tr>
 		          </table>
-		  
+
+
+		          <table class="table table-bordered table-striped">
+		            <th rowspan="11">
+						<div class="grid-container">
+							<div></div>
+				  			<div></div>
+				  			<div></div>
+				  			<div>____________</div>
+
+				  			<div>Beginning Balance</div>
+				  			<div>______________</div>
+				  			<div>.2018</div>
+				  			<div>P___________</div>
+
+				  			<div></div>
+				  			<div>Gen. Basic</div>
+				  			<div>40,432.00</div>
+				  			<div>____________</div>
+
+				  			<div>Add Collection</div>
+				  			<div>SEF</div>
+				  			<div>15,488.00</div>
+				  			<div>____________</div>
+
+				  			<div></div>
+				  			<div>Cash</div>
+				  			<div></div>
+				  			<div><u>58,568.00</u></div>
+
+				  			<div></div>
+				  			<div>Checks</div>
+				  			<div>____________</div>
+				  			<div>____________</div>
+
+				  			<div>Total</div>
+				  			<div></div>
+				  			<div></div>
+				  			<div><u>56,887.00</u></div>
+
+				  			<div>Less: </div>
+				  			<div>Remittance/Deposit to</div>
+				  			<div></div>
+				  			<div>____________</div>
+
+				  			<div></div>
+				  			<div>Treasurer/<u>Depository Banck</u></div>
+				  			<div></div>
+				  			<div>____________</div>
+
+				  			<div>Blance </div>
+				  			<div></div>
+				  			<div></div>
+				  			<div>____________</div>
+				  		</div>
+		            </th>
+		            <th colspan="12">
+		            	List of Checks:
+		            	<tr>
+		            	 <td class="text-center" colspan="2">Check No.</td>
+		            	 <td class="text-center" colspan="1">Bank</td>
+		                 <td class="text-center" colspan="2">Payee</td>
+		                 <td class="text-center" colspan="2">Amount</td>
+		                </tr>
+		                <tr>
+		            	 <td class="text-center" colspan="2"></td>
+		            	 <td class="text-center" colspan="1"></td>
+		                 <td class="text-center" colspan="2"></td>
+		                 <td class="text-center" colspan="2"></td>
+		                </tr>
+		                <tr>
+		            	 <td class="text-center" colspan="5">TOTAL</td>
+		                 <td class="text-center" colspan="2"></td>
+		                </tr>
+		                <tr>
+		            	 <td colspan="12"></td>
+		                </tr>		            
+		      		</th>
+		          </table>
+
+
+		          <table class="table table-bordered table-striped">
+		            <th rowspan="11">
+		            	<h6><left>CERTIFICATION: </h6></left>
+		            	<p><center>I hereby certify that the foregoing <br> report of collections and deposits <br> and accountability for accountable <br> forms is true and correct.
+						</center></p>
+		              <br>
+					<div class="grider-container">
+			  			<div><u>ANNABELLE P. BULADO</u></div>
+			  			<div><u>12/05/1997</u></div>
+			  			<div><b>RCC II</b></div>
+			  			<div>Date</div>
+			  		</div>
+		            </th>
+		            <th rowspan="11">
+		            	<h6><left>VERIFICATION AND ACKNOWLEDGEMENT </left></h6>
+		            	<p><center>I hereby certify that the foregoing <br> report of collections has been verified <br> and acknowledge receipt of ___________ .
+						</center></p>
+					<div class="griders-container">
+			  			<div></div>
+			  			<div></div>
+			  			<div>(P________________)</div>
+			  		</div>
+			  		<br>
+			  		<div class="grider-container">
+			  			<div><u>PAMELA A. CALIJAN</u></div>
+			  			<div><u>12/05/1997</u></div>
+			  			<div><b>Asst. City Treasurer/ OIC - City Treasurer</b></div>
+			  			<div>Date</div>
+			  		</div>
+		            </th>
+		          </table>
 
 		        </div>
 		      	</div>
@@ -133,10 +244,19 @@
 		}
 		.grider-container {
 		  display: grid;
-		  grid-template-columns: auto auto auto auto;
+		  grid-template-columns: auto auto ;
+		  text-align: center;
 		  /*grid-gap: 30px;*/
-		  /*padding: 10px;*/
+/*		  padding: 10px;*/
 		}
+		.griders-container {
+		  display: grid;
+		  grid-template-columns: auto auto auto;
+		  text-align: center;
+		  /*grid-gap: 30px;*/
+/*		  padding: 10px;*/
+		}
+
 		</style>
 
         <style>

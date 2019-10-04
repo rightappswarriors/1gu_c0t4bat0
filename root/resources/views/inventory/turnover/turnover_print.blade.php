@@ -21,11 +21,11 @@
 		              <thead>
 		                <tr>
 		                  <div class="image">
-		                  <th style="text-align:center !important;border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" width="145"></th>
-		                  <th style="border: none !important;padding:5px 0 3rem 5px;">
+		                  <th style="border: none !important;">
+		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="border: none !important;">
 		                    <center><h3>CITY OF GUIHULNGAN</h3><h4>Local Government Unit</h4><h4>General Services Office</h4></center></th>
-		                  <th style="text-align:center !important;border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo"  width="129"></th>
+		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
 		                </div>
 		                </tr>
 		              </thead>
@@ -130,7 +130,7 @@
     overflow: hidden;
     outline: none;
 
-    -webkit-box-shadow: none;
+    -webkit-box-shadow: none; 
     -moz-box-shadow: none;
     box-shadow: none;
     scroll-behavior: none;
