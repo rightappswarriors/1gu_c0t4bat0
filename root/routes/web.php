@@ -790,14 +790,10 @@ Route::group(['middleware'=>['checkauth']], function () {
 Route::get('temporary/{page}', 'HomeController@tempPage');
 // Link to get all session
 Route::get('session-all', 'HomeController@SessionAll');
-Route::get('/gago', function(){
-	try {
-		DB::connection()->getPdo();
-		return 'GAGO';
-	} catch (Exception $e) {
-		die("Could not connect to the database.  Please check your configuration. error:" . $e );
-	}
+Route::get('/test', function(){
+	return view('report.collection.test');
 });
 // Link to pages with no controller (Must be at the bottom)
 Route::get('{page}', 'HomeController@page');
+
 /* OTHERS -------------------------------*/
