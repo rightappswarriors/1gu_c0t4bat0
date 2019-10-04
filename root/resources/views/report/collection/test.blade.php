@@ -13,13 +13,13 @@
         <section class="content">
 
 			<div class="grid-container">
-			  <div>Fund : </div>
+			  <div>Fund : <u>GENERAL FUND</u></div>
 			  <div></div>
-			  <div>Date :</div>
+			  <div>Date : <u>December 5, 1997</u></div>
 			  <div></div>
-			  <div>Name of Accountable Officer : </div>
+			  <div>Name of Accountable Officer : <u>ANNABELLE P. BULADO</u></div>
 			  <div></div>
-			  <div>Report No. : </div>
+			  <div>Report No. : <u>APD-JLBE-100-009-02</u></div>
 			  <div></div>
 			  
 			</div>
@@ -42,15 +42,15 @@
 		            </tr>
 		            <tr>
 
-		            	<td class="text-center" colspan="7"> </td>
-		                <td class="text-center" colspan="5"> </td>
-		                <td class="text-center" colspan="5"> </td>
-		                 <td class="text-center" colspan="5"> </td>
+		            	<td class="text-center" colspan="7">AF 56</td>
+		                <td class="text-center" colspan="5">12051997</td>
+		                <td class="text-center" colspan="5">12052019</td>
+		                 <td class="text-center" colspan="5"> 30,256.05</td>
 
 		            </tr>
 		            <tr>
 		            	<td class="text-right" colspan="17">TOTAL  </td>
-		                 <td class="text-center" colspan="5"></td>
+		                 <td class="text-center" colspan="5">30,256.05</td>
 		            </tr>
 		            <tr>
 		                 <td class="text-left" colspan="22">2. For Liquidating Officers/Treasurers</td>
@@ -94,19 +94,19 @@
 		                 <td class="text-center" colspan="2">To</td>
 		            </tr>
 		            <tr>
-		            	 <td class="text-center" colspan="2"></td>
-		            	 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
+		            	 <td class="text-center" colspan="2">AF 56</td>
+		            	 <td class="text-center" colspan="1">22</td>
+		                 <td class="text-center" colspan="2">12051997</td>
+		                 <td class="text-center" colspan="2">12052019</td>
+		                 <td class="text-center" colspan="1">50</td>
+		                 <td class="text-center" colspan="2">1997</td>
+		                 <td class="text-center" colspan="2">2019</td>
+		                 <td class="text-center" colspan="1">14</td>
+		                 <td class="text-center" colspan="2">1997</td>
+		                 <td class="text-center" colspan="2">2019</td>
+		                 <td class="text-center" colspan="1">16</td>
+		                 <td class="text-center" colspan="2">1997</td>
+		                 <td class="text-center" colspan="2">2019</td>
 		            </tr>
 		            <tr>
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
