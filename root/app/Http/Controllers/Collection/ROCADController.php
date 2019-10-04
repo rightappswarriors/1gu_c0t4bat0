@@ -103,8 +103,48 @@ class ROCADController extends Controller
                 return $e;           
             }
         }
+    }
 
+    public function viewToDiposit(Request $request){
+        $arrRet = [
+            'collectors'=>DB::select("SELECT x08.opr_name,liquidate.liquidateid from rssys.liquidate left join rssys.x08 on x08.uid = liquidate.collector where liquidateid NOT IN (SELECT liquidateid from rssys.deposittobank)"),
+            '_bc'=>[
+                    ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
+                    ['link'=>url("collection/Liquidating-officer"),'desc'=>'Liquidating Officer','icon'=>'file-text','st'=>true]
+                ],
+            '_ch'=>"Deposit to bank"
+        ];
+        return view('collection.readytodeposit',$arrRet);
+    }
 
+    public function deposittobank(Request $request, $liquidateid){
+        if(DB::select("SELECT count(*) as counted from rssys.deposittobank where liquidateid = '$liquidateid'")[0]->counted >= 1 || DB::select("SELECT count(*) as counted from rssys.liquidate where liquidateid = '$liquidateid'")[0]->counted <= 0){
+            return abort(404);
+        }
+
+        $data = DB::select("SELECT x08.uid, x08.opr_name, liquidate.amountreceive from rssys.liquidate left join rssys.x08 on x08.uid = liquidate.collector where liquidateid = '$liquidateid' AND liquidateid not in (SELECT liquidateid from rssys.deposittobank)");
+
+        if($request->isMethod('get')){
+        
+            $arrRet = [
+                'banks' => DB::table('rssys.bank')->select('b_code','b_name')->where('active',TRUE)->get(),
+                'det' => $data,
+                '_ch'=>"Liquidate"
+            ];
+            return view('collection.toDeposit',$arrRet);
+
+        }
+        if($request->isMethod('post')){
+            try {
+                if (Core::insertTable('rssys.deposittobank', ['b_code' => $request->bank, 'accountnumber' => $request->acct, 'collector' => $data[0]->uid ,'t_date' => $this->currentDate, 't_time' => Date('H:i:s'), 'uid' => session()->get('_user')['id'], 'amount' => str_replace( ',', '', $request->amount ), 'depositdate' => Date('Y-m-d',strtotime($request->dateDep)) , 'deposittime' => Date('H:i:s',strtotime($request->timeDep))], 'Deposit to bank'))
+                {
+                    return redirect('collection/Bank-Deposit');
+                }
+            } 
+            catch (Exception $e) {
+                return $e;           
+            }
+        }
     }
 
 

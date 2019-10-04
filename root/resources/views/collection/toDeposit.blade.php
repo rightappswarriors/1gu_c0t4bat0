@@ -14,18 +14,40 @@
             <div class="container mt-5">
 	            <div class="row">
 	            	<div class="col-md-6">Collector Name</div>
-	            	<div class="col-md-6">Expected cash to liquidate</div>
+	            	<div class="col-md-6">Expected cash to Deposit (From liquidated cash)</div>
 	            </div>
 	            <div class="row mt-3">
 	            	<div class="col-md-6">{{($det[0]->opr_name ?? 'NOT DEFINED')}}</div>
-	            	<div class="col-md-6">{{(number_format($det[0]->total,2) ?? 'NOT DEFINED')}}</div>
+	            	<div class="col-md-6">{{(number_format($det[0]->amountreceive,2) ?? 'NOT DEFINED')}}</div>
 	            </div>
             </div>
             <div class="container mt-5">
             	<form method="POST">
             		{{csrf_field()}}
-            		<label for="liquidate">Total Cash given</label>
-            		<input required type="text" name="amount" class="form-control" id="liquidate" style="text-align: center;">
+            		<label for="liquidate">Total Amount Deposited</label>
+            		<input required type="text" name="amount" value="{{isset($det[0]->amountreceive) ? number_format($det[0]->amountreceive) : ''}}" class="form-control" id="liquidate" style="text-align: center;">
+
+            		<label for="banks">Bank Deposited</label>
+            		<select required name="bank" id="banks" style="width: 100%;">
+            			<option value="" selected="">Please select</option>
+            			@isset($banks) 
+	            			@foreach($banks as $bank)
+								<option value="{{$bank->b_code}}">{{$bank->b_name}}</option>
+	            			@endforeach
+            			@endisset
+            		</select>
+
+            		<label for="acctno">Account Number</label>
+            		<input required type="text" name="acct" id="acctno" class="form-control" style="text-align: center;">
+
+            		<label for="depodate">Date Deposited</label>
+            		<input required type="date" name="dateDep" id="depodate" class="form-control" style="text-align: center;">
+
+            		<label for="depotime">Time Deposited</label>
+            		<input required type="time" name="timeDep" id="depotime" class="form-control" style="text-align: center;">
+
+
+
             		<div class="pull-left mt-3">
 		            	<button type="submit" class="btn btn-success"><i class="fa fa-paper-plane"></i> Submit form</button>
 		          	</div>
