@@ -501,6 +501,20 @@
                         </a>
                     </li>
                     @endif
+                    @if($LA_GRP["R2000000"]["restrict"] == 'Y')
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i>
+                            <span>Collection</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                            <ul class="treeview-menu">
+                                <li><a href="{{ url('reports/collection/RocadDailyUser') }}"><i class="fa fa-circle-o"></i>ROCAD</a></li>
+                            </ul>
+                        </a>
+                    </li>
+                    @endif
                     @if($LA_GRP["R3000000"]["restrict"] == 'Y')
                     <li><a href="#"><i class="fa fa-circle-o"></i> Sales</a></li>
                     @endif

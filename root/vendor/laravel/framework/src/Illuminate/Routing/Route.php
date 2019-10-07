@@ -1,7 +1,6 @@
 <?php
 
 namespace Illuminate\Routing;
-
 use Closure;
 use LogicException;
 use ReflectionFunction;

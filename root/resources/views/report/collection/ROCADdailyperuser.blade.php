@@ -5,6 +5,7 @@
         ['link'=>'#','desc'=>'Turn Over','icon'=>'none','st'=>true]
     ];
     $_ch = "Turn Over"; // Module Name
+    $total = 0;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -13,13 +14,13 @@
         <section class="content">
 
 			<div class="grid-container">
-			  <div>Fund : </div>
+			  <div>Fund : <u>GENERAL FUND</u></div>
 			  <div></div>
-			  <div>Date :</div>
+			  <div>Date : <u>{{Date('F d, Y',strtotime($date))}}</u></div>
 			  <div></div>
-			  <div>Name of Accountable Officer : </div>
+			  <div>Name of Accountable Officer : <u>{{$data[0]->collector}}</u></div>
 			  <div></div>
-			  <div>Report No. : </div>
+			  <div>Report No. : <u>APD-JLBE-100-009-02</u></div>
 			  <div></div>
 			  
 			</div>
@@ -40,17 +41,27 @@
 		                 <td class="text-center" colspan="5">From</td>
 		                 <td class="text-center" colspan="5">To</td>
 		            </tr>
-		            <tr>
+					
+					@isset($data)
+					@foreach($data as $collectorData)
 
-		            	<td class="text-center" colspan="7"> qwe</td>
-		                <td class="text-center" colspan="5"> qwe</td>
-		                <td class="text-center" colspan="5"> qwe</td>
-		                 <td class="text-center" colspan="5">qw </td>
+			            <tr>
 
-		            </tr>
+			            	<td class="text-center" colspan="7">{{$collectorData->ortype}}</td>
+			                <td class="text-center" colspan="5">{{$collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="5">{{$collectorData->issueduntil}}</td>
+			                 <td class="text-center" colspan="5">{{number_format($collectorData->amount,2)}}</td>
+
+			            </tr>
+			            <?php $total += $collectorData->amount; ?>
+		            @endforeach
+		            @endisset
+
+
+
 		            <tr>
 		            	<td class="text-right" colspan="17">TOTAL  </td>
-		                 <td class="text-center" colspan="5"></td>
+		                 <td class="text-center" colspan="5">₱{{Number_format($total,2)}}</td>
 		            </tr>
 		            <tr>
 		                 <td class="text-left" colspan="22">2. For Liquidating Officers/Treasurers</td>
@@ -61,6 +72,11 @@
 		                 <td class="text-center" colspan="9">Amount</td>
 		            </tr>
 		            <tr>
+		                 <td class="text-center" align="justify" colspan="7">{{$data[0]->liquidatingofficer}}</td>
+		                 <td class="text-center" colspan="5"></td>
+		                 <td class="text-center" colspan="9">{{Number_format($data[0]->liquidatereceived,2)}}</td>
+		            </tr>
+		            <tr>
 		                 <td class="text-center" colspan="7">B. Remittances/Deposits</td>
 		                 <td class="text-center" colspan="15"></td>
 		            </tr>
@@ -68,6 +84,11 @@
 		                 <td class="text-center" align="justify" colspan="7">Accountable Officer Bank</td>
 		                 <td class="text-center" colspan="5">Reference</td>
 		                 <td class="text-center" colspan="9">Amount</td>
+		            </tr>
+		            <tr>
+		                 <td class="text-center" align="justify" colspan="7">{{$data[0]->depositofficer}}</td>
+		                 <td class="text-center" colspan="5"></td>
+		                 <td class="text-center" colspan="9">{{Number_format($data[0]->depossitedamount,2)}}</td>
 		            </tr>
 		            <tr>
 		                 <td class="text-left" colspan="22">C. ACCOUNTABILITY FOR ACCOUNTABLE FORMS</td>
@@ -93,21 +114,23 @@
 		                 <td class="text-center" colspan="2">From</td>
 		                 <td class="text-center" colspan="2">To</td>
 		            </tr>
-		            <tr>
-		            	 <td class="text-center" colspan="2"></td>
-		            	 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="1"></td>
-		                 <td class="text-center" colspan="2"></td>
-		                 <td class="text-center" colspan="2"></td>
-		            </tr>
+		            @foreach($data as $collectorData)
+						<tr>
+			            	<td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
+			            	<td class="text-center" colspan="1">{{$collectorData->issuedto - $collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
+			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
+			            	<td class="text-center" colspan="1">{{$collectorData->issuedto - $collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
+			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
+			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+			            </tr>
+		            @endforeach
 		            <tr>
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
 		            </tr>
@@ -200,8 +223,8 @@
 						</center></p>
 		              <br>
 					<div class="grider-container">
-			  			<div><u>ANNABELLE P. BULADO</u></div>
-			  			<div><u>12/05/1997</u></div>
+			  			<div><u>{{$data[0]->collector}}</u></div>
+			  			<div><u>{{Date('m/d/Y')}}</u></div>
 			  			<div><b>RCC II</b></div>
 			  			<div>Date</div>
 			  		</div>
@@ -218,7 +241,7 @@
 			  		<br>
 			  		<div class="grider-container">
 			  			<div><u>PAMELA A. CALIJAN</u></div>
-			  			<div><u>12/05/1997</u></div>
+			  			<div><u>{{Date('m/d/Y')}}</u></div>
 			  			<div><b>Asst. City Treasurer/ OIC - City Treasurer</b></div>
 			  			<div>Date</div>
 			  		</div>

@@ -65,7 +65,7 @@
                 <option value hidden selected disabled>Select OR Types</option>
                 @isset($or_types)
                   @foreach($or_types AS $each)
-                  <option value="{{$each->or_type}}">{{$each->or_code}}</option>
+                  <option suggestive="{{$each->suggestiveORto}}" value="{{$each->or_type}}">{{$each->or_code}}</option>
                   @endforeach
                 @endisset
               </select>
@@ -134,6 +134,15 @@
   </section>
   <script type="text/javascript" src="{{ asset('root/public/js/forall.js') }}"></script>
   <script type="text/javascript">
+    $("#orFrom").keyup(function(event) {
+
+      let suggestive = $('[name=or_type]').find('option:selected').attr('suggestive');
+      if(typeof(suggestive) != 'undefined'){
+        $('[name=or_no_to]').val(Number($("#orFrom").val()) + Number(suggestive));
+      }
+      suggestive = 0;
+    });
+
     @isset($or_issuance) @if(count($or_issuance) > 0)
     document.getElementsByName('or_type')[0].value = "{{$or_issuance[0]->or_type}}";
     document.getElementsByName('date_issued')[0].value = "{{$or_issuance[0]->date_issued}}";
@@ -142,7 +151,7 @@
     document.getElementsByName('collector')[0].value = "{{$or_issuance[0]->collector}}";
     @endif @endisset
     @if($message != "")
-    insErrMsg('warning', "{{$message}}", 'dbsErr');
+    insErrMsg('success', "{{$message}}", 'dbsErr');
     @endif
   </script>
 @endsection
