@@ -84,28 +84,25 @@
                 @endif
               </div>
             </div>
-            <!-- <div class="col-md-3">
-              <div class="form-group">
-                <label>Stock Location</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation">
-                  <option value="" selected="selected">--- Select Stock Location ---</option>
-                  @foreach($stock_loc as $st)
-                  <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
+
             <div class="col-md-3">
               <div class="form-group">
-                <label>Branch</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true", name="select_branch">
-                  <option value="" selected="selected">--- Select Branch ---</option>
-                  @foreach($branch as $b)
-                  <option value="{{$b->code}}">{{$b->name}}</option>
+                <label>Requested By</label>                
+                @if($isnew)
+                  <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;"  data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" value="GIAN CARLO A. MIJARES" required>
+                @else
+                  <input list="select_receivedfrom" name="select_receivedfrom" value="{{$rechdr->are_receivedfrom}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                @endif  
+
+                <datalist id="select_receivedfrom">
+                  @foreach($are_users as $au)
+                    <option value="{{$au->name}}">
                   @endforeach
-                </select>              
+                </datalist>
+                <span id="validate_selectreceivedfrom"></span>
               </div>
-            </div> -->
+            </div>
+            
           </div>
           <div class="row">
             <div class="col-md-3">
@@ -138,6 +135,26 @@
                 @endif
               </div>
             </div>
+            
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Personnel to Received</label>
+
+                @if($isnew)
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" value="{{$rechdr->are_receivedfromdesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @endif
+
+                <datalist id="select_receivedfromdesig">
+                  @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                  @endforeach
+                </datalist>
+                <span id="validate_selectreceivedfromdesig"></span>
+              </div>
+            </div>
+
           </div>
           <!-- /.row -->
         </div>
@@ -596,61 +613,6 @@
         }
       }
 
-      // function disp_amt_result()
-      // {
-      //   var total_costamt = 0.00, net_amt = 0.00, qty = 0.00, costprice = 0.00, disc_amt = 0.00, ln_amt = 0.00;
-
-      //   qty = $('input[name="txt_qty"]').val();
-      //   costprice = $('input[name="txt_cost"]').val();
-        
-      //   if($('input[name="txt_disc"]').val() != null)
-      //   {
-      //     disc_amt = $('input[name="txt_disc"]').val();
-      //   }
-
-      //   total_costamt = qty * costprice;
-
-      //   ln_amt = parseFloat(total_costamt - disc_amt).toFixed(2);
-
-      //   $('input[name="txt_lineamt"]').val(ln_amt);
-      //   $('input[name="txt_disc"]').val(disc_amt);
-
-      //   disp_vat(ln_amt);
-      // }
-
-      // function disp_vat(total_amt)
-      // {
-      //   var vat_amt = 0.00, net_amt = 0.00;
-      //   var tax_type = $('select[name="select_vat"]').select2('data')[0].id;
-
-      //   if(tax_type == 'I')
-      //   {
-      //       net_amt = parseFloat(total_amt / 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else if(tax_type == 'E')
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       total_amt = parseFloat(total_amt * 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_lineamt"]').val(total_amt);
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       vat_amt = parseFloat(vat_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      // }
-
       function clear()
       {
         $('input[name="txt_lineno"]').val('');
@@ -677,6 +639,8 @@
                       reference: $('input[name="txt_reference"]').val(),
                       ris_no: $('input[name="txt_ris_no"]').val(),
                       sai_no: $('input[name="txt_sai_no"]').val(),
+                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val()
                    };
 
            $.ajax({
@@ -713,6 +677,9 @@
                       reference: $('input[name="txt_reference"]').val(),
                       ris_no: $('input[name="txt_ris_no"]').val(),
                       sai_no: $('input[name="txt_sai_no"]').val(),
+                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+
                    };
 
            $.ajax({

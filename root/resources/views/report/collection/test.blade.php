@@ -105,8 +105,8 @@
 		                 <td class="text-center" colspan="2">1997</td>
 		                 <td class="text-center" colspan="2">2019</td>
 		                 <td class="text-center" colspan="1">16</td>
-		                 <td class="text-center" colspan="2">1997</td>
-		                 <td class="text-center" colspan="2">2019</td>
+		                 <td class="text-center" colspan="2">1997 </td>
+		                 <td class="text-center" colspan="2">2019 </td>
 		            </tr>
 		            <tr>
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
@@ -135,6 +135,7 @@
 				  			<div>Add Collection</div>
 				  			<div>SEF</div>
 				  			<div>15,488.00</div>
+				  			
 				  			<div>____________</div>
 
 				  			<div></div>

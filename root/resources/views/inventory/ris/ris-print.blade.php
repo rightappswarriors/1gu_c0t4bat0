@@ -100,7 +100,7 @@
 		              <div><font size="2"><center><i>Printed Name</i></center></font></div>
 		             </th>
 		             <th colspan="2">
-		               {{-- <div><center><u>{{$are_header->receivedby}}</u></center><div><center>{{$are_header->receivedbydesig}}</center></div> --}}
+		               <div><center>{{$rechdr->are_receivedfrom}}</center><div><center>{{-- {{$are_header->receivedbydesig}} --}}</center></div>
 		             </th>
 		             <th colspan="3">
 		               <div><font size="2"><center><b>CARLO JORGE JOAN L. REYES</b></center></font></div>
@@ -117,7 +117,7 @@
 		              <div><font size="2"><center><i>Designation</i></center></font></div>
 		             </th>
 		             <th colspan="2">
-		               {{-- <div><center><u>{{$are_header->receivedby}}</u></center><div><center>{{$are_header->receivedbydesig}}</center></div> --}}
+		               <div><center><i>{{$rechdr->are_receivedfromdesig}}</i></center><div><center>{{-- {{$are_header->receivedbydesig}} --}}</center></div>
 		             </th>
 		             <th colspan="3">
 		               <div><font size="2"><center><i>City Mayor</i></center></font></div>
@@ -134,7 +134,7 @@
 		              <div><font size="2"><center><i>Date</i></center></font></div>
 		             </th>
 		             <th colspan="2">
-		               {{-- <div><center><u>{{$are_header->receivedby}}</u></center><div><center>{{$are_header->receivedbydesig}}</center></div> --}}
+		               <div><center>{{$rechdr->trnx_date}}</center><div><center>{{-- {{$are_header->receivedbydesig}} --}}</center></div>
 		             </th>
 		             <th colspan="3">
 		               {{-- <center><u>{{$are_header->issuedto}}</u></center><div><center>{{$are_header->issuedtodesig}}</center></div> --}}

@@ -811,7 +811,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1011,7 +1011,7 @@ class Inventory extends Model
     	{
     		//$sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull)";
 
-    	   $sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull) AND approve = 'true'";
+    	   $sql = "SELECT x08.uid, rec_num, _reference, trnx_date, ris_no, sai_no, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, x08.opr_name as nameofpersonnel FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid JOIN rssys.x08 ON x08.uid = rh.personnel WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull) AND approve = 'true'";
    
     	   return DB::select(DB::raw($sql));
         }
@@ -1041,7 +1041,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, x08.opr_name as nameofpersonnel FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid join rssys.x08 on x08.uid = rh.personnel WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 

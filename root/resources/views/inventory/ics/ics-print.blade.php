@@ -80,8 +80,8 @@
 
 		             <th rowspan="3">
 		             	<h4><left>Received By: </h4></left>
-		              <div><center>____________________</center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
-		              <div><center>____________________</center></div><div><center><font size="1">Postion/Office</font></center></div>
+		              <div><center><u>{{$rechdr->nameofpersonnel}}</u></center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
+		              <div><center><u>{{$rechdr->cc_code}}</u></center></div><div><center><font size="1">Postion/Office</font></center></div>
 		              <div><center>____________________</center></div><div><center><font size="1">Date</font></center></div>
 		             </th>
 		             <th rowspan="3">
