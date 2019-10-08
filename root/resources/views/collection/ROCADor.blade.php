@@ -135,6 +135,7 @@
 		    	success: function(a){
 		    		if(a == 'done'){
 		    			alert('Successfully updated data');
+		    			window.location.href=" {{url('collection/ROCAD')}} ";
 		    		} else {
 		    			alert(a);
 		    		}

@@ -11,8 +11,6 @@
 |
 */
 
-
-
 /* AUTHENTICATION --------------------------*/
 	Route::get('/login', 'AuthController@view')->name('login');
 	Route::post('/login', 'AuthController@login');
@@ -727,6 +725,11 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('/', 'Collection\ROCADController@viewToDiposit');
 				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
 			});
+			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewToDiposit');
+				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
+			});
+			
 		});
 		// collection area
 
@@ -779,11 +782,16 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('saaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
 				Route::post('saaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
+			Route::prefix('collection')->group(function() {
+				Route::prefix('RocadDailyUser')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@rocardDailyUser');
+					Route::match(['get','post'],'/{uid}/{date}', 'Collection\ROCADController@rocardDailyUserProcess');
+				});
+			});
 		});
 		/* SETTING -------------------------------*/
 	// });
 });
-
 
 /* OTHERS -------------------------------*/
 // Link for the temporary report page
@@ -791,9 +799,8 @@ Route::get('temporary/{page}', 'HomeController@tempPage');
 // Link to get all session
 Route::get('session-all', 'HomeController@SessionAll');
 Route::get('/test', function(){
-	return view('report.collection.test');
+	return view('report.collection.ROCADdailyperuser');
 });
 // Link to pages with no controller (Must be at the bottom)
 Route::get('{page}', 'HomeController@page');
-
 /* OTHERS -------------------------------*/
