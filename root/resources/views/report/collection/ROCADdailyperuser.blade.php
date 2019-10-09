@@ -4,7 +4,7 @@
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Turn Over','icon'=>'none','st'=>true]
     ];
-    $_ch = "Turn Over"; // Module Name
+    $_ch = ""; // Module Name
     $total = 0;
 @endphp
 @section('content')
@@ -114,7 +114,6 @@
 		                 <td class="text-center" colspan="2">From</td>
 		                 <td class="text-center" colspan="2">To</td>
 		            </tr>
-<<<<<<< HEAD:root/resources/views/report/collection/test.blade.php
 		            <tr>
 		            	 <td class="text-center" colspan="2">AF 56</td>
 		            	 <td class="text-center" colspan="1">22</td>
@@ -130,7 +129,6 @@
 		                 <td class="text-center" colspan="2">1997 </td>
 		                 <td class="text-center" colspan="2">2019 </td>
 		            </tr>
-=======
 		            @foreach($data as $collectorData)
 						<tr>
 			            	<td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
@@ -148,7 +146,6 @@
 			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
 			            </tr>
 		            @endforeach
->>>>>>> 1b9edf7a5740887fb9278c0f27e1eb0ab4b3a3df:root/resources/views/report/collection/ROCADdailyperuser.blade.php
 		            <tr>
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
 		            </tr>
@@ -236,35 +233,35 @@
 
 
 		          <table class="table table-bordered table-striped">
-		            <th rowspan="11">
-		            	<h6><left>CERTIFICATION: </h6></left>
-		            	<p><center>I hereby certify that the foregoing <br> report of collections and deposits <br> and accountability for accountable <br> forms is true and correct.
-						</center></p>
-		              <br>
-					<div class="grider-container">
-			  			<div><u>{{$data[0]->collector}}</u></div>
-			  			<div><u>{{Date('m/d/Y')}}</u></div>
-			  			<div><b>RCC II</b></div>
-			  			<div>Date</div>
-			  		</div>
-		            </th>
-		            <th rowspan="11">
-		            	<h6><left>VERIFICATION AND ACKNOWLEDGEMENT </left></h6>
-		            	<p><center>I hereby certify that the foregoing <br> report of collections has been verified <br> and acknowledge receipt of ___________ .
-						</center></p>
-					<div class="griders-container">
-			  			<div></div>
-			  			<div></div>
-			  			<div>(P________________)</div>
-			  		</div>
-			  		<br>
-			  		<div class="grider-container">
-			  			<div><u>PAMELA A. CALIJAN</u></div>
-			  			<div><u>{{Date('m/d/Y')}}</u></div>
-			  			<div><b>Asst. City Treasurer/ OIC - City Treasurer</b></div>
-			  			<div>Date</div>
-			  		</div>
-		            </th>
+			            <th colspan="12" rowspan="11">
+			            	<h6><left>CERTIFICATION: </h6></left>
+			            	<p><center>I hereby certify that the foregoing <br> report of collections and deposits <br> and accountability for accountable <br> forms is true and correct.
+							</center></p>
+			              <br>
+						<div class="grider-container">
+				  			<div><u>{{$data[0]->collector}}</u></div>
+				  			<div><u>{{Date('m/d/Y')}}</u></div>
+				  			<div><b>RCC II</b></div>
+				  			<div>Date</div>
+				  		</div>
+			            </th>
+			            <th colspan="12" rowspan="11">
+			            	<h6><left>VERIFICATION AND ACKNOWLEDGEMENT </left></h6>
+			            	<p><center>I hereby certify that the foregoing <br> report of collections has been verified <br> and acknowledge receipt of ___________ .
+							</center></p>
+						<div class="griders-container">
+				  			<div></div>
+				  			<div></div>
+				  			<div>(P________________)</div>
+				  		</div>
+				  		<br>
+				  		<div class="grider-container">
+				  			<div><u>PAMELA A. CALIJAN</u></div>
+				  			<div><u>{{Date('m/d/Y')}}</u></div>
+				  			<div><b>Asst. City Treasurer/ OIC - City Treasurer</b></div>
+				  			<div>Date</div>
+				  		</div>
+			            </th>
 		          </table>
 
 		        </div>
@@ -277,12 +274,13 @@
 		  display: grid;
 		  grid-template-columns: auto auto auto auto;
 		  /*grid-gap: 30px;*/
-		  padding: 10px;
+		  padding: 5px;
 		}
 		.grid-container > div {
 		  /*border: 1px solid black;*/
 		  /*text-align: center;*/
-		  font-size: 20px;
+		  font-size: 12px;
+		  font-weight:normal;
 		}
 		.grider-container {
 		  display: grid;
