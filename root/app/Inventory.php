@@ -788,6 +788,36 @@ class Inventory extends Model
         }
     }
 
+    // RIS Print Header
+    public static function printRISHeader($code)
+    {
+    	try
+    	{
+    	   $sql = 'SELECT m8.cc_desc as office, rh.cc_code as office_code, rh.ris_no, rh.sai_no, rh.trnx_date as date, rh.are_receivedfrom as requestedby, rh.are_receivedfromdesig as requestedbydesig, rh.are_receivedby as receivedby, rh.are_receivebydesig as receivedbydesig FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$code.'\'';
+   
+    	   return DB::select(DB::raw($sql))[0];
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
+    // RIS Print Line
+    public static function printRISLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\'';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
     // use for incremental of code with string
     public static function get_nextincrementwithchar($val)
     {
@@ -811,7 +841,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig, are_receivedby, are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 

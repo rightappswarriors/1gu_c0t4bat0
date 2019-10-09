@@ -65,6 +65,11 @@ class I_RISController extends Controller
             $receivedfromdesig = $request->receivedfromdesig;
             Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedfrom);
             Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedfromdesig);
+
+            $receivedby = $request->receivedby;
+            $receivedbydesig = $request->receivedbydesig;
+            Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
             
             $data = ['rec_num' => $code,  
                      '_reference' => $reference, 
@@ -79,10 +84,14 @@ class I_RISController extends Controller
                      't_time' => $datetime->toTimeString(),
                      'are_receivedfrom' => $receivedfrom,
                      'are_receivedfromdesig' => $receivedfromdesig,
+                     'are_receivedby' => $receivedby,
+                     'are_receivebydesig' => $receivedbydesig
                      // 'branch' => $branch
                     ];
 
-            if(Core::insertTable($table, $data, $this->module) == true)
+            $insertRIShd = Core::insertTable($table, $data, $this->module);        
+
+            if($insertRIShd == 'true')
             {
                 Core::updatem99('ris_code', Inventory::get_nextincrementwithchar($code));
 
@@ -98,32 +107,7 @@ class I_RISController extends Controller
                               'unit' => $tb[7]];
 
                     if(Core::insertTable($tableln, $data2, $this->module))
-                    {
-                         // $stk_qty_in = $tb[4];
-                         // $stk_qty_out = "0";
-
-                         // $stkcrd = ['item_code' => $tb[2],
-                         //            'item_desc' => $tb[3],
-                         //            'unit' => $tb[5],
-                         //            'trnx_date' => $invoicedt,
-                         //            'reference' => $stk_ref,
-                         //            'qty_in' => $stk_qty_in,
-                         //            'qty_out' => $stk_qty_out,
-                         //            'fcp' => $tb[7],
-                         //            'price' => $tb[7],
-                         //            'whs_code' => $stock_loc,
-                         //            'supl_code' => $supl_code,
-                         //            'supl_name' => $supl_name,
-                         //            'trn_type' => $this->stk_trns_type,
-                         //            'branch' => $branch];
-
-                         // if(Inventory::saveToStkcrd($stkcrd))
-                         // { }
-                         // else
-                         // {
-                         //   $flag = 'false';
-                         //   break;
-                         // }          
+                    {       
                     }
                     else
                     {
@@ -136,7 +120,7 @@ class I_RISController extends Controller
             }
             else
             {
-                $flag = 'false';
+                return $insertRIShd;
             }
 
             return $flag;    
@@ -192,6 +176,11 @@ class I_RISController extends Controller
 
           Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedfrom);
           Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedfromdesig);
+
+          $receivedby = $request->receivedby;
+          $receivedbydesig = $request->receivedbydesig;
+          Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
+          Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
             
           $data = ['_reference' => $reference, 
                    'trnx_date' => $invoicedt, 
@@ -203,7 +192,9 @@ class I_RISController extends Controller
                    't_date' => $datetime->toDateString(),
                    't_time' => $datetime->toTimeString(),
                    'are_receivedfrom' => $receivedfrom,
-                   'are_receivedfromdesig' => $receivedfromdesig
+                   'are_receivedfromdesig' => $receivedfromdesig,
+                   'are_receivedby' => $receivedby,
+                   'are_receivebydesig' => $receivedbydesig
                    // 'branch' => $branch
                   ];
 
@@ -291,8 +282,9 @@ class I_RISController extends Controller
 
     public function print($code)
     {
-      $rechdr = Inventory::getReceivingPOHeader($code);
-      $reclne = Inventory::getReceivingPOLine($code);
+      $rechdr = Inventory::printRISHeader($code);
+      $reclne = Inventory::printRISLine($code); 
+
 
       return view('inventory.ris.ris-print', compact('rechdr', 'reclne'));
     }

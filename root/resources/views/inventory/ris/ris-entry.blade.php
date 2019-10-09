@@ -35,7 +35,7 @@
         <!-- /.box-header -->
         <div class="box-body" style="">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Invoice No</label>
                 @if($isnew)
@@ -45,7 +45,7 @@
                 @endif
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>RIS Date</label>
                 <div class="input-group date">
@@ -60,7 +60,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Office</label>
                 @if($isnew)
@@ -84,14 +84,49 @@
                 @endif
               </div>
             </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Reference</label>
+                @if($isnew)
+                <input type="text" class="form-control" name="txt_reference">
+                @else
+                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}">
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>RIS NO</label>
+                @if($isnew)
+                <input type="text" class="form-control" name="txt_ris_no">
+                @else
+                <input type="text" class="form-control" name="txt_ris_no" value="{{$rechdr->ris_no}}">
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>SAI NO</label>
+                @if($isnew)
+                <input type="text" class="form-control" name="txt_sai_no">
+                @else
+                <input type="text" class="form-control" name="txt_sai_no" value="{{$rechdr->sai_no}}">
+                @endif
+              </div>
+            </div>
 
+          </div>
+          <div class="row">
             <div class="col-md-3">
               <div class="form-group">
                 <label>Requested By</label>                
                 @if($isnew)
-                  <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;"  data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" value="GIAN CARLO A. MIJARES" required>
+                  <input list="select_receivedfrom" name="select_receivedfrom" style="width: 100%;"  data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Requested By is required.</strong>" value="GIAN CARLO A. MIJARES" required>
                 @else
-                  <input list="select_receivedfrom" name="select_receivedfrom" value="{{$rechdr->are_receivedfrom}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Received From is required.</strong>" required>
+                  <input list="select_receivedfrom" name="select_receivedfrom" value="{{$rechdr->are_receivedfrom}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Requested By is required.</strong>" required>
                 @endif  
 
                 <datalist id="select_receivedfrom">
@@ -102,48 +137,14 @@
                 <span id="validate_selectreceivedfrom"></span>
               </div>
             </div>
-            
-          </div>
-          <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Reference</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_reference">
-                @else
-                <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}">
-                @endif
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>RIS NO</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_ris_no">
-                @else
-                <input type="text" class="form-control" name="txt_ris_no" value="{{$rechdr->ris_no}}">
-                @endif
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>SAI NO</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_sai_no">
-                @else
-                <input type="text" class="form-control" name="txt_sai_no" value="{{$rechdr->sai_no}}">
-                @endif
-              </div>
-            </div>
-            
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Personnel to Received</label>
+                <label>Requested By Designation</label>
 
                 @if($isnew)
-                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Requested By Designation is required.</strong>" required>
                 @else
-                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" value="{{$rechdr->are_receivedfromdesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                  <input list="select_receivedfromdesig" name="select_receivedfromdesig" value="{{$rechdr->are_receivedfromdesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Requested By Designation is required.</strong>" required>
                 @endif
 
                 <datalist id="select_receivedfromdesig">
@@ -154,7 +155,41 @@
                 <span id="validate_selectreceivedfromdesig"></span>
               </div>
             </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Personnel to Received</label>                
+                @if($isnew)
+                  <input list="select_receivedby" name="select_receivedby" style="width: 100%;"  data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Personnel to Received is required.</strong>" required>
+                @else
+                  <input list="select_receivedby" name="select_receivedby" value="{{$rechdr->are_receivedby}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Personnel to Received is required.</strong>" required>
+                @endif  
 
+                <datalist id="select_receivedby">
+                  @foreach($are_users as $au)
+                    <option value="{{$au->name}}">
+                  @endforeach
+                </datalist>
+                <span id="validate_selectreceivedby"></span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Personnel to Received Designation</label>
+
+                @if($isnew)
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Personnel to Received Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Personnel to Received Designation is required.</strong>" required>
+                @endif
+
+                <datalist id="select_receivedbydesig">
+                  @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                  @endforeach
+                </datalist>
+                <span id="validate_selectreceivedbydesig"></span>
+              </div>
+            </div>
           </div>
           <!-- /.row -->
         </div>
@@ -640,7 +675,9 @@
                       ris_no: $('input[name="txt_ris_no"]').val(),
                       sai_no: $('input[name="txt_sai_no"]').val(),
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
-                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val()
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                      receivedby: $('input[name="select_receivedby"]').val(),
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                    };
 
            $.ajax({
@@ -656,7 +693,7 @@
                               }
                               else
                               {
-                                alert('ERROR in saving.');
+                                alert(flag);
                               }
                            }
                   });
@@ -679,6 +716,8 @@
                       sai_no: $('input[name="txt_sai_no"]').val(),
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                      receivedby: $('input[name="select_receivedby"]').val(),
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val()
 
                    };
 
