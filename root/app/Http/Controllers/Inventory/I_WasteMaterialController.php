@@ -251,11 +251,11 @@ class I_WasteMaterialController extends Controller
       return $flag;
     }
 
-    // public function print($code)
-    // {
-    //   $rechdr = Inventory::getReceivingPOHeader($code);
-    //   $reclne = Inventory::getReceivingPOLine($code);
+    public function print($code)
+    {
+      $rechdr = Inventory::getTOHeader($code);
+      $reclne = Inventory::getTOLine($code);
 
-    //   return view('inventory.receivingpo-print', compact('rechdr', 'reclne'));
-    // }
+      return view('inventory.wastematerial.wastematerial-print', compact('rechdr', 'reclne'));
+    }
 }
