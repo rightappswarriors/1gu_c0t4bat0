@@ -20,43 +20,52 @@
 		          <table style="border: 1px solid #000;"  id="tbl_list" class="table table-bordered table-striped">
 		              <thead>
 		                <tr>
-		                  <div class="image">
+		                  <th class="text-right" style="border: none !important;">
+		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" width="145"></th>
 		                  <th style="border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-		                  <th style="border: none !important;">
-		                    <center><h3>REPUBLIC OF THE PHILIPPINES</h3><h3>PROVINCE OF NEGROS ORIENTAL</h3><h3>CITY OF GUIHULNGAN</h4></center></th>
-		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
-		                </div>
+		                    <center><h4>REPUBLIC OF THE PHILIPPINES</h4><h4>PROVINCE OF NEGROS ORIENTAL</h4><h4>CITY OF GUIHULNGAN</h4></center></th>
+		                  <th class="text-left" style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle " alt="logo" width="130"></th>
+		                </tr>
+		                <tr>
+		                	<th colspan="3" class="text-center" style="font-size: 18px;border-top: hidden !important">WASTE MATERIAL REPORT</th>
+		                </tr>
+		                <tr>
+		                	<th colspan="2">Place of Storage</th>
+		          			<th>Date:</th>
+		                </tr>
+		                <tr>
+		                	<th colspan="2">ITEMS FOR DISPOSAL</th>
+		                	<th>Control #:</th>
 		                </tr>
 		              </thead>
-		          </table>
-
-		          <div class="row">
-		          	<div class="col-md-12">
-		          		<h3><b><center>TURN OVER OF PROPERTY ACCOUNTABILITIES</center></b></h3>
-		          	</div>
-		          	<div class="col-md-12 text-right">
-		          			<h4><b>TURN OVER DATE: {{$rechdr->to_date}}</b></h4>
-		          	</div>		          	
-		          </div>
-		          <br>
-
+		          </table>		      
 		          <table  class="table table-bordered table-striped">
 		            <thead>
+		            	<tr>
+		            		<th width="10%" class="text-center" nowrap style="font-size:14px;border-bottom: hidden !important">ITEM</th>
+			                 <th width="10" class="text-center" style="font-size:14px;border-bottom: hidden !important">QTY.</th>
+			                 <th width="10" class="text-center" style="font-size:15px;border-bottom: hidden !important">UNIT</th>
+			                 <th nowspan class="text-center" style="font-size:15px;border-bottom: hidden !important">DESCRIPTION</th>
+		            		<th colspan="2" class="text-center">RECORD OF SALES</th>
+		            	</tr>
 		            <tr>
-		                 <th style="white-space: nowrap;font-size:14px;"><center>ARTICLE</center> No.</th>
-		                 <th style="white-space: nowrap;font-size:14px;"><center>QTY.</center></th>
-		                 <th style="width:50%;font-size:15px;"><center>Description</center></th>
-		                 <th nowspan style="width:25%;font-size:15px;"><center>REMARKS</center></th>
+		                 <th></th>
+		                 <th></th>
+		                 <th></th>
+		                 <th></th>
+		                 <th width="15%" class="text-center">OR NO.</th>
+		                 <th width="15%" class="text-center">Amount</th>
 		            </tr>
 		          </thead>
 		            <tbody>
 	              @foreach($reclne as $rl)
 		            <tr>
-		                 <td>{{$rl->to_article}}</td>
-		                 <td>{{$rl->recv_qty}}</td>
-		                 <td>{{$rl->item_desc}}</td>
-		                 <td>{{$rl->notes}}</td>
+		                <td></td>
+		                <td></td>
+		                <td></td>
+		                <td></td>
+		                <td></td>
+		                <td></td>
 		            </tr>
 		            @endforeach 	
 		            </tbody>
@@ -72,21 +81,40 @@
 		          </table>
 
 		          <table class="table table-bordered table-striped">
-		            <th rowspan="3">
-		             	<h4><left>Received By: </h4></left>
-		             	<br>
-		              <div><center>{{$rechdr->to_by}}<br>_____________________________</center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
-		              <br>
-					<div><center>{{$rechdr->cc_desc}}<br>_____________________________</center></div><div><center><font size="1">Postion/Office</font></center></div>
+		          	<tr>
+		          		<th rowspan="3">
+		             	<h4>Certified Correct:</h4><center><strong>GIAN CARLO A. MIJARES</strong><br>City Administrator/GSO Designate <br> Property Officer	</center>
+		             	
 		             </th>
 		             <th rowspan="3">
-		             	<h4><left> Received From: </left></h4> 
-		             	&nbsp;&nbsp;
-		             	&nbsp;&nbsp;&nbsp;&nbsp;
-		              <div><font size="2"><center><b>{{$rechdr->to_receivedby}}</b><br>_____________________________</center></font></div>
-		              <div><font size="2"><center><i>City Administration/ GSO Designate</i></center></font></div>
-		             </th>
-		           </tr>	
+		             	<h4><left> Disposal Approved: </left></h4> 
+		             </th>	
+		          	</tr>
+		            
+		          </table>
+		          <hr style="border: none;border-top: 1px dashed black;">
+		          <div class="text-center"><strong><h5><i>CERTIFICATE OF INSPECTION</i></h5></strong></div>
+		          <table class="table table-bordered table-striped">
+		          	<tr>
+		          		<td>To be filled up upon disposal 
+		          			<p style="margin: 0px !important;">I hereby certify that the proerty enumerated above was disposed of as follows:</p>
+		          			<p style="margin: 0px !important;">Item ____________________</p>
+		          			<p style="margin: 0px !important;">Item ____________________</p>
+		          			<p style="margin: 0px !important;">Item ____________________</p>
+		          			<p style="margin: 0px !important;">Item ____________________</p>
+		          		</td>
+		          		<td style="border-left: hidden !important; "><br>
+		          			<br>
+		          			<p style="margin: 0px !important;">Destroyed</p>
+		          			<p style="margin: 0px !important;">Sold at Private sale</p>
+		          			<p style="margin: 0px !important;">Sold at Public sale</p>
+		          			<p style="margin: 0px !important;">Transferred without ___________</p>
+		          		</td>
+		          	</tr>
+		          	<tr>
+		          		<td><h4>Property Inspector:</h4><center><strong>______________________</strong><br>Property Inspector</center></td>
+		          		<td><h4>Witness to:</td>
+		          	</tr>
 		          </table>
 		        </div>
 		      </div>
