@@ -83,7 +83,7 @@
 		             	<h4><left> Received From: </left></h4> 
 		             	&nbsp;&nbsp;
 		             	&nbsp;&nbsp;&nbsp;&nbsp;
-		              <div><font size="2"><center><b>{{$rechdr->to_receivedby}}</b><br>_____________________________</center></font></div>
+		              <div><font size="2"><center><b>{{-- {{$rechdr->to_receivedby}} --}}GIAN CARLO A. MIJARES</b><br>_____________________________</center></font></div>
 		              <div><font size="2"><center><i>City Administration/ GSO Designate</i></center></font></div>
 		             </th>
 		           </tr>	

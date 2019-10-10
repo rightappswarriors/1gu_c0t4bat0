@@ -51,7 +51,7 @@
                                     <span id="#validate__reference"></span>
                           </div>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                           <div class="form-group">
                             <label>Received By</label>
                                 @if($isnew)
@@ -61,7 +61,7 @@
                                 @endif
                                     <span id="#validate_to_receivedby"></span>
                           </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-3">
                           <div class="form-group">
                             <label>Turned Over By</label>
@@ -113,7 +113,7 @@
                                     </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <div class="form-group">
                                 <label>User ID</label>
                             @if($isnew)
@@ -123,7 +123,7 @@
                             @endif
                                 <span id="#validate_recipient"></span>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </form>
