@@ -24,6 +24,51 @@ class Inventory extends Model
 		}
     }
 
+    public static function getItemSearchTable($stockLocation, $branch) // items with qty
+    {
+        try 
+		{
+			$sql = "SELECT i.item_code, COALESCE(SUM(st.qty_in),0.00) - COALESCE(SUM(st.qty_out),0.00) AS qty_onhand_su, i.part_no, i.serial_no, i.tag_no, i.cartype, i.item_desc, iu.unit_shortcode AS sale_unit, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric AS regular, i.sc_price AS senior, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, CASE WHEN st.branch IS NULL THEN i.branch ELSE st.branch END AS branchcode, CASE WHEN branch.name IS NULL THEN ibranch.name ELSE branch.name END AS branchname, COALESCE(c_name, 'None') AS c_name, i.active AS active FROM rssys.items  i LEFT JOIN rssys.itmunit iu ON i.sales_unit_id=iu.unit_id LEFT JOIN rssys.brand b ON i.brd_code=b.brd_code LEFT JOIN rssys.itmgrp ig ON ig.item_grp=i.item_grp LEFT JOIN rssys.stkcrd st ON st.item_code=i.item_code LEFT JOIN rssys.whouse w ON w.whs_code=st.whs_code LEFT JOIN rssys.branch ON w.branch=branch.code LEFT JOIN rssys.branch ibranch ON i.branch=ibranch.code LEFT JOIN rssys.m07 m7 ON m7.c_code = i.supl_code WHERE i.active = 'true' AND w.whs_code = '$stockLocation' GROUP BY i.item_code, i.part_no, i.cartype, i.item_desc,iu.unit_shortcode, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric, i.sc_price, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, branchcode, branchname, c_name ORDER BY item_code";
+			
+			return DB::select(DB::raw($sql));
+		} 
+		catch (\Exception $e) 
+		{
+			return $e->getMessage();
+		}
+    }
+
+     public static function getBioItemSearchTable() // items with qty
+    {
+        try 
+		{
+			$sql = "SELECT i.item_code, COALESCE(SUM(st.qty_in),0.00) - COALESCE(SUM(st.qty_out),0.00) AS qty_onhand_su, i.part_no, i.serial_no, i.tag_no, i.cartype, i.item_desc, iu.unit_shortcode AS sale_unit, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric AS regular, i.sc_price AS senior, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, CASE WHEN st.branch IS NULL THEN i.branch ELSE st.branch END AS branchcode, CASE WHEN branch.name IS NULL THEN ibranch.name ELSE branch.name END AS branchname, COALESCE(c_name, 'None') AS c_name, i.active AS active FROM rssys.items  i LEFT JOIN rssys.itmunit iu ON i.sales_unit_id=iu.unit_id LEFT JOIN rssys.brand b ON i.brd_code=b.brd_code LEFT JOIN rssys.itmgrp ig ON ig.item_grp=i.item_grp LEFT JOIN rssys.stkcrd st ON st.item_code=i.item_code LEFT JOIN rssys.whouse w ON w.whs_code=st.whs_code LEFT JOIN rssys.branch ON w.branch=branch.code LEFT JOIN rssys.branch ibranch ON i.branch=ibranch.code LEFT JOIN rssys.m07 m7 ON m7.c_code = i.supl_code WHERE i.active = 'true' AND i.item_grp = 'BIO' GROUP BY i.item_code, i.part_no, i.cartype, i.item_desc,iu.unit_shortcode, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric, i.sc_price, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, branchcode, branchname, c_name ORDER BY item_code";
+			
+			return DB::select(DB::raw($sql));
+		} 
+		catch (\Exception $e) 
+		{
+			return $e->getMessage();
+		}
+    }
+
+    
+
+    public static function getItemSearchLine($stockLocation, $item_code) // items with qty
+    {
+        try 
+		{
+			$item_code = Core::get_nextincrementlimitchar($item_code-1,10);
+			$sql = "SELECT CASE WHEN s.trn_type='P' THEN 'STOCK-IN' WHEN s.trn_type='SR' THEN 'STOCK RELEASE' WHEN s.trn_type='A' THEN 'STOCK ADJUSTMENT' END AS trn_type_desc, s.trn_type, s.item_code, s.item_desc, s.unit, TO_CHAR(s.trnx_date, 'MM/DD/YYYY') AS trnx_date, s.reference, s.po_so, s.qty_in, s.qty_out, s.fcp, price, s.whs_code, s.supl_code, s.supl_name, s.cht_code, s.cnt_code, i.unit_shortcode, w.whs_desc FROM rssys.stkcrd s LEFT JOIN rssys.itmunit i ON s.unit=i.unit_id LEFT JOIN rssys.whouse w ON w.whs_code=s.whs_code LEFT JOIN rssys.items it ON it.item_code = s.item_code WHERE s.item_code='$item_code' AND s.whs_code= '$stockLocation' ORDER BY s.trnx_date, s.trn_type";
+			
+			return DB::select(DB::raw($sql));
+		} 
+		catch (\Exception $e) 
+		{
+			return $e->getMessage();
+		}
+    }
+
     public static function getReceivingPO()
     {
     	try
@@ -594,6 +639,55 @@ class Inventory extends Model
         	return $e->getMessage();
         }
     }
+
+    //BIOLOGY
+
+    //GET BIOLOGICAL ACQUSITION HEADER
+    public static function getBioAcq()
+    {
+    	try
+    	{
+    	   $sql = "SELECT * FROM rssys.biology_acquisitionhd WHERE cancel = 'false' ORDER BY code DESC ";
+   
+    	   return DB::select(DB::raw($sql));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
+
+    // GET BIOLOGICAL OF OFFSPRING HEADER
+    public static function getBioBoo()
+    {
+    	try
+    	{
+    	   $sql = "SELECT * FROM rssys.biology_offspringhd WHERE cancel = 'false' ORDER BY code DESC";
+   
+    	   return DB::select(DB::raw($sql));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
+
+    public static function getBioDispo()
+    {
+    	try
+    	{
+    	   $sql = "SELECT * FROM rssys.biology_dispositionhd WHERE cancel = 'false' ORDER BY code DESC";
+   
+    	   return DB::select(DB::raw($sql));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
     
     // get specific Stock In Transaction header.
     public static function getStockInHeader($rec_num)
@@ -609,6 +703,50 @@ class Inventory extends Model
 		}
 	}
 
+	public static function getBioAllHeader(){
+
+		$sql = "SELECT DISTINCT * FROM rssys.biology_acquisitionhd WHERE cancel = false UNION ALL SELECT DISTINCT * FROM rssys.biology_offspringhd WHERE cancel = false UNION ALL SELECT DISTINCT * FROM rssys.biology_dispositionhd WHERE cancel = false";
+			return DB::select(DB::raw($sql));
+	}
+
+	public static function getAcqCode($select_koa, $selected_fund){
+		$sql = "SELECT code FROM rssys.biology_acquisitionhd WHERE cancel = false AND kindofanimals = '$select_koa' AND fund = '$selected_fund'";
+			return DB::select(DB::raw($sql));
+	}
+
+	public static function getOffCode($select_koa, $selected_fund){
+		$sql = "SELECT code FROM rssys.biology_offspringhd WHERE cancel = false AND kindofanimals = '$select_koa' AND fund = '$selected_fund'";
+			return DB::select(DB::raw($sql));
+	}
+
+	public static function getDispoCode($select_koa, $selected_fund){
+		$sql = "SELECT code FROM rssys.biology_dispositionhd WHERE cancel = false AND kindofanimals = '$select_koa' AND fund = '$selected_fund'";
+			return DB::select(DB::raw($sql));
+	}
+
+	public static function getItemAcq($AcqCode){
+		$AcqCode = $AcqCode[0]->code;
+		$sql = "SELECT * FROM rssys.biology_acquistionln WHERE code = '$AcqCode'";	
+
+		return DB::select(DB::raw($sql));
+
+	}
+
+	public static function getItemOff($OffCode){
+		$OffCode = $OffCode[0]->code;
+		$sql = "SELECT * FROM rssys.biology_offspringln WHERE code = '$OffCode' ";
+
+		return DB::select(DB::raw($sql));
+	}
+
+	public static function getItemDispo($DispoCode){
+		$DispoCode = $DispoCode[0]->code;
+		$sql = "SELECT * FROM rssys.biology_dispositionln WHERE code = '$DispoCode'";
+
+		return DB::select(DB::raw($sql));
+	
+	}
+
     // get specific Stock In Transaction line.
 	public static function getStockInLine($rec_num) 
 	{
@@ -616,6 +754,113 @@ class Inventory extends Model
 		{
             $sql = 'SELECT rl.ln_num, rl.part_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code WHERE rec_num = \''.$rec_num.'\'';
             
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	    public static function getBioAcqHeader($code)
+	{	
+		try 
+		{
+			$sql = 'SELECT * FROM rssys.biology_acquisitionhd WHERE code = \''.$code.'\' ORDER BY code LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+    // get specific Stock In Transaction line.
+	public static function getBioAcqLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT bio.ln_num, bio.property_no, bio.item_code, bio.item_desc, bio.qty, bio.remarks, bio.date FROM rssys.biology_acquistionln bio  WHERE code = \''.$code.'\'';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+
+	public static function getBioBooHeader($code)
+	{	
+		try 
+		{
+			$sql = 'SELECT * FROM rssys.biology_offspringhd WHERE code = \''.$code.'\' ORDER BY code LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+	public static function getAllReports($select_koa, $selected_fund){
+
+		$sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.numberofoffspring as offspringqty, offspring.date as offdate, disposition.date as dispodate, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa' ";
+
+
+
+		return DB::select(DB::raw($sql));
+	}
+
+	public static function getAllHeader($select_koa, $selected_fund){
+		$sql = "SELECT acqln.item_code, acqln.item_desc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.numberofoffspring as offspringqty, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa' LIMIT 1 ";
+		$items = DB::select(DB::raw($sql));
+
+		$itemscounted = count($items);
+		if($itemscounted == 0){
+			return false;
+		}
+		else{
+			return DB::select(DB::raw($sql))[0];
+		}
+		
+	}	
+
+
+
+    // get specific Stock In Transaction line.
+	public static function getBioBooLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT * FROM rssys.biology_offspringln  WHERE code = \''.$code.'\'';
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function getBioDispoHeader($code)
+	{	
+		try 
+		{
+			$sql = 'SELECT * FROM rssys.biology_dispositionhd WHERE code = \''.$code.'\' ORDER BY code LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+    // get specific Stock In Transaction line.
+	public static function getBioDispoLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT * FROM rssys.biology_dispositionln  WHERE code = \''.$code.'\'';
             return DB::select(DB::raw($sql));
 		}
 		catch(\Exception $e)
@@ -726,6 +971,7 @@ class Inventory extends Model
 				            {
 						    	//Inventory::alert(1, 'modified  data in '.$module);
 						    }
+						    Core::alert(1, 'cancellatition of  data in '.$module); //Edited 10/3/19 -Don
 						    return true;
 				        }
 					}
@@ -742,6 +988,42 @@ class Inventory extends Model
 			Inventory::alert(0, '');
 			return false;
 		}
+	}
+
+	public static function cancelBioAcq($code, $module){
+
+        if(DB::table('rssys.biology_acquisitionhd')->where('code', $code)->update(['cancel' => true])){
+        	Core::alert(1, 'cancellatition of  data in '.$module);
+        	return true;
+        }
+        else{
+        	return false;
+        }
+
+
+
+	}
+
+	public static function cancelBioBoo($code, $module){
+
+        if(DB::table('rssys.biology_offspringhd')->where('code', $code)->update(['cancel' => true])){
+        	Core::alert(1, 'cancellatition of  data in birth of offspring');
+        	return true;
+        }
+        else{
+        	return false;
+        }
+	}
+
+	public static function cancelBioDispo($code, $module){
+
+        if(DB::table('rssys.biology_dispositionhd')->where('code', $code)->update(['cancel' => true])){
+        	Core::alert(1, 'cancellatition of  data in disposition');
+        	return true;
+        }
+        else{
+        	return false;
+        }
 	}
 
 	// get all RIS Transactions Header.
