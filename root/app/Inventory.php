@@ -1376,7 +1376,11 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 		{
 			//$sql = 'Select rec_num, _reference, to_date, to_by, cc_code, to_receivedby, trn_type, recipient, t_date, t_time From rssys.rechdr Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
-			$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			$sql = 'SELECT rh.to_date as date, m8.cc_desc as office, rh.to_by as turnoverby, rh.are_receivebydesig as designation FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$rec_num.'\' LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 

@@ -36,7 +36,7 @@
 		          		<h3><b><center>TURN OVER OF PROPERTY ACCOUNTABILITIES</center></b></h3>
 		          	</div>
 		          	<div class="col-md-12 text-right">
-		          			<h4><b>TURN OVER DATE: {{$rechdr->to_date}}</b></h4>
+		          			<h4><b>TURN OVER DATE: {{$rechdr->date}}</b></h4>
 		          	</div>		          	
 		          </div>
 		          <br>
@@ -55,7 +55,7 @@
 		            <tr>
 		                 <td>{{$rl->to_article}}</td>
 		                 <td>{{$rl->recv_qty}}</td>
-		                 <td>{{$rl->item_desc}}</td>
+		                 <td><textarea>{{$rl->item_desc}}</textarea></td>
 		                 <td>{{$rl->notes}}</td>
 		            </tr>
 		            @endforeach 	
@@ -63,21 +63,21 @@
 		          </table>
 
 
-		          <table  class="table table-bordered table-striped">
-		            <tfoot>
-		              <tr>
-		                {{-- <th colspan="8">Office/Department: {{$are_header->office}}</th> --}}
-		              </tr>
-		            </tfoot>
-		          </table>
+		          <table  class="table table-bordered table-striped" style="margin:8px 0 8px 0 !important;">
+                    <tfoot>
+                      <tr>
+                        <th colspan="8">Office/Department: {{$rechdr->office}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
 
 		          <table class="table table-bordered table-striped">
 		            <th rowspan="3">
 		             	<h4><left>Received By: </h4></left>
 		             	<br>
-		              <div><center>{{$rechdr->to_by}}<br>_____________________________</center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
+		              <div><center>{{$rechdr->turnoverby}}<br>_____________________________</center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
 		              <br>
-					<div><center>{{$rechdr->cc_desc}}<br>_____________________________</center></div><div><center><font size="1">Postion/Office</font></center></div>
+					<div><center>{{$rechdr->designation}}<br>_____________________________</center></div><div><center><font size="1">Postion/Office</font></center></div>
 		             </th>
 		             <th rowspan="3">
 		             	<h4><left> Received From: </left></h4> 
