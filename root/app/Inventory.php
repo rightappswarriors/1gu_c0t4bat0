@@ -1280,6 +1280,36 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 		}
 	}
 
+	// print Waste Material Header.
+	public static function printWasteMaterialHeader($code)
+	{
+		try
+		{
+			$sql = 'SELECT m8.cc_desc as placeofstorage, wh.trnx_date as date, wh.certified_correct, wh.disposal_approved FROM rssys.wastematerialhdr wh LEFT JOIN rssys.m08 m8 ON wh.cc_code = m8.cc_code WHERE wh.code = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// print Waste Material line.
+	public static function printWasteMaterialLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\' ORDER BY CAST(wm.ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
 	// get specific ARE Transaction header.
     public static function getAREHeader($rec_num)
 	{	

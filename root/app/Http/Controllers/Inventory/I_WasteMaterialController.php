@@ -253,9 +253,9 @@ class I_WasteMaterialController extends Controller
 
     public function print($code)
     {
-      $rechdr = Inventory::getTOHeader($code);
-      $reclne = Inventory::getTOLine($code);
+      $header = Inventory::printWasteMaterialHeader($code);
+      $line = Inventory::printWasteMaterialLine($code);
 
-      return view('inventory.wastematerial.wastematerial-print', compact('rechdr', 'reclne'));
+      return view('inventory.wastematerial.wastematerial-print', compact('header', 'line'));
     }
 }

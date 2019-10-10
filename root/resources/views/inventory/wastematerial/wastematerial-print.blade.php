@@ -30,8 +30,8 @@
 		                	<th colspan="3" class="text-center" style="font-size: 18px;border-top: hidden !important">WASTE MATERIAL REPORT</th>
 		                </tr>
 		                <tr>
-		                	<th colspan="2">Place of Storage</th>
-		          			<th>Date:</th>
+		                	<th colspan="2">Place of Storage: {{$header->placeofstorage}}</th>
+		          			<th>Date: {{$header->date}}</th>
 		                </tr>
 		                <tr>
 		                	<th colspan="2">ITEMS FOR DISPOSAL</th>
@@ -58,14 +58,14 @@
 		            </tr>
 		          </thead>
 		            <tbody>
-	              @foreach($reclne as $rl)
+	              @foreach($line as $l)
 		            <tr>
-		                <td></td>
-		                <td></td>
-		                <td></td>
-		                <td></td>
-		                <td></td>
-		                <td></td>
+		                <td>{{$l->ln_num}}</td>
+		                <td>{{number_format($l->qty)}}</td>
+		                <td>{{$l->unit_shortcode}}</td>
+		                <td>{{$l->item_desc}}</td>
+		                <td>{{$l->or_no}}</td>
+		                <td>{{number_format($l->price, 2)}}</td>
 		            </tr>
 		            @endforeach 	
 		            </tbody>
@@ -87,7 +87,7 @@
 		             	
 		             </th>
 		             <th rowspan="3">
-		             	<h4><left> Disposal Approved: </left></h4> 
+		             	<h4><left> Disposal Approved: {{$header->disposal_approved}}</left></h4> 
 		             </th>	
 		          	</tr>
 		            
