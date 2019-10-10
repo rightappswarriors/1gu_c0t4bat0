@@ -28,8 +28,8 @@
 		                  <th>Code No.</th>
 		                  <th>Turn over date</th>
 		                  <th>Turn Over by</th>
-		                  <th>Position/Office</th>
-		                  <th>Received by</th>
+		                  <th>Position/Office</th>{{-- 
+		                  <th>Received by</th> --}}
 		                  <th>Option</th>
 		                </tr>
 		                </thead>
@@ -41,8 +41,8 @@
 		                  <td>{{$d->to_date}}</td>
 		                  <td>{{$d->to_by}}</td>
 		                  <td>{{$d->cc_desc}}</td>
-		                  <td>{{$d->to_receivedby}}</td>
-		                  <td>
+		                  {{-- <td>{{$d->to_receivedby}}</td>
+ --}}		                  <td>
 		                    <center>
 		                      <a class="btn btn-social-icon btn-warning" href="{{route('inventory.turnover_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.turnover_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;
 		                      <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a>

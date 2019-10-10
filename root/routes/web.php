@@ -483,6 +483,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 		    		Route::match(['get', 'post'], '/wastematerial_add', 'Inventory\I_WasteMaterialController@add')->name('inventory.wastematerial_add');
 		    		Route::match(['get', 'post'], '/wastematerial_edit/{code}', 'Inventory\I_WasteMaterialController@edit')->name('inventory.wastematerial_edit');
 		    		Route::get('/wastematerial_cancel/{code}', 'Inventory\I_WasteMaterialController@cancel')->name('inventory.wastematerial_cancel');
+		    		Route::get('/print/{code}', 'Inventory\I_WasteMaterialController@print')->name('inventory.wastematerial_print');
 		    	});
 		    });
 		/* ----- WASTE MATERIAL */
@@ -802,7 +803,7 @@ Route::get('temporary/{page}', 'HomeController@tempPage');
 // Link to get all session
 Route::get('session-all', 'HomeController@SessionAll');
 Route::get('/test', function(){
-	return view('report.collection.ROCADdailyperuser');
+	return view('report.collection.test');
 });
 // Link to pages with no controller (Must be at the bottom)
 Route::get('{page}', 'HomeController@page');

@@ -56,6 +56,8 @@ class I_TurnOverController extends Controller
             $cc_code = $request->cc_code;
             $to_date = $request->to_date;                 
             $recipient = $request->recipient;
+            $receivedbydesig = $request->receivedbydesig;
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
             
 
             $data = ['rec_num' => $code,
@@ -67,7 +69,8 @@ class I_TurnOverController extends Controller
                      'recipient' => strtoupper(Session::get('_user')['id']),
                      'trn_type' => $this->stk_trns_type,
                      't_date' => $datetime->toDateString(),
-                     't_time' => $datetime->toTimeString()
+                     't_time' => $datetime->toTimeString(),
+                     'are_receivebydesig' => $receivedbydesig
                     ];
 
             $insertHeader = Core::insertTable($table, $data, $this->module);
@@ -164,6 +167,9 @@ class I_TurnOverController extends Controller
             $cc_code = $request->cc_code;
             $to_date = $request->to_date;                 
             $recipient = $request->recipient;
+
+            $receivedbydesig = $request->receivedbydesig;
+            Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
             
           $data = ['rec_num' => $code,
             		 '_reference' => $_reference,
@@ -174,7 +180,8 @@ class I_TurnOverController extends Controller
                      'recipient' => strtoupper(Session::get('_user')['id']),
                      'trn_type' => $this->stk_trns_type,
                      't_date' => $datetime->toDateString(),
-                     't_time' => $datetime->toTimeString()
+                     't_time' => $datetime->toTimeString(),
+                     'are_receivebydesig' => $receivedbydesig
                     ];
 
           $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);

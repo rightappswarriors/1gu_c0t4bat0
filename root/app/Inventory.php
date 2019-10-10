@@ -788,6 +788,36 @@ class Inventory extends Model
         }
     }
 
+    // RIS Print Header
+    public static function printRISHeader($code)
+    {
+    	try
+    	{
+    	   $sql = 'SELECT m8.cc_desc as office, rh.cc_code as office_code, rh.ris_no, rh.sai_no, rh.trnx_date as date, rh.are_receivedfrom as requestedby, rh.are_receivedfromdesig as requestedbydesig, rh.are_receivedby as receivedby, rh.are_receivebydesig as receivedbydesig FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$code.'\'';
+   
+    	   return DB::select(DB::raw($sql))[0];
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
+    // RIS Print Line
+    public static function printRISLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\'';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
     // use for incremental of code with string
     public static function get_nextincrementwithchar($val)
     {
@@ -811,7 +841,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig, are_receivedby, are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1011,7 +1041,7 @@ class Inventory extends Model
     	{
     		//$sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull)";
 
-    	   $sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull) AND approve = 'true'";
+    	   $sql = "SELECT x08.uid, rec_num, _reference, trnx_date, ris_no, sai_no, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, x08.opr_name as nameofpersonnel FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid JOIN rssys.x08 ON x08.uid = rh.personnel WHERE trn_type = 'R' AND (rh.cancel != 'Y' OR rh.cancel isnull) AND approve = 'true'";
    
     	   return DB::select(DB::raw($sql));
         }
@@ -1041,7 +1071,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, trnx_date, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, x08.opr_name as nameofpersonnel FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid join rssys.x08 on x08.uid = rh.personnel WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1197,7 +1227,7 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 	{
 		try
 		{
-            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\'';
+            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no, wm.estimated FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\'';
             
             return DB::select(DB::raw($sql));
 		}
@@ -1247,6 +1277,36 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 			return $e->getMessage();
 			Inventory::alert(0, '');
 			return false;
+		}
+	}
+
+	// print Waste Material Header.
+	public static function printWasteMaterialHeader($code)
+	{
+		try
+		{
+			$sql = 'SELECT m8.cc_desc as placeofstorage, wh.trnx_date as date, wh.certified_correct, wh.disposal_approved FROM rssys.wastematerialhdr wh LEFT JOIN rssys.m08 m8 ON wh.cc_code = m8.cc_code WHERE wh.code = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// print Waste Material line.
+	public static function printWasteMaterialLine($code) 
+	{
+		try
+		{
+            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no, wm.estimated FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\' ORDER BY CAST(wm.ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
 		}
 	}
 
@@ -1316,7 +1376,11 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 		{
 			//$sql = 'Select rec_num, _reference, to_date, to_by, cc_code, to_receivedby, trn_type, recipient, t_date, t_time From rssys.rechdr Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
-			$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			$sql = 'SELECT rh.to_date as date, m8.cc_desc as office, rh.to_by as turnoverby, rh.are_receivebydesig as designation FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$rec_num.'\' LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 

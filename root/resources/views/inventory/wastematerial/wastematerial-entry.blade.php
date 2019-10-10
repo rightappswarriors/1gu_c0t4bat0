@@ -90,7 +90,12 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Certified Correct</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_certifiedCorrect" data-parsley-errors-container="#validate_certifiedCorrect" data-parsley-required-message="<strong>Certified Correct is required.</strong>" required>
+                @if($isnew)
+                <input type="text" class="form-control" name="select_certifiedCorrect" value="GIAN CARLO A. MIJARES" disabled="">
+                @else
+                  <input type="text" class="form-control" name="txt_code" maxlength="9" value="{{$datahdr->certified_correct}}" disabled="">
+                @endif
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_certifiedCorrect" data-parsley-errors-container="#validate_certifiedCorrect" data-parsley-required-message="<strong>Certified Correct is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Certified Correct ---</option>
                     @foreach($x08 as $x8)
@@ -106,13 +111,18 @@
                     @endforeach
                   @endif
                 </select>
-                 <span id="validate_certifiedCorrect"></span>
+                 <span id="validate_certifiedCorrect"></span> --}}
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Disposal Approved</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_disposalApproved" data-parsley-errors-container="#validate_disposalApproved" data-parsley-required-message="<strong>Disposal Approved is required.</strong>" required>
+                @if($isnew)
+                <input type="text" class="form-control" name="select_disposalApproved">
+                @else
+                  <input type="text" class="form-control" name="txt_code" maxlength="9" value="{{$datahdr->disposal_approved}}">
+                @endif
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_disposalApproved" data-parsley-errors-container="#validate_disposalApproved" data-parsley-required-message="<strong>Disposal Approved is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Disposal Approved ---</option>
                     @foreach($x08 as $x8)
@@ -128,7 +138,7 @@
                     @endforeach
                   @endif
                 </select>
-                 <span id="validate_disposalApproved"></span>
+                 <span id="validate_disposalApproved"></span> --}}
               </div>
             </div>
             <div class="col-md-3">
@@ -266,6 +276,7 @@
                   <th>Unit Desc</th>
                   <th>Price</th>
                   <th>Or No</th>
+                  <th>Estimated Useful Life</th>
                   <th>Actions</th>
                 </tr>
                 </thead>
@@ -284,6 +295,7 @@
                     <td>{{$dl->unit_shortcode}}</td>
                     <td>{{$dl->price}}</td>
                     <td>{{$dl->or_no}}</td>
+                    <td>{{$dl->estimated}}</td>
                     <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$dl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$dl->ln_num}});"></i></a></center>
                   </td>
                   </tr>  
@@ -416,6 +428,14 @@
                             <div class="form-group">
                               <label>OR NO</label>
                               <input id="txt_price" type="text" class="form-control" name="txt_orno" placeholder="0.00">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Estimated Useful Life</label>
+                              <input id="txt_estimated" type="text" class="form-control" name="txt_estimated">
                             </div>
                           </div>
                         </div>
@@ -557,6 +577,7 @@
           $('select[name="select_unit"]').val(data[7]).trigger('change');
           $('input[name="txt_price"]').val(data[9]);
           $('input[name="txt_orno"]').val(data[10]);
+          $('input[name="txt_estimated"]').val(data[11]);
 
           $('#enteritem-modal').modal('toggle');
 
@@ -593,6 +614,7 @@
         var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
         var price = $('input[name="txt_price"]').val();
         var orno = $('input[name="txt_orno"]').val();
+        var estimated = $('input[name="txt_estimated"]').val();
         var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
@@ -601,12 +623,12 @@
         if($('#ENTER_ITEM').text() == 'Add')
         {
 
-        table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, price, orno, buttons]).draw();
+        table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, price, orno, estimated, buttons]).draw();
 
         }
         else if($('#ENTER_ITEM').text() == 'Edit')
         {
-          table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, price, orno, buttons]).draw();
+          table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, price, orno, estimated, buttons]).draw();
         }
         else // remove item
         {
@@ -706,6 +728,7 @@
         $('select[name="select_unit"]').val('').trigger('change');
         $('input[name="txt_price"]').val('');
         $('input[name="txt_orno"]').val('');
+        $('input[name="txt_estimated"]').val('');
       }
 
       function Save()
@@ -724,8 +747,10 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
                           office: $('select[name="select_office"]').select2('data')[0].id,
-                          certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
-                          disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
+                          certifiedCorrect: $('input[name="select_certifiedCorrect"]').val(),
+                          disposalApproved: $('input[name="select_disposalApproved"]').val(),
+                          // certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
+                          // disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
                        };
 
             $.ajax({
@@ -772,8 +797,10 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
                           office: $('select[name="select_office"]').select2('data')[0].id,
-                          certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
-                          disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
+                          certifiedCorrect: $('input[name="select_certifiedCorrect"]').val(),
+                          disposalApproved: $('input[name="select_disposalApproved"]').val(),
+                          // certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
+                          // disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
                          };
 
               $.ajax({

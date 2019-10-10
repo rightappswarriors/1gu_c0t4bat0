@@ -34,12 +34,13 @@
 	<div class="row">
 		<div ><center><b><h3>INVENTORY CUSTODIAN SLIP</h3></b></center></div>
 	
-           		<table  border="0">
-		            <tfoot>
+           		<table  class="table" style="border: hidden !important;margin: 0 !important;">
+		            <thead>
 		              <tr>
-		                <th colspan="8">ICS No: {{$rechdr->rec_num}}</th>
+		                <th></th>
+		                <th style="	border: hidden !important;" width="20%">ICS No: {{$rechdr->rec_num}}</th>
 		              </tr>
-		            </tfoot>
+		            </thead>
 		          </table>
 		      </div>
 		      </div>
@@ -80,8 +81,8 @@
 
 		             <th rowspan="3">
 		             	<h4><left>Received By: </h4></left>
-		              <div><center>____________________</center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
-		              <div><center>____________________</center></div><div><center><font size="1">Postion/Office</font></center></div>
+		              <div><center><u>{{$rechdr->nameofpersonnel}}</u></center></div><div><center><font size="1">Signature Over Printed Name</font></center></div>
+		              <div><center><u>{{$rechdr->cc_code}}</u></center></div><div><center><font size="1">Postion/Office</font></center></div>
 		              <div><center>____________________</center></div><div><center><font size="1">Date</font></center></div>
 		             </th>
 		             <th rowspan="3">
