@@ -75,8 +75,8 @@
 		                 <td>{{$rl->ln_num}}</td>
 		                 <td>{{$rl->unit_desc}}</td>
 		                 <td>{{$rl->item_desc}}</td>
-		                 <td>{{$rl->qty}}</td>
-		                 <td></td>
+		                 <td>{{number_format($rl->qty, 2)}}</td>
+		                 <td>{{number_format($rl->qty, 2)}}</td>
 		                 <td></td>
 		            </tr>
 		            @endforeach 	
