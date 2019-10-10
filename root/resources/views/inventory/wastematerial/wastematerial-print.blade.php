@@ -47,6 +47,7 @@
 			                 <th width="10" class="text-center" style="font-size:15px;border-bottom: hidden !important">UNIT</th>
 			                 <th nowspan class="text-center" style="font-size:15px;border-bottom: hidden !important">DESCRIPTION</th>
 		            		<th colspan="2" class="text-center">RECORD OF SALES</th>
+		            		<th width="10" class="text-center" style="font-size:15px;border-bottom: hidden !important">ESTIMATED USEFUL</th>
 		            	</tr>
 		            <tr>
 		                 <th></th>
@@ -55,6 +56,7 @@
 		                 <th></th>
 		                 <th width="15%" class="text-center">OR NO.</th>
 		                 <th width="15%" class="text-center">Amount</th>
+		                 <th></th>
 		            </tr>
 		          </thead>
 		            <tbody>
@@ -66,6 +68,7 @@
 		                <td>{{$l->item_desc}}</td>
 		                <td>{{$l->or_no}}</td>
 		                <td>{{number_format($l->price, 2)}}</td>
+		                <td>{{$l->estimated}}</td>
 		            </tr>
 		            @endforeach 	
 		            </tbody>

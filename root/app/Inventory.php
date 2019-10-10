@@ -1227,7 +1227,7 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 	{
 		try
 		{
-            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\'';
+            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no, wm.estimated FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\'';
             
             return DB::select(DB::raw($sql));
 		}
@@ -1300,7 +1300,7 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 	{
 		try
 		{
-            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\' ORDER BY CAST(wm.ln_num as integer)';
+            $sql = 'SELECT wm.code, wm.ln_num, wm.item_code, i.part_no, i.serial_no, i.tag_no, wm.item_desc, wm.unit, it.unit_shortcode, wm.qty, wm.price, wm.or_no, wm.estimated FROM rssys.wastemateriallne wm LEFT JOIN rssys.items i ON wm.item_code = i.item_code LEFT JOIN rssys.itmunit it ON wm.unit = it.unit_id WHERE wm.code = \''.$code.'\' ORDER BY CAST(wm.ln_num as integer)';
             
             return DB::select(DB::raw($sql));
 		}
