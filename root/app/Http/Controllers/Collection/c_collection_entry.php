@@ -13,6 +13,9 @@ class c_collection_entry extends Controller
 {
 	public function __construct()
     {
+        $this->retArr = [];
+        $SQLrp_class = "SELECT * FROM rssys.rp_class  WHERE active = TRUE";
+        $this->rp_class = Core::sql($SQLrp_class);
         $SQLm05 = "SELECT * FROM rssys.m05  WHERE active = TRUE";
         $this->m05 = Core::sql($SQLm05);
         $SQLm06 = "SELECT * FROM rssys.m06  WHERE active = TRUE";
@@ -21,27 +24,13 @@ class c_collection_entry extends Controller
         $this->m10 = Core::getAll('rssys.m10');
         $this->soa = Core::getAll('rssys.soalne');
         $this->fund = Core::getAll('rssys.fund');
-        $sql = "SELECT empid, CONCAT(lastname, ', ', firstname, ' ', mi) AS name FROM hris.hr_employee WHERE hris.hr_employee.positions = 'CSH'";
+        $sql = "SELECT uid, opr_name AS name FROM rssys.x08 WHERE rssys.x08.grp_id = '005'";
         $this->cashiers = Core::sql($sql);
         $SQLM04 =   "SELECT * FROM rssys.m04 WHERE active = TRUE AND payment = 'Y'";
         $SQLM04_2 = "SELECT * FROM rssys.m04 WHERE active = TRUE AND payment = 'N'";
         $this->m04 = DB::select($SQLM04);
         $this->m04_2 = DB::select($SQLM04_2);
-        // SOOO LAG
-        $data = DB::select("SELECT * FROM rssys.or_issuance ORDER BY or_no DESC");
-        $this->retArr = []; $min = ""; $max = "";
-        if(count($data) > 0) {
-            for($j = 0; $j < count($data); $j++)
-            {
-                $min = $data[$j]->or_no; $max = $data[$j]->or_no_to;
-                if(isset($min) && isset($max)) { for($i = intval($min); $i <= intval($max); $i++) {
-                    $n_or_no = str_pad($i, strlen($data[$j]->or_no), "0", STR_PAD_LEFT);
-                    if(count(DB::select("SELECT * FROM rssys.colhdr WHERE or_no = '$n_or_no'")) < 1) {
-                        array_push($this->retArr, $n_or_no);
-                    }
-                } }
-            }
-        }
+        
         // $this->retArr2 = array_reverse($this->retArr);
         // sort($this->retArr2);
         // SOOO LAG
@@ -99,6 +88,23 @@ class c_collection_entry extends Controller
     }
     public function new() // TO VIEW NEW COLLECTION ENTRY 
     {
+        // SOOO LAG
+
+
+        $data = DB::select("SELECT * FROM rssys.or_issuance ORDER BY or_no DESC");
+        $min = ""; $max = "";
+        if(count($data) > 0) {
+            for($j = 0; $j < count($data); $j++)
+            {
+                $min = $data[$j]->or_no; $max = $data[$j]->or_no_to;
+                if(isset($min) && isset($max)) { for($i = intval($min); $i <= intval($max); $i++) {
+                    $n_or_no = str_pad($i, strlen($data[$j]->or_no), "0", STR_PAD_LEFT);
+                    if(count(DB::select("SELECT * FROM rssys.colhdr WHERE or_no = '$n_or_no'")) < 1) {
+                        array_push($this->retArr, $n_or_no);
+                    }
+                } }
+            }
+        }
         // return dd($this->retArr);
     	return view('collection.collection_collection_entry_new', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'm04'=>$this->m04, 'm04_2' => $this->m04_2, 'or_num' =>$this->retArr]);
     }
@@ -262,11 +268,10 @@ class c_collection_entry extends Controller
                              'payment_type' => $r->typ[$i],
                              'payer' => $r->payer[$i],
                          ];
-                     if (Core::insertTable('rssys.collne2', $insertIntoBgt02, 'Collection Entry')) {
-                     } else {
+                     if (Core::insertTable('rssys.collne2', $insertIntoBgt02, 'Collection Entry') != true) {
                          return 'ERROR';
                          break;
-                     }
+                     } 
                  }
                  return 'DONE';
             }
@@ -280,8 +285,8 @@ class c_collection_entry extends Controller
     // }
     public function import_view() // TO VIEW COLLECTION ENTRY IMPORT
     {
-        // return dd($this->retArr2);
-        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->m04_2, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06]);
+        // return dd($this->retArr2)
+        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->m04_2, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06, 'real' => $this->rp_class]);
     }
     public function import(Request $r) // TO IMPORT CSV FILE
     {
@@ -456,6 +461,67 @@ class c_collection_entry extends Controller
     }
     public function saveImport(Request $r) // TO SAVE THE IMPORTED CSV FILE
     {
+        if(isset($r->hd_or_num)){
+            for ($i=0; $i < count($r->hd_or_num); $i++) { 
+                $dt = Carbon::now();
+                $b_num = Core::getm99One('col_code');
+                $fromImport = $r->hd_jr[$r->hd_or_num[$i]];
+                $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$fromImport'";
+                $testData = Core::sql($sql00);
+                $insertIntoBgt01 =
+                [
+                    'col_code' => $b_num->col_code,
+                    'debt_code' => ($r->hd_cust[$r->hd_or_num[$i]] ?? 'NOT SET'),
+                    'debt_name' => (DB::table('rssys.m06')->where('d_code',$r->hd_cust[$r->hd_or_num[$i]])->select('d_name')->first()->d_name ?? 'NOT FOUND'),
+                    'trnx_date' => ($r->hd_dt[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
+                    'or_type' => ($r->hd_or_typ[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
+                    'or_ref' => 'From Import',
+                    'coll_code' => $r->hdr_cash,
+                    'jrnlz' => 'N',
+                    'cancel' => 'N',
+                    'user_id' => strtoupper(Session::get('_user')['id']),
+                    't_date' => $dt->toDateString(),
+                    't_time' => $dt->toTimeString(),
+                    'j_code' => $fromImport,
+                    'j_num' => $testData[0]->j_num,
+                    't_ipaddress' => request()->ip(),
+                    'fid' => ($r->hd_fund[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
+                    'rptype' => ($r->hd_real_property[$r->hd_or_num[$i]] ?? 'NOT SET'),
+                    'or_no' => $r->hd_or_num[$i], // get this
+                ];
+                if (Core::insertTable('rssys.colhdr', $insertIntoBgt01, 'Collection Entry') == true) {
+                    Core::updatem99('col_code', Core::get_nextincrementlimitchar($b_num->col_code, 8));
+                    if (count($r->hiddentax_typ_id[$r->hd_or_num[$i]])) {
+                         for ($k=0, $j = 1; $k < count($r->hiddentax_typ_id[$r->hd_or_num[$i]]); $k++, $j++) {
+                             $insertIntoBgt02 =
+                                 [
+                                     'or_code' => $b_num->col_code,
+                                     'ln_num' => $j,
+                                     'type' => $r->hiddenpy_typ[$r->hd_or_num[$i]][$k],
+                                     // 'chk_num' => $r->chk_num[$i],
+                                     // 'chk_date' => $r->chk_dt[$i],
+                                     'amount' => floatval($r->hiddenamt[$r->hd_or_num[$i]][$k]),
+                                     // 'deposited' => $r->is_dep[$i],
+                                     'soa_code' => $r->hiddensoa_code[$r->hd_or_num[$i]][$k],
+                                     'payment_desc' => urldecode($r->hiddentax_typ_id[$r->hd_or_num[$i]][$k]),
+                                     'tin' => $r->hiddentin[$r->hd_or_num[$i]][$k],
+                                     'td_bus_id' => $r->hiddentd[$r->hd_or_num[$i]][$k],
+                                     'payment_type' => $r->hiddenpy_typ[$r->hd_or_num[$i]][$k],
+                                     'payer' => $r->hiddenpayer[$r->hd_or_num[$i]][$k],
+                                 ];
+                             if (Core::insertTable('rssys.collne2', $insertIntoBgt02, 'Collection Entry') != true) {
+                                 return 'ERROR';
+                                 break;
+                             } 
+                         }
+                        Session::flash('alert', ['Success','success','Successfully save imported iTax']);
+                        return redirect('accounting/collection/entry');
+                    }
+                }
+                return 'ERROR';
+            }
 
+
+        }
     }
 }

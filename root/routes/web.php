@@ -373,6 +373,9 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::prefix('import')->group(function(){
 					Route::get('/', 'Collection\c_collection_entry@import_view');
 				});
+				Route::prefix('saveimport')->group(function(){
+					Route::post('/', 'Collection\c_collection_entry@saveImport');
+				});
 
 				Route::prefix('bank_deposit')->group(function(){
 					Route::get('/', 'Collection\c_bank_deposit@view');

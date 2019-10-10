@@ -136,8 +136,9 @@
                             @isset($cashiers)
                                 @if(count($cashiers) > 0)
                                   <option value="">Select Cashier...</option>
+
                                   @foreach($cashiers as $o)
-                                      <option value="{{$o->empid}}">{{$o->name}}</option>
+                                      <option value="{{$o->uid}}">{{$o->name}}</option>
                                   @endforeach
                                 @else
                                     <option value="">No Cashier registered...</option>

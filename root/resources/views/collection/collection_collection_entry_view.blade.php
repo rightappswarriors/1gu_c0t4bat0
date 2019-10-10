@@ -101,14 +101,14 @@
                   <div class="form-group">
                       <label>Cashier <span style="color:red"><strong>*</strong></span></label>
                       <select class="form-control select2 select2-hidden-accessible" name="hdr_cash" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_cashier_span" data-parsley-required-message="<strong>Cashier</strong> is required." required>
-                            {{-- @isset($cashiers)
+                            @isset($cashiers)
                               <option value="">Select Casher...</option>
                               @foreach($cashiers as $o)
-                                  <option value="{{$o->uid}}">{{$o->opr_name}}</option>
+                                  <option value="{{$o->uid}}">{{$o->name}}</option>
                               @endforeach
                             @else
                               <option value="">No Cashier registered...</option>
-                            @endisset --}}
+                            @endisset
                         </select>
                         <span id="hdr_cashier_span"></span>
                   </div>
@@ -522,7 +522,7 @@
     {
         var charge_code = $('select[name="itm_payment"]').val();
         if(charge_code != '') {
-            $('input[name="itm_desc"]').val(urldecode($('#payment_'+charge_code).attr('c_desc')));
+            (typeof($('#payment_'+charge_code).attr('c_desc')) != 'undefined' ? $('input[name="itm_desc"]').val(urldecode($('#payment_'+charge_code).attr('c_desc'))) : '') ;
         } else {
           $('input[name="itm_desc"]').val('');
             // alert('No Charge Selected...');
