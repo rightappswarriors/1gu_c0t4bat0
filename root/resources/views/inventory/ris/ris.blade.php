@@ -61,8 +61,8 @@
                   <th>SAI NO</th>
                   <th>Date</th>
                   <th>Office</th>
-                  <th>Stock Location</th>
-                  <th>Branch</th>
+                  <!--<th>Stock Location</th>-->
+                  <!--<th>Branch</th>-->
                   <th>User ID</th>
                   <th>Actions</th>
                 </tr>

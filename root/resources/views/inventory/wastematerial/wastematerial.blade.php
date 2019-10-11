@@ -43,7 +43,7 @@
                   <td>{{$d->certified_correct}}</td>
                   <td>{{$d->disposal_approved}}</td>
                   <td>
-                    <center>{{-- <a class="btn btn-social-icon btn-primary" href=""><i class="fa fa-print"></i></a>&nbsp; --}}<a class="btn btn-social-icon btn-warning" href="{{route('inventory.wastematerial_edit', $d->code)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center>
+                    <center><a class="btn btn-social-icon btn-primary" href="{{route('inventory.wastematerial_print', $d->code)}}"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{route('inventory.wastematerial_edit', $d->code)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center>
                   </td>
                 </tr>
                 @endforeach

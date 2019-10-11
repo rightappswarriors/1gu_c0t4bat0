@@ -43,6 +43,12 @@
                                                                 <input type="text" name="txt_name" class="form-control" placeholder="Description" data-parsley-required-message="<strong>Description</strong> is required." required>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Suggestive OR to <span class="text-red">*</span></label>
+                                                            <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                <input type="number" name="suggestive" class="form-control" placeholder="Suggestive OR to" data-parsley-required-message="<strong>Suggestive OR to</strong> is required." required>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </span>
                                                 <span class="DeleteMode"  style="display: none">
@@ -74,6 +80,7 @@
                                     <tr>
                                         <th>Code</th>
                                         <th>Description</th>
+                                        <th>Suggestive OR upto</th>
                                         <th width="15%"><center>Options</center></th>
                                     </tr>
                                 </thead>
@@ -83,9 +90,10 @@
                                             <tr>
                                                 <th>{{$fund->or_type}}</th>
                                                 <td>{{$fund->or_code}}</td>
+                                                <td>{{$fund->suggestiveORto}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$fund->or_type}}', '{{$fund->or_code}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$fund->or_type}}', '{{$fund->or_code}}', '{{$fund->suggestiveORto}}');"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$fund->or_type}}', '{{$fund->or_code}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
@@ -122,10 +130,12 @@
             $('input[name="txt_id"]').removeAttr('readonly');
             $('input[name="txt_name"]').val('');
             $('input[name="txt_name"]').attr('required', '');
+            $('input[name="suggestive"]').val('');
+            $('input[name="suggestive"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc)
+        function EditMode(id, desc, suggest)
         {
             $('#MOD_MODE').text('(Edit)');
             $('#AddForm').attr('action', '{{ url('master-file/accounting/or_types') }}/update');
@@ -134,6 +144,8 @@
             $('input[name="txt_id"]').attr('readonly', '');
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
+            $('input[name="suggestive"]').val(suggest);
+            $('input[name="suggestive"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }

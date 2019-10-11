@@ -384,7 +384,7 @@
                           <div class="col-sm-9">
                             <div class="form-group">
                               <label>VAT Type</label> <span class="validate_ivattype"></span>
-                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_vat" data-parsley-errors-container="#validate_ivattype" data-parsley-required-message="<strong>VAT Type is required.</strong>" required>
+                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_vat" data-parsley-errors-container="#validate_ivattype" data-parsley-required-message="<strong>VAT Type is required.</strong>" {{-- required --}}>
                                   <option value="" selected="selected">--- Select VAT ---</option>
                                   @foreach($vat as $v)
                                   <option value="{{$v->vat_code}}">{{$v->vat_desc}}</option>
@@ -397,14 +397,14 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Quantity</label>
-                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" {{-- required --}}>
                                 <span class="validate_iqty"></span>
                             </div>
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Unit Measurement</label>
-                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" required>
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" {{-- required --}}>
                                   <option value="" selected="selected">--- Select Unit ---</option>
                                   @foreach($itemunit as $iu)
                                   <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
@@ -416,7 +416,7 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Cost Price</label>
-                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" required>
+                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" {{-- required --}}>
                                <span class="validate_icostprice"></span>
                             </div>
                           </div>
@@ -451,7 +451,7 @@
                     </span>
                     <span class="DeleteMode">
                       <center>
-                          <h4 class="text-transform: uppercase;">Are you sure you want to delete this item?
+                          <h4 class="text-transform: uppercase;">Are you sure you want to remove this item?
                           </h4>
                       </center>
                     </span>
@@ -673,7 +673,11 @@
             $('#enteritem-modal').modal('toggle');
             $('#itemsearch-modal').modal('show');
         }
-      }
+        }
+        else
+        {
+          alert('oy');
+        }
       }
 
       function disp_amt_result()

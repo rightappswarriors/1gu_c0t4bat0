@@ -90,7 +90,12 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Certified Correct</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_certifiedCorrect" data-parsley-errors-container="#validate_certifiedCorrect" data-parsley-required-message="<strong>Certified Correct is required.</strong>" required>
+                @if($isnew)
+                <input type="text" class="form-control" name="select_certifiedCorrect" value="GIAN CARLO A. MIJARES" disabled="">
+                @else
+                  <input type="text" class="form-control" name="txt_code" maxlength="9" value="{{$datahdr->certified_correct}}" disabled="">
+                @endif
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_certifiedCorrect" data-parsley-errors-container="#validate_certifiedCorrect" data-parsley-required-message="<strong>Certified Correct is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Certified Correct ---</option>
                     @foreach($x08 as $x8)
@@ -106,13 +111,18 @@
                     @endforeach
                   @endif
                 </select>
-                 <span id="validate_certifiedCorrect"></span>
+                 <span id="validate_certifiedCorrect"></span> --}}
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Disposal Approved</label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_disposalApproved" data-parsley-errors-container="#validate_disposalApproved" data-parsley-required-message="<strong>Disposal Approved is required.</strong>" required>
+                @if($isnew)
+                <input type="text" class="form-control" name="select_disposalApproved">
+                @else
+                  <input type="text" class="form-control" name="txt_code" maxlength="9" value="{{$datahdr->disposal_approved}}">
+                @endif
+                {{-- <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_disposalApproved" data-parsley-errors-container="#validate_disposalApproved" data-parsley-required-message="<strong>Disposal Approved is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Disposal Approved ---</option>
                     @foreach($x08 as $x8)
@@ -128,7 +138,7 @@
                     @endforeach
                   @endif
                 </select>
-                 <span id="validate_disposalApproved"></span>
+                 <span id="validate_disposalApproved"></span> --}}
               </div>
             </div>
             <div class="col-md-3">
@@ -724,8 +734,10 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
                           office: $('select[name="select_office"]').select2('data')[0].id,
-                          certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
-                          disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
+                          certifiedCorrect: $('input[name="select_certifiedCorrect"]').val(),
+                          disposalApproved: $('input[name="select_disposalApproved"]').val(),
+                          // certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
+                          // disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
                        };
 
             $.ajax({
@@ -772,8 +784,10 @@
                           invoicedt: $('input[name="dtp_invoicedt"]').val(),
                           stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
                           office: $('select[name="select_office"]').select2('data')[0].id,
-                          certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
-                          disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
+                          certifiedCorrect: $('input[name="select_certifiedCorrect"]').val(),
+                          disposalApproved: $('input[name="select_disposalApproved"]').val(),
+                          // certifiedCorrect: $('select[name="select_certifiedCorrect"]').select2('data')[0].id,
+                          // disposalApproved: $('select[name="select_disposalApproved"]').select2('data')[0].id,
                          };
 
               $.ajax({

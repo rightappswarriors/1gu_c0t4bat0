@@ -83,52 +83,7 @@
                 @endif
               </div>
             </div>
-            <!-- <div class="col-md-3">
-              <div class="form-group">
-                <label>Stock Location</label>
-                @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation">
-                  <option value="" selected="selected">--- Select Stock Location ---</option>
-                  @foreach($stock_loc as $st)
-                  <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                  @endforeach
-                </select>
-                @else
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation">
-                  @foreach($stock_loc as $st)
-                  @if($rechdr->whs_code == $st->whs_code)
-                  <option selected="selected" value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                  @else
-                  <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                  @endif
-                  @endforeach
-                </select>
-                @endif
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Branch</label>
-                @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true", name="select_branch">
-                  <option value="" selected="selected">--- Select Branch ---</option>
-                  @foreach($branch as $b)
-                  <option value="{{$b->code}}">{{$b->name}}</option>
-                  @endforeach
-                </select>     
-                @else
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true", name="select_branch">
-                  @foreach($branch as $b)
-                  @if($rechdr->branch == $b->code)
-                  <option selected = "selected" value="{{$b->code}}">{{$b->name}}</option>
-                  @else
-                  <option value="{{$b->code}}">{{$b->name}}</option>
-                  @endif
-                  @endforeach
-                </select> 
-                @endif         
-              </div>
-            </div> -->
+
           </div>
           <div class="row">
             <div class="col-md-3">
@@ -153,25 +108,25 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Personnel</label>
-                @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_personnel" required="">
-                  <option value="" selected="selected">--- Select Personnel ---</option>
-                  @foreach($x08 as $x8)
-                  <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
-                  @endforeach
-                </select>
-                @else
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_personnel" required="">
-                  @foreach($x08 as $x8)
-                  @if($rechdr->personnel == $x8->uid)
-                  <option selected="" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                <label>Personnel to Receive</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_personnel" data-parsley-errors-container="#validate_personnel" data-parsley-required-message="<strong>Personnel to receive is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">-- Select Personnel to Receive --</option>
+                    @foreach($x08 as $x8)
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endforeach
                   @else
-                   <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    <option value="">-- Select Personnel to Receive --</option>
+                    @foreach($x08 as $x8)
+                      @if($rechdr->personnel == $x8->uid)
+                        <option selected="selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @else  
+                        <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @endif
+                    @endforeach
                   @endif
-                  @endforeach
                 </select>
-                @endif
+                <span id="validate_personnel"></span>
               </div>
             </div>
             
@@ -356,12 +311,7 @@
                               <input type="text" class="form-control" name="txt_itemcode" readonly="">
                             </div>
                           </div>
-                          <!-- <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Part No.</label>
-                              <input type="text" class="form-control" name="txt_partno" readonly="">
-                            </div>
-                          </div>   -->                      
+                                               
                         </div>
                         <div class="row">
                           <div class="col-sm-4">
@@ -390,31 +340,9 @@
                               <input type="text" class="form-control" name="txt_itemdesc" readonly=""> 
                             </div>
                           </div>
-                          <!-- <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Item Search</label>
-                              <span class="AddModeBtn">
-                                 <button class="btn btn-block btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-search"></i> Item Search</button>
-                              </span>
-                              <span class="EditModeBtn">
-                                 <button class="btn btn-block btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#itemsearch-modal" disabled=""><i class="fa fa-search"></i> Item Search</button>
-                              </span>
-                            </div>
-                          </div> -->
+                          
                         </div>
-                        <!-- <div class="row">
-                          <div class="col-sm-9">
-                            <div class="form-group">
-                              <label>VAT Type</label>
-                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_vat" required="">
-                                  <option value="" selected="selected">--- Select VAT ---</option>
-                                  @foreach($vat as $v)
-                                  <option value="{{$v->vat_code}}">{{$v->vat_desc}}</option>
-                                  @endforeach
-                                </select>
-                            </div>
-                          </div>
-                        </div> -->
+                        
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group">
@@ -433,39 +361,9 @@
                                 </select>
                             </div>
                           </div>
-                          <!-- <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Cost Price</label>
-                               <input id="txt_cost" type="text" class="form-control" name="txt_cost" placeholder="0.00" required="">
-                            </div>
-                          </div> -->
+                          
                         </div>
-                        <!-- <div class="row">                          
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Discount Amount</label>
-                               <input id="txt_disc" type="text" class="form-control" name="txt_disc" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Line Amount</label>
-                               <input type="text" class="form-control" name="txt_lineamt" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>VAT</label>
-                               <input type="text" class="form-control" name="txt_vatamt" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Net Price</label>
-                               <input type="text" class="form-control" name="txt_netprice" placeholder="0.00">
-                            </div>
-                          </div>
-                        </div> -->
+                        
                       </div>
                     </span>
                     <span class="DeleteMode">
@@ -523,9 +421,12 @@
                               <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_ris" required="" onchange="getDataFromLoadItems()">
                                   <option value="" selected="selected">--- Select RIS Approved ---</option>
                                   @foreach($ris_approved as $risa)
-                                  <option value="{{$risa->rec_num}}">{{$risa->ris_no}} {{$risa->sai_no}} {{$risa->cc_code}}</option>
+                                   {{-- {{print_r([$risa->rec_num,$risa->ris_no,$risa->cc_code,$risa->nameofpersonnel])}} --}}
+                                  <option personneltoreceive="{{$risa->uid}}" value="{{$risa->rec_num}}">{{$risa->ris_no}} {{$risa->cc_code}} {{$risa->nameofpersonnel}}</option>
+
                                   @endforeach
                                 </select>
+
                             </div>
                           </div>
                         </div>
@@ -767,60 +668,6 @@
         }
       }
 
-      // function disp_amt_result()
-      // {
-      //   var total_costamt = 0.00, net_amt = 0.00, qty = 0.00, costprice = 0.00, disc_amt = 0.00, ln_amt = 0.00;
-
-      //   qty = $('input[name="txt_qty"]').val();
-      //   costprice = $('input[name="txt_cost"]').val();
-        
-      //   if($('input[name="txt_disc"]').val() != null)
-      //   {
-      //     disc_amt = $('input[name="txt_disc"]').val();
-      //   }
-
-      //   total_costamt = qty * costprice;
-
-      //   ln_amt = parseFloat(total_costamt - disc_amt).toFixed(2);
-
-      //   $('input[name="txt_lineamt"]').val(ln_amt);
-      //   $('input[name="txt_disc"]').val(disc_amt);
-
-      //   disp_vat(ln_amt);
-      // }
-
-      // function disp_vat(total_amt)
-      // {
-      //   var vat_amt = 0.00, net_amt = 0.00;
-      //   var tax_type = $('select[name="select_vat"]').select2('data')[0].id;
-
-      //   if(tax_type == 'I')
-      //   {
-      //       net_amt = parseFloat(total_amt / 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else if(tax_type == 'E')
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       total_amt = parseFloat(total_amt * 1.12).toFixed(2);
-      //       vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-      //       $('input[name="txt_lineamt"]').val(total_amt);
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      //   else
-      //   {
-      //       net_amt = parseFloat(total_amt).toFixed(2);
-      //       vat_amt = parseFloat(vat_amt).toFixed(2);
-
-      //       $('input[name="txt_netprice"]').val(net_amt);
-      //       $('input[name="txt_vatamt"]').val(vat_amt);
-      //   }
-      // }
 
       function clear()
       {
@@ -969,6 +816,8 @@
                   }
 
                   $('select[name="select_costcenter"]').val(data[1]).trigger('change');
+                  $('select[name=select_personnel]').val($('[name=select_ris]').find('option:selected').attr('personneltoreceive')).trigger('change');
+
                 }
 
                 

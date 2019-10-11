@@ -416,11 +416,6 @@
 
           $('#enteritem-modal').modal('toggle');
 
-
-
-
-
-          //console.log(data);
       }
 
       function EnterItem_Delete(line)
@@ -431,6 +426,14 @@
         $('.EditMode').hide();
         $('.EditModeBtn').hide();
         $('.DeleteMode').show();
+
+        $('input[name="txt_lineno"]').val(data[1]);
+          $('input[name="txt_partno"]').val(data[3]);
+          $('input[name="txt_itemcode"]').val(data[2]);
+          $('input[name="txt_itemdesc"]').val(data[4]);
+          $('input[name="txt_qty"]').val(data[5]);
+          $('input[name="txt_date"]').val(data[0]);
+          $('input[name="txt_remarks"]').val(data[6]);
 
         $('#enteritem-modal').modal('toggle');
       }
@@ -451,9 +454,11 @@
         var date = $('input[name="txt_date"]').val();
         var remarks = $('input[name="txt_remarks"]').val();
         var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
-              '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
-            '</center>';
+                        '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+                        '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
+                      '</center>';
+
+
 
         if($('#ENTER_ITEM').text() == 'Add')
         {
@@ -465,10 +470,14 @@
         {
           table.row(selectedRow).data([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
         }
+
+        
         else // remove item
         {
           table.row(selectedRow).remove().draw();
           
+          var a = 'hello';
+
           var i;
           var r = 1;
 
@@ -477,7 +486,6 @@
             table.cell({row:i, column:0}).data(r);
             r++;
           }
-
           alert('Successfully deleted.');
         }
 
@@ -493,7 +501,11 @@
             $('#enteritem-modal').modal('toggle');
             $('#itemsearch-modal').modal('show');
         }
-      }
+        }
+        else
+        {
+          alert('oy');
+        }
       }
 
       function clear()

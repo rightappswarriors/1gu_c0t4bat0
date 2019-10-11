@@ -325,9 +325,9 @@ class AccountingControllers extends Controller {
                     'headerDet' => $arr_bgtps,
                     'obrlne' => $arrToReturn
                 ];
-                return Excel::download(new OfficeExport('officeReport.raoreport',$arrRet), 'RAO-Report-'.$fpp.'-'.$cc_code.'-'.$date.'.xlsx');
+                // return Excel::download(new OfficeExport('officeReport.raoreport',$arrRet), 'RAO-Report-'.$fpp.'-'.$cc_code.'-'.$date.'.xlsx');
 
-                return view('accounting.raoreport', $arrRet);
+                return view('officeReport.raoreport', $arrRet);
 
 
             }
@@ -521,7 +521,7 @@ class AccountingControllers extends Controller {
         $message = "";
         if($request->isMethod('post')) {
             // dd($request->all());
-            $arrData = ['or_type', 'date_issued', 'or_no', 'or_no_to', 'collector'];
+            $arrData = ['date_issued', 'or_type', 'or_no', 'or_no_to', 'collector'];
             $validate = [['or_type', 'or_no', 'or_no_to', 'collector'], ['or_type'=>'No type selected', 'or_no'=>'No OR No. (From) specified', 'or_no_to'=>'No OR No. (To) specified', 'collector'=>'No collector specified']];
             $makeHash = []; $haveAdd = ['t_date'=>Carbon::now()->toDateString(), 't_time'=>Carbon::now()->toTimeString(), 'user_id'=>strtoupper(FunctionsAccountingControllers::getSession("_user", "id"))]; $arrCheck = []; $sMail = [];
             $tbl = 'rssys.or_issuance';
@@ -533,7 +533,7 @@ class AccountingControllers extends Controller {
             }
         }
         $arrRet = [
-            'or_types'=>DB::table(DB::raw('rssys.or_types'))->get(),
+            'or_types'=>DB::table(DB::raw('rssys.or_types'))->where('active',TRUE)->get(),
             'isrelease'=>true,
             'cashiers'=>DB::select("SELECT uid, opr_name FROM rssys.x08 WHERE rssys.x08.grp_id = '005'"),
             '_bc'=>[
@@ -541,7 +541,8 @@ class AccountingControllers extends Controller {
                 ['link'=>url("accounting/collection/or_issuance"),'desc'=>'Issuance OR','icon'=>'file-text','st'=>true]
             ],
             '_ch'=>"Issuance OR",
-            'message'=>$message
+            'message'=>$message,
+            'user' => session()->get('_user')
         ];
         return view('accounting.issuance_or_new', $arrRet);
     }
@@ -552,7 +553,7 @@ class AccountingControllers extends Controller {
         }
         $message = "";
         if($request->isMethod('post')) {
-            $arrData = ['or_type', 'date_issued', 'or_no', 'or_no_to', 'collector'];
+            $arrData = ['date_issued', 'or_type', 'or_no', 'or_no_to', 'collector'];
             $validate = [['or_type', 'or_no', 'or_no_to', 'collector'], ['or_type'=>'No type selected', 'or_no'=>'No OR No. (From) specified', 'or_no_to'=>'No OR No. (To) specified', 'collector'=>'No collector specified']];
             $makeHash = []; $haveAdd = ['t_date'=>Carbon::now()->toDateString(), 't_time'=>Carbon::now()->toTimeString(), 'user_id'=>strtoupper(FunctionsAccountingControllers::getSession("_user", "id"))]; $arrCheck = []; $sMail = [];
             $tbl = 'rssys.or_issuance';
@@ -566,7 +567,7 @@ class AccountingControllers extends Controller {
         }
         $arrRet = [
             'or_issuance'=>DB::select("SELECT or_issuance.*, or_types.or_code, x08.opr_name FROM rssys.or_issuance LEFT JOIN rssys.or_types ON or_issuance.or_type = or_types.or_type LEFT JOIN rssys.x08 ON x08.uid = or_issuance.collector WHERE transid = '$transid'"),
-            'or_types'=>DB::table(DB::raw('rssys.or_types'))->get(),
+            'or_types'=>DB::table(DB::raw('rssys.or_types'))->where('active',TRUE)->get(),
             'isrelease'=>true,
             'cashiers'=>DB::select("SELECT uid, opr_name FROM rssys.x08 WHERE rssys.x08.grp_id = '005'"),
             '_bc'=>[
@@ -574,7 +575,8 @@ class AccountingControllers extends Controller {
                 ['link'=>url("accounting/collection/or_issuance"),'desc'=>'Issuance OR','icon'=>'file-text','st'=>true]
             ],
             '_ch'=>"Issuance OR",
-            'message'=>$message
+            'message'=>$message,
+            'user' => session()->get('_user')
         ];
         return view('accounting.issuance_or_new', $arrRet);
     }

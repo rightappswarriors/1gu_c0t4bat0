@@ -28,20 +28,21 @@
 		                  <th>Code No.</th>
 		                  <th>Turn over date</th>
 		                  <th>Turn Over by</th>
-		                  <th>Position/Office</th>
-		                  <th>Received by</th>
+		                  <th>Position/Office</th>{{-- 
+		                  <th>Received by</th> --}}
 		                  <th>Option</th>
 		                </tr>
 		                </thead>
 		                <tbody>
+						  @isset($data)
 		                  @foreach($data as $d)
 		                <tr>
 		                  <td>{{$d->rec_num}}</td>
 		                  <td>{{$d->to_date}}</td>
 		                  <td>{{$d->to_by}}</td>
 		                  <td>{{$d->cc_desc}}</td>
-		                  <td>{{$d->to_receivedby}}</td>
-		                  <td>
+		                  {{-- <td>{{$d->to_receivedby}}</td>
+ --}}		                  <td>
 		                    <center>
 		                      <a class="btn btn-social-icon btn-warning" href="{{route('inventory.turnover_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.turnover_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;
 		                      <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a>
@@ -49,6 +50,8 @@
 		                  </td>
 		                </tr>
 		                @endforeach
+		                @endisset
+
 		                </tbody>
 		              </table>
 		            </div>
@@ -65,7 +68,7 @@
 		          <div class="modal-content">
 		            <div class="modal-header">
 		              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                <span aria-hidden="true">×</span></button>
+		                <span aria-hidden="true">Ã—</span></button>
 		              <h4 class="modal-title">Approve Transaction</h4>
 		            </div>
 		            <div class="modal-body">
@@ -89,12 +92,12 @@
 		          <div class="modal-content">
 		            <div class="modal-header">
 		              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                <span aria-hidden="true">×</span></button>
+		                <span aria-hidden="true">Ã—</span></button>
 		              <h4 class="modal-title">Cancel Transaction</h4>
 		            </div>
 		            <div class="modal-body">
 		              <center>
-		                  <h4 class="text-transform: uppercase;">Are you sure you want to cancel this transaction {{$d->rec_num}}?
+		                  <h4 class="text-transform: uppercase;">Are you sure you want to cancel this transaction?
 		                  </h4>
 		              </center>
 		            </div>

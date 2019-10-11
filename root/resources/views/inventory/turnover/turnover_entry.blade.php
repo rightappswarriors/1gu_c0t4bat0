@@ -42,6 +42,12 @@
                     <div class="row">
                         <div class="col-md-3">
                           <div class="form-group">
+                            <label>Code</label>
+                                <input type="text" class="form-control" name="txt_code" disabled="">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
                             <label>Reference</label>
                                 @if($isnew)
                                     <input type="text" class="form-control" name="_reference" data-parsley-errors-container="#validate_to_received">
@@ -51,30 +57,6 @@
                                     <span id="#validate__reference"></span>
                           </div>
                         </div>
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <label>Received By</label>
-                                @if($isnew)
-                                    <input type="text" class="form-control" name="to_receivedby" data-parsley-errors-container="#validate_to_received">
-                                @else
-                                    <input type="text" class="form-control" name="to_receivedby" value="{{$rechdr->to_receivedby}}" data-parsley-errors-container="#validate_to_receivedby">
-                                @endif
-                                    <span id="#validate_to_receivedby"></span>
-                          </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <label>Turned Over By</label>
-                                @if($isnew)
-                                    <input type="text" class="form-control" name="to_by" data-parsley-errors-container="#validate_to_by">
-                                @else
-                                    <input type="text" class="form-control" name="to_by" value="{{$rechdr->to_by}}" data-parsley-errors-container="#validate_to_by">
-                                @endif
-                                    <span id="#validate_to_by"></span>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Office</label>
@@ -97,6 +79,48 @@
                                         <span id="validate_selectcostcenter"></span>
                             </div>
                         </div>
+                        {{-- <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Received By</label>
+                                @if($isnew)
+                                    <input type="text" class="form-control" name="to_receivedby" data-parsley-errors-container="#validate_to_received">
+                                @else
+                                    <input type="text" class="form-control" name="to_receivedby" value="{{$rechdr->to_receivedby}}" data-parsley-errors-container="#validate_to_receivedby">
+                                @endif
+                                    <span id="#validate_to_receivedby"></span>
+                          </div>
+                        </div> --}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Turned Over By</label>
+                                @if($isnew)
+                                    <input type="text" class="form-control" name="to_by" data-parsley-errors-container="#validate_to_by">
+                                @else
+                                    <input type="text" class="form-control" name="to_by" value="{{$rechdr->to_by}}" data-parsley-errors-container="#validate_to_by">
+                                @endif
+                                    <span id="#validate_to_by"></span>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Turn Over By Designation</label>
+
+                            @if($isnew)
+                              <input list="select_receivedbydesig" name="select_receivedbydesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Personnel to Received Designation is required.</strong>" required>
+                            @else
+                              <input list="select_receivedbydesig" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Personnel to Received Designation is required.</strong>" required>
+                            @endif
+
+                            <datalist id="select_receivedbydesig">
+                              @foreach($are_position as $ap)
+                                <option value="{{$ap->name}}">
+                              @endforeach
+                            </datalist>
+                            <span id="validate_selectreceivedbydesig"></span>
+                          </div>
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Turn Over Date</label>
@@ -113,7 +137,7 @@
                                     </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <div class="form-group">
                                 <label>User ID</label>
                             @if($isnew)
@@ -123,7 +147,7 @@
                             @endif
                                 <span id="#validate_recipient"></span>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </form>
@@ -303,27 +327,28 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Article</label>
-                                                    <input type="text" class="form-control" name="txt_to_article_text">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Article</label>
+                                                        <input type="text" class="form-control" name="txt_to_article_text">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Quantity</label>
+                                                        <input id="txt_qty" type="number" class="form-control" name="txt_recv_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
+                                                        <span class="validate_iqty"></span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Quantity</label>
-                                                    <input id="txt_qty" type="number" class="form-control" name="txt_recv_qty_text" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" required>
-                                                    <span class="validate_iqty"></span>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Description</label>
-                                                    <input type="text" class="form-control" name="txt_item_desc_text">
+                                                    {{-- <input type="text" class="form-control" name="txt_item_desc_text"> --}}
+                                                    <div><textarea id="txt_item_desc_text" class="form-control" name="txt_item_desc_text" rows="4" cols="88"></textarea></div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -508,7 +533,8 @@
               $('input[name="txt_itemcode_text"]').val(data[1]);
               $('input[name="txt_to_article_text"]').val(data[2]);
               $('input[name="txt_recv_qty_text"]').val(data[3]);
-              $('input[name="txt_item_desc_text"]').val(data[4]);
+              //$('input[name="txt_item_desc_text"]').val(data[4]);
+              $('textarea[name="txt_item_desc_text"]').val(data[4]);
               $('input[name="txt_notes_text"]').val(data[5]); 
 
               $('#enteritem-modal').modal('toggle');
@@ -651,7 +677,7 @@
                 var item_code = $('input[name="txt_itemcode_text"]').val();
                 var to_article = $('input[name="txt_to_article_text"]').val();
                 var recv_qty = $('input[name="txt_recv_qty_text"]').val();
-                var item_desc = $('input[name="txt_item_desc_text"]').val();
+                var item_desc = $('textarea[name="txt_item_desc_text"]').val(); //$('input[name="txt_item_desc_text"]').val();
                 var notes = $('input[name="txt_notes_text"]').val();
                 var buttons = '<center>' +
                   '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
@@ -730,7 +756,8 @@
             $('input[name="txt_itemcode_text"]').val('');
             $('input[name="txt_to_article_text"]').val('');
             $('input[name="txt_recv_qty_text"]').val('0.00');
-            $('input[name="txt_item_desc_text"]').val('');
+            $('textarea[name="txt_item_desc_text"]').val('');
+            //$('input[name="txt_item_desc_text"]').val('');
             $('input[name="txt_notes_text"]').val('');
         } 
 
@@ -754,6 +781,7 @@
                                   cc_code: $('select[name="cc_code"]').select2('data')[0].id,
                                   to_date: $('input[name="to_date"]').val(),                                  
                                   recipient: $('input[name="recipient"]').val(),
+                                  receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                                };
 
                        $.ajax({
@@ -801,6 +829,7 @@
                           cc_code: $('select[name="cc_code"]').select2('data')[0].id,
                           to_receivedby: $('input[name="to_receivedby"]').val(),
                           recipient: $('input[name="recipient"]').val(),
+                          receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                        };
 
                  $.ajax({

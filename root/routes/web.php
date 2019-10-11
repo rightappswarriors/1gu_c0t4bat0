@@ -11,8 +11,6 @@
 |
 */
 
-
-
 /* AUTHENTICATION --------------------------*/
 	Route::get('/login', 'AuthController@view')->name('login');
 	Route::post('/login', 'AuthController@login');
@@ -297,6 +295,41 @@ Route::group(['middleware'=>['checkauth']], function () {
 			});
 			/* --- INVENTORY ----------*/
 
+
+			/* --- COLLECTION ----------*/
+			Route::prefix('tax')->group(function(){
+				/* --- TAX GROUP ----------*/
+				Route::prefix('group')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\c_tax_group@view');
+					Route::post('/', 'Collection\c_tax_group@add');
+					Route::post('/update', 'Collection\c_tax_group@update');
+					Route::post('/delete', 'Collection\c_tax_group@delete');
+				});
+				/* --- TAX GROUP ----------*/
+
+				/* --- TAX TYPE ----------*/
+				Route::prefix('type')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\c_tax_type@view');
+					Route::post('/', 'Collection\c_tax_type@add');
+					Route::post('/update', 'Collection\c_tax_type@update');
+					Route::post('/delete', 'Collection\c_tax_type@delete');
+				});
+				/* --- TAX TYPE ----------*/
+			});
+
+
+			
+
+			Route::prefix('real-property-classification')->group(function(){
+				Route::get('/', 'Collection\c_real_class@view');
+				Route::post('/', 'Collection\c_real_class@add');
+				Route::post('/update', 'Collection\c_real_class@update');
+				Route::post('/delete', 'Collection\c_real_class@delete');
+			});
+			/* --- COLLECTION ----------*/
+
+
+
 			/* --- GENERAL ----------*/
 			Route::prefix('general')->group(function(){ // DONE -m
 				Route::prefix('barangay')->group(function(){
@@ -307,6 +340,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 				});
 			});
 			/* --- GENERAL ----------*/
+
+
+			// Miscellenioiqweqtqwrqasdasqweksqwe
+			Route::prefix('Miscellaneous')->group(function(){
+				Route::prefix('bank')->group(function(){
+					Route::get('/', 'MFile\Miscellaneous\bankController@view');
+					Route::post('/', 'MFile\Miscellaneous\bankController@add');
+					Route::post('/update', 'MFile\Miscellaneous\bankController@update');
+					Route::post('/delete', 'MFile\Miscellaneous\bankController@delete');
+				});
+			});
 
 		});
 	/* MASTER FILE --------------------------*/
@@ -436,6 +480,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 		    		Route::match(['get', 'post'], '/wastematerial_add', 'Inventory\I_WasteMaterialController@add')->name('inventory.wastematerial_add');
 		    		Route::match(['get', 'post'], '/wastematerial_edit/{code}', 'Inventory\I_WasteMaterialController@edit')->name('inventory.wastematerial_edit');
 		    		Route::get('/wastematerial_cancel/{code}', 'Inventory\I_WasteMaterialController@cancel')->name('inventory.wastematerial_cancel');
+		    		Route::get('/print/{code}', 'Inventory\I_WasteMaterialController@print')->name('inventory.wastematerial_print');
 		    	});
 		    });
 		/* ----- WASTE MATERIAL */
@@ -516,7 +561,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::prefix('turnover')->group(function() {
 					Route::get('/', 'Inventory\I_TurnOverController@view')->name('inventory.turnover');
 					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
-					Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
+					Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverController@print')->name('inventory.turnover_print');
 					Route::match(['get', 'post'], '/turnover_entry', 'Inventory\I_TurnOverController@add')->name('inventory.turnover_entry');
 					Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
 					Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
@@ -530,7 +575,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::prefix('biology')->group(function() {
 
 					//REDIRECT TO BIOLOGY TABLES
-					Route::get('/', 'Inventory\I_BiologyController@view')->name('inventory.biology');
+
 					Route::get('/biologyacqusitiontbl', 'Inventory\I_BiologyController@acq_table')->name('inventory.biology.bio_acq_table');
 					Route::get('/biologybirthtbl', 'Inventory\I_BiologyController@boo_table')->name('inventory.biology.bio_boo_table');
 					Route::get('/biologydispotbl', 'Inventory\I_BiologyController@dispo_table')->name('inventory.biology.bio_dispo_table');
@@ -564,6 +609,13 @@ Route::group(['middleware'=>['checkauth']], function () {
 
 					//GET TABLE LINE DETAILS
 					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockin_getitemdetails');
+
+					Route::get('/', 'Inventory\I_BiologyController@view')->name('inventory.biology');
+					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
+					// Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
+					Route::match(['get', 'post'], '/biologyacqusition', 'Inventory\I_BiologyController@add')->name('inventory.biologyacqusition');
+					// Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
+					// Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
 				});
 			});
 		/* ----- Biology*/
@@ -704,6 +756,34 @@ Route::group(['middleware'=>['checkauth']], function () {
 			});
 			/* ----- USERS */
 		});
+
+
+
+		// collection area
+
+		Route::prefix('collection')->group(function(){
+			Route::prefix('ROCAD')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@view');
+				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@viewOR');
+			});
+			Route::prefix('Liquidating-officer')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewLiquidate');
+				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@liquidate');
+			});
+			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewToDiposit');
+				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
+			});
+			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
+				Route::get('/', 'Collection\ROCADController@viewToDiposit');
+				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
+			});
+			
+		});
+		// collection area
+
+
+
 		// Reancy
 		Route::prefix('accounting')->group(function() {
 			Route::prefix('disbursement')->group(function() {
@@ -751,24 +831,24 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('saaob', 'Report\Budget\SaaobReportController@view')->name('report.saaob');
 				Route::post('saaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
+			Route::prefix('collection')->group(function() {
+				Route::prefix('RocadDailyUser')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@rocardDailyUser');
+					Route::match(['get','post'],'/{uid}/{date}', 'Collection\ROCADController@rocardDailyUserProcess');
+				});
+			});
 		});
 		/* SETTING -------------------------------*/
 	// });
 });
-
 
 /* OTHERS -------------------------------*/
 // Link for the temporary report page
 Route::get('temporary/{page}', 'HomeController@tempPage');
 // Link to get all session
 Route::get('session-all', 'HomeController@SessionAll');
-Route::get('/gago', function(){
-	try {
-		DB::connection()->getPdo();
-		return 'GAGO';
-	} catch (Exception $e) {
-		die("Could not connect to the database.  Please check your configuration. error:" . $e );
-	}
+Route::get('/test', function(){
+	return view('report.collection.test');
 });
 // Link to pages with no controller (Must be at the bottom)
 Route::get('{page}', 'HomeController@page');
