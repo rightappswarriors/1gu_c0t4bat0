@@ -345,9 +345,9 @@
                             @if($LA_GRP["C1000002"]["restrict"] == 'Y')
                             <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Important thru iTax</a></li>
                             @endif
-                            @if($LA_GRP["C1000003"]["restrict"] == 'Y')
+                           {{--  @if($LA_GRP["C1000003"]["restrict"] == 'Y')
                             <li><a href="#"><i class="fa fa-circle-o"></i> Posting</a></li>
-                            @endif
+                            @endif --}}
                             @if($LA_GRP["C1000003"]["restrict"] == 'Y')
                             <li><a href="{{ url('collection/ROCAD/') }}"><i class="fa fa-circle-o"></i> ROCAD</a></li>
                             @endif

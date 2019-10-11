@@ -77,7 +77,8 @@ class I_WasteMaterialController extends Controller
                               'qty' => $tb[6], 
                               'unit' => $tb[7], 
                               'price' => $tb[9], 
-                              'or_no' => $tb[10]];
+                              'or_no' => $tb[10],
+                              'estimated' => $tb[11]];
 
                     if(Core::insertTable($tableln, $data2, $this->module))
                     {
@@ -186,7 +187,8 @@ class I_WasteMaterialController extends Controller
                           'qty' => $tb[6], 
                           'unit' => $tb[7], 
                           'price' => $tb[9], 
-                          'or_no' => $tb[10]];
+                          'or_no' => $tb[10],
+                          'estimated' => $tb[11]];
 
                 if(Core::insertTable($tableln, $data2, $this->module))
                 {

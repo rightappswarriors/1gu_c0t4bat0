@@ -23,7 +23,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body" style="display: none">
-          <form id="PerFundCheck" data-parsley-validate novalidate>
+          <form id="PerFuMndCheck" data-parsley-validate novalidate>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -76,8 +76,15 @@
         <!-- /.col -->
       </div> --}}
       <!-- /.row -->
-      <span id="ShowAll">
-      </span>
+      <form id="he" action="{{url('accounting/collection/saveimport')}}" method="post">
+        {{csrf_field()}}
+        <span id="ShowAll">
+                    
+
+          
+        </span>
+
+      </form>
     </section>
 <div class="modal fade in" id="modal-default2">
   <div class="modal-dialog">
@@ -426,7 +433,7 @@
 
                   '<div class="box-body">' +
                     '<div class="row">' +
-                      '<form id="CheckMeFirst" data-parsley-validate novalidate>' +
+                      // '<form id="CheckMeFirst" data-parsley-validate novalidate>' +
                       '<div class="col-md-4">' +
                         '<div class="form-group">' +
                           '<label>Cashier<span style="color:red"><strong>*</strong></span></label>' +
@@ -436,7 +443,7 @@
                                 @if(count($cashiers) > 0)
                                   '<option value="">Select Cashier...</option>' +
                                   @foreach($cashiers as $o)
-                                      '<option value="{{$o->empid}}">{{$o->name}}</option>' +
+                                      '<option value="{{$o->uid}}">{{$o->name}}</option>' +
                                   @endforeach
                                 @else
                                     '<option value="">No Cashier registered...</option>' +
@@ -450,7 +457,7 @@
                       '</div>'+
                       '<div class="col-md-6" id="CASHIER_ERROR">' +
                       '</div>'+
-                      '</form>' +
+                      // '</form>' +
 
                     '</div>' +
                   '</div>' +
@@ -462,7 +469,7 @@
             '</div>'
           );
          test = data;
-         $('select[name="hdr_cash"]').select2();
+         // $('select[name="hdr_cash"]').select2();
          var exists = header.chk_ofc.length > 0 ? true : false ;
           if(!exists){
             $('#CASHIER_ERROR').append(
@@ -485,7 +492,7 @@
                 '<div class="box box-default">' +
                   // BOX HEADER
                   '<div class="box-header with-border">' +
-                    '<h3 class="box-title">'+kk+'.) '+data[i].or_no+'</h3> <a onclick="AddMode(\''+data[i].or_no+'\', \''+data[i].no+'\');" class="btn btn-social-icon btn-success" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i></a>' +
+                    '<h3 class="box-title">'+kk+'.) '+data[i].or_no+'</h3> <a onclick="AddMode(\''+data[i].or_no+'\', \''+data[i].no+'\');" class="btn btn-social-icon btn-success" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i></a> <h3 class="box-title">Add new</h3>' +
                     // '<div class="box-tools pull-right">' +
                     //   '<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>' +
                     //   '</button>' +
@@ -496,14 +503,14 @@
                   // BOX BODY
                   '<div class="box-body">' +
                     // COLUMN HEAD
-                    '<form id="hdr_form_'+data[i].or_no+'_'+data[i].no+'" data-parsley-validate novalidate>' +
+                    // '<form id="hdr_form_'+data[i].or_no+'_'+data[i].no+'" data-parsley-validate novalidate>' +
                     // ROW 1
                     '<div class="row">' +
                       // OR TYPE
                       '<div class="col-md-4">' +
                         '<div class="form-group">' +
                           '<label>OR Type <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" {{--onchange="loadORIssuance()"--}} name="hd_or_typ" style="width: 100%;" id="head_or_typ_'+data[i].or_no+'" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_or_typ_'+data[i].or_no+'"" data-parsley-required-message="<strong>OR Type</strong> is required." {{-- required --}}>' +
+                          '<select class="form-control select2 select2-hidden-accessible" {{--onchange="loadORIssuance()"--}} name="hd_or_typ['+data[i].or_no+']" style="width: 100%;" id="head_or_typ_'+data[i].or_no+'" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_or_typ_'+data[i].or_no+'"" data-parsley-required-message="<strong>OR Type</strong> is required." {{-- required --}}>' +
                             @isset($or_type)
                                 '<option value="">Select OR Type...</option>' +
                               @foreach($or_type as $o)
@@ -521,7 +528,7 @@
                       '<div class="col-md-4">' +
                         '<div class="form-group">' +
                           '<label>Journal <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_jr" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
+                          '<select class="form-control select2 select2-hidden-accessible" name="hd_jr['+data[i].or_no+']" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
                             @isset($m05)
                               '<option value="">Select Journal...</option>' +
                                 @foreach($m05 as $s)
@@ -539,7 +546,7 @@
                       '<div class="col-md-4">' +
                         '<div class="form-group">' +
                           '<label>Fund <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_fund" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#hd_fd_'+data[i].or_no+'" >' +
+                          '<select class="form-control select2 select2-hidden-accessible" name="hd_fund['+data[i].or_no+']" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#hd_fd_'+data[i].or_no+'" >' +
                             @isset($fund)
                                 '<option value="">Select Fund...</option>' +
                                 @foreach($fund as $bp)
@@ -558,19 +565,19 @@
                     // ROW 2
                     '<div class="row">' +
                       // OR NUMBER
-                      '<div class="col-md-4">' +
+                      '<div class="col-md-3">' +
                         '<div class="form-group">' +
                           '<label>OR No. <span style="color:red"><strong>*</strong></span></label>' +
-                          '<input type="text" class="form-control" data-parsley-required-message="<strong>Reference</strong> is required." required value="'+data[i].or_no+'" name="hd_or_num" readonly="" or_num="'+data[i].no+'">' +
+                          '<input type="text" class="form-control" data-parsley-required-message="<strong>Reference</strong> is required." required value="'+data[i].or_no+'" name="hd_or_num[]" readonly="" or_num="'+data[i].no+'">' +
                         '</div>' +
                       '</div>'+
                       // OR NUMBER
                       // CUSTOMER
-                      '<div class="col-md-4">' +
+                      '<div class="col-md-3">' +
                         '<div class="form-group">' +
                           '<label>Customer <span style="color:red"><strong>*</strong></span></label>' +
                           // '<input type="text" class="form-control" data-parsley-required-message="<strong>Customer</strong> is required." value="'+(data[i].paid_by != false ? data[i].paid_by : '')+'" name="hd_cust" required>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_cust" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Customer</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
+                          '<select required class="form-control select2 select2-hidden-accessible" name="hd_cust['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Customer</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
                             @isset($m06)
                               '<option value="">Select Customer...</option>' +
                                 @foreach($m06 as $x3)
@@ -585,21 +592,40 @@
                       '</div>'+
                       // CUSTOMER
                       // DATE
-                      '<div class="col-md-4">' +
+                      '<div class="col-md-3">' +
                         '<div class="form-group">' +
                           '<label>Date <span style="color:red;"><strong>*</strong></span></label>' +
                           '<div class="input-group date">' +
                               '<div class="input-group-addon">' +
                                   '<i class="fa fa-calendar"></i>' +
                               '</div>' +
-                              '<input type="date" class="form-control pull-right" name="hd_dt" required data-parsley-required-message="<strong>Date</strong> is required." value="'+data[i].date+'"  readonly>' +
+                              '<input required type="date" class="form-control pull-right" name="hd_dt['+data[i].or_no+']" required data-parsley-required-message="<strong>Date</strong> is required." value="'+data[i].date+'"  readonly>' +
                           '</div>'+
                         '</div>' +
                       '</div>'+
                       // DATE
+                      // Real property type
+                      '<div class="col-md-3">' +
+                        '<div class="form-group">' +
+                          '<label>Real Property Class <span style="color:red"><strong>*</strong></span></label>' +
+                          // '<input type="text" class="form-control" data-parsley-required-message="<strong>Customer</strong> is required." value="'+(data[i].paid_by != false ? data[i].paid_by : '')+'" name="hd_cust" required>' +
+                          '<select required class="form-control select2 select2-hidden-accessible" name="hd_real_property['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Real Property Class</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
+                            @isset($real)
+                              '<option value="">Select Real Property Class...</option>' +
+                                @foreach($real as $r)
+                                  '<option value="{{$r->rpid}}" id="cust_{{$r->rpid}}" cust_name="{{urlencode($r->rp_desc)}}">{{$r->rpid}} {{$r->rp_desc}}</option>' +
+                                @endforeach
+                            @else
+                                '<option value="">No Real Property Class registered...</option>' +
+                            @endisset
+                          '</select>' +
+                          '<span id="budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'"></span>' +
+                        '</div>' +
+                      '</div>'+
+                      // Real property type
                     '</div>' +
                     // ROW 2
-                    '</form>' +
+                    // '</form>' +
                     // COLUMN HEAD
                     // COLUMN BODY
                     // '<div class="row table-responsive">' +
@@ -668,20 +694,26 @@
               selectedId = table.row( this ).index() ;
               // console.log(this);
           });
-
+          // for adding per line
           if(data[i].data.length > 0)
           {
             for(var j = 0, k = 1; j< data[i].data.length; j++,k++)
             {
               $('#table_'+data[i].or_no+'_'+ data[i].no).DataTable().row.add([
                 k,
-                '<span class="tin" pay_tin="'+data[i].data[j].local_tin+'">'+data[i].data[j].local_tin+'</span>',
-                '<span class="td_id" td_id="'+data[i].data[j].to_bus+'">'+((data[i].data[j].to_bus != '') ? data[i].data[j].to_bus : 'N/A')+'</span>',
-                '<span class="payer" payer="'+data[i].data[j].tax_payer+'">'+data[i].data[j].tax_payer+'</span>',
-                '<span class="py_typ" py_typ="'+data[i].data[j].type+'"><center>'+data[i].data[j].type+'</center></span>',
-                '<span class="tax_type" tax_typ_id="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'" tax_type="'+encodeURI(data[i].data[j].tax_type)+'">'+data[i].data[j].tax_type+'</span>',
-                '<span class="soa_code" soa_code="">'+'N/A'+'</span>',
-                '<center class="amt" amt="'+parseFloat(isNaN(data[i].data[j].amt) ? '0' : data[i].data[j].amt)+'">'+formatNumberToMoney(parseFloat(data[i].data[j].amt))+'</center>',
+                '<span class="tin" pay_tin="'+data[i].data[j].local_tin+'">'+data[i].data[j].local_tin+'</span><input name="hiddentin['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].local_tin+'">',
+
+                '<span class="td_id" td_id="'+data[i].data[j].to_bus+'">'+((data[i].data[j].to_bus != '') ? data[i].data[j].to_bus : 'N/A')+'</span><input name="hiddentd['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].to_bus+'">',
+
+                '<span class="payer" payer="'+data[i].data[j].tax_payer+'">'+data[i].data[j].tax_payer+'</span><input name="hiddenpayer['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].tax_payer+'">',
+
+                '<span class="py_typ" py_typ="'+data[i].data[j].type+'"><center>'+data[i].data[j].type+'</center></span><input name="hiddenpy_typ['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].type+'">',
+
+                '<span class="tax_type" tax_typ_id="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'" tax_type="'+encodeURI(data[i].data[j].tax_type)+'">'+data[i].data[j].tax_type+'</span><input name="hiddentax_typ_id['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'">',
+
+                '<span class="soa_code" soa_code="">'+'N/A'+'</span><input name="hiddensoa_code['+data[i].or_no+'][]" type="hidden" value=""><input name="hiddenpaymentdesc['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'">',
+
+                '<center class="amt" amt="'+parseFloat(isNaN(data[i].data[j].amt) ? '0' : data[i].data[j].amt)+'">'+formatNumberToMoney(parseFloat(data[i].data[j].amt))+'</center><input name="hiddenamt['+data[i].or_no+'][]" type="hidden" value="'+parseFloat(isNaN(data[i].data[j].amt) ? '0' : data[i].data[j].amt)+'">',
                 '<center>' +
                 //'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0].at_code : '')+'
                 //(or_no, no, line, tin, td_bus, payer, itm_type, payment, payment_desc, soa_code, amt)
@@ -693,6 +725,7 @@
             // console.log(data[i].data[0].local_tin);
             SubTotal(data[i].or_no, data[i].no);
           }
+          // end for adding per line
         }
         $('#ShowAll').append(
             '<div class="row">' +
@@ -707,7 +740,7 @@
                 '<div class="col-sm-6">' +
                     '<div class="col-sm-6">' +
                       {{-- <div class="form-group" style="display: flex;"> --}}
-                        '<button type="button" class="btn btn-block btn-success" onclick="SaveProposal()"><i class="fa fa-save"></i> Save</button>' +
+                        '<button type="submit" class="btn btn-block btn-success" onclick="SaveProposal()"><i class="fa fa-save"></i> Save</button>' +
                     '</div>'+
                     '<div class="col-sm-6">' +
                       '<button type="button" class="btn btn-block btn-primary" style="margin-top: 0;" onclick="javascript:history.go(-1)"><i class="fa fa-arrow-left"></i> Go Back</button>' +
@@ -716,17 +749,19 @@
             '</div>'
           );
         GrandTotal();
-        $('select[name="hd_jr"]').select2();
-        $('select[name="hd_cust"]').select2();
-        $('select[name="hd_fund"]').select2();
-        $('select[name="hd_or_typ"]').select2();
-        if($('select[name="hd_jr"] option').length > 1)
+        // $('select[name="hd_jr"]').select2();
+        // $('select[name="hd_cust"]').select2();
+        // $('select[name="hd_real_property"]').select2();
+        // $('select[name="hd_fund"]').select2();
+        // $('select[name="hd_or_typ"]').select2();
+        $("select").select2();
+        if($('select[name^="hd_jr"] option').length > 1)
         {
-          $('select[name="hd_jr"]').val('CRJ').trigger('change');
+          $('select[name^="hd_jr"]').val('CRJ').trigger('change');
         }
-        if($('select[name="hd_fund"] option').length > 1)
+        if($('select[name^="hd_fund"] option').length > 1)
         {
-          $('select[name="hd_fund"]').val('00000008').trigger('change');
+          $('select[name^="hd_fund"]').val('00000008').trigger('change');
         }
       }
     }
@@ -817,7 +852,6 @@
       $('input[name="itm_amt"]').val(parseFloat(amt));
 
       $('#ItemButtonNameButton').removeClass('fa-plus');
-      console.log($('#ItmForm').parsley().validate());
       $('#ItemButtonNameButton').addClass('fa-save');
       $('.DeleteMode').hide();
       $('.AddMode').hide();
@@ -871,13 +905,13 @@
         {
           table.row.add([
             line,
-            '<span class="tin" pay_tin="'+tin+'">'+tin+'</span>',
-            '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span>',
-            '<span class="payer" payer="'+payer+'">'+payer+'</span>',
-            '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span>',
-            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span>',
-            '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span>',
-            '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center>',
+            '<span class="tin" pay_tin="'+tin+'">'+tin+'</span><input name="hiddentin['+or_no+'][]" value="'+tin+'" type="hidden">',
+            '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span><input name="hiddentd['+or_no+'][]" value="'+td_bus+'" type="hidden">',
+            '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
+            '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
+            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
+            '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center><input name="hiddenamt['+or_no+'][]" value="'+parseFloat(amt)+'" type="hidden">',
             '<center>' +
                 '<a class="btn btn-social-icon btn-warning"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode(\''+or_no+'\', \''+no+'\', \''+line+'\', \''+tin+'\', \''+td_bus+'\', \''+payer+'\', \''+itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"></i></a>&nbsp;' +
                 '<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode(\''+or_no+'\', \''+no+'\', \''+line+'\', \''+tin+'\', \''+td_bus+'\', \''+payer+'\', \''+itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"><i class="fa fa-trash "></i></a>' +
@@ -889,13 +923,13 @@
         {
           table.row(selectedId).data([
             line,
-            '<span class="tin" pay_tin="'+tin+'">'+tin+'</span>',
-            '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span>',
-            '<span class="payer" payer="'+payer+'">'+payer+'</span>',
-            '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span>',
-            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span>',
-            '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span>',
-            '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center>',
+            '<span class="tin" pay_tin="'+tin+'">'+tin+'</span><input name="hiddentin['+or_no+'][]" value="'+tin+'" type="hidden">',
+            '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span><input name="hiddentd['+or_no+'][]" value="'+td_bus+'" type="hidden">',
+            '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
+            '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
+            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
+            '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center><input name="hiddenamt['+or_no+'][]" value="'+parseFloat(amt)+'" type="hidden">',
             '<center>' +
                 '<a class="btn btn-social-icon btn-warning"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode(\''+or_no+'\', \''+no+'\', \''+line+'\', \''+tin+'\', \''+td_bus+'\', \''+payer+'\', \''+itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"></i></a>&nbsp;' +
                 '<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode(\''+or_no+'\', \''+no+'\', \''+line+'\', \''+tin+'\', \''+td_bus+'\', \''+payer+'\', \''+itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"><i class="fa fa-trash "></i></a>' +
@@ -927,6 +961,7 @@
       var COL_NUM = $('[name="hd_or_num"]').map(function(){return $(this).attr('or_num');}).get();
       var COL_JR = $('[name="hd_jr"]').map(function(){return $(this).val();}).get();
       var COL_FUND = $('[name="hd_fund"]').map(function(){return $(this).val();}).get();
+      var COL_REAL_PROPERTY = $('[name="hd_real_property"]').map(function(){return $(this).val();}).get();
       var COL_CUST_NAME = $('[name="hd_cust"]').map(function(){return $(this).attr('leCustomer');}).get();
       // CHECK NUMBER OF COLLECTION TO SAVE
       if(COL_OR_NUM.length > 0)
@@ -969,30 +1004,49 @@
 
           if(leTEST == true)
           {
-            var AllData = [];
-            for(var i = 0; i < COL_OR_NUM.length;i++)
-            {
-              var TempoRaryStorage1 = [];
-              TempoRaryStorage1["col_code"] = COL_JR[i];
-              TempoRaryStorage1["fund"] = COL_FUND[i];
-              TempoRaryStorage1["dt"] = COL_DT[i];
-              TempoRaryStorage1["cust"] = COL_CUST[i];
-              TempoRaryStorage1["cust_name"] = COL_CUST_NAME[i];
-              TempoRaryStorage1["or_typ"] = COL_OR_TYP[i];
-              TempoRaryStorage1["or_no"] = COL_OR_NUM[i];
-              TempoRaryStorage1["cashier"] = $('select[name="hdr_cash"]').val();
-              TempoRaryStorage1["data"] = [];
+           // save here
+          var AllData = [];
+          let arrOfHidden = ['hiddentin','hiddentd','hiddenpayer','hiddenpy_typ','hiddentax_typ_id','hiddenpaymentdesc','hiddensoa_code','hiddenamt'];
+          for(var i = 0; i < COL_OR_NUM.length; i++)
+          {
+            var TempoRaryStorage1 = [];
+            var TempoRaryStorage2 = [];
+            var TempoRaryStorage1 = [];
+            var TempoRaryStorage2 = [];
+            TempoRaryStorage1["col_code"] = COL_JR[i];
+            TempoRaryStorage1["fund"] = COL_FUND[i];
+            TempoRaryStorage1["dt"] = COL_DT[i];
+            TempoRaryStorage1["cust"] = COL_CUST[i];
+            TempoRaryStorage1["cust_name"] = COL_CUST_NAME[i];
+            TempoRaryStorage1["or_typ"] = COL_OR_TYP[i];
+            TempoRaryStorage1["or_no"] = COL_OR_NUM[i];
+            TempoRaryStorage1["real_property"] = COL_REAL_PROPERTY[i];
+            TempoRaryStorage1["cashier"] = $('select[name="hdr_cash"]').val();
+            TempoRaryStorage1["data"] = [];
 
-              for(var j = 0; j <  $('#table_'+COL_OR_NUM[i]+'_'+COL_NUM[i]).DataTable().row().length; j++)
-              {
-                var TempoRaryStorage2 = [];
-              }
-
-              AllData.push(TempoRaryStorage1);
+            let tableqwe = $('#table_'+COL_OR_NUM[i]+'_'+COL_NUM[i]).DataTable();
+            tableqwe.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+              let data = this.data();
+              let thisNode = $(this.node());
+              arrOfHidden.forEach(function(el,key){
+                if(thisNode.find('[name="'+el+'"]').length){
+                  TempoRaryStorage1["data"][el + '^' + rowIdx + '^' + tableLoop] = thisNode.find('[name="'+el+'"]').val();
+                }
+              })
+              
+            } );
+            AllData.push(TempoRaryStorage1);
+          }
+          console.log(AllData);
+          $.ajax({
+            url: '{{url('accounting/collection/saveimport')}}',
+            method: 'POST',
+            cache: false,
+            data: {_token: '{{csrf_token()}}', data: $("#he").serialize()},
+            success: function(a){
+              console.log(a);
             }
-            console.log(AllData);
-            // $.ajax({});
-
+          })
           }
           else
           {
