@@ -714,20 +714,20 @@
             {
                 if(($('#example1').DataTable().data().count()/ 9) != 0)
                 {
-                    var tin = $(".tin").map(function(){return $(this).attr("pay_tin");}).get();
-                    var td_id = $('.td_id').map(function(){return $(this).attr("td_id");}).get();
-                    var payer = $('.payer').map(function(){return $(this).attr("payer");}).get();
-                    var typ = $('.py_typ').map(function(){return $(this).attr("py_typ");}).get();   
+                    var tin = [], td_id = [], payer = [], typ = [], pay_typ = [], pay_desc = [], amt = [], soa_code = [];
+                    $('#example1').DataTable().rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+                        let currentNode = $(this.node());
+                       tin.push(currentNode.find('td .tin').attr("pay_tin"));
+                       td_id.push(currentNode.find('td .td_id').attr("td_id"));
+                       payer.push(currentNode.find('td .payer').attr("payer"));
+                       typ.push(currentNode.find('td .py_typ').attr("py_typ"));
+                       pay_typ.push(currentNode.find('td .tax_type').attr("tax_typ_id"));
+                       pay_desc.push(currentNode.find('td .tax_type').attr("tax_type"));
+                       amt.push(currentNode.find('td .amt').attr("amt"));
+                       soa_code.push(currentNode.find('td .soa_code').attr("soa_code"));
+                    } );
+                    
 
-                    var pay_typ = $(".tax_type").map(function(){return $(this).attr("tax_typ_id");}).get();
-                    var pay_desc = $(".tax_type").map(function(){return urldecode($(this).attr("tax_type"));}).get();
-                    var amt = $(".amt").map(function(){return $(this).attr("amt");}).get();
-                    // var chk_num = $(".chk_num").map(function(){return $(this).attr("chk_num");}).get();
-                    // var chk_dt = $(".chk_dt").map(function(){return $(this).attr("chk_dt");}).get();
-                    // var is_dep = $(".is_dep").map(function(){return $(this).attr("is_dep");}).get();
-                    var soa_code = $(".soa_code").map(function(){return $(this).attr("soa_code");}).get();
-                    // var at_code = $(".at_code").map(function(){return $(this).attr("at_code");}).get();
-                    // var subgrpid = $(".subgrpid").map(function(){return $(this).attr("subgrpid");}).get();
                     var data = {
                             _token : $('meta[name="csrf-token"]').attr('content'),
                             tin : tin,

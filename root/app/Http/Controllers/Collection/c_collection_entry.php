@@ -175,8 +175,8 @@ class c_collection_entry extends Controller
     		];
             if (Core::insertTable('rssys.colhdr', $insertIntoBgt01, 'Collection Entry')) {
                 Core::updatem99('col_code', Core::get_nextincrementlimitchar($b_num->col_code, 8));
-             if (count($r->pay_typ)) {
-                 for ($i=0, $j = 1; $i < count($r->pay_typ); $i++, $j++) {
+             if (count($r->tin)) {
+                 for ($i=0, $j = 1; $i < count($r->tin); $i++, $j++) {
                      $insertIntoBgt02 =
                          [
                              'or_code' => $b_num->col_code,
@@ -223,7 +223,7 @@ class c_collection_entry extends Controller
     }
     public function update(Request $r) // TO UPDATE EXISTING COLLECTION ENTRY
     {
-        // return dd($r->all());
+        // return $r->all();
         $dt = Carbon::now();
         $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$r->col_code'";
         $testData = Core::sql($sql00);
@@ -250,8 +250,8 @@ class c_collection_entry extends Controller
         Core::deleteTableMultiWhere('rssys.collne2', $del, 'Collection Entry' );
         if (Core::updateTable('rssys.colhdr', 'col_code', $r->b_num, $insertIntoBgt01, 'Collection Entry')) 
         {
-            if (count($r->pay_typ)) {
-                for ($i=0, $j = 1; $i < count($r->pay_typ); $i++, $j++) {
+            if (count($r->tin)) {
+                for ($i=0, $j = 1; $i < count($r->tin); $i++, $j++) {
                      $insertIntoBgt02 =
                          [
                              'or_code' => $r->b_num,

@@ -342,6 +342,9 @@
                             @if($LA_GRP["C1000001"]["restrict"] == 'Y')
                             <li><a href="{{ asset('accounting/collection/or_issuance') }}"><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
                             @endif
+                            @if($LA_GRP["C1000001"]["restrict"] == 'Y')
+                            <li><a href="{{ asset('accounting/collection/import') }}"><i class="fa fa-circle-o"></i> Import iTax</a></li>
+                            @endif
                             @if($LA_GRP["C1000002"]["restrict"] == 'Y')
                             <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Important thru iTax</a></li>
                             @endif
