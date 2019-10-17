@@ -82,4 +82,9 @@ $.widget.bridge('uibutton', $.ui.button);
     function urldecode(url) {
       return decodeURIComponent(url.replace(/\+/g, ' '));
     }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 </script>

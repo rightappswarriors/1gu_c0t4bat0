@@ -576,6 +576,43 @@ Route::group(['middleware'=>['checkauth']], function () {
 		/* ----- Biology*/
 			Route::prefix('inventory')->group(function() {
 				Route::prefix('biology')->group(function() {
+
+					//REDIRECT TO BIOLOGY TABLES
+
+					Route::get('/biologyacqusitiontbl', 'Inventory\I_BiologyController@acq_table')->name('inventory.biology.bio_acq_table');
+					Route::get('/biologybirthtbl', 'Inventory\I_BiologyController@boo_table')->name('inventory.biology.bio_boo_table');
+					Route::get('/biologydispotbl', 'Inventory\I_BiologyController@dispo_table')->name('inventory.biology.bio_dispo_table');
+
+					//GET POST TO CREATE LIST
+					
+					//BIOLOGY ACQUISITION
+					
+					Route::match(['get', 'post'], '/biologyacqusition_add', 'Inventory\I_BiologyController@acq_add')->name('inventory.biologyacqusition_add');
+					Route::match(['get', 'post'], '/biologyacqusition_edit/{code}', 'Inventory\I_BiologyController@acq_edit')->name('inventory.biologyacqusition_edit');
+					Route::post('/bioAcq_cancel', 'Inventory\I_BiologyController@acq_cancel')->name('inventory.bioAcq_cancel');
+
+					//END BIOLOGY ACQUISITION
+
+					//BIOLOGY OF OFFSPRING
+					
+					Route::match(['get', 'post'], '/biologyoffspring_add', 'Inventory\I_BiologyController@boo_add')->name('inventory.biologyoffspring_add');
+					Route::match(['get', 'post'], '/biologyoffspring_edit/{code}', 'Inventory\I_BiologyController@boo_edit')->name('inventory.biologyoffspring_edit');
+					Route::post('/bioBoo_cancel', 'Inventory\I_BiologyController@boo_cancel')->name('inventory.bioBoo_cancel');
+					
+					//END BIOLOGY OF OFFSPRING
+					
+					//BIOLOGY DISPOSITION
+
+					Route::match(['get', 'post'], '/biologydisposition_add', 'Inventory\I_BiologyController@dispo_add')->name('inventory.biologydisposition_add');
+					Route::match(['get', 'post'], '/biologydisposition_edit/{code}', 'Inventory\I_BiologyController@dispo_edit')->name('inventory.biologydisposition_edit');
+					Route::post('/bioDispo_cancel', 'Inventory\I_BiologyController@dispo_cancel')->name('inventory.bioDispo_cancel');
+
+					//END BIOLOGY DISPOSITION
+					
+
+					//GET TABLE LINE DETAILS
+					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockin_getitemdetails');
+
 					Route::get('/', 'Inventory\I_BiologyController@view')->name('inventory.biology');
 					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
 					// Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
@@ -671,6 +708,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('report/budget/saaob', 'Report\Budget\c_saob@view');
 				Route::get('report/budget/saaob/generate/{fy}/{mo}/{fid}', 'Report\Budget\c_saob@GenerateSaob');
 			/* ----- SAOB */
+
+			//BIOLOGY REPORT
+			
+			Route::get('/report/biology/biologyreport', 'Report\InventoryReports@view')->name('inventory.bioreports');
+			
+			Route::get('/report/biology/bioreportsview', 'Report\InventoryReports@index')->name('inventory.bioreportsview');
+
+			Route::post('report/biology/bioreportsview', 'Report\InventoryReports@generate')->name('report.generatebioreport');
+
+			Route::post('report/biology/bioreportsprint', 'Report\InventoryReports@generate')->name('report.biology.bioreportsprint');
+
 		/* ----- BUDGET */
 	/* REPORT -------------------------------*/
 

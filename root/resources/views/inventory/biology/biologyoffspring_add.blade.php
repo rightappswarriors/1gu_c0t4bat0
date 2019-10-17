@@ -3,30 +3,32 @@
 @php
     $_bc = [
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>'#','desc'=>'Stock In','icon'=>'none','st'=>false],
+        ['link'=>'#','desc'=>'Item Repair','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Create','icon'=>'none','st'=>true],
     ];
-    $_ch = "Stock In"; // Module Name
+    $_ch = " Offspring"; // Module Name
 @endphp
 @else
 @php
     $_bc = [
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>'#','desc'=>'Stock In','icon'=>'none','st'=>false],
+        ['link'=>'#','desc'=>'Item Repair Info','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Edit','icon'=>'none','st'=>true],
     ];
-    $_ch = "Stock In"; // Module Name
+    $_ch = " Offspring"; // Module Name
 @endphp
 @endif
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       <div class="box box-default">
         <div class="box-header with-border">
-          <h3 class="box-title">Stock In Info</h3>
-
+          <h3 class="box-title"> Offspring</h3>
+          @if(!$isnew)
+            <input type="hidden" name="txt_code" value="{{$biohd->code}}">
+          @endif
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -36,115 +38,41 @@
         <form id="HeaderForm" data-parsley-validate novalidate>
         <div class="box-body" style="">
           <div class="row">
+
             <div class="col-md-3">
               <div class="form-group">
-                <label>Purchase Order No</label>
-                @if($isnew)
-                <input type="text" class="form-control" name="txt_purccode" maxlength="9" data-parsley-errors-container="#validate_code" data-parsley-required-message="<strong>Purchase No is required.</strong>" required>
+                <label>FUND <span style="color:red"><strong>*</strong></span></label>
+                 @if($isnew)
+                  <input type="text" class="form-control" name="b_fund" data-parsley-errors-container="#validate_b_fund" required>
+                 @else
+                  <input type="text" class="form-control" name="b_fund" value="{{$biohd->fund}}" data-parsley-errors-container="#validate_b_fund" required>
+                 @endif
+                  <span id="#validate_b_fund"></span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Kind of Animals <span style="color:red"><strong>*</strong></span></label>
+                 @if($isnew)
+                <input type="text" class="form-control" name="b_koa" data-parsley-errors-container="#validate_b_koa" required>
                 @else
-                <input type="text" class="form-control" name="txt_purccode" maxlength="9" value="{{$rechdr->purc_ord}}" data-parsley-errors-container="#validate_code" data-parsley-required-message="<strong>Purchase No is required.</strong>" required>
-                <input type="hidden" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}">
+                <input type="text" class="form-control" name="b_koa" value="{{$biohd->kindofanimals}}" data-parsley-errors-container="#validate_b_koa" required>
                 @endif
-                <span id="validate_code"></span>
+                  <span id="#validate_b_koa"></span>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Purchase Order Date <span style="color:red"><strong>*</strong></span></label>
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  @if($isnew)
-                  <input type="date" name="dtp_invoicedt" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>Purchase date is required.</strong>" required>
-                  @else
-                  <input type="date" class="form-control pull-right" id="datepicker" name="dtp_invoicedt" value="{{$rechdr->trnx_date}}" data-parsley-errors-container="#validate_invoicedt" data-parsley-required-message="<strong>Purchase date is required.</strong>" required>
-                  @endif
-                </div>
-                <span id="validate_invoicedt"></span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Stock Location <span style="color:red"><strong>*</strong></span></label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation" data-parsley-errors-container="#validate_stocklocation" data-parsley-required-message="<strong>Stock Location is required.</strong>" required>
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Stock Location ---</option>
-                    @foreach($stock_loc as $st)
-                    <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                    @endforeach
-                  @else
-                    @foreach($stock_loc as $st)
-                    @if($rechdr->whs_code == $st->whs_code)
-                    <option selected="selected" value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                    @else
-                    <option value="{{$st->whs_code}}">{{$st->whs_desc}}</option>
-                    @endif
-                    @endforeach
-                  @endif
-                </select>
-                 <span id="validate_stocklocation"></span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Branch <span style="color:red"><strong>*</strong></span></label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true", name="select_branch" data-parsley-errors-container="#validate_branch" data-parsley-required-message="<strong>Branch is required.</strong>" required>
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Branch ---</option>
-                    @foreach($branch as $b)
-                    <option value="{{$b->code}}">{{$b->name}}</option>
-                    @endforeach
-                  @else
-                    @foreach($branch as $b)
-                    @if($rechdr->branch == $b->code)
-                    <option selected = "selected" value="{{$b->code}}">{{$b->name}}</option>
-                    @else
-                    <option value="{{$b->code}}">{{$b->name}}</option>
-                    @endif
-                    @endforeach
-                  @endif
-                </select>        
-                <span id="validate_branch"></span>      
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Supplier Name <span style="color:red"><strong>*</strong></span></label>
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_supplier" data-parsley-errors-container="#validate_supplier" data-parsley-required-message="<strong>Supplier is required.</strong>" required>
-                  @if($isnew)
-                    <option value="" selected="selected">--- Select Supplier ---</option>
-                    @foreach($supplier as $s)
-                    <option value="{{$s->c_code}}">{{$s->c_name}}</option>
-                    @endforeach
-                  @else
-                    @foreach($supplier as $s)
-                    @if($rechdr->supl_code == $s->c_code)
-                    <option selected="selected" value="{{$s->c_code}}">{{$s->c_name}}</option>
-                    @else
-                    <option value="{{$s->c_code}}">{{$s->c_name}}</option>
-                    @endif
-                    @endforeach
-                  @endif
-                </select>
-                <span id="validate_supplier"></span>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Reference <span style="color:red"><strong>*</strong></span></label>
+                <label>Reference</label>
                 @if($isnew)
-                  <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_reference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
+                  <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_reference">
                 @else
-                  <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" data-parsley-errors-container="#validate_reference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
+                  <input type="text" class="form-control" name="txt_reference" value="{{$biohd->reference}}" data-parsley-errors-container="#validate_reference">
                 @endif
-                <span id="validate_reference"></span>
+                  <span id="#validate_reference"></span>
               </div>
-            </div>
-          </div>
-          <!-- /.row -->
+            </div>                     
+            
         </div>
       </form>
         <!-- /.box-body -->
@@ -157,15 +85,6 @@
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button>
-                </div>
-                <div class="col-sm-6">
-                  <h5 class="box-title">Total amount:</h5>
-                    &nbsp;<label>@if($isnew)
-                                   <input type="text" name="txt_grandtotalamt" readonly="">
-                                @else
-                                   <input type="text" name="txt_grandtotalamt" value="{{$grandtotal->grandtotal}}" readonly="">
-                                @endif
-                          </label>
                 </div>
               </div>
 
@@ -189,7 +108,7 @@
                               <th></th>
                               <th>Item Code</th>
                               <th>Quantity</th>
-                              <th>Part No</th>
+                              <th>Property No</th>
                               <th>Item Description</th>
                               <th>Unit</th>
                               <th>Brand</th>
@@ -201,7 +120,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                              @foreach($disp_items as $di)
+                              @foreach($data as $di)
                             <tr>
                               <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}')"></td>
                               <td>{{$di->item_code}}</td>
@@ -241,63 +160,34 @@
               <table id="tbl_itemlist" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Line</th>
-                  <th>Part No</th>
+                  <th>Date</th>
+                  <th>Line No.</th>
                   <th>Item Code</th>
+                  <th>Property No.</th>
                   <th>Description</th>
-                  <th>Qty</th>
-                  <th>Unit Code</th>
-                  <th>Unit Desc</th>
-                  <th>Cost Price</th>
-                  <th>Disc Amt</th>
-                  <th>Line Amt</th>
-                  <th>Net Price</th>
-                  <th>Line Vat</th>
-                  <th>Vat</th>
+                  <th>Number Of Offspring</th>
+                  <th>Remarks</th>
                   <th>Actions</th>
+
                 </tr>
                 </thead>
                 <tbody>
                   @if(!$isnew)
-                  @foreach($reclne as $rl)
-                     <tr>  
-                       <td>{{$rl->ln_num}}</td>
-                       <td>{{$rl->part_no}}</td>
-                       <td>{{$rl->item_code}}</td>
+                  @foreach($bioln as $rl)
+                     <tr>
+                      <td>{{$rl->date}}</td>
+                       <td>{{$rl->ln_num}}</td> 
+                       <td>{{$rl->item_code}}</td> 
+                       <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
-                       <td>{{$rl->qty}}</td>
-                       <td>{{$rl->unit_code}}</td>
-                       <td>{{$rl->unit_desc}}</td>
-                       <td>{{$rl->price}}</td>
-                       <td>{{$rl->discount}}</td>
-                       <td>{{$rl->ln_amnt}}</td>
-                       <td>{{$rl->net_amnt}}</td>
-                       <td>{{$rl->ln_vat}}</td>
-                       <td>{{$rl->ln_vatamt}}</td>
+                       <td>{{$rl->numberofoffspring}}</td>
+                       <td>{{$rl->remarks}}</td>
                        <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
                        </td>
                      </tr>  
                   @endforeach
                   @endif
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>Line</th>
-                  <th>Part No</th>
-                  <th>Item Code</th>
-                  <th>Description</th>
-                  <th>Qty</th>
-                  <th>Unit Code</th>
-                  <th>Unit Desc</th>
-                  <th>Cost Price</th>
-                  <th>Disc Amt</th>
-                  <th>Line Amt</th>
-                  <th>Net Price</th>
-                  <th>Line Vat</th>
-                  <th>Vat</th>
-                  <th>Actions</th>
-                </tr>
-                </tfoot>
               </table>
             </div>
             </div>
@@ -307,7 +197,7 @@
           <div class="row">
             <div class="col-sm-3">
               <div class="form-group" style="display: flex;">
-                <a href="{{route('inventory.stockin')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
+                <a href="{{route('inventory.biology.bio_boo_table')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
               </div>
             </div>
             <div class="col-sm-3">
@@ -356,7 +246,7 @@
                           </div>
                           <div class="col-sm-4">
                             <div class="form-group">
-                              <label>Part No.</label>
+                              <label>Property No.</label>
                               <input type="text" class="form-control" name="txt_partno" readonly="">
                             </div>
                           </div>                        
@@ -381,77 +271,38 @@
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-9">
+                          
+                          <div class="col-sm-12">
                             <div class="form-group">
-                              <label>VAT Type</label> <span class="validate_ivattype"></span>
-                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_vat" data-parsley-errors-container="#validate_ivattype" data-parsley-required-message="<strong>VAT Type is required.</strong>" {{-- required --}}>
-                                  <option value="" selected="selected">--- Select VAT ---</option>
-                                  @foreach($vat as $v)
-                                  <option value="{{$v->vat_code}}">{{$v->vat_desc}}</option>
-                                  @endforeach
-                              </select>
+                              <label>Item Remarks</label>
+                              <input type="text" class="form-control" name="txt_remarks"> 
                             </div>
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Quantity</label>
-                                <input id="txt_qty" type="number" class="form-control" name="txt_qty" step="any" placeholder="0.00" data-parsley-errors-container="#validate_iqty" data-parsley-required-message="<strong>Quantity is required.</strong>" {{-- required --}}>
-                                <span class="validate_iqty"></span>
+                          <div class="col-sm-5">
+                            <label>Date <span style="color:red"><strong>*</strong></span></label>
+                            <div class="input-group">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input required value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
                             </div>
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-sm-5">
                             <div class="form-group">
-                              <label>Unit Measurement</label>
-                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_unit" data-parsley-errors-container="#validate_iitemunit" data-parsley-required-message="<strong>Unit Measurement is required.</strong>" {{-- required --}}>
-                                  <option value="" selected="selected">--- Select Unit ---</option>
-                                  @foreach($itemunit as $iu)
-                                  <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
-                                  @endforeach
-                                </select>
-                                <span class="validate_iitemunit"></span>
+                              <label>Number Of Offspring <span style="color:red"><strong>*</strong></span></label>
+                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" required>
                             </div>
                           </div>
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <label>Cost Price</label>
-                               <input id="txt_cost" type="number" class="form-control" name="txt_cost" step="any" placeholder="0.00" data-parsley-errors-container="#validate_icostprice" data-parsley-required-message="<strong>Cost Price is required.</strong>" {{-- required --}}>
-                               <span class="validate_icostprice"></span>
-                            </div>
-                          </div>
+                          
                         </div>
-                        <div class="row">                          
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Discount Amount</label>
-                               <input id="txt_disc" type="number" class="form-control" name="txt_disc" step="any" placeholder="0.00">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Line Amount</label>
-                               <input type="text" class="form-control" name="txt_lineamt" placeholder="0.00" readonly="">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>VAT</label>
-                               <input type="text" class="form-control" name="txt_vatamt" placeholder="0.00" readonly="">
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group">
-                              <label>Net Price</label>
-                               <input type="text" class="form-control" name="txt_netprice" placeholder="0.00" readonly="">
-                            </div>
-                          </div>
-                        </div>
+
                       </div>
                     </span>
                     <span class="DeleteMode">
                       <center>
-                          <h4 class="text-transform: uppercase;">Are you sure you want to remove this item?
+                          <h4 class="text-transform: uppercase;">Are you sure you want to delete this item?
                           </h4>
                       </center>
                     </span>
@@ -506,7 +357,6 @@
       $('#tbl_itemlist').DataTable( {
         "columnDefs": [
             {
-                "targets": [ 5 ], // hide unit code col
                 "visible": false,
                 "searchable": false
             }
@@ -514,29 +364,6 @@
       } );
       } );
 
-      // if input qty change
-      $('#txt_qty').keyup(function(event)
-      {
-        disp_amt_result();
-      });
-      
-      // if select vat qty change
-      $('select[name="select_vat"]').change(function(event)
-      {
-        disp_amt_result();
-      });
-      
-      // input disc change
-      $('#txt_disc').keyup(function(event)
-      {
-        disp_amt_result();
-      });
-
-      // if cost price change
-      $('#txt_cost').keyup(function(event)
-      {
-        disp_amt_result();
-      });
 
 
       function EnterItem_Add(code)
@@ -559,10 +386,8 @@
                            {
                              $('input[name="txt_lineno"]').val(line);
                              $('input[name="txt_itemcode"]').val(code);
-                             $('input[name="txt_partno"]').val(data[0]); //edited
+                             $('input[name="txt_partno"]').val(data[0]);
                              $('input[name="txt_itemdesc"]').val(data[1]);
-                             $('input[name="txt_cost"]').val(data[3]);
-                             $('select[name="select_unit"]').val(data[2]).trigger('change');
                            }
               });
       }
@@ -580,20 +405,19 @@
           var row = line - 1;
           var data = table.row(row).data();
           
-          $('input[name="txt_lineno"]').val(data[0]);
-          $('input[name="txt_partno"]').val(data[1]);
+          $('input[name="txt_lineno"]').val(data[1]);
+          $('input[name="txt_partno"]').val(data[3]);
           $('input[name="txt_itemcode"]').val(data[2]);
-          $('input[name="txt_itemdesc"]').val(data[3]);
-          $('input[name="txt_qty"]').val(data[4]);
-          $('select[name="select_unit"]').val(data[5]).trigger('change');
-          $('input[name="txt_cost"]').val(data[7]);
-          $('input[name="txt_disc"]').val(data[8]);
-          $('input[name="txt_lineamt"]').val(data[9]);
-          $('input[name="txt_netprice"]').val(data[10]);
-          $('select[name="select_vat"]').val(data[11]).trigger('change');
-          $('input[name="txt_vatamt"]').val(data[12]);
+          $('input[name="txt_itemdesc"]').val(data[4]);
+          $('input[name="txt_qty"]').val(data[5]);
+          $('input[name="txt_date"]').val(data[0]);
+          $('input[name="txt_remarks"]').val(data[6]);
 
           $('#enteritem-modal').modal('toggle');
+
+
+
+
 
           //console.log(data);
       }
@@ -617,19 +441,14 @@
 
         var table = $('#tbl_itemlist').DataTable();
 
+        
         var line = $('input[name="txt_lineno"]').val();
         var item_code = $('input[name="txt_itemcode"]').val();
         var part_no = $('input[name="txt_partno"]').val();
         var item_desc = $('input[name="txt_itemdesc"]').val();
         var qty = $('input[name="txt_qty"]').val();
-        var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
-        var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
-        var cost_price = $('input[name="txt_cost"]').val();
-        var disc_amnt = $('input[name="txt_disc"]').val();
-        var line_amnt = $('input[name="txt_lineamt"]').val();
-        var net_price = $('input[name="txt_netprice"]').val();
-        var line_vat = $('select[name="select_vat"]').select2('data')[0].id;
-        var vat_amt = $('input[name="txt_vatamt"]').val();
+        var date = $('input[name="txt_date"]').val();
+        var remarks = $('input[name="txt_remarks"]').val();
         var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
@@ -638,12 +457,12 @@
         if($('#ENTER_ITEM').text() == 'Add')
         {
 
-        table.row.add([line, part_no, item_code, item_desc, qty, unit_code, unit_desc, cost_price, disc_amnt, line_amnt, net_price, line_vat, vat_amt, buttons]).draw();
+        table.row.add([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
 
         }
         else if($('#ENTER_ITEM').text() == 'Edit')
         {
-          table.row(selectedRow).data([line, part_no, item_code, item_desc, qty, unit_code, unit_desc, cost_price, disc_amnt, line_amnt, net_price, line_vat, vat_amt, buttons]).draw();
+          table.row(selectedRow).data([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
         }
         else // remove item
         {
@@ -673,86 +492,21 @@
             $('#enteritem-modal').modal('toggle');
             $('#itemsearch-modal').modal('show');
         }
-        }
-        else
-        {
-          alert('oy');
-        }
       }
-
-      function disp_amt_result()
-      {
-        var total_costamt = 0.00, net_amt = 0.00, qty = 0.00, costprice = 0.00, disc_amt = 0.00, ln_amt = 0.00;
-
-        qty = $('input[name="txt_qty"]').val();
-        costprice = $('input[name="txt_cost"]').val();
-        
-        if($('input[name="txt_disc"]').val() != null)
-        {
-          disc_amt = $('input[name="txt_disc"]').val();
-        }
-
-        total_costamt = qty * costprice;
-
-        ln_amt = parseFloat(total_costamt - disc_amt).toFixed(2);
-
-        $('input[name="txt_lineamt"]').val(ln_amt);
-        $('input[name="txt_disc"]').val(disc_amt);
-
-        disp_vat(ln_amt);
-      }
-
-      function disp_vat(total_amt)
-      {
-        var vat_amt = 0.00, net_amt = 0.00;
-        var tax_type = $('select[name="select_vat"]').select2('data')[0].id;
-
-        if(tax_type == 'I')
-        {
-            net_amt = parseFloat(total_amt / 1.12).toFixed(2);
-            vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-            $('input[name="txt_netprice"]').val(net_amt);
-            $('input[name="txt_vatamt"]').val(vat_amt);
-        }
-        else if(tax_type == 'E')
-        {
-            net_amt = parseFloat(total_amt).toFixed(2);
-            total_amt = parseFloat(total_amt * 1.12).toFixed(2);
-            vat_amt = parseFloat(total_amt - net_amt).toFixed(2);
-
-            $('input[name="txt_lineamt"]').val(total_amt);
-            $('input[name="txt_netprice"]').val(net_amt);
-            $('input[name="txt_vatamt"]').val(vat_amt);
-        }
-        else
-        {
-            net_amt = parseFloat(total_amt).toFixed(2);
-            vat_amt = parseFloat(vat_amt).toFixed(2);
-
-            $('input[name="txt_netprice"]').val(net_amt);
-            $('input[name="txt_vatamt"]').val(vat_amt);
-        }
       }
 
       function clear()
       {
+        $('input[name="txt_remarks"]').val('');
         $('input[name="txt_lineno"]').val('');
         $('input[name="txt_itemcode"]').val('');
         $('input[name="txt_partno"]').val('');
         $('input[name="txt_itemdesc"]').val('');
         $('select[name="select_vat"]').val('').trigger('change');
-        $('input[name="txt_qty"]').val('0');
-        $('select[name="select_unit"]').val('').trigger('change');
-        $('input[name="txt_cost"]').val('0.00');
-        $('input[name="txt_disc"]').val('0.00');
-        $('input[name="txt_lineamt"]').val('0.00');
-        $('input[name="txt_vatamt"]').val('0.00');
-        $('input[name="txt_netprice"]').val('0.00');
-
+        $('input[name="txt_qty"]').val('');
       }
 
-      function Save()
+       function Save()
       {
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
 
@@ -765,17 +519,14 @@
             var data = { 
                           _token : $('meta[name="csrf-token"]').attr('content'),
                           tbl_itemlist: tbl_itemdata,
-                          purc_code: $('input[name="txt_purccode"]').val(),
-                          invoicedt: $('input[name="dtp_invoicedt"]').val(),
-                          stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
-                          branch: $('select[name="select_branch"]').select2('data')[0].id,
-                          supl_code: $('select[name="select_supplier"]').select2('data')[0].id,
-                          supl_name: $('select[name="select_supplier"]').select2('data')[0].text,
+                          fund: $('input[name="b_fund"]').val(),
+                          koa: $('input[name="b_koa"]').val(),
                           reference: $('input[name="txt_reference"]').val(),
+
                        };
 
             $.ajax({
-                   url: '{{route('inventory.stockin_add')}}',
+                   url: '{{route('inventory.biologyoffspring_add')}}',
                    method: 'POST',
                    data: data,
                    success : function(flag)
@@ -783,7 +534,7 @@
                                if(flag == 'true')
                                {
                                  console.log(flag);
-                                 location.href= "{{route('inventory.stockin')}}";
+                                 location.href= "{{route('inventory.biology.bio_boo_table')}}";
                                }
                                else
                                {
@@ -791,6 +542,8 @@
                                }
                             }
                    });
+
+            console.log(data);
           }
           else
           {
@@ -799,6 +552,7 @@
         
          }
       }
+
 
       function EditSave()
       {
@@ -810,22 +564,18 @@
           {
               var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
 
-              var rec_num = $('input[name="txt_code"]').val();
+              var code = $('input[name="txt_code"]').val();
 
               var data = { 
                             _token : $('meta[name="csrf-token"]').attr('content'),
                             tbl_itemlist: tbl_itemdata,
-                            purc_code: $('input[name="txt_purccode"]').val(),
-                            invoicedt: $('input[name="dtp_invoicedt"]').val(),
-                            stock_loc: $('select[name="select_stocklocation"]').select2('data')[0].id,
-                            branch: $('select[name="select_branch"]').select2('data')[0].id,
-                            supl_code: $('select[name="select_supplier"]').select2('data')[0].id,
-                            supl_name: $('select[name="select_supplier"]').select2('data')[0].text,
+                            fund: $('input[name="b_fund"]').val(),
+                            koa: $('input[name="b_koa"]').val(),
                             reference: $('input[name="txt_reference"]').val(),
                          };
 
               $.ajax({
-                     url: '{{asset('inventory/stockin/stockin_edit')}}/'+rec_num,
+                     url: '{{asset('inventory/biology/biologyoffspring_edit')}}/'+code,
                      method: 'POST',
                      data: data,
                      success : function(flag)
@@ -833,7 +583,7 @@
                                  if(flag == 'true')
                                  {
                                    console.log(flag);
-                                   location.href= "{{route('inventory.stockin')}}";
+                                   location.href= "{{route('inventory.biology.bio_boo_table')}}";
                                  }
                                  else
                                  {
@@ -866,7 +616,8 @@
 
     </script>
 
+
     </section>
     <!-- /.content -->
-	
+  
 @endsection

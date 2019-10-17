@@ -12,313 +12,481 @@ use Carbon\Carbon;
 
 class I_BiologyController extends Controller
 {
-    private $stk_trns_type = "IR";
-    private $module = "Item Repair";
+    private $stk_trns_type = "BA";
+    private $module = "Biological Acquisition";
 
-    public function view()
-    {  
-        $data = Inventory::getIR();
 
-        return view('inventory.biology.biology', compact('data'));
+
+    // START BIOLOGY ACQUISITION
+
+    public function acq_table(){
+      $data = Inventory::getBioAcq();
+      return view('inventory.biology.bio_acq_table', compact('data'));
     }
 
-    public function add(Request $request)
+    public function acq_add(Request $request)
     {
-       if($request->isMethod('get'))
+        if($request->isMethod('get'))
         {
-            $stock_loc = Core::getAll('rssys.whouse');
-            $branch = Core::getAll('rssys.branch');
-            $itemunit = Core::getAll('rssys.itmunit');
-            $costcenter = Core::getAll('rssys.m08');
-            $vat = Core::getAll('rssys.vat');
-            $x08 = Core::getAll('rssys.x08');
-            $are_users = Core::getAll('rssys.are_users');
-            $are_position = Core::getAll('rssys.are_position');
+
             $isnew = true;
+            $data = Inventory::getBioItemSearchTable();
 
-            $disp_items = Inventory::getIR();
-
-            return view('inventory.biology.biologyacqusition', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08', 'are_users', 'are_position'));
+            return view('inventory.biology.biologyacqusition_add', compact( 'data', 'isnew'));
         }
         else if($request->isMethod('post'))
         {
-           $datetime = Carbon::now();
-           $flag = "true";
 
-            $table = 'rssys.rechdr';
-            $tableln = "rssys.reclne";
+          try {
+              $datetime = Carbon::now();
+              $flag = "true";
 
-            $getCode = Core::getm99One('ir_code');
-            $code = $getCode->ir_code;
-            $ir_model = $request->ir_model;
-            $ir_unitserialno = $request->ir_unitserialno;
-            $ir_engineserialno = $request->ir_engineserialno;
-            $ir_plateno = $request->ir_plateno;
-            $recipient = $request->recipient;
-            $ir_designation = $request->ir_designation;
-            $cc_code = $request->cc_code;
-            $ir_dateofare = $request->ir_dateofare;
-            
-            $data = ['rec_num' => $code,
-                     'ir_model' => $ir_model,
-                     'ir_unitserialno' => $ir_unitserialno,
-                     'ir_engineserialno' => $ir_engineserialno,
-                     'ir_plateno' => $ir_plateno,
-                     'recipient' => strtoupper(Session::get('_user')['id']),
-                     'ir_designation' => $ir_designation,
-                     'cc_code' => $cc_code,
-                     'ir_dateofare' => $ir_dateofare,
-                     'trn_type' => $this->stk_trns_type,
-                     't_date' => $datetime->toDateString(),
-                     't_time' => $datetime->toTimeString()
-                    ];
+              $table = 'rssys.biology_acquisitionhd';
+              $tableln = "rssys.biology_acquistionln";
 
-            $insertHeader = Core::insertTable($table, $data, $this->module);
+              $getCode = Core::getm99One('biological_acquisition');
+              $code = $getCode->biological_acquisition;
 
-            if($insertHeader == 'true')
-            {
-                $updateM99 = Core::updatem99 ('ir_code', Core::get_nextincrementwithString($code, 6));
+              if (empty($code)) {
+                  return 'code is null.';
+              }
 
-                if($updateM99 == 'true')
-                {
-                  foreach($request->tbl_itemlist as $tb)
-                  {
-                      $data2 = ['rec_num' => $code, 
-                                'ln_num' => $tb[0],
-                                'item_code' => $tb[1], 
-                                'ir_joborder' => $tb[2], 
-                                'ir_date' => $tb[3], 
-                                'ir_prepost' => $tb[4], 
-                                'ir_postdate' => $tb[5], 
-                                'ir_invoice' => $tb[6], 
-                                'ir_delvdate' => $tb[7], 
-                                'ir_supplier' => $tb[8],
-                                'recv_qty' => $tb[9],
-                                'unit' => $tb[10],
-                                'price' => $tb[12],
-                                'ir_material' => $tb[13],
-                                'notes' => $tb[14]];
+              $fund = $request->fund;
+              $koa = $request->koa;
+              $reference = $request->reference;
 
-                      $insertLine = Core::insertTable($tableln, $data2, $this->module);
+              $data = [
+                  'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+              ];
 
-                      if($insertLine == 'true')
-                      {
-                         // $stk_qty_in = $tb[4];
-                         // $stk_qty_out = "0";
+              $insertHeader = Core::insertTable($table, $data, $this->module);
 
-                         // $stkcrd = ['item_code' => $tb[2],
-                         //            'item_desc' => $tb[3],
-                         //            'unit' => $tb[5],
-                         //            'trnx_date' => $invoicedt,
-                         //            'reference' => $stk_ref,
-                         //            'qty_in' => $stk_qty_in,
-                         //            'qty_out' => $stk_qty_out,
-                         //            'fcp' => $tb[7],
-                         //            'price' => $tb[7],
-                         //            'whs_code' => $stock_loc,
-                         //            'supl_code' => $supl_code,
-                         //            'supl_name' => $supl_name,
-                         //            'trn_type' => $this->stk_trns_type,
-                         //            'branch' => $branch];
+              if ($insertHeader == true) {
+                  $updateM99 = Core::updatem99('biological_acquisition', Core::get_nextincrementlimitchar($code, 8));
 
-                         // if(Inventory::saveToStkcrd($stkcrd))
-                         // { }
-                         // else
-                         // {
-                         //   $flag = 'false';
-                         //   break;
-                         // }          
-                         $flag = 'true';
+                  if ($updateM99 == true) {
+                      foreach($request->tbl_itemlist as $tb) {
+                          $data2 = ['code' => $code,
+                              'date' => $tb[0],
+                              'ln_num' => $tb[1],
+                              'item_code' => $tb[2],
+                              'property_no' => $tb[3],
+                              'item_desc' => $tb[4],
+                              'qty' => $tb[5],
+                              'remarks' => $tb[6],
+                          ];
+
+                          $insertLine = Core::insertTable($tableln, $data2, $this->module);
+
                       }
-                      else
-                      {
-                          return $insertLine;
-                      }          
+                      return json_encode($insertLine);
+                  } else {
+                      return json_encode($updateM99);
                   }
-                }
-                else
-                {
-                  return $updateM99;
-                }
-            }
-            else
-            {
-              return $insertHeader;
-            }
+              } else {
+                  return json_encode($insertHeader);
+              }
 
-            return $flag;    
+              return $flag;
+          } catch (Exception $e) {
+              return $e->getMessage();
+          }
         
         }
     }
 
-    public function edit(Request $request, $code)
-    {
 
+
+    public function acq_edit(Request $request, $code) {
       if($request->isMethod('get')) // for entry
       {
-          $isnew = false;
-          $stock_loc = Core::getAll('rssys.whouse');
-          $branch = Core::getAll('rssys.branch');
-          $itemunit = Core::getAll('rssys.itmunit');
-          $costcenter = Core::getAll('rssys.m08');
-          $vat = Core::getAll('rssys.vat');
-    
-          $disp_items = Inventory::getIR();
-    
-          $rechdr = Inventory::getIRHeader($code);
-          $reclne = Inventory::getItemRepairLine($code);
 
-          //dd($rechdr);
-
-          $x08 = Core::getAll('rssys.x08');
-          $are_users = Core::getAll('rssys.are_users');
-          $are_position = Core::getAll('rssys.are_position'); 
-          //$grandtotal = Inventory::getTotalAmtRIS($code);
-
-    
-          return view('inventory.itemrepair.itemrepair_entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'isnew', 'x08', 'are_users', 'are_position'));
+          $data = Inventory::getBioItemSearchTable();
+          $biohd=Inventory::getBioAcqHeader($code);
+          $bioln=Inventory::getBioAcqLine($code);
+          $isnew=false;
+          return view('inventory.biology.biologyacqusition_add', compact('data', 'biohd', 'bioln', 'isnew'));
       }
-      elseif($request->isMethod('post'))
-      {
-          $datetime = Carbon::now();
-          $flag = "true";
+      elseif($request->isMethod('post')) {
+          $flag="true";
+          $table = 'rssys.biology_acquisitionhd';
+          $tableln = "rssys.biology_acquistionln";
+          $code=$code;
+          $fund = $request->fund;
+          $koa = $request->koa;
+          $reference = $request->reference;
 
-          $table = 'rssys.rechdr';
-          $tableln = "rssys.reclne";
+          $data=[ 'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+                ];
+          $updHeader=Core::updateTable($table, 'code', $code, $data, $this->module);
+          if($updHeader=='true') {
+              $del_dataln=[['code',
+              '=',
+              $code]];
+      
+              $delLine=Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+              foreach($request->tbl_itemlist as $tb) {
+                  $data2=[
+                            'code' => $code,
+                            'date' => $tb[0],
+                            'ln_num' => $tb[1],
+                            'item_code' => $tb[2],
+                            'property_no' => $tb[3],
+                            'item_desc' => $tb[4],
+                            'qty' => $tb[5],
+                            'remarks' => $tb[6],];
+                  $insertLine=Core::insertTable($tableln, $data2, $this->module);
 
-          $code = $code;
-
-          //$code = $getCode->ir_code;
-            $ir_model = $request->ir_model;
-            $ir_unitserialno = $request->ir_unitserialno;
-            $ir_engineserialno = $request->ir_engineserialno;
-            $ir_plateno = $request->ir_plateno;
-            $recipient = $request->recipient;
-            $ir_designation = $request->ir_designation;
-            $cc_code = $request->cc_code;
-            $ir_dateofare = $request->ir_dateofare;
-            
-          $data = ['rec_num' => $code,
-                     'ir_model' => $ir_model,
-                     'ir_unitserialno' => $ir_unitserialno,
-                     'ir_engineserialno' => $ir_engineserialno,
-                     'ir_plateno' => $ir_plateno,
-                     'recipient' => strtoupper(Session::get('_user')['id']),
-                     'ir_designation' => $ir_designation,
-                     'cc_code' => $cc_code,
-                     'ir_dateofare' => $ir_dateofare,
-                     'trn_type' => $this->stk_trns_type,
-                     't_date' => $datetime->toDateString(),
-                     't_time' => $datetime->toTimeString()
-                    ];
-
-          $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);
-
-          if($updHeader == 'true')
-          {
-              $del_dataln = [['rec_num', '=', $code]];
-              //$del_datastkcrd = [['reference', '=', $stk_ref]];
-
-              Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
-              //Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
-
-              foreach($request->tbl_itemlist as $tb)
-              {
-                $data2 = ['rec_num' => $code, 
-                                'ln_num' => $tb[0],
-                                'item_code' => $tb[1], 
-                                'ir_joborder' => $tb[2], 
-                                'ir_date' => $tb[3], 
-                                'ir_prepost' => $tb[4], 
-                                'ir_postdate' => $tb[5], 
-                                'ir_invoice' => $tb[6], 
-                                'ir_delvdate' => $tb[7], 
-                                'ir_supplier' => $tb[8],
-                                'recv_qty' => $tb[9],
-                                'unit' => $tb[10],
-                                'price' => $tb[12],
-                                'ir_material' => $tb[13],
-                                'notes' => $tb[14]];
-
-                $insertLine = Core::insertTable($tableln, $data2, $this->module);                 
-
-                if($insertLine == 'true')
-                {
-                  $flag = 'true';
-                    // $stk_qty_in = $tb[4];
-                    // $stk_qty_out = "0";
-
-                    // $stkcrd = ['item_code' => $tb[2],
-                    //            'item_desc' => $tb[3],
-                    //            'unit' => $tb[5],
-                    //            'trnx_date' => $invoicedt,
-                    //            'reference' => $stk_ref,
-                    //            'qty_in' => $stk_qty_in,
-                    //            'qty_out' => $stk_qty_out,
-                    //            'fcp' => $tb[7],
-                    //            'price' => $tb[7],
-                    //            'whs_code' => $stock_loc,
-                    //            'supl_code' => $supl_code,
-                    //            'supl_name' => $supl_name,
-                    //            'trn_type' => $this->stk_trns_type,
-                    //            'branch' => $branch];
-
-                    //  if(Inventory::saveToStkcrd($stkcrd))
-                    //  {
-
-                    //  }
-                    //  else
-                    //  {
-                    //    $flag = 'false';
-                    //    break;
-                    //  }          
-                }
-                else
-                {
-                    return $insertLine;
-                }          
               }
-          }
-          else
-          {
-              return $updHeader;
-          }
 
-          return $flag;   
-      } 
-    }
-    
-    public function cancel($code)
+                      return json_encode($insertLine);
+
+          }
+          else {
+              return json_encode($updHeader);
+          }
+          return $flag;
+      }
+}
+
+    public function acq_cancel(Request $request)
     {
-      $table = "rssys.rechdr";
-      $col = "rec_num";
+      $table = "rssys.biology_acquisitionhd";
       $flag = 'true';
 
-      $cancelIR = Inventory::cancelIR($code, $table, $col, $this->module);
+      $cancelBioAcq = Inventory::cancelBioAcq($request->code, $this->module);
 
-      if($cancelIR != 'true')
+      if($cancelBioAcq = 'true')
       {
-        return $cancelIR;
+        return $cancelBioAcq;
       }
 
       return $flag;
     }
 
-    public function approve($code)
+
+    //END BIOLOGY ACQUISITION
+
+
+    // START BIOLOGY OF OFFSPRING
+
+    public function boo_table(){
+      $data = Inventory::getBioBoo();
+      return view('inventory.biology.bio_boo_table', compact('data'));
+    }
+
+    public function boo_add(Request $request)
     {
-      $table = "rssys.rechdr";
-      $col = "rec_num";
-      $flag = 'false';
+        if($request->isMethod('get'))
+        {
 
-      $data = ['are_status' => 'true'];
+            $isnew = true;
+            $data = Inventory::getBioItemSearchTable();
 
-      if(Core::updateTable($table, 'rec_num', $code, $data, $this->module))
+            return view('inventory.biology.biologyoffspring_add', compact( 'data', 'isnew'));
+        }
+        else if($request->isMethod('post'))
+        {
+
+          try {
+
+              $datetime = Carbon::now();
+              $flag = "true";
+
+              $table = 'rssys.biology_offspringhd';
+              $tableln = "rssys.biology_offspringln";
+
+              $getCode = Core::getm99One('biological_offspring');
+              $code = $getCode->biological_offspring;
+
+              if (empty($code)) {
+                  return 'code is null.';
+              }
+
+              $fund = $request->fund;
+              $koa = $request->koa;
+              $reference = $request->reference;
+
+              $data = [
+                  'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+              ];
+
+              $insertHeader = Core::insertTable($table, $data, $this->module);
+
+              if ($insertHeader == true) {
+                  $updateM99 = Core::updatem99('biological_offspring', Core::get_nextincrementlimitchar($code, 8));
+
+                  if ($updateM99 == true) {
+                      foreach($request->tbl_itemlist as $tb) {
+                          $data2 = ['code' => $code,
+                              'date' => $tb[0],
+                              'ln_num' => $tb[1],
+                              'item_code' => $tb[2],
+                              'property_no' => $tb[3],
+                              'item_desc' => $tb[4],
+                              'numberofoffspring' => $tb[5],
+                              'remarks' => $tb[6],
+                          ];
+
+                          $insertLine = Core::insertTable($tableln, $data2, $this->module);
+
+                          
+                      }
+                      return json_encode($insertLine);
+                  } else {
+                      return json_encode($updateM99);
+                  }
+              } else {
+                  return json_encode($insertHeader);
+              }
+
+              return $flag;
+          } catch (Exception $e) {
+              return $e->getMessage();
+          }
+        
+        }
+    }
+
+
+
+    public function boo_edit(Request $request, $code) {
+      if($request->isMethod('get')) // for entry
       {
-        $flag = 'true';
+
+          $data =Inventory::getBioItemSearchTable();
+          $biohd=Inventory::getBioBooHeader($code);
+          $bioln=Inventory::getBioBooLine($code);
+          $isnew=false;
+          return view('inventory.biology.biologyoffspring_add', compact('data', 'biohd', 'bioln', 'isnew'));
+      }
+      elseif($request->isMethod('post')) {
+          $flag="true";
+          $table = 'rssys.biology_offspringhd';
+          $tableln = "rssys.biology_offspringln";
+          $code=$code;
+          $fund = $request->fund;
+          $koa = $request->koa;
+          $reference = $request->reference;
+
+          $data=[ 'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+                ];
+          $updHeader=Core::updateTable($table, 'code', $code, $data, $this->module);
+          if($updHeader=='true') {
+              $del_dataln=[['code',
+              '=',
+              $code]];
+      
+              $delLine=Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+              foreach($request->tbl_itemlist as $tb) {
+                  $data2=[
+                            'code' => $code,
+                            'date' => $tb[0],
+                            'ln_num' => $tb[1],
+                            'item_code' => $tb[2],
+                            'property_no' => $tb[3],
+                            'item_desc' => $tb[4],
+                            'numberofoffspring' => $tb[5],
+                            'remarks' => $tb[6],];
+                  $insertLine=Core::insertTable($tableln, $data2, $this->module);
+                      
+              }
+              return json_encode($insertLine);
+          }
+          else {
+              return json_encode($updHeader);
+          }
+          return $flag;
+      }
+}
+
+    public function boo_cancel(Request $request)
+    {
+      $table = "rssys.biology_offspringhd";
+      $flag = 'true';
+
+      $cancelBioBoo = Inventory::cancelBioBoo($request->code, $this->module);
+
+      if($cancelBioBoo = 'true')
+      {
+        return $cancelBioBoo;
+      }
+
+      return $flag;
+    }
+
+    //END BIOLOGY OF OFFSPRING
+
+    // START BIOLOGY OF DISPOSITION
+
+    public function dispo_table(){
+      $data = Inventory::getBioDispo();
+      return view('inventory.biology.bio_dispo_table', compact('data'));
+    }
+
+
+    public function dispo_add(Request $request)
+    {
+        if($request->isMethod('get'))
+        {
+
+            $isnew = true;
+            $data = Inventory::getBioItemSearchTable();
+
+            return view('inventory.biology.biologydisposition_add', compact( 'data', 'isnew'));
+        }
+        else if($request->isMethod('post'))
+        {
+
+          try {
+
+              $datetime = Carbon::now();
+              $flag = "true";
+
+              $table = 'rssys.biology_dispositionhd';
+              $tableln = "rssys.biology_dispositionln";
+
+              $getCode = Core::getm99One('biological_disposition');
+              $code = $getCode->biological_disposition;
+
+              if (empty($code)) {
+                  return 'code is null.';
+              }
+
+              $fund = $request->fund;
+              $koa = $request->koa;
+              $reference = $request->reference;
+
+              $data = [
+                  'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+              ];
+
+              $insertHeader = Core::insertTable($table, $data, $this->module);
+
+              if ($insertHeader == true) {
+                  $updateM99 = Core::updatem99('biological_disposition', Core::get_nextincrementlimitchar($code, 8));
+
+                  if ($updateM99 == true) {
+                      foreach($request->tbl_itemlist as $tb) {
+                          $data2 = ['code' => $code,
+                              'date' => $tb[0],
+                              'ln_num' => $tb[1],
+                              'item_code' => $tb[2],
+                              'property_no' => $tb[3],
+                              'item_desc' => $tb[4],
+                              'numberofdisposition' => $tb[5],
+                              'natureofdisposition' => $tb[6],
+                              'remarks' => $tb[6],
+                          ];
+
+                          $insertLine = Core::insertTable($tableln, $data2, $this->module);
+                      }
+                      return json_encode($insertLine);
+                  } else {
+                      return json_encode($updateM99);
+                  }
+              } else {
+                  return json_encode($insertHeader);
+              }
+
+              return $flag;
+          } catch (Exception $e) {
+              return $e->getMessage();
+          }
+        
+        }
+    }
+
+
+
+
+    public function dispo_edit(Request $request, $code) {
+      if($request->isMethod('get')) // for entry
+      {
+
+          $data =Inventory::getBioItemSearchTable();
+          $biohd=Inventory::getBioDispoHeader($code);
+          $bioln=Inventory::getBioDispoLine($code);
+          $isnew=false;
+          return view('inventory.biology.biologydisposition_add', compact('data', 'biohd', 'bioln', 'isnew'));
+      }
+      elseif($request->isMethod('post')) {
+          $flag="true";
+          $table = 'rssys.biology_dispositionhd';
+          $tableln = "rssys.biology_dispositionln";
+          $code=$code;
+          $fund = $request->fund;
+          $koa = $request->koa;
+          $reference = $request->reference;
+
+          $data=[ 'code' => $code,
+                  'fund' => $fund,
+                  'kindofanimals' => $koa,
+                  'reference' => $reference,
+                ];
+          $updHeader=Core::updateTable($table, 'code', $code, $data, $this->module);
+          if($updHeader=='true') {
+              $del_dataln=[['code',
+              '=',
+              $code]];
+      
+              $delLine=Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+              foreach($request->tbl_itemlist as $tb) {
+                  $data2=[
+                            'code' => $code,
+                            'date' => $tb[0],
+                            'ln_num' => $tb[1],
+                            'item_code' => $tb[2],
+                            'property_no' => $tb[3],
+                            'item_desc' => $tb[4],
+                            'numberofdisposition' => $tb[5],
+                            'natureofdisposition' => $tb[6],
+                            'remarks' => $tb[7],];
+                  $insertLine=Core::insertTable($tableln, $data2, $this->module);     
+              }
+              return json_encode($insertLine);
+          }
+          else {
+              return json_encode($updHeader);
+          }
+          return $flag;
+      }
+}
+
+    public function dispo_cancel(Request $request)
+    {
+      $table = "rssys.biology_dispositionhd";
+      $flag = 'true';
+
+      $cancelBioDispo = Inventory::cancelBioDispo($request->code, $this->module);
+
+      if($cancelBioDispo = 'true')
+      {
+        return $cancelBioDispo;
       }
 
       return $flag;
     }
 
 
+//END BIOLOGY OF DISPOSITION
 }
+
+
+
+

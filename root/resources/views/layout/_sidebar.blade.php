@@ -395,7 +395,7 @@
             @if($LA_GRP["I0000000"]["restrict"] == 'Y')
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-edit"></i> <span>Inventory</span>
+                    <i class="fa fa-edit" id="SideBar_Inv_Acq"></i> <span>Inventory</span>
                     <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -438,15 +438,30 @@
                     <li><a href="{{route('inventory.turnover')}}"><i class="fa fa-circle-o"></i>Turn Over</a></li>
                     @endif
                     <hr>
-                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Acqusition</a></li>
-                    @endif
-                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Birth of Offspring</a></li>
-                    @endif
-                    @if($LA_GRP["I4000000"]["restrict"] == 'Y')
-                    <li><a href="{{route('inventory.biology')}}"><i class="fa fa-circle-o"></i>Biology Disposition</a></li>
-                    @endif
+                    
+                    <li class="treeview">
+                        {{-- <a href="{{ url('reports/budget/lbp') }}"><i class="fa fa-circle-o"></i> LBP</a> --}}
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> 
+                            <span>Biology</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="white-space: normal;" id="Biological_Inv">
+                            @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                            <li><a href="{{route('inventory.biology.bio_acq_table')}}"><i class="fa fa-circle-o" id="SideBar_Inv_Acq"></i>Biology Acqusition</a></li>
+                            @endif
+                            @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                            <li><a href="{{route('inventory.biology.bio_boo_table')}}"><i class="fa fa-circle-o"></i>Biology Birth of Offspring</a></li>
+                            @endif
+                            @if($LA_GRP["I4000000"]["restrict"] == 'Y')
+                            <li><a href="{{route('inventory.biology.bio_dispo_table')}}"><i class="fa fa-circle-o"></i>Biology Disposition</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                   
+
                     <hr>
                 </ul>
             </li>
@@ -522,7 +537,21 @@
                     <li><a href="#"><i class="fa fa-circle-o"></i> Sales</a></li>
                     @endif
                     @if($LA_GRP["R4000000"]["restrict"] == 'Y')
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Inventory</a></li>
+                     <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i>
+                            <span>Inventory</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                            <ul class="treeview-menu">
+                                {{-- @if($LA_GRP["R2000001"]["restrict"] == 'Y') --}}
+                                {{-- <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li> --}}
+                                <li><a href="{{ route('inventory.bioreportsview') }}"><i class="fa fa-circle-o"></i>Biology</a></li>
+                                {{-- @endif --}}
+                            </ul>
+                        </a>
+                    </li>
                     @endif
                 </ul>
             </li>
