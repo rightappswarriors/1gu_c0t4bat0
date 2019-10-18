@@ -19,26 +19,14 @@
     <div class="row">
       <div class="col-sm-3">
         <div class="form-group">
-          <label>Kind Of Animal</label>
-            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="koa" data-parsley-errors-container="#validate_select_fy" data-parsley-required-message="<strong>Kind of Animal is required.</strong>" required>
-              <option value="" selected="selected">--- Select Kind Of Animal ---</option>
+          <label>FUND || Kind Of Animal</label>
+            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="code" data-parsley-errors-container="#validate_select_fy" data-parsley-required-message="<strong>Kind of Animal is required.</strong>" required>
+              <option value="" selected="selected">--- Select FUND and Kind Of Animal ---</option>
               @foreach($data as $d)
-              <option value="{{$d->kindofanimals}}">{{$d->kindofanimals}}</option>
+              <option value="{{$d->acqcode}}">{{$d->acqcode}} || {{$d->kindofanimals}}</option>
               @endforeach
             </select>
             <span class="validate_select_fy"></span>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label>Fund</label>
-            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fund" data-parsley-errors-container="#validate_select_fund" data-parsley-required-message="<strong>Fund is required.</strong>" required>
-              <option value="" selected="selected">--- Select Fund ---</option>
-              @foreach($data as $f)
-              <option value="{{$f->fund}}">{{$f->fund}}</option>
-              @endforeach
-            </select>
-            <span class="validate_select_fund"></span>
         </div>
       </div>
     </div>

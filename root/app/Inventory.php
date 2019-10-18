@@ -53,6 +53,19 @@ class Inventory extends Model
 		}
     }
 
+    public static function getAcqData(){
+    	try
+    	{
+    		$sql = "SELECT * FROM rssys.biology_acquisitionhd WHERE cancel = 'false'";
+
+    		return DB::select(DB::raw($sql));
+    	}
+    	catch (\Exception $e)
+    	{
+    		return $e->getMessage();
+    	}
+    }
+
     
 
     public static function getItemSearchLine($stockLocation, $item_code) // items with qty
@@ -706,7 +719,7 @@ class Inventory extends Model
 
 	public static function getBioAllHeader(){
 
-		$sql = "SELECT DISTINCT * FROM rssys.biology_acquisitionhd WHERE cancel = false UNION ALL SELECT DISTINCT * FROM rssys.biology_offspringhd WHERE cancel = false UNION ALL SELECT DISTINCT * FROM rssys.biology_dispositionhd WHERE cancel = false";
+		$sql = "SELECT DISTINCT acq.code as acqcode, acq.fund,acq, off.* FROM (SELECT * FROM rssys.biology_acquisitionhd WHERE cancel is false) AS acq LEFT JOIN (SELECT  * FROM rssys.biology_offspringhd WHERE cancel is false) AS off ON acq.fund = off.fund LEFT JOIN (SELECT  * FROM rssys.biology_dispositionhd WHERE cancel is false) AS dispo ON acq.code = dispo.code";
 			return DB::select(DB::raw($sql));
 	}
 
@@ -804,17 +817,17 @@ class Inventory extends Model
 			return $e->getMessage();
 		}
 	}
-	public static function getAllReports($select_koa, $selected_fund){
+	public static function getAllReports($selected_code){
 
-		$sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.numberofoffspring as offspringqty, offspring.date as offdate, disposition.date as dispodate, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa' ";
+		// $sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc as acqdesc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.item_desc as offdesc, offspring.numberofoffspring as offspringqty, offspring.date as offdate, offspring.property_no as offprono, disposition.date as dispodate, disposition.property_no as dispoprono, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa'";
 
-
+		$sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc as acqdesc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.item_desc as offdesc, offspring.numberofoffspring as offspringqty, offspring.date as offdate, offspring.property_no as offprono, disposition.date as dispodate, disposition.property_no as dispoprono, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.acq_code = '$selected_code') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.acq_code = '$selected_code') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.code = '$selected_code'";
 
 		return DB::select(DB::raw($sql));
 	}
 
-	public static function getAllHeader($select_koa, $selected_fund){
-		$sql = "SELECT acqln.item_code, acqln.item_desc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.numberofoffspring as offspringqty, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa' LIMIT 1 ";
+	public static function getAllHeader($selected_code){
+		$sql = "SELECT fund, kindofanimals FROM rssys.biology_acquisitionhd WHERE code = '$selected_code' LIMIT 1";
 		$items = DB::select(DB::raw($sql));
 
 		$itemscounted = count($items);
@@ -927,6 +940,21 @@ class Inventory extends Model
 			return $e->getMessage();
 		}
 	}
+
+	// get acquisition header and line
+	public static function acqItemDetails($code)
+	{	
+		try 
+		{
+			$sql = "SELECT acqln.* , acqhd.* FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code WHERE acqhd.cancel = false AND acqhd.code = '$code'";
+
+			return DB::select(DB::raw($sql));
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
 
     // get specific grand total amount of Stock In.
 	public static function getTotalAmtStockIn($code)

@@ -35,21 +35,24 @@
             <thead>
               <tr>
                 <th colspan="4"><center>Acquistion</center></th>
-                <th colspan="2"><center>Birth Of Offspring</center></th>
-                <th colspan="3"><center>Disposition</center></th>
+                <th colspan="4"><center>Birth Of Offspring</center></th>
+                <th colspan="4"><center>Disposition</center></th>
               </tr>
             </thead>
             <thead>
               <tr>
                 <td>Date</td>
-                <td>Property No.</td>
+                <td>Property No</td>
                 <td>Description</td>
                 <td>Qty.</td>
                 
                 <td>Date</td>
-                <td>No. Of Offspring</td>
+                <td>No Of Offspring</td>
+                <td>Property No</td>
+                <td>Description</td>
                 
                 <td>Date</td>
+                <td>Property No</td>
                 <td>Nature Of Disposition</td>
                 <td>No Disposed of</td>
               </tr>
@@ -60,11 +63,14 @@
               <tr>
               <td>{{$d->date}}</td>
               <td>{{$d->property_no}}</td>
-              <td>{{$d->item_desc}}</td>
+              <td>{{$d->acqdesc}}</td>
               <td>{{$d->acquisitionqty}}</td>
               <td>{{$d->offdate}}</td>
               <td>{{$d->offspringqty}}</td>
+              <td>{{$d->offprono}}</td>
+              <td>{{$d->offdesc}}</td>
               <td>{{$d->dispodate}}</td>
+              <td>{{$d->dispoprono}}</td>
               <td>{{$d->natureofdisposition}}</td>
               <td>{{$d->numberofdisposition}}</td>
               </tr>

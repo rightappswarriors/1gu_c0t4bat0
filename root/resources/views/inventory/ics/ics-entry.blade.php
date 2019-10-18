@@ -19,8 +19,8 @@
 @endphp
 @endif
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       <div class="box box-default">
@@ -865,5 +865,5 @@
 
     </section>
     <!-- /.content -->
-	
+  
 @endsection

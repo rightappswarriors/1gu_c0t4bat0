@@ -617,6 +617,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
 					// Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
 					Route::match(['get', 'post'], '/biologyacqusition', 'Inventory\I_BiologyController@add')->name('inventory.biologyacqusition');
+					Route::get('/bio_getacqdetails/{code}', 'Inventory\I_BiologyController@acqItemDetails')->name('inventory.biology_getacqdetails');
 					// Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
 					// Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
 				});

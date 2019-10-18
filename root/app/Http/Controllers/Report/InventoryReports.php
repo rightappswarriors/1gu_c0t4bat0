@@ -24,13 +24,11 @@ class InventoryReports extends Controller
     public function generate(Request $request)
   {
       
-      $select_koa = $request->koa;
-      $selected_fund = $request->fund;
+      $selected_code = $request->code;     
+      
+      $getallitems = Inventory::getAllReports($selected_code);
 
-     
-
-      $getallitems = Inventory::getAllReports($select_koa, $selected_fund);
-      $header = Inventory::getAllHeader($select_koa, $selected_fund);
+      $header = Inventory::getAllHeader($selected_code);
       if($header == false){
         $isEmpty = 'Y';
       } 
