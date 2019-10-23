@@ -325,9 +325,9 @@ class AccountingControllers extends Controller {
                     'headerDet' => $arr_bgtps,
                     'obrlne' => $arrToReturn
                 ];
-                // return Excel::download(new OfficeExport('officeReport.raoreport',$arrRet), 'RAO-Report-'.$fpp.'-'.$cc_code.'-'.$date.'.xlsx');
+                return Excel::download(new OfficeExport('officeReport.raoreport',$arrRet), 'RAO-Report-'.$fpp.'-'.$cc_code.'-'.$date.'.xlsx');
 
-                return view('officeReport.raoreport', $arrRet);
+                // return view('officeReport.raoreport', $arrRet);
 
 
             }

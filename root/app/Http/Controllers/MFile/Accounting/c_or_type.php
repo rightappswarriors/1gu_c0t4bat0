@@ -40,7 +40,8 @@ class c_or_type extends Controller
         $data = [
                     'or_type' => $r->txt_id,
                     'or_code' => $r->txt_name,
-                    'suggestiveORto' => $r->suggestive
+                    'suggestiveORto' => $r->suggestive,
+                    'hassef' => $r->hassef
                 ];
         if (Core::insertTable('rssys.or_types', $data, 'OR Type'))
         {
@@ -58,7 +59,8 @@ class c_or_type extends Controller
             }
     	$data = [
                     'or_code' => $r->txt_name,
-                    'suggestiveORto' => $r->suggestive
+                    'suggestiveORto' => $r->suggestive,
+                    'hassef' => $r->hassef
                 ];
     	if (Core::updateTable('rssys.or_types', 'or_type', $r->txt_id, $data, 'OR Type'))
         {

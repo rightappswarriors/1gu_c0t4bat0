@@ -27,6 +27,7 @@ class c_tax_type extends Controller
     public function add(Request $r)
     {
         $data = [
+            'tax_code' => $r->txt_code,
             'taxtype_desc' => $r->txt_name,
             'tax_id' => $r->tax_grp,
             'or_code' => $r->txt_taxtype_id
@@ -41,6 +42,7 @@ class c_tax_type extends Controller
     public function update(Request $r) // TO UPDATE EXISTING OR TYPE MODULE
     {
     	$data = [
+            'tax_code' => $r->txt_code,
             'taxtype_desc' => $r->txt_name,
             'tax_id' => $r->tax_grp,
             'or_code' => $r->txt_taxtype_id

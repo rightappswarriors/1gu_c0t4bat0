@@ -722,11 +722,11 @@
                        payer.push(currentNode.find('td .payer').attr("payer"));
                        typ.push(currentNode.find('td .py_typ').attr("py_typ"));
                        pay_typ.push(currentNode.find('td .tax_type').attr("tax_typ_id"));
-                       pay_desc.push(currentNode.find('td .tax_type').attr("tax_type"));
+                       pay_desc.push(urldecode(currentNode.find('td .tax_type').attr("tax_type")));
                        amt.push(currentNode.find('td .amt').attr("amt"));
                        soa_code.push(currentNode.find('td .soa_code').attr("soa_code"));
                     } );
-                    
+
 
                     var data = {
                             _token : $('meta[name="csrf-token"]').attr('content'),

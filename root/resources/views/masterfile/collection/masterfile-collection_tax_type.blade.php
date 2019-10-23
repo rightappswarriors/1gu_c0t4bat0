@@ -32,6 +32,12 @@
                                                 <span class="AddMode">
                                                     <div class="box-body">
                                                         <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Code <span class="text-red">*</span></label>
+                                                            <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                <input type="text" name="txt_code" class="form-control" placeholder="Code" data-parsley-required-message="<strong>Code</strong> is required." required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <label class="col-sm-4 control-label">Description <span class="text-red">*</span></label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
                                                                 <input type="text" name="txt_name" class="form-control" placeholder="Description" data-parsley-required-message="<strong>Description</strong> is required." required>
@@ -98,6 +104,7 @@
         					<table id="example1" class="table table-bordered table-striped">
         						<thead>
                                     <tr>
+                                        <th>Code</th>
                                         <th>Description</th>
                                         <th>Tax Group</th>
                                         <th>OR Type</th>
@@ -108,12 +115,13 @@
                                 	@isset($tax_type)
                                         @foreach($tax_type as $tax)
                                             <tr>
+                                                <td>{{$tax->tax_code}}</td>
                                                 <td>{{$tax->taxtype_desc}}</td>
                                                 <td>{{$tax->tax_desc}}</td>
                                                 <td>{{$tax->or_type}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$tax->taxtype_id}}', '{{$tax->tax_desc}}', '{{$tax->tax_id}}', '{{$tax->or_code}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$tax->taxtype_id}}', '{{$tax->taxtype_desc}}', '{{$tax->tax_id}}', '{{$tax->or_code}}', '{{$tax->tax_code}}');"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$tax->taxtype_id}}', '{{$tax->tax_desc}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
@@ -153,10 +161,12 @@
             $('select[name="txt_taxtype_id"]').val('');
             $('select[name="txt_taxtype_id"]').attr('required', '');
             $('input[name="txt_id"]').removeAttr('required');
+            $('input[name="txt_code"]').val('').trigger('change');
+            $('input[name="txt_code"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc, groupid, or_code)
+        function EditMode(id, desc, groupid, or_code, code)
         {
             $('#MOD_MODE').text('(Edit)');
             $('#AddForm').attr('action', '{{ url('master-file/tax/type') }}/update');
@@ -167,6 +177,8 @@
             $('select[name="tax_grp"]').attr('required', '');
             $('select[name="txt_taxtype_id"]').val(or_code).trigger('change');
             $('select[name="txt_taxtype_id"]').attr('required', '');
+            $('input[name="txt_code"]').val(code).trigger('change');
+            $('input[name="txt_code"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
@@ -177,7 +189,10 @@
             $('input[name="txt_id"]').val(id);
             $('input[name="txt_id"]').removeAttr('required');
             $('input[name="txt_name"]').val(desc);
-            $('input[name="txt_name"]').attr('required', '');
+            $('input[name="txt_name"]').removeAttr('required');
+            $('input[name="txt_code"]').removeAttr('required');
+            $('select[name="tax_grp"]').removeAttr('required');
+            $('select[name="txt_taxtype_id"]').removeAttr('required');
             $('#DeleteName').text(desc);
             $('.DeleteMode').show();
             $('.AddMode').hide();

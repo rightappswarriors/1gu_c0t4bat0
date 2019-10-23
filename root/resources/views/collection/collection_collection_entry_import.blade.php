@@ -1067,5 +1067,6 @@
       }
       // CHECK NUMBER OF COLLECTION TO SAVE
     }
+    $("#collection, #collection_menu").show();
     </script>
 @endsection

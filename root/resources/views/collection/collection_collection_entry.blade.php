@@ -285,5 +285,6 @@
             });
         }
     }
+    $("#collection, #collection_menu").show();
     </script>
 @endsection

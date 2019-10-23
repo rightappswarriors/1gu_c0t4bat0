@@ -773,10 +773,10 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::get('/', 'Collection\ROCADController@viewLiquidate');
 				Route::match(['get','post'],'/{uid}', 'Collection\ROCADController@liquidate');
 			});
-			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
-				Route::get('/', 'Collection\ROCADController@viewToDiposit');
-				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
-			});
+			// Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
+			// 	Route::get('/', 'Collection\ROCADController@viewToDiposit');
+			// 	Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
+			// });
 			Route::prefix('Bank-Deposit')->group(function(){ // DONE -m
 				Route::get('/', 'Collection\ROCADController@viewToDiposit');
 				Route::match(['get','post'],'/{liquidateid}', 'Collection\ROCADController@deposittobank');
@@ -835,10 +835,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::post('saaob/generate', 'Report\Budget\SaaobReportController@generate')->name('report.generatesaaob');
 			});
 			Route::prefix('collection')->group(function() {
+
 				Route::prefix('RocadDailyUser')->group(function(){ // DONE -m
 					Route::get('/', 'Collection\ROCADController@rocardDailyUser');
 					Route::match(['get','post'],'/{uid}/{date}', 'Collection\ROCADController@rocardDailyUserProcess');
 				});
+
+				Route::prefix('abstract')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@abstractView');
+					Route::match(['get','post'],'/{from}/{to}', 'Collection\ROCADController@abstractProcess');
+				});
+
 			});
 		});
 		/* SETTING -------------------------------*/

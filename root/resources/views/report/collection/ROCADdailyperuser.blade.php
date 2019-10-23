@@ -6,6 +6,7 @@
     ];
     $_ch = ""; // Module Name
     $total = 0;
+    $totalArr = [];
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -50,7 +51,7 @@
 			            	<td class="text-center" colspan="7">{{$collectorData->ortype}}</td>
 			                <td class="text-center" colspan="5">{{$collectorData->issuedfrom}}</td>
 			                <td class="text-center" colspan="5">{{$collectorData->issueduntil}}</td>
-			                 <td class="text-center" colspan="5">{{number_format($collectorData->amount,2)}}</td>
+			                <td class="text-center" colspan="5">{{number_format($collectorData->amount,2)}}</td>
 
 			            </tr>
 			            <?php $total += $collectorData->amount; ?>
@@ -114,7 +115,7 @@
 		                 <td class="text-center" colspan="2">From</td>
 		                 <td class="text-center" colspan="2">To</td>
 		            </tr>
-		            <tr>
+{{-- 		            <tr>
 		            	 <td class="text-center" colspan="2">AF 56</td>
 		            	 <td class="text-center" colspan="1">22</td>
 		                 <td class="text-center" colspan="2">12051997</td>
@@ -128,13 +129,20 @@
 		                 <td class="text-center" colspan="1">16</td>
 		                 <td class="text-center" colspan="2">1997 </td>
 		                 <td class="text-center" colspan="2">2019 </td>
-		            </tr>
+		            </tr> --}}
 		            @foreach($data as $collectorData)
+		            	<?php 
+		            		if($collectorData->hassef === true){
+		            			$totalArr['hassef'][] = $collectorData->amount;
+		            		} else {
+		            			$totalArr['nosef'][] = $collectorData->amount;
+		            		}
+		            	?>
 						<tr>
 			            	<td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
-			            	<td class="text-center" colspan="1">{{$collectorData->issuedto - $collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
+			            	<td class="text-center" colspan="1"></td>
+			                <td class="text-center" colspan="2"></td>
+			                <td class="text-center" colspan="2"></td>
 			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
 			                <td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
 			            	<td class="text-center" colspan="1">{{$collectorData->issuedto - $collectorData->issuedfrom}}</td>
@@ -167,19 +175,19 @@
 
 				  			<div></div>
 				  			<div>Gen. Basic</div>
-				  			<div>40,432.00</div>
+				  			<div>{{number_format( (array_sum(($totalArr['hassef'] ?? []))/ 2) + array_sum(($totalArr['nosef'] ?? [])),2 )}}</div>
 				  			<div>____________</div>
 
 				  			<div>Add Collection</div>
 				  			<div>SEF</div>
-				  			<div>15,488.00</div>
+				  			<div>{{number_format(array_sum(($totalArr['hassef'] ?? [])) / 2 ,2)}}</div>
 				  			
 				  			<div>____________</div>
 
 				  			<div></div>
 				  			<div>Cash</div>
 				  			<div></div>
-				  			<div><u>58,568.00</u></div>
+				  			<div><u>{{number_format( (array_sum(($totalArr['hassef'] ?? []))) + array_sum(($totalArr['nosef'] ?? [])),2 )}}</u></div>
 
 				  			<div></div>
 				  			<div>Checks</div>
@@ -189,7 +197,7 @@
 				  			<div>Total</div>
 				  			<div></div>
 				  			<div></div>
-				  			<div><u>56,887.00</u></div>
+				  			<div><u>{{number_format( (array_sum(($totalArr['hassef'] ?? []))) + array_sum(($totalArr['nosef'] ?? [])),2 )}}</u></div>
 
 				  			<div>Less: </div>
 				  			<div>Remittance/Deposit to</div>
@@ -252,7 +260,7 @@
 						<div class="griders-container">
 				  			<div></div>
 				  			<div></div>
-				  			<div>(P________________)</div>
+				  			<div>(P{{number_format( (array_sum(($totalArr['hassef'] ?? []))) + array_sum(($totalArr['nosef'] ?? [])),2 )}})</div>
 				  		</div>
 				  		<br>
 				  		<div class="grider-container">
@@ -323,14 +331,14 @@
         #print_hide, #print_name_hide {
           display: none;
         }
-         .graph-image img{
+        .graph-image img{
         opacity: 0.2; /* set your opacity */ 
         position: absolute;
         right: 0;
         top: 0;
         bottom: 0;
         left:0;
-      }
+      	}
       } 
       textarea {
     border: none;

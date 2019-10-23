@@ -327,7 +327,7 @@
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="treeview-menu" id="collection">
                     @if($LA_GRP["C1000000"]["restrict"] == 'Y')
                     <li class="treeview">
                         <a href="#">
@@ -338,7 +338,7 @@
                               <!-- <span class="label label-primary pull-right">4</span> -->
                             </span>
                         </a>
-                        <ul class="treeview-menu" style="white-space: normal;">
+                        <ul class="treeview-menu" style="white-space: normal;" id="collection_menu">
                             @if($LA_GRP["C1000001"]["restrict"] == 'Y')
                             <li><a href="{{ asset('accounting/collection/or_issuance') }}"><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
                             @endif
@@ -529,6 +529,7 @@
                             </span>
                             <ul class="treeview-menu">
                                 <li><a href="{{ url('reports/collection/RocadDailyUser') }}"><i class="fa fa-circle-o"></i>ROCAD</a></li>
+                                <li><a href="{{ url('reports/collection/abstract') }}"><i class="fa fa-circle-o"></i>ABSTRACT Report</a></li>
                             </ul>
                         </a>
                     </li>

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Session;
 use Core;
 use DB;
+use Excel;
+use OfficeExport;
 
 class ROCADController extends Controller
 {
@@ -107,7 +109,7 @@ class ROCADController extends Controller
 
     public function viewToDiposit(Request $request){
         $arrRet = [
-            'collectors'=>DB::select("SELECT x08.opr_name,liquidate.liquidateid from rssys.liquidate left join rssys.x08 on x08.uid = liquidate.collector where liquidateid NOT IN (SELECT liquidateid from rssys.deposittobank)"),
+            'collectors'=>DB::select("SELECT distinct x08.opr_name,liquidate.liquidateid from rssys.liquidate left join rssys.x08 on x08.uid = liquidate.collector where liquidateid NOT IN (SELECT liquidateid from rssys.deposittobank)"),
             '_bc'=>[
                     ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
                     ['link'=>url("collection/Liquidating-officer"),'desc'=>'Liquidating Officer','icon'=>'file-text','st'=>true]
@@ -150,7 +152,7 @@ class ROCADController extends Controller
 
     public function rocardDailyUser(){
         $arrRet = [
-            'collectors'=>DB::select("SELECT x08.opr_name, x08.uid from rssys.deposittobank left join rssys.x08 on x08.uid = deposittobank.collector"),
+            'collectors'=>DB::select("SELECT distinct x08.opr_name, x08.uid from rssys.deposittobank left join rssys.x08 on x08.uid = deposittobank.collector"),
             '_bc'=>[
                     ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
                     ['link'=>url("collection/RocadDailyUser"),'desc'=>'Rocad Daily Report','icon'=>'file-text','st'=>true]
@@ -160,9 +162,40 @@ class ROCADController extends Controller
         return view('report.collection.ROCADdailyuser',$arrRet);
     }
 
+    public function abstractView(){
+        return view('report.collection.abstractview');
+    }
+
+    public function abstractProcess(Request $request, $from, $to){
+        $groupedTax = $groupData = [];
+        if(isset($from) && isset($to)){
+            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, lne.or_code as orno, 'various taxpayer' as taxpayer, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on  lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno");
+            $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id");
+
+            foreach ($taxData as $key => $value) {
+                $groupedTax[$value->tax_id]['description'] = $value->tax_desc;
+                $groupedTax[$value->tax_id][] = $value;
+            }
+
+            foreach ($data as $key) {
+                $groupData[$key->date][] = $key;
+            }
+
+            $arrRet = [
+                'unfiltered' => $data,
+                'groupedTax' => $groupedTax,
+                'ungrouped' => $taxData,
+                'groupedData' => $groupData
+            ];
+            return Excel::download(new OfficeExport('officeReport.abstractreport',$arrRet), 'ABSTRACT-Report-'.$from.'-'.$to.'.xlsx');
+            return view('report.collection.abstractProcess', $arrRet);
+        }
+        return abort(404);
+    }
+
     public function rocardDailyUserProcess(Request $request, $uid, $date){
         if(isset($uid) && isset($date)){
-            $data = DB::select("SELECT f.or_type as ortype, g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND d.t_date = '$date' ");
+            $data = DB::select("SELECT f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND d.t_date = '$date' ");
             if(count($data) <= 0){
                 abort(404);
             }

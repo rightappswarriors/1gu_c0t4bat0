@@ -49,6 +49,15 @@
                                                                 <input type="number" name="suggestive" class="form-control" placeholder="Suggestive OR to" data-parsley-required-message="<strong>Suggestive OR to</strong> is required." required>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Has SEF?<span class="text-red">*</span></label>
+                                                            <div class="col-sm-8" style="margin-bottom:10px;">
+                                                                <select name="hassef" class="form-control" data-parsley-required-message="<strong>SEF</strong> is required." required style="width: 100%;">
+                                                                    <option selected value="false">No</option>
+                                                                    <option value="true">Yes</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </span>
                                                 <span class="DeleteMode"  style="display: none">
@@ -81,6 +90,7 @@
                                         <th>Code</th>
                                         <th>Description</th>
                                         <th>Suggestive OR upto</th>
+                                        <th>Has SEF</th>
                                         <th width="15%"><center>Options</center></th>
                                     </tr>
                                 </thead>
@@ -91,9 +101,10 @@
                                                 <th>{{$fund->or_type}}</th>
                                                 <td>{{$fund->or_code}}</td>
                                                 <td>{{$fund->suggestiveORto}}</td>
+                                                <td>{{($fund->hassef == 1 ? 'Yes' : 'No')}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$fund->or_type}}', '{{$fund->or_code}}', '{{$fund->suggestiveORto}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$fund->or_type}}', '{{$fund->or_code}}', '{{$fund->suggestiveORto}}', '{{$fund->hassef}}');"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$fund->or_type}}', '{{$fund->or_code}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>
@@ -132,11 +143,14 @@
             $('input[name="txt_name"]').attr('required', '');
             $('input[name="suggestive"]').val('');
             $('input[name="suggestive"]').attr('required', '');
+            $('select[name="hassef"]').val('');
+            $('select[name="hassef"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
-        function EditMode(id, desc, suggest)
+        function EditMode(id, desc, suggest, hassef)
         {
+            hassef = hassef.trim() != '' ? 'true' : 'false';
             $('#MOD_MODE').text('(Edit)');
             $('#AddForm').attr('action', '{{ url('master-file/accounting/or_types') }}/update');
             $('input[name="txt_id"]').val(id);
@@ -146,6 +160,8 @@
             $('input[name="txt_name"]').attr('required', '');
             $('input[name="suggestive"]').val(suggest);
             $('input[name="suggestive"]').attr('required', '');
+            $('select[name="hassef"]').val(hassef).trigger('change');
+            $('select[name="hassef"]').attr('required', '');
             $('.AddMode').show();
             $('.DeleteMode').hide();
         }
@@ -157,6 +173,8 @@
             $('input[name="txt_id"]').removeAttr('required');
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
+            $('select[name="hassef"]').removeAttr('required');
+            $('input[name="suggestive"]').removeAttr('required');
             $('#DeleteName').text(desc);
             $('.DeleteMode').show();
             $('.AddMode').hide();
