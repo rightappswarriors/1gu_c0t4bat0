@@ -32,7 +32,7 @@ class I_BiologyController extends Controller
             $isnew = true;
             $data = Inventory::getBioItemSearchTable();
 
-            return view('inventory.biology.biologyacqusition_add', compact( 'data', 'isnew'));
+            return view('inventory.biology.biologyacqusition_add', compact('data', 'isnew' ));
         }
         else if($request->isMethod('post'))
         {
@@ -70,8 +70,8 @@ class I_BiologyController extends Controller
                   if ($updateM99 == true) {
                       foreach($request->tbl_itemlist as $tb) {
                           $data2 = ['code' => $code,
-                              'date' => $tb[0],
-                              'ln_num' => $tb[1],
+                              'date' => $tb[1],
+                              'ln_num' => $tb[0],
                               'item_code' => $tb[2],
                               'property_no' => $tb[3],
                               'item_desc' => $tb[4],
@@ -134,8 +134,8 @@ class I_BiologyController extends Controller
               foreach($request->tbl_itemlist as $tb) {
                   $data2=[
                             'code' => $code,
-                            'date' => $tb[0],
-                            'ln_num' => $tb[1],
+                            'date' => $tb[1],
+                            'ln_num' => $tb[0],
                             'item_code' => $tb[2],
                             'property_no' => $tb[3],
                             'item_desc' => $tb[4],
@@ -185,11 +185,11 @@ class I_BiologyController extends Controller
     {
         if($request->isMethod('get'))
         {
-
+            $acqData = Inventory::getAcqData();
             $isnew = true;
             $data = Inventory::getBioItemSearchTable();
 
-            return view('inventory.biology.biologyoffspring_add', compact( 'data', 'isnew'));
+            return view('inventory.biology.biologyoffspring_add', compact( 'data', 'isnew', 'acqData'));
         }
         else if($request->isMethod('post'))
         {
@@ -212,12 +212,14 @@ class I_BiologyController extends Controller
               $fund = $request->fund;
               $koa = $request->koa;
               $reference = $request->reference;
+              $acq_code = $request->acq_code;
 
               $data = [
                   'code' => $code,
                   'fund' => $fund,
                   'kindofanimals' => $koa,
                   'reference' => $reference,
+                  'acq_code' => $acq_code,
               ];
 
               $insertHeader = Core::insertTable($table, $data, $this->module);
@@ -228,8 +230,8 @@ class I_BiologyController extends Controller
                   if ($updateM99 == true) {
                       foreach($request->tbl_itemlist as $tb) {
                           $data2 = ['code' => $code,
-                              'date' => $tb[0],
-                              'ln_num' => $tb[1],
+                              'date' => $tb[1],
+                              'ln_num' => $tb[0],
                               'item_code' => $tb[2],
                               'property_no' => $tb[3],
                               'item_desc' => $tb[4],
@@ -262,12 +264,12 @@ class I_BiologyController extends Controller
     public function boo_edit(Request $request, $code) {
       if($request->isMethod('get')) // for entry
       {
-
+          $acqData = Inventory::getAcqData();
           $data =Inventory::getBioItemSearchTable();
           $biohd=Inventory::getBioBooHeader($code);
           $bioln=Inventory::getBioBooLine($code);
           $isnew=false;
-          return view('inventory.biology.biologyoffspring_add', compact('data', 'biohd', 'bioln', 'isnew'));
+          return view('inventory.biology.biologyoffspring_add', compact('data', 'biohd', 'bioln', 'isnew', 'acqData'));
       }
       elseif($request->isMethod('post')) {
           $flag="true";
@@ -276,12 +278,14 @@ class I_BiologyController extends Controller
           $code=$code;
           $fund = $request->fund;
           $koa = $request->koa;
+          $acq_code = $request->acq_code;
           $reference = $request->reference;
 
           $data=[ 'code' => $code,
                   'fund' => $fund,
                   'kindofanimals' => $koa,
                   'reference' => $reference,
+                  'acq_code' => $acq_code,
                 ];
           $updHeader=Core::updateTable($table, 'code', $code, $data, $this->module);
           if($updHeader=='true') {
@@ -293,8 +297,8 @@ class I_BiologyController extends Controller
               foreach($request->tbl_itemlist as $tb) {
                   $data2=[
                             'code' => $code,
-                            'date' => $tb[0],
-                            'ln_num' => $tb[1],
+                            'date' => $tb[1],
+                            'ln_num' => $tb[0],
                             'item_code' => $tb[2],
                             'property_no' => $tb[3],
                             'item_desc' => $tb[4],
@@ -341,11 +345,11 @@ class I_BiologyController extends Controller
     {
         if($request->isMethod('get'))
         {
-
+            $acqData = Inventory::getAcqData();
             $isnew = true;
             $data = Inventory::getBioItemSearchTable();
 
-            return view('inventory.biology.biologydisposition_add', compact( 'data', 'isnew'));
+            return view('inventory.biology.biologydisposition_add', compact( 'data', 'isnew', 'acqData'));
         }
         else if($request->isMethod('post'))
         {
@@ -368,12 +372,14 @@ class I_BiologyController extends Controller
               $fund = $request->fund;
               $koa = $request->koa;
               $reference = $request->reference;
+              $acq_code = $request->acq_code;
 
               $data = [
                   'code' => $code,
                   'fund' => $fund,
                   'kindofanimals' => $koa,
                   'reference' => $reference,
+                  'acq_code' => $acq_code,
               ];
 
               $insertHeader = Core::insertTable($table, $data, $this->module);
@@ -384,14 +390,14 @@ class I_BiologyController extends Controller
                   if ($updateM99 == true) {
                       foreach($request->tbl_itemlist as $tb) {
                           $data2 = ['code' => $code,
-                              'date' => $tb[0],
-                              'ln_num' => $tb[1],
+                              'date' => $tb[1],
+                              'ln_num' => $tb[0],
                               'item_code' => $tb[2],
                               'property_no' => $tb[3],
                               'item_desc' => $tb[4],
                               'numberofdisposition' => $tb[5],
                               'natureofdisposition' => $tb[6],
-                              'remarks' => $tb[6],
+                              'remarks' => $tb[7],
                           ];
 
                           $insertLine = Core::insertTable($tableln, $data2, $this->module);
@@ -418,12 +424,12 @@ class I_BiologyController extends Controller
     public function dispo_edit(Request $request, $code) {
       if($request->isMethod('get')) // for entry
       {
-
+          $acqData = Inventory::getAcqData();
           $data =Inventory::getBioItemSearchTable();
           $biohd=Inventory::getBioDispoHeader($code);
           $bioln=Inventory::getBioDispoLine($code);
           $isnew=false;
-          return view('inventory.biology.biologydisposition_add', compact('data', 'biohd', 'bioln', 'isnew'));
+          return view('inventory.biology.biologydisposition_add', compact('data', 'biohd', 'bioln', 'isnew', 'acqData'));
       }
       elseif($request->isMethod('post')) {
           $flag="true";
@@ -432,12 +438,14 @@ class I_BiologyController extends Controller
           $code=$code;
           $fund = $request->fund;
           $koa = $request->koa;
+          $acq_code = $request->acq_code;
           $reference = $request->reference;
 
           $data=[ 'code' => $code,
                   'fund' => $fund,
                   'kindofanimals' => $koa,
                   'reference' => $reference,
+                  'acq_code' => $acq_code,
                 ];
           $updHeader=Core::updateTable($table, 'code', $code, $data, $this->module);
           if($updHeader=='true') {
@@ -449,8 +457,8 @@ class I_BiologyController extends Controller
               foreach($request->tbl_itemlist as $tb) {
                   $data2=[
                             'code' => $code,
-                            'date' => $tb[0],
-                            'ln_num' => $tb[1],
+                            'date' => $tb[1],
+                            'ln_num' => $tb[0],
                             'item_code' => $tb[2],
                             'property_no' => $tb[3],
                             'item_desc' => $tb[4],
@@ -485,6 +493,30 @@ class I_BiologyController extends Controller
 
 
 //END BIOLOGY OF DISPOSITION
+
+//GET ACQUISITION ITEM LINE AND HEADER
+
+public function acqItemDetails($code)
+    {
+      $itemdetails = Inventory::acqItemDetails($code);
+
+      // $fund = $itemdetails->fund;
+      // $koa = $itemdetails->kindofanimals;
+      // $reference = $itemdetails->reference;
+      // $ln_num = $itemdetails->ln_num;
+      // $item_code = $itemdetails->item_code;
+      // $item_desc = $itemdetails->item_desc;
+      // $date = $itemdetails->date;
+      // $pro_no = $itemdetails->property_no;
+      // $qty = $itemdetails->qty;
+      // $remarks = $itemdetails->remarks;
+
+      $dummydata = 'hello';
+      $itemdetailsdata = array($itemdetails, $dummydata);
+
+      return $itemdetailsdata;
+    }
+
 }
 
 

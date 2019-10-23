@@ -17,15 +17,15 @@
 		      </div>
 		      <div class="row" >
 		        <div class="col-sm-12" >
-		          <table style="border: 1px solid #000;"  id="tbl_list" class="table table-bordered table-striped">
+		          <table style="border: 1px solid #000;margin:0 !important;"  id="tbl_list" class="table table-bordered table-striped">
 		              <thead>
 		                <tr>
 		                  <div class="image">
-		                  <th style="border: none !important;">
-		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="border: none !important;text-align: right;">
+		                    <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" width="145"></th>
 		                  <th style="border: none !important;">
 		                    <center><h3>CITY OF GUIHULNGAN</h3><h4>Local Government Unit</h4><h4>General Services Office</h4></center></th>
-		                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" style="max-width: 85px;"></th>
+		                  <th style="border: none !important;text-align: left;"><img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo" width="129"></th>
 		                </div>
 		                </tr>
 		              </thead>
@@ -41,7 +41,7 @@
 		          </div>
 		          <br>
 
-		          <table  class="table table-bordered table-striped">
+		          <table  class="table table-bordered table-striped" style="margin: 0 !important">
 		            <thead>
 		            <tr>
 		                 <th style="white-space: nowrap;font-size:14px;"><center>ARTICLE</center> No.</th>
@@ -54,7 +54,7 @@
 	              @foreach($reclne as $rl)
 		            <tr>
 		                 <td>{{$rl->to_article}}</td>
-		                 <td>{{$rl->recv_qty}}</td>
+		                 <td>{{number_format($rl->recv_qty, 2)}}</td>
 		                 <td><textarea>{{$rl->item_desc}}</textarea></td>
 		                 <td>{{$rl->notes}}</td>
 		            </tr>
@@ -63,7 +63,7 @@
 		          </table>
 
 
-		          <table  class="table table-bordered table-striped" style="margin:8px 0 8px 0 !important;">
+		          <table  class="table table-bordered table-striped" style="margin:8px 0 8px 0 !important;border: hidden !important;margin: 0 !important;">
                     <tfoot>
                       <tr>
                         <th colspan="8">Office/Department: {{$rechdr->office}}</th>

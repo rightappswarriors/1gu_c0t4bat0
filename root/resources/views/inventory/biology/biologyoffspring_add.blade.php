@@ -43,9 +43,9 @@
               <div class="form-group">
                 <label>FUND <span style="color:red"><strong>*</strong></span></label>
                  @if($isnew)
-                  <input type="text" class="form-control" name="b_fund" data-parsley-errors-container="#validate_b_fund" required>
+                  <input type="text" class="form-control" name="b_fund" data-parsley-errors-container="#validate_b_fund" required readonly="">
                  @else
-                  <input type="text" class="form-control" name="b_fund" value="{{$biohd->fund}}" data-parsley-errors-container="#validate_b_fund" required>
+                  <input type="text" class="form-control" name="b_fund" value="{{$biohd->fund}}" data-parsley-errors-container="#validate_b_fund" required readonly="">
                  @endif
                   <span id="#validate_b_fund"></span>
               </div>
@@ -54,9 +54,9 @@
               <div class="form-group">
                 <label>Kind of Animals <span style="color:red"><strong>*</strong></span></label>
                  @if($isnew)
-                <input type="text" class="form-control" name="b_koa" data-parsley-errors-container="#validate_b_koa" required>
+                <input type="text" class="form-control" name="b_koa" data-parsley-errors-container="#validate_b_koa" required readonly="">
                 @else
-                <input type="text" class="form-control" name="b_koa" value="{{$biohd->kindofanimals}}" data-parsley-errors-container="#validate_b_koa" required>
+                <input type="text" class="form-control" name="b_koa" value="{{$biohd->kindofanimals}}" data-parsley-errors-container="#validate_b_koa" required readonly="">
                 @endif
                   <span id="#validate_b_koa"></span>
               </div>
@@ -71,7 +71,18 @@
                 @endif
                   <span id="#validate_reference"></span>
               </div>
-            </div>                     
+            </div>
+            <div class="col-md-3" style="display: none;">
+              <div class="form-group">
+                <label>Acquisition Code</label>
+                @if($isnew)
+                  <input type="text" class="form-control" name="acq_code" data-parsley-errors-container="#validate_reference">
+                @else
+                  <input type="text" class="form-control" name="acq_code" value="{{$biohd->acq_code}}" data-parsley-errors-container="#validate_reference">
+                @endif
+                  <span id="#validate_reference"></span>
+              </div>
+            </div>                         
             
         </div>
       </form>
@@ -84,10 +95,15 @@
               <div class="row">
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button>
+                   {{--  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button> --}}
+                   @if($isnew)
+                    <button type="button" class="btn btn-primary" id="addacqitembtn" data-toggle="modal" data-target="#additemfromacq-modal"><i class="fa fa-plus"></i> Add item from Acquisition</button>
+                    @else
+                    <button disabled="" type="button" class="btn btn-primary" id="addacqitembtn" data-toggle="modal" data-target="#additemfromacq-modal"><i class="fa fa-plus"></i> Add item from Acquisition</button>
+                    @endif
+
                 </div>
               </div>
-
 
               <!-- Modal -->
             <div class="row">
@@ -145,12 +161,18 @@
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                       <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#enteritem-modal"><i class="fa fa-plus"></i> Add Item</button>
                     </div>
+
+                    
                   </div>
                   <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
               </div>
             </div>  
+
+
+
+            
 
 
             </div>
@@ -160,8 +182,9 @@
               <table id="tbl_itemlist" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Date</th>
+                  
                   <th>Line No.</th>
+                  <th>Date</th>
                   <th>Item Code</th>
                   <th>Property No.</th>
                   <th>Description</th>
@@ -175,8 +198,9 @@
                   @if(!$isnew)
                   @foreach($bioln as $rl)
                      <tr>
-                      <td>{{$rl->date}}</td>
-                       <td>{{$rl->ln_num}}</td> 
+                      
+                       <td>{{$rl->ln_num}}</td>
+                       <td>{{$rl->date}}</td> 
                        <td>{{$rl->item_code}}</td> 
                        <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
@@ -215,6 +239,9 @@
       </div>
       <!-- /.row -->
 
+
+     
+
        <!-- /.modal -->
        <!-- Enter Item Modal Form -->
               <div class="row">
@@ -234,7 +261,7 @@
                           <div class="col-sm-4">
                             <div class="form-group">
                               <label>Line No.</label>
-                              <input type="text" class="form-control" name="txt_lineno" readonly="">
+                              <input type="text" class="form-control" id="lineno" name="txt_lineno" readonly="">
                             </div>
                           </div> 
                           <div class="col-sm-4">
@@ -286,13 +313,13 @@
                               <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                               </div>
-                              <input required value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
+                              <input value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
                             </div>
                           </div>
                           <div class="col-sm-5">
                             <div class="form-group">
                               <label>Number Of Offspring <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" required>
+                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0">
                             </div>
                           </div>
                           
@@ -330,6 +357,78 @@
               <!-- End Modal -->
               <!-- Enter Item Modal Form -->
 
+
+               <!-- Add item(s) from ACQUISITION -->
+              <div class="row">
+              <div class="modal fade in" id="additemfromacq-modal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title">Add item(s) from Acquisition</h4>
+                    </div>
+                    <div class="modal-body">
+                      <form id="add-form">
+                       
+                      <div class="box-body">
+                        
+                        
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                              <label>SELECT ACQUISITION</label>
+                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_acq" required="" onchange="getDataFromLoadItems()">
+                                  <option value="" selected="selected">--- Select ACQUISITION HEADER ---</option>
+                                  @foreach($acqData as $acq)
+                                   {{-- {{print_r([$risa->rec_num,$risa->ris_no,$risa->cc_code,$risa->nameofpersonnel])}} --}}
+                                  <option value="{{$acq->code}}">{{$acq->fund}} || {{$acq->kindofanimals}}</option>
+
+                                  @endforeach
+                                </select>
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                           <div class="table-responsive">
+                           <table id="tbl_acqitemlist" class="table table-bordered table-striped">
+                             <thead>
+                               <tr>
+                                 <th><input type="checkbox" name="select_all" onchange="checkAllACQItems(this.checked)"></th>
+                                 <th>Line</th>
+                                 <th>Item Code</th>
+                                 <th>Property No</th>
+                                 <th>Date</th>
+                                 <th>Description</th>
+                               </tr>
+                             </thead>
+                             <tbody>
+                             </tbody>
+                           </table>
+                          </div>
+                      </div>
+                        
+                        
+                      </div>
+                   
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                     
+                        <button type="button" class="btn btn-primary" onclick="selectedACQItems()">Proceed</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                     
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+              </div>
+              <!-- End Modal -->
+              <!-- Add item(s) from ACQUISITION --> 
+
     <script>
 
    // Fix modal scroll disabled.
@@ -342,6 +441,7 @@
     // Fix modal scroll disabled.
 
       var selectedRow = 0;
+      loadedItemsFromACQ = [];
 
       // hide table rpo column
       $(document).ready(function() {
@@ -364,7 +464,94 @@
       } );
       } );
 
+      function getDataFromLoadItems() // load items from ACQUISITION
+      {
+         var tbl_acqitemlist = $('#tbl_acqitemlist').DataTable();
+         var code = $('select[name="select_acq"]').select2('data')[0].id;
+         var dataar;
+         
+         tbl_acqitemlist.clear().draw();
 
+         acqcode = code;
+
+         if(code != '')
+         {
+           $.ajax({
+             url: '{{asset('inventory/biology/bio_getacqdetails')}}/'+code,
+             method: 'GET',
+             success : function(data)
+             {
+
+                if(data.length > 0)
+                {
+                  loadedItemsFromACQ = data[0];
+                  dataar = data[0];
+                  
+                  for(var i = 0; i < dataar.length; i++)
+                  {
+                    tbl_acqitemlist.row.add(['<input type="checkbox" id="chk_acqitems" class="chk_acqitems" value="'+dataar[i].ln_num+'">',
+                                             dataar[i].ln_num, 
+                                             dataar[i].item_code,
+                                             dataar[i].property_no,
+                                             dataar[i].date,
+                                             dataar[i].item_desc,
+                                            ]).draw();
+
+
+                  }
+
+                      $('input[name="acq_code"]').val(dataar[0].code);
+                      $('input[name="b_fund"]').val(dataar[0].fund);
+                      $('input[name="b_koa"]').val(dataar[0].kindofanimals);
+                      $('input[name="txt_reference"]').val(dataar[0].reference);
+                }
+
+                
+             }
+           });
+         }
+      }
+
+      function checkAllACQItems(chk_bool) // check/uncheck all checkbox risitems
+      {
+        let chk_acqitems = document.getElementsByClassName('chk_acqitems');
+      
+        for(let i = 0; i < chk_acqitems.length; i++) 
+        {
+          chk_acqitems[i].checked = chk_bool;
+        }
+      }
+
+      function selectedACQItems()
+      {
+        var table = $('#tbl_itemlist').DataTable();
+        let chk_acqitems = document.getElementsByClassName('chk_acqitems');
+        let tbl_itemlist = $('#tbl_itemlist').DataTable();
+
+        for(let i = 0; i < chk_acqitems.length; i++) 
+        {
+          if(chk_acqitems[i].checked)
+          {
+            loadedItemsFromACQ.forEach(function (a, b, c) {
+                if(a.ln_num == chk_acqitems[i].value)
+                {
+                  var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+                 var buttons = '<center>' +
+                                  '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+                                  '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+a.ln_num+'\');"></i></a>' +
+                                '</center>';
+                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, buttons]).draw();
+                  
+                }
+            });
+          }
+        }
+       
+        $('#addacqitembtn').addClass('disabled');
+        $("#addacqitembtn").attr("disabled","");
+        $('#additemfromacq-modal').modal('toggle');
+        
+      }
 
       function EnterItem_Add(code)
       {
@@ -392,6 +579,12 @@
               });
       }
 
+
+
+
+
+      
+
       function EnterItem_Edit(line)
       {
           $('#ENTER_ITEM').text('Edit');
@@ -405,12 +598,11 @@
           var row = line - 1;
           var data = table.row(row).data();
           
-          $('input[name="txt_lineno"]').val(data[1]);
+          $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_partno"]').val(data[3]);
           $('input[name="txt_itemcode"]').val(data[2]);
           $('input[name="txt_itemdesc"]').val(data[4]);
           $('input[name="txt_qty"]').val(data[5]);
-          $('input[name="txt_date"]').val(data[0]);
           $('input[name="txt_remarks"]').val(data[6]);
 
           $('#enteritem-modal').modal('toggle');
@@ -457,12 +649,12 @@
         if($('#ENTER_ITEM').text() == 'Add')
         {
 
-        table.row.add([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
+        table.row.add([line, date, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
 
         }
         else if($('#ENTER_ITEM').text() == 'Edit')
         {
-          table.row(selectedRow).data([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
+          table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
         }
         else // remove item
         {
@@ -522,6 +714,7 @@
                           fund: $('input[name="b_fund"]').val(),
                           koa: $('input[name="b_koa"]').val(),
                           reference: $('input[name="txt_reference"]').val(),
+                          acq_code: $('input[name="acq_code"]').val(),
 
                        };
 
@@ -572,6 +765,7 @@
                             fund: $('input[name="b_fund"]').val(),
                             koa: $('input[name="b_koa"]').val(),
                             reference: $('input[name="txt_reference"]').val(),
+                            acq_code: $('input[name="acq_code"]').val(),
                          };
 
               $.ajax({

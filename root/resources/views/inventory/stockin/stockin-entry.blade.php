@@ -674,10 +674,6 @@
             $('#itemsearch-modal').modal('show');
         }
         }
-        else
-        {
-          alert('oy');
-        }
       }
 
       function disp_amt_result()

@@ -160,8 +160,9 @@
               <table id="tbl_itemlist" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Date</th>
+                  
                   <th>Line No.</th>
+                  <th>Date</th>
                   <th>Item Code</th>
                   <th>Property No.</th>
                   <th>Description</th>
@@ -175,8 +176,9 @@
                   @if(!$isnew)
                   @foreach($bioln as $rl)
                      <tr>
-                      <td>{{$rl->date}}</td>
-                       <td>{{$rl->ln_num}}</td> 
+                      
+                       <td>{{$rl->ln_num}}</td>
+                       <td>{{$rl->date}}</td> 
                        <td>{{$rl->item_code}}</td> 
                        <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
@@ -286,13 +288,13 @@
                               <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                               </div>
-                              <input required value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
+                              <input value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
                             </div>
                           </div>
                           <div class="col-sm-6">
                             <div class="form-group">
                               <label>Quantity <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" required="">
+                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0">
                             </div>
                           </div>
                           
@@ -411,7 +413,7 @@
           $('input[name="txt_itemcode"]').val(data[2]);
           $('input[name="txt_itemdesc"]').val(data[4]);
           $('input[name="txt_qty"]').val(data[5]);
-          $('input[name="txt_date"]').val(data[0]);
+          $('input[name="txt_date"]').val(data[1]);
           $('input[name="txt_remarks"]').val(data[6]);
 
           $('#enteritem-modal').modal('toggle');
@@ -426,14 +428,6 @@
         $('.EditMode').hide();
         $('.EditModeBtn').hide();
         $('.DeleteMode').show();
-
-        $('input[name="txt_lineno"]').val(data[1]);
-          $('input[name="txt_partno"]').val(data[3]);
-          $('input[name="txt_itemcode"]').val(data[2]);
-          $('input[name="txt_itemdesc"]').val(data[4]);
-          $('input[name="txt_qty"]').val(data[5]);
-          $('input[name="txt_date"]').val(data[0]);
-          $('input[name="txt_remarks"]').val(data[6]);
 
         $('#enteritem-modal').modal('toggle');
       }
@@ -463,20 +457,19 @@
         if($('#ENTER_ITEM').text() == 'Add')
         {
 
-        table.row.add([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
+        table.row.add([line, date, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
 
         }
         else if($('#ENTER_ITEM').text() == 'Edit')
         {
-          table.row(selectedRow).data([date, line, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
+          table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, remarks, buttons]).draw();
         }
 
         
         else // remove item
         {
           table.row(selectedRow).remove().draw();
-          
-          var a = 'hello';
+            
 
           var i;
           var r = 1;
