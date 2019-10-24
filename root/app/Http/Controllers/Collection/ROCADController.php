@@ -167,10 +167,10 @@ class ROCADController extends Controller
     }
 
     public function abstractProcess(Request $request, $from, $to){
-        $groupedTax = $groupData = [];
+        $groupedTax = $groupData = $processedData = $processedHeaderDesc = [];
         if(isset($from) && isset($to)){
-            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, lne.or_code as orno, 'various taxpayer' as taxpayer, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on  lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno");
-            $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id");
+            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, lne.or_code as orno, 'various taxpayer' as taxpayer, lne.payment_desc as description, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno, description");
+            $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id order by tax_group.tax_id ASC");
 
             foreach ($taxData as $key => $value) {
                 $groupedTax[$value->tax_id]['description'] = $value->tax_desc;
@@ -181,13 +181,19 @@ class ROCADController extends Controller
                 $groupData[$key->date][] = $key;
             }
 
+            if(isset($groupData)){
+                foreach ($groupData as $gkey => $gvalue) {
+                    foreach ($gvalue as $subvalue) {
+                       $processedData[strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $subvalue->description)))))] = $subvalue->amount;
+                    }      
+                }
+            }
             $arrRet = [
-                'unfiltered' => $data,
                 'groupedTax' => $groupedTax,
-                'ungrouped' => $taxData,
-                'groupedData' => $groupData
+                'groupedData' => $groupData,
+                'processedData' => $processedData,
             ];
-            return Excel::download(new OfficeExport('officeReport.abstractreport',$arrRet), 'ABSTRACT-Report-'.$from.'-'.$to.'.xlsx');
+            // return Excel::download(new OfficeExport('officeReport.abstractreport',$arrRet), 'ABSTRACT-Report-'.$from.'-'.$to.'.xlsx');
             return view('report.collection.abstractProcess', $arrRet);
         }
         return abort(404);
