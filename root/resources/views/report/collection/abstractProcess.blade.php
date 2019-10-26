@@ -1,6 +1,6 @@
 @extends('_main')
 @section('content')
-<?php $old = $flagData = null; $runningAmountTotal = $headerDataCount = $amountFromLoop = $runningAmountTotal = $runningt = $runningGT = $runningRowTotal = 0; $runningColTotal = [];?>
+<?php $old = $flagData = null; $runningAmountTotal = $headerDataCount = $amountFromLoop = $runningAmountTotal = $runningt = $runningGT = $runningRowTotal = 0; $runningColTotal = []; $flag = true;?>
   <section class="content">
       <div class="box box-default">
  
@@ -60,11 +60,17 @@
                   {{-- for extra TD and DATA --}}
                   @foreach($groupedTax as $tax)
                    @for($l = 0; $l < count($tax) - 1 ; $l++)
-                        <?php $formattedTaxDesc = strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $tax[$l]->taxtype_desc))))); ?>
+                        <?php $formattedTaxDesc = strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $tax[$l]->taxtype_desc)))));?>
+
                         @if(strpos(strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $groupedData[$key][$j]->description))))), $formattedTaxDesc) !== false)
 
-                        <?php $amountFromLoop = $groupedData[$key][$j]->amount; ?>
+                        <?php $amountFromLoop = $groupedData[$key][$j]->amount; $flag = false;?>
                         @endif
+
+                        @if($flag == true && $tax[$l]->taxtype_id == 25)
+                        <?php $amountFromLoop = $groupedData[$key][$j]->amount; $flag = true;?>
+                        @endif
+
                       <td scope="col" class="text-center">{{Number_format($amountFromLoop,0)}}</td>
                       <?php $runningColTotal[$formattedTaxDesc.''.$l] = (isset($runningColTotal[$formattedTaxDesc.''.$l]) ? $runningColTotal[$formattedTaxDesc.''.$l] + $amountFromLoop : $amountFromLoop); ?>
                       <?php $runningRowTotal += $amountFromLoop; ?>
@@ -74,6 +80,7 @@
                   @endforeach
                   <td>{{Number_format($runningRowTotal,2)}} <?php $runningt += $runningRowTotal; ?></td>
                   <td>{{number_format($groupedData[$key][$j]->amount,2)}} <?php $runningGT += $groupedData[$key][$j]->amount; ?></td>
+                  <?php $runningRowTotal = 0; ?>
                </tr>
                @endfor
                <tr style="font-weight: bold;">

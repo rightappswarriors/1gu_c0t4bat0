@@ -1,15 +1,11 @@
-	@extends('_main')
+@extends('_main')
 @php
-    $_bc = [
-        ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>'#','desc'=>'Turn Over','icon'=>'none','st'=>true]
-    ];
-    $_ch = ""; // Module Name
-    $total = 0;
+    $totalYes = $totalTo = $runningTotalRowAccord = $runningTotalColAccordTotal = $runningTotalColAccordYes = $runningTotalColAccordToday = $runningHeretoTotal = $runningCollectionTotal = 0;
+    $isAF56 = false;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
-    @include('layout._contentheader')
+    {{-- @include('layout._contentheader') --}}
         <!-- Main content -->
     <section class="content">
 
@@ -18,7 +14,7 @@
 	  			<div><u></u></div>
 	  			<div><u></u></div>
 	  			<div></div>
-	  			<div><u>{{Date('m/d/Y')}}</u></div>
+	  			<div><u>{{(isset($selectedDate) ? Date('F j, Y',strtotime($selectedDate)) : null)}}</u></div>
 	  			<div><u></u></div>
 	  			<div><u></u></div>
 	  			<div><b></b></div>
@@ -35,17 +31,47 @@
 	                	<th class="text-center" colspan="4">Totals Todays</th>
 	                	<th class="text-center" colspan="4">Totals to Date</th>
 	            	</tr>
+	            	@isset($allData[0])
+	            	@foreach($allData[0] as $keyAccourd => $accord)
 	            	<tr>
-	            		<td class="text-center" colspan="4"></td>
-	            		<td class="text-center" colspan="4"></td>
-	            		<td class="text-center" colspan="4"></td>
-	            		<td class="text-center" colspan="4"></td>
+	            		<td class="text-center" colspan="4">{{$keyAccourd}}</td>
+	            		@for($i = 0; $i < count($accord); $i++)
+
+							<?php 
+							if($accord[$i]->ortype != 'AF56'){
+								$isAF56 = false;
+							} else {
+								$isAF56 = true;
+							}
+							$runningTotalColAccordTotal += ($isAF56 ? ($accord[$i]->today /2) : $accord[$i]->today);
+
+							if($accord[$i]->todayflag == 'today'){
+								$totalTo += ($isAF56 ? ($accord[$i]->today /2) : $accord[$i]->today);
+								$runningTotalRowAccord +=  ($isAF56 ? ($accord[$i]->today /2) : $accord[$i]->today);
+							} else {
+								$totalYes += ($isAF56 ? ($accord[$i]->today /2) : $accord[$i]->today);
+								$runningTotalRowAccord +=  ($isAF56 ? ($accord[$i]->today /2) : $accord[$i]->today);
+							}
+
+							?>
+	            		@endfor
+
+	            		<td class="text-center" colspan="4">{{number_format($totalYes,2)}} <?php $runningTotalColAccordYes += $totalYes; ?></td>
+	            		<td class="text-center" colspan="4">{{number_format($totalTo,2)}} <?php $runningTotalColAccordToday += $totalTo; ?></td>
+	            		<td class="text-center" colspan="4">{{number_format($runningTotalRowAccord,2)}}</td>
+			
 	            	</tr>
+	            	<?php 
+	            	
+	            	?>
+	            	<?php $totalYes = $totalTo = $runningTotalRowAccord = 0; ?>
+	            	@endforeach
+	            	@endisset
 	            	<tr>
 	            		<td class="text-center" colspan="4">CUMMULATIVE TOTAL</td>
-	            		<td class="text-center" colspan="4">1,149,674.46</td>
-	            		<td class="text-center" colspan="4">191,156.76</td>
-	            		<td class="text-center" colspan="4">1,340,831.22</td>
+	            		<td class="text-center" colspan="4">{{number_format($runningTotalColAccordYes,2)}}</td>
+	            		<td class="text-center" colspan="4">{{number_format($runningTotalColAccordToday,2)}}</td>
+	            		<td class="text-center" colspan="4">{{number_format($runningTotalColAccordTotal,2)}}</td>
 	            	</tr>
 				</table>
 					<div class="grider-container">
@@ -74,17 +100,22 @@
 		                	<th class="text-center" colspan="4">Title</th>
 		                	<th class="text-center" colspan="4">Amount</th>		
 		            	</tr>
+		            	@isset($hereto)
+		            	@foreach($hereto as $here)
+		            	<?php $runningHeretoTotal += $here->depossitedamount; ?>
 		            	<tr>
+		            		<td class="text-center" colspan="4">{{$here->collector}}</td>
 		            		<td class="text-center" colspan="4"></td>
-		            		<td class="text-center" colspan="4"></td>
-		            		<td class="text-center" colspan="4"></td>
+		            		<td class="text-center" colspan="4">{{number_format($here->depossitedamount)}}</td>
 		            	</tr>
+		            	@endforeach
+		            	@endisset
 					</table>
 						<div class="grider-container">
 							<div><u></u></div>
 				  			<div><u></u></div>
 				  			<div>TOTAL COLLECTION FOR TODAY ------------------- </div>
-				  			<div> P           <u><b>191,156.76</b></u></div>
+				  			<div> P           <u><b>{{Number_format($runningHeretoTotal,2)}}</b></u></div>
 						</div>
 						<br>
 						<div class="grid1-container">
@@ -110,35 +141,26 @@
 							<tr>
 			                	<td colspan="12"><b>Summary of Collections</b></td>
 			            	</tr>
+			            	@isset($collection)
+			            	@foreach($collection as $col)
+			            	<?php $runningCollectionTotal += $col->colamount; ?>
 			        		<tr>
-			            		<td  colspan="3">RPT COLLECTION</td>
+			            		<td  colspan="3">{{strtoupper(trim(urldecode($col->payment_desc)))}}</td>
 			                	<td  colspan="7"><center></center></td>
-			                	<td class="text-right" colspan="2">5,737.20</td>	
-			            	</tr>			            	
-			            	<tr>
-			            		<td  colspan="3">GENERAL COLLECTIONS</td>
-			                	<td  colspan="7"><center></center></td>
-			                	<td class="text-right" colspan="2">61,527.24</td>	
-			            	</tr>
-			            	<tr>
-			            		<td  colspan="3">MARKET FEES</td>
-			                	<td  colspan="7"><center></center></td>
-			                	<td class="text-right" colspan="2">20,172.32</td>	
-			            	</tr>			            	
-			            	<tr>
-			            		<td  colspan="3">WATER FEES</td>
-			                	<td  colspan="7"><center></center></td>
-			                	<td class="text-right" colspan="2">20,172.32</td>	
-			            	</tr>
+			                	<td class="text-right" colspan="2">{{number_format($col->colamount)}}</td>	
+			            	</tr>			
+			            	@endforeach
+			            	@endisset            		            	
+
 			            	<tr>
 			            		<td  colspan="3"><b>TOTAL </b></td>
 			                	<td  colspan="7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                	<td class="text-right" colspan="2">191,156.76</td>	
+			                	<td class="text-right" colspan="2">{{Number_format($runningCollectionTotal,2)}}</td>	
 			            	</tr>
 						</table>
 						<br>
 						<div class="grid1-container">
-							<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I HEREBY CERTIFY to have received this ____________________ day of ____________________ 2019 shown above which agree with the total collections for today shown in the records and abstract of collection in the <br>amount of P<u><b>191,156.76</b></u>.</p>
+							<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I HEREBY CERTIFY to have received this ____________________ day of ____________________ 2019 shown above which agree with the total collections for today shown in the records and abstract of collection in the <br>amount of P<u><b>{{Number_format($runningCollectionTotal,2)}}</b></u>.</p>
 						</div>
 						<div class="grider-container">
 							<div><u></u></div>

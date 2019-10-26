@@ -530,6 +530,21 @@
                             <ul class="treeview-menu">
                                 <li><a href="{{ url('reports/collection/RocadDailyUser') }}"><i class="fa fa-circle-o"></i>ROCAD</a></li>
                                 <li><a href="{{ url('reports/collection/abstract') }}"><i class="fa fa-circle-o"></i>ABSTRACT Report</a></li>
+                                <li><a href="{{ url('reports/collection/Daily-Collection') }}"><i class="fa fa-circle-o"></i>Daily Collections</a></li>
+
+                                <li class="treeview">
+                                    <a href="#">
+                                        <i class="fa fa-circle-o"></i>
+                                        <span>Real Property</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                        <ul class="treeview-menu">
+                                            <li><a href="{{ url('reports/collection/Real-Property-Tax') }}"><i class="fa fa-circle-o"></i>Daily Collections</a></li>
+                                        </ul>
+                                    </a>
+                                </li>
+
                             </ul>
                         </a>
                     </li>

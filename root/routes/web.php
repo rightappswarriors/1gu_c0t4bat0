@@ -847,6 +847,16 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get','post'],'/{from}/{to}', 'Collection\ROCADController@abstractProcess');
 				});
 
+				Route::prefix('Daily-Collection')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@dailycollectionView');
+					Route::match(['get','post'],'/{date}', 'Collection\ROCADController@dailycollectionProcess');
+				});
+
+				Route::prefix('Real-Property-Tax')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@RPTView');
+					Route::match(['get','post'],'/{date}', 'Collection\ROCADController@RPTProcess');
+				});
+
 			});
 		});
 		/* SETTING -------------------------------*/

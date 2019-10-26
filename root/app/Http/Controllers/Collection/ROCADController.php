@@ -169,9 +169,11 @@ class ROCADController extends Controller
     public function abstractProcess(Request $request, $from, $to){
         $groupedTax = $groupData = $processedData = $processedHeaderDesc = [];
         if(isset($from) && isset($to)){
-            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, lne.or_code as orno, 'various taxpayer' as taxpayer, lne.payment_desc as description, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno, description");
+            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, hd.or_no as orno, 'various taxpayer' as taxpayer, lne.payment_desc as description, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno, description");
             $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id order by tax_group.tax_id ASC");
-
+            if(count($data) <= 0){
+                return abort(404);
+            }
             foreach ($taxData as $key => $value) {
                 $groupedTax[$value->tax_id]['description'] = $value->tax_desc;
                 $groupedTax[$value->tax_id][] = $value;
@@ -199,6 +201,40 @@ class ROCADController extends Controller
         return abort(404);
     }
 
+    public function dailycollectionView(){
+        return view('report.collection.dailycollectionView');
+    }
+
+
+     public function dailycollectionProcess($date){
+        if(isset($date)){
+            $filteredAccord = [];
+            $selectedDate = Date('m-d-Y',strtotime($date));
+            $yesterdayOfSelectedDate = Date('m-d-Y',strtotime($date.'-1 day'));
+            $unfilteredData = DB::select("SELECT 'today' as todayFlag,  f.or_type as ortype, SUM(d.amount::float) as today from rssys.deposittobank a join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where d.t_date = '$selectedDate' group by ortype UNION ALL SELECT 'yesterday' as yesterdayFlag, f.or_type as ortype, SUM(d.amount::float) as yesterday from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where d.t_date = '2019-10-08' group by ortype");
+            $hereto = DB::select("SELECT e.opr_name as collector, SUM(a.amount::float) as depossitedamount from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where d.t_date = '$selectedDate' GROUP BY e.opr_name");
+            $collection = DB::select("SELECT payment_desc, SUM(amount) as colamount from rssys.colhdr hd join rssys.collne2 lne on hd.col_code = lne.or_code where trnx_date = '$selectedDate' group by payment_desc");
+            foreach ($unfilteredData as $key => $value) {
+                if($value->ortype != 'AF56'){
+                    $filteredAccord['General'][] = $value;
+                }
+                if($value->ortype == 'AF56'){
+                    $filteredAccord['Land Tax (Basic)'][] = $value;
+                    $filteredAccord['Land Tax (SEF)'][] = $value;
+                }
+            }
+
+            $arrRet = [
+                'allData' => [$filteredAccord],
+                'selectedDate' => $date,
+                'hereto' => $hereto,
+                'collection' => $collection
+            ];
+            return view('report.collection.dailycollectionProcess',$arrRet);
+
+        }
+    }
+
     public function rocardDailyUserProcess(Request $request, $uid, $date){
         if(isset($uid) && isset($date)){
             $data = DB::select("SELECT f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND d.t_date = '$date' ");
@@ -211,6 +247,18 @@ class ROCADController extends Controller
             ];
             return view('report.collection.ROCADdailyperuser',$arrRet);
         }
+
+    }
+
+    public function RPTView(){
+        $arrRet = [
+            'forRPT' => true
+        ];
+        return view('report.collection.dailycollectionView',$arrRet);
+    }
+
+    public function RPTProcess(Request $request,$date){
+        return view('report.collection.RPTCollection');
 
     }
 
