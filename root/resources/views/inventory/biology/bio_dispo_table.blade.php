@@ -32,16 +32,19 @@
                 </tr>
                 </thead>
                 <tbody>
+                  @isset($data)
                   @foreach($data as $d)
-                <tr>
-                  <td>{{$d->code}}</td>
-                  <td>{{$d->fund}}</td>
-                  <td>{{$d->kindofanimals}}</td>
-                  <td>{{$d->reference}}</td>
-                  <td>
-                    <center><a class="btn btn-social-icon btn-warning" href="{{route('inventory.biologydisposition_edit', $d->code)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>
-                </tr>
-                @endforeach
+                  <tr>
+                    <td>{{$d->code}}</td>
+                    <td>{{$d->fund}}</td>
+                    <td>{{$d->kindofanimals}}</td>
+                    <td>{{$d->reference}}</td>
+                    <td>
+                      <center><a class="btn btn-social-icon btn-warning" href="{{route('inventory.biologydisposition_edit', $d->code)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>
+                  </tr>
+                  @endforeach
+                  @endisset
+
                 </tbody>
               </table>
             </div>

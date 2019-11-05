@@ -258,7 +258,22 @@ class ROCADController extends Controller
     }
 
     public function RPTProcess(Request $request,$date){
-        return view('report.collection.RPTCollection');
+        $arrPush = [];
+        $yesterdayOfSelectedDate = Date('Y',strtotime($date.'-1 day'));
+        $unfilteredData = DB::select("SELECT hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'gross' as flag from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount >= 0 AND hdr.trnx_date = '$date'  GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code UNION select hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'discount' as flag from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount < 0 AND hdr.trnx_date = '$date' GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code");
+        if(count($unfilteredData) <= 0){
+            return abort(404);
+        }
+        
+        foreach ($unfilteredData as $key => $value) {
+            $arrPush[$value->date][$value->periodcoveredqtr.$value->periodcoveredyear][] = [$value,DB::SELECT("SELECT SUM(lne.amount) from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount < 0 AND to_char(trnx_date,'YYYY') < '2020' AND or_code ='$value->col_code' AND  year = '$value->periodcoveredyear' AND qtr = '$value->periodcoveredqtr' ")];
+        }
+
+        $arrRet = [
+            'data' => $arrPush
+        ];
+        
+        return view('report.collection.RPTCollection',$arrRet);
 
     }
 

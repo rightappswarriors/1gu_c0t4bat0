@@ -31,6 +31,7 @@ class c_collection_entry extends Controller
         $this->m04 = DB::select($SQLM04);
         $this->m04_2 = DB::select($SQLM04_2);
         
+        $this->qtr = (int)ceil( Date('m')/3 );
         // $this->retArr2 = array_reverse($this->retArr);
         // sort($this->retArr2);
         // SOOO LAG
@@ -188,6 +189,8 @@ class c_collection_entry extends Controller
                              // 'deposited' => $r->is_dep[$i],
                              'soa_code' => $r->soa_code[$i],
                              'payment_desc' => $r->pay_desc[$i],
+                             'qtr' => $r->qtr[$i],
+                             'year' => $r->year[$i],
                              'tin' => $r->tin[$i],
                              'td_bus_id' => $r->td_id[$i],
                              'payment_type' => $r->typ[$i],
@@ -219,7 +222,7 @@ class c_collection_entry extends Controller
     	$d1 = Core::sql($sql1);
     	$d2 = Core::sql($sql2);
         // return dd($d2);
-    	return view('collection.collection_collection_entry_view', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'colhdr' =>$d1, 'colne' => $d2,  'm04_2' => $this->m04_2, 'm04'=>$this->m04,]);
+    	return view('collection.collection_collection_entry_view', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'colhdr' =>$d1, 'colne' => $d2,  'm04_2' => $this->m04_2, 'm04'=>$this->m04, 'qtr' => $this->qtr]);
     }
     public function update(Request $r) // TO UPDATE EXISTING COLLECTION ENTRY
     {
@@ -263,12 +266,14 @@ class c_collection_entry extends Controller
                              // 'deposited' => $r->is_dep[$i],
                              'soa_code' => $r->soa_code[$i],
                              'payment_desc' => $r->pay_desc[$i],
+                             'qtr' => $r->qtr[$i],
+                             'year' => $r->year[$i],
                              'tin' => $r->tin[$i],
                              'td_bus_id' => $r->td_id[$i],
                              'payment_type' => $r->typ[$i],
                              'payer' => $r->payer[$i],
                          ];
-                     if (Core::insertTable('rssys.collne2', $insertIntoBgt02, 'Collection Entry') != true) {
+                     if (Core::insertTable('rssys.collne2', $insertIntoBgt02, 'Collection Entry') !== true) {
                          return 'ERROR';
                          break;
                      } 
@@ -286,7 +291,7 @@ class c_collection_entry extends Controller
     public function import_view() // TO VIEW COLLECTION ENTRY IMPORT
     {
         // return dd($this->retArr2)
-        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->m04_2, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06, 'real' => $this->rp_class]);
+        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->m04_2, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06, 'real' => $this->rp_class, 'qtr' => $this->qtr]);
     }
     public function import(Request $r) // TO IMPORT CSV FILE
     {
@@ -505,6 +510,8 @@ class c_collection_entry extends Controller
                                      'soa_code' => $r->hiddensoa_code[$r->hd_or_num[$i]][$k],
                                      'payment_desc' => urldecode($r->hiddentax_typ_id[$r->hd_or_num[$i]][$k]),
                                      'tin' => $r->hiddentin[$r->hd_or_num[$i]][$k],
+                                     'qtr' => $r->hiddenqtr[$r->hd_or_num[$i]][$k],
+                                     'year' => $r->hiddendp[$r->hd_or_num[$i]][$k],
                                      'td_bus_id' => $r->hiddentd[$r->hd_or_num[$i]][$k],
                                      'payment_type' => $r->hiddenpy_typ[$r->hd_or_num[$i]][$k],
                                      'payer' => $r->hiddenpayer[$r->hd_or_num[$i]][$k],

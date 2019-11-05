@@ -279,6 +279,28 @@
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
+                                                        <label>Quarter <span style="color:red"><strong>*</strong></span></label>
+                                                        <select name="qtr" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" required>
+                                                         <option value="">Please Select</option>
+                                                         <option otherData="1" value="1st">1st</option>
+                                                         <option otherData="2" value="2nd">2nd</option>
+                                                         <option otherData="3" value="3rd">3rd</option>
+                                                         <option otherData="4" value="4th">4th</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Year <span style="color:red"><strong>*</strong></span></label>
+                                                        <input type="number" min="1900" max="3000" step="1" value="{{Date('Y')}}" class="form-control" name="dp" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
                                                         <label>COA<span style="color:red;display: none"><strong>*</strong></span></label>
                                                             {{-- <input type="text" class="form-control" name="itm_acc_title_txt" readonly=""> --}}
                                                         <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#itm_acc_title_span" name="itm_soa" data-parsley-required-message="<strong>SOA</strong> is required." onchange="">
@@ -370,6 +392,8 @@
                                 <th>Taxpayer</th>
                                 <th><center>Type</center></th>
                                 <th>Tax Type</th>
+                                <th>Period</th>
+                                <th>Year</th>
                                 <th><center>COA Acc</center></th>
                                 <th><center>Amount</center></th>
                                 <th><center>Options</center></th>
@@ -393,6 +417,7 @@
                 itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"></i></a>&nbsp;' +
                 '<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode(\''+line+'\', \''+tin+'\', \''+td_bus+'\', \''+payer+'\', \''+itm_type+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+code+'\', \''+parseFloat(amt)+'\');"><i class="fa fa-trash "></i></a>' +
             '</center>', --}}
+                        
                         @isset($colne)
                             @if(count($colne) > 0)
                                 @foreach($colne AS $c)
@@ -403,6 +428,8 @@
                                     <td><span class="payer" payer="{{$c->payer}}">{{$c->payer}}</span></td>
                                     <td><span class="py_typ" py_typ="{{$c->payment_type}}"><center>{{$c->payment_type}}</center></span></td>
                                     <td><span class="tax_type" tax_typ_id="{{$c->type}}" tax_type="{{urlencode($c->payment_desc)}}">{{$c->payment_desc}}</span></td>
+                                    <td><span class="qtr" qtr="{{$c->qtr}}">{{$c->qtr}}</span></td>
+                                    <td><span class="year" year="{{$c->year}}">{{$c->year}}</span></td>
                                     <td><span class="soa_code" soa_code="{{$c->soa_code}}">{{($c->soa_code != '') ? $c->soa_code : 'N/A'}}</span></td>
                                     <td><center class="amt" amt="{{floatval($c->amount)}}">Php {{number_format($c->amount, 2, ".", ", ")}}</center></td>
                                     {{-- <td><span class="pay_typ" pay_typ="{{$c->type}}">{{$c->type}} - {{$c->mp_desc}}</span></td> --}}
@@ -547,7 +574,7 @@
     }
   function addMode(selected)
   {
-    var line = ($('#example1').DataTable().data().count()/ 9) + 1;
+    var line = parseInt(($('#example1').DataTable().data().count()/ 9) + 1);
 
     $('input[name="itm_line"]').val(line);
     $('input[name="itm_tin"]').val('');
@@ -560,6 +587,8 @@
     $('input[name="itm_amt"]').val('');
     $('input[name="itm_chk_dt"]').val('');
     $('input[name="itm_chk_num"]').val('');
+    // $('input[name="qtr"]').val('');
+    // $('input[name="dp"]').val('');
     $('input[name="itm_dep"]').prop('checked', false);
         // $('input[name="itm_desc"]').val('');
         // name="acct_desc"
@@ -592,6 +621,9 @@
 
       var chk_dt = $('input[name="itm_chk_dt"]').val();
       var chk_num = $('input[name="itm_chk_num"]').val();
+      var qtrDesc = $('select[name="qtr"]').select2('data')[0].text;
+      var qtr = $('select[name="qtr"]').val();
+      var dp = $('input[name="dp"]').val();
       var deposited = (payment == '114') ?  (($('input[name="itm_dep"]').prop('checked')) ? 'Y' : 'N') : '';
       var table = $('#example1').DataTable();
       // var acc_title_desc = $('select[name="itm_acc_title"]').select2('data')[0].text; // Charge
@@ -612,6 +644,8 @@
             '<span class="payer" payer="'+payer+'">'+payer+'</span>',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span>',
             '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span>',
+            '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span></td>',
+            '<td><span class="year" year="'+dp+'">'+dp+'</span></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span>',
             '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center>',
             '<center>' +
@@ -629,6 +663,8 @@
             '<span class="payer" payer="'+payer+'">'+payer+'</span>',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span>',
             '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span>',
+            '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span></td>',
+            '<td><span class="year" year="'+dp+'">'+dp+'</span></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span>',
             '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center>',
             '<center>' +
@@ -714,7 +750,7 @@
             {
                 if(($('#example1').DataTable().data().count()/ 9) != 0)
                 {
-                    var tin = [], td_id = [], payer = [], typ = [], pay_typ = [], pay_desc = [], amt = [], soa_code = [];
+                    var tin = [], td_id = [], payer = [], typ = [], pay_typ = [], pay_desc = [], amt = [], soa_code = [], qtr = [], year = [];
                     $('#example1').DataTable().rows().every( function ( rowIdx, tableLoop, rowLoop ) {
                         let currentNode = $(this.node());
                        tin.push(currentNode.find('td .tin').attr("pay_tin"));
@@ -723,6 +759,8 @@
                        typ.push(currentNode.find('td .py_typ').attr("py_typ"));
                        pay_typ.push(currentNode.find('td .tax_type').attr("tax_typ_id"));
                        pay_desc.push(urldecode(currentNode.find('td .tax_type').attr("tax_type")));
+                       qtr.push(currentNode.find('td .qtr').attr("qtr"));
+                       year.push(currentNode.find('td .year').attr("year"));
                        amt.push(currentNode.find('td .amt').attr("amt"));
                        soa_code.push(currentNode.find('td .soa_code').attr("soa_code"));
                     } );
@@ -736,6 +774,8 @@
                             typ : typ,
                             pay_typ : pay_typ,
                             pay_desc : pay_desc,
+                            qtr : qtr,
+                            year : year,
                             amt : amt,
                             // chk_num : chk_num,
                             // chk_dt : chk_dt,
@@ -948,5 +988,8 @@
     //         alert('Select Budget Appropriation');
     //     }
     // }
+    @isset($qtr)
+    $('[name="qtr"]').val($('[name="qtr"] option[otherData = {{$qtr}}]').val()).trigger('change');
+    @endisset
 </script>
 @endsection

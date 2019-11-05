@@ -272,6 +272,29 @@
               </div>
 
               <div class="row">
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label>Quarter <span style="color:red"><strong>*</strong></span></label>
+                          <select name="qtr" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" required>
+                           <option value="">Please Select</option>
+                           <option otherData="1" value="1st">1st</option>
+                           <option otherData="2" value="2nd">2nd</option>
+                           <option otherData="3" value="3rd">3rd</option>
+                           <option otherData="4" value="4th">4th</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label>Year <span style="color:red"><strong>*</strong></span></label>
+                          <input type="number" min="1900" max="3000" step="1" value="{{Date('Y')}}" class="form-control" name="dp" required>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>COA<span style="color:red;display: none"><strong>*</strong></span></label>
@@ -638,6 +661,8 @@
                             '<th>Taxpayer</th>' +
                             '<th><center>Type</center></th>' +
                             '<th>Tax Type</th>' +
+                            '<th>Period</th>' +
+                            '<th>Year</th>' +
                             '<th><center>COA Acc</center></th>' +
                             '<th><center>Amount</center></th>' +
                             '<th><center>Options</center></th>' +
@@ -697,6 +722,7 @@
           // for adding per line
           if(data[i].data.length > 0)
           {
+            let forNull = null;
             for(var j = 0, k = 1; j< data[i].data.length; j++,k++)
             {
               $('#table_'+data[i].or_no+'_'+ data[i].no).DataTable().row.add([
@@ -710,6 +736,10 @@
                 '<span class="py_typ" py_typ="'+data[i].data[j].type+'"><center>'+data[i].data[j].type+'</center></span><input name="hiddenpy_typ['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].type+'">',
 
                 '<span class="tax_type" tax_typ_id="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'" tax_type="'+encodeURI(data[i].data[j].tax_type)+'">'+data[i].data[j].tax_type+'</span><input name="hiddentax_typ_id['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'">',
+
+                '<td><span class="qtr" qtr="">NOT SET</span><input name="hiddenqtr['+data[i].or_no+'][]" value="" type="hidden"></td></td>',
+
+                '<td><span class="year" year="">NOT SET</span><input name="hiddendp['+data[i].or_no+'][]" value="" type="hidden"></td>',
 
                 '<span class="soa_code" soa_code="">'+'N/A'+'</span><input name="hiddensoa_code['+data[i].or_no+'][]" type="hidden" value=""><input name="hiddenpaymentdesc['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'">',
 
@@ -898,6 +928,9 @@
         var payment_desc = $('input[name="itm_desc"]').val(); // description
         var amt = $('input[name="itm_amt"]').val(); // balance
         var payer = $('input[name="itm_payer"]').val(); // Payer
+        var qtrDesc = $('select[name="qtr"]').select2('data')[0].text;
+        var qtr = $('select[name="qtr"]').val();
+        var dp = $('input[name="dp"]').val();
         var itm_type = $('input[name="itm_type"]').val(); // itm type
         var table = $('#table_'+or_no+'_'+no).DataTable(); // TABLE
 
@@ -910,6 +943,8 @@
             '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
             '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span><input name="hiddenqtr['+or_no+'][]" value="'+qtr+'" type="hidden"></td>',
+            '<td><span class="year" year="'+dp+'">'+dp+'</span><input name="hiddendp['+or_no+'][]" value="'+dp+'" type="hidden"></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
             '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center><input name="hiddenamt['+or_no+'][]" value="'+parseFloat(amt)+'" type="hidden">',
             '<center>' +
@@ -928,6 +963,8 @@
             '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
             '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span><input name="hiddenqtr['+or_no+'][]" value="'+qtr+'" type="hidden"></td>',
+            '<td><span class="year" year="'+dp+'">'+dp+'</span><input name="hiddendp['+or_no+'][]" value="'+dp+'" type="hidden"></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
             '<center class="amt" amt="'+parseFloat(amt)+'">'+formatNumberToMoney(parseFloat(amt))+'</center><input name="hiddenamt['+or_no+'][]" value="'+parseFloat(amt)+'" type="hidden">',
             '<center>' +
@@ -1006,7 +1043,7 @@
           {
            // save here
           var AllData = [];
-          let arrOfHidden = ['hiddentin','hiddentd','hiddenpayer','hiddenpy_typ','hiddentax_typ_id','hiddenpaymentdesc','hiddensoa_code','hiddenamt'];
+          let arrOfHidden = ['hiddentin','hiddentd','hiddenpayer','hiddenpy_typ','hiddentax_typ_id','hiddenpaymentdesc','hiddenqtr','hiddendp','hiddensoa_code','hiddenamt'];
           for(var i = 0; i < COL_OR_NUM.length; i++)
           {
             var TempoRaryStorage1 = [];
@@ -1068,5 +1105,8 @@
       // CHECK NUMBER OF COLLECTION TO SAVE
     }
     $("#collection, #collection_menu").show();
+    @isset($qtr)
+    $('[name="qtr"]').val($('[name="qtr"] option[otherData = {{$qtr}}]').val()).trigger('change');
+    @endisset
     </script>
 @endsection
