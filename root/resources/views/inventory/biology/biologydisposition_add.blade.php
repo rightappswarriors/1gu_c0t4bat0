@@ -165,12 +165,6 @@
               </div>
             </div> 
 
-
-
-
-            
-
-
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -185,6 +179,7 @@
                   <th>Property No.</th>
                   <th>Description</th>
                   <th>Number Disposed Of</th>
+                  <th>Number of Disposed Offspring</th>
                   <th>Nature Of Disposition</th>
                   <th>Remarks</th>
                   <th>Actions</th>
@@ -202,9 +197,10 @@
                        <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
                        <td>{{$rl->numberofdisposition}}</td>
+                       <td>{{$rl->numberofoffspring}}</td>
                        <td>{{$rl->natureofdisposition}}</td>
                        <td>{{$rl->remarks}}</td>
-                       <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
+                       <td style="white-space: nowrap;"><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
                        </td>
                      </tr>  
                   @endforeach
@@ -323,7 +319,12 @@
                                 <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" >
                             </div>
                           </div>
-                          
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
+                                <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
+                            </div>
+                          </div>
                         </div>
 
                       </div>
@@ -357,11 +358,6 @@
               </div>
               <!-- End Modal -->
               <!-- Enter Item Modal Form -->
-
-
-
-
-
 
               <!-- Add item(s) from ACQUISITION -->
               <div class="row">
@@ -454,10 +450,9 @@
       // get selected row
       $('#tbl_itemlist tbody').on( 'click', 'tr', function () {
                 var table = $('#tbl_itemlist').DataTable();
-                selectedRow = table.row( this ).index() ;
+                selectedRow = table.row( this ).index();
 
-                console.log('rowindex: '+selectedRow);
-            } );
+            });
 
       $('#tbl_itemlist').DataTable( {
         "columnDefs": [
@@ -510,14 +505,31 @@
           var table = $('#tbl_itemlist').DataTable();
           var row = line - 1;
           var data = table.row(row).data();
+          var itemcode = data[2];
+         
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_partno"]').val(data[3]);
           $('input[name="txt_itemcode"]').val(data[2]);
           $('input[name="txt_itemdesc"]').val(data[4]);
           $('input[name="txt_qty"]').val(data[5]);
-          $('input[name="txt_nature"]').val(data[6]);
-          $('input[name="txt_remarks"]').val(data[7]);
+          $('input[name="txt_nature"]').val(data[7]);
+          $('input[name="txt_remarks"]').val(data[8]);
+          $('input[name="txt_off"]').val(data[6]);
+
+          $.ajax({
+             url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
+             method: 'GET',
+             success : function(data)
+             {
+                if(data.length > 0){
+                  var max = data[0].qty_onhand_su;
+                  $("input[name='txt_off']").attr({
+                     "max" : max,        // substitute your own
+                  });
+                }
+             }
+           });
 
           $('#enteritem-modal').modal('toggle');
 
@@ -555,6 +567,7 @@
         var date = $('input[name="txt_date"]').val();
         var nature = $('input[name="txt_nature"]').val();
         var remarks = $('input[name="txt_remarks"]').val();
+        var offspring = $('input[name="txt_off"]').val();
         var buttons = '<center>' +
               '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
               '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
@@ -563,12 +576,12 @@
         if($('#ENTER_ITEM').text() == 'Add')
         {
 
-        table.row.add([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+        table.row.add([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
 
         }
         else if($('#ENTER_ITEM').text() == 'Edit')
         {
-          table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+          table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
         }
         else // remove item
         {
@@ -649,7 +662,6 @@
 
 
                   }
-                  console.log(dataar[0].fund);
                        $('input[name="b_fund"]').val(dataar[0].fund);
                        $('input[name="b_koa"]').val(dataar[0].kindofanimals);
                        $('input[name="txt_reference"]').val(dataar[0].reference);
@@ -693,7 +705,7 @@
                                   '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                                   '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+a.ln_num+'\');"></i></a>' +
                                 '</center>';
-                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, null, buttons]).draw();
+                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, null, null, buttons]).draw();
                 }
             });
           }
