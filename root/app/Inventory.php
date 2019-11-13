@@ -1687,8 +1687,33 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 
 			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
-			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	public static function getTOLine($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT ln_num, item_code, item_desc, item_code, to_article, recv_qty, notes FROM rssys.reclne WHERE rec_num = \''.$rec_num.'\' ORDER BY CAST(ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function printTOHeader($rec_num)
+	{	
+		try 
+		{
 			$sql = 'SELECT rh.to_date as date, m8.cc_desc as office, rh.to_by as turnoverby, rh.are_receivebydesig as designation FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$rec_num.'\' LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
@@ -1697,7 +1722,8 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 			return $e->getMessage();
 		}
 	}
-	public static function getTOLine($rec_num) 
+
+	public static function printTOLine($rec_num) 
 	{
 		try
 		{

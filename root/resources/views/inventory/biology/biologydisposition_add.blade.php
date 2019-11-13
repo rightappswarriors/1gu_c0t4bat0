@@ -96,12 +96,16 @@
                 <div class="col-sm-6">
                   <h3 class="box-title">Item Details</h3>
                     {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button> --}}
-
-                    <button type="button" class="btn btn-primary" id="addacqitembtn" data-toggle="modal" data-target="#additemfromacq-modal"><i class="fa fa-plus"></i> Add item from Acquisition</button>
+                    @if($isnew)
+                      <button type="button" class="btn btn-primary" id="addacqitembtn" data-toggle="modal" data-target="#additemfromacq-modal"><i class="fa fa-plus"></i> Add item from Acquisition</button>
+                    
+                    @else
+                    
+                      <button type="button" class="btn btn-primary disabled" id="addacqitembtn" data-toggle="modal" data-target="#additemfromacq-modal"><i class="fa fa-plus" disabled></i> Add item from Acquisition</button>
+                    
+                    @endif
                 </div>
               </div>
-
-
               <!-- Modal -->
             <div class="row">
               <div class="modal fade" id="itemsearch-modal">
@@ -133,7 +137,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                              @foreach($data as $di)
+                            @foreach($data as $di)
                             <tr>
                               <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}')"></td>
                               <td>{{$di->item_code}}</td>
