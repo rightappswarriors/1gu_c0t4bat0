@@ -245,8 +245,8 @@ class I_TurnOverController extends Controller
 
     public function print($code)
     {
-      	$rechdr = Inventory::getTOHeader($code);
-        $reclne = Inventory::getTOLine($code);
+      	$rechdr = Inventory::printTOHeader($code);
+        $reclne = Inventory::printTOLine($code);
 
       return view('inventory.turnover.turnover_print', compact('rechdr', 'reclne'));
     }
