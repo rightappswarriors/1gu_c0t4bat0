@@ -545,6 +545,8 @@
                                     </a>
                                 </li>
 
+                                <li><a href="{{ url('reports/collection/Statement-Of-Collection') }}"><i class="fa fa-circle-o"></i>Statement of Collections</a></li>
+
                             </ul>
                         </a>
                     </li>

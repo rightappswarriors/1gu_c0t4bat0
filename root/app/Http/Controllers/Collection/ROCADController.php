@@ -277,6 +277,36 @@ class ROCADController extends Controller
 
     }
 
+    public function SOCView(){
+        return view('report.collection.SOCView');
+    }
+
+    public function SOCProcess(Request $request, $from, $to){
+        $users = $groupData = $processedData = $processedHeaderDesc = [];
+        if(isset($from) && isset($to)){
+            $data = DB::select("SELECT issued.t_date, users.opr_name, users.uid, SUM(issued.amount::float) from rssys.or_issued issued left join rssys.or_issuance issue on issued.transid = issue.transid left join rssys.x08 users on issue.collector = users.uid  where issued.t_date >= '$from' AND issued.t_date <  '$to' GROUP BY issued.t_date, opr_name, users.uid");
+            if(count($data) <= 0){
+                return abort(404);
+            }
+
+
+            foreach ($data as $key => $value) {
+                $users[$value->uid] = [$value->opr_name,$value->uid];
+                $processedData[$value->t_date][] = $value;
+            }
+
+            $arrRet = [
+                'users' => $users,
+                'data' => $processedData,
+                'dateFormatted' => [[Date('F',strtotime($from)),Date('Y',strtotime($from))],[Date('F',strtotime($to)), Date('Y',strtotime($to))]]
+            ];
+
+
+            return view('report.collection.SOCProcess', $arrRet);
+        }
+        return abort(404);
+    }
+
 
 
 }

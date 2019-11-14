@@ -857,6 +857,11 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get','post'],'/{date}', 'Collection\ROCADController@RPTProcess');
 				});
 
+				Route::prefix('Statement-Of-Collection')->group(function(){ // DONE -m
+					Route::get('/', 'Collection\ROCADController@SOCView');
+					Route::match(['get','post'],'/{from}/{to}', 'Collection\ROCADController@SOCProcess');
+				});
+
 			});
 		});
 		/* SETTING -------------------------------*/
