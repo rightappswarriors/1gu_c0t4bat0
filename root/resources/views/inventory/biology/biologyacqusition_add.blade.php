@@ -124,7 +124,11 @@
                             <tr>
                               <td><input type="radio" name="r3" onclick="EnterItem_Add('{{$di->item_code}}')"></td>
                               <td>{{$di->item_code}}</td>
-                              <td>{{$di->qty_onhand_su}}</td>
+                              @php
+                                $qty_onhand = $di->qty_onhand_su; 
+                                $qty = number_format($qty_onhand, 2, '.', ',');
+                              @endphp
+                              <td>{{$qty}}</td>
                               <td>{{$di->part_no}}</td>
                               <td>{{$di->item_desc}}</td>
                               <td>{{$di->sale_unit}}</td>
@@ -408,7 +412,7 @@
           var row = line - 1;
           var data = table.row(row).data();
           
-          $('input[name="txt_lineno"]').val(data[1]);
+          $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_partno"]').val(data[3]);
           $('input[name="txt_itemcode"]').val(data[2]);
           $('input[name="txt_itemdesc"]').val(data[4]);
@@ -497,7 +501,7 @@
         }
         else
         {
-          alert('oy');
+          
         }
       }
 

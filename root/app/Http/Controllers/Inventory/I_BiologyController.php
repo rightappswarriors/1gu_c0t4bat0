@@ -81,8 +81,54 @@ class I_BiologyController extends Controller
 
                           $insertLine = Core::insertTable($tableln, $data2, $this->module);
 
+                          if($insertLine == 'true')
+                          {
+                             $stk_qty_in = $tb[5];
+                             $stk_qty_out = "0";
+                             $unit = 'PIECE';
+                             $reference = '';
+                             $price = 0;
+                             $stock_loc = 'N/A';
+                             $supl_code = '';
+                             $supl_name = '';
+                             $branch = '001';
+
+
+
+                             $stkcrd = ['item_code' => $tb[2],
+                                        'item_desc' => $tb[4],
+                                        'unit' => $unit,
+                                        'trnx_date' => $tb[1],
+                                        'reference' => $reference,
+                                        'qty_in' => $stk_qty_in,
+                                        'qty_out' => $stk_qty_out,
+                                        'fcp' => $price,
+                                        'price' => $price,
+                                        'whs_code' => $stock_loc,
+                                        'supl_code' => $supl_code,
+                                        'supl_name' => $supl_name,
+                                        'trn_type' => $this->stk_trns_type,
+                                        'branch' => $branch];
+
+                             $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                             if($insertStkcrd == 'true')
+                             {
+                               $flag = 'true'; 
+                             }
+                             else
+                             {
+                               return json_encode($insertStkcrd);
+                             }          
+                          }
+                          else
+                          {
+                              return json_encode($insertLine);
+                          } 
+
                       }
-                      return json_encode($insertLine);
+
+                      
                   } else {
                       return json_encode($updateM99);
                   }
@@ -118,6 +164,7 @@ class I_BiologyController extends Controller
           $fund = $request->fund;
           $koa = $request->koa;
           $reference = $request->reference;
+          $stk_ref = $this->stk_trns_type."#".$code;
 
           $data=[ 'code' => $code,
                   'fund' => $fund,
@@ -129,8 +176,9 @@ class I_BiologyController extends Controller
               $del_dataln=[['code',
               '=',
               $code]];
-      
+              $del_datastkcrd = [['reference', '=', $stk_ref]];
               $delLine=Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+              $delStkcrd = Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
               foreach($request->tbl_itemlist as $tb) {
                   $data2=[
                             'code' => $code,
@@ -143,10 +191,51 @@ class I_BiologyController extends Controller
                             'remarks' => $tb[6],];
                   $insertLine=Core::insertTable($tableln, $data2, $this->module);
 
+                  if($insertLine == 'true')
+                      {
+                         $stk_qty_in = "0";
+                         $stk_qty_out = $tb[5];
+                         $unit = 'PIECE';
+                         $reference = '';
+                         $price = 0;
+                         $stock_loc = 'N/A';
+                         $supl_code = '';
+                         $supl_name = '';
+                         $branch = '001';
+
+
+
+                         $stkcrd = ['item_code' => $tb[2],
+                                    'item_desc' => $tb[4],
+                                    'unit' => $unit,
+                                    'trnx_date' => $tb[1],
+                                    'reference' => $reference,
+                                    'qty_in' => $stk_qty_in,
+                                    'qty_out' => $stk_qty_out,
+                                    'fcp' => $price,
+                                    'price' => $price,
+                                    'whs_code' => $stock_loc,
+                                    'supl_code' => $supl_code,
+                                    'supl_name' => $supl_name,
+                                    'trn_type' => $this->stk_trns_type,
+                                    'branch' => $branch];
+
+                         $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                         if($insertStkcrd == 'true')
+                         {
+                           $flag = 'true'; 
+                         }
+                         else
+                         {
+                           return json_encode($insertStkcrd);
+                         }          
+                      }
+                          else
+                      {
+                          return json_encode($insertLine);
+                      } 
               }
-
-                      return json_encode($insertLine);
-
           }
           else {
               return json_encode($updHeader);
@@ -240,10 +329,53 @@ class I_BiologyController extends Controller
                           ];
 
                           $insertLine = Core::insertTable($tableln, $data2, $this->module);
+                          if($insertLine == 'true')
+                          {
+                             $stk_qty_in = $tb[5];
+                             $stk_qty_out = "0";
+                             $unit = 'PIECE';
+                             $reference = '';
+                             $price = 0;
+                             $stock_loc = 'N/A';
+                             $supl_code = '';
+                             $supl_name = '';
+                             $branch = '001';
 
-                          
+
+
+                             $stkcrd = ['item_code' => $tb[2],
+                                        'item_desc' => $tb[4],
+                                        'unit' => $unit,
+                                        'trnx_date' => $tb[1],
+                                        'reference' => $reference,
+                                        'qty_in' => $stk_qty_in,
+                                        'qty_out' => $stk_qty_out,
+                                        'fcp' => $price,
+                                        'price' => $price,
+                                        'whs_code' => $stock_loc,
+                                        'supl_code' => $supl_code,
+                                        'supl_name' => $supl_name,
+                                        'trn_type' => $this->stk_trns_type,
+                                        'branch' => $branch];
+
+                             $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                             if($insertStkcrd == 'true')
+                             {
+                               $flag = 'true'; 
+                             }
+                             else
+                             {
+                               return json_encode($insertStkcrd);
+                             }          
+                          }
+                          else
+                          {
+                              return json_encode($insertLine);
+                          }
+
                       }
-                      return json_encode($insertLine);
+                      
                   } else {
                       return json_encode($updateM99);
                   }
@@ -258,8 +390,6 @@ class I_BiologyController extends Controller
         
         }
     }
-
-
 
     public function boo_edit(Request $request, $code) {
       if($request->isMethod('get')) // for entry
@@ -305,9 +435,52 @@ class I_BiologyController extends Controller
                             'numberofoffspring' => $tb[5],
                             'remarks' => $tb[6],];
                   $insertLine=Core::insertTable($tableln, $data2, $this->module);
+
+                  if($insertLine == 'true')
+                    {
+                       $stk_qty_in = "0";
+                       $stk_qty_out = $tb[5];
+                       $unit = 'PIECE';
+                       $reference = '';
+                       $price = 0;
+                       $stock_loc = 'N/A';
+                       $supl_code = '';
+                       $supl_name = '';
+                       $branch = '001';
+
+
+                       $stkcrd = ['item_code' => $tb[2],
+                                  'item_desc' => $tb[4],
+                                  'unit' => $unit,
+                                  'trnx_date' => $tb[1],
+                                  'reference' => $reference,
+                                  'qty_in' => $stk_qty_in,
+                                  'qty_out' => $stk_qty_out,
+                                  'fcp' => $price,
+                                  'price' => $price,
+                                  'whs_code' => $stock_loc,
+                                  'supl_code' => $supl_code,
+                                  'supl_name' => $supl_name,
+                                  'trn_type' => $this->stk_trns_type,
+                                  'branch' => $branch];
+
+                       $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                       if($insertStkcrd == 'true')
+                       {
+                         $flag = 'true'; 
+                       }
+                       else
+                       {
+                         return json_encode($insertStkcrd);
+                       }          
+                    }
+                    else
+                    {
+                        return json_encode($insertLine);
+                    }
                       
               }
-              return json_encode($insertLine);
           }
           else {
               return json_encode($updHeader);
@@ -389,20 +562,67 @@ class I_BiologyController extends Controller
 
                   if ($updateM99 == true) {
                       foreach($request->tbl_itemlist as $tb) {
-                          $data2 = ['code' => $code,
+                          $data2 = [
+                              'code' => $code,
                               'date' => $tb[1],
                               'ln_num' => $tb[0],
                               'item_code' => $tb[2],
                               'property_no' => $tb[3],
                               'item_desc' => $tb[4],
                               'numberofdisposition' => $tb[5],
-                              'natureofdisposition' => $tb[6],
-                              'remarks' => $tb[7],
+                              'numberofoffspring' => $tb[6],
+                              'natureofdisposition' => $tb[7],
+                              'remarks' => $tb[8],
                           ];
 
                           $insertLine = Core::insertTable($tableln, $data2, $this->module);
+
+                          if($insertLine == 'true')
+                          {
+
+                             $stk_qty_in = "0";
+                             $stk_qty_out = $tb[5] + $tb[6];
+                             $unit = 'PIECE';
+                             $reference = '';
+                             $price = 0;
+                             $stock_loc = 'N/A';
+                             $supl_code = '';
+                             $supl_name = '';
+                             $branch = '001';
+
+
+
+                             $stkcrd = ['item_code' => $tb[2],
+                                        'item_desc' => $tb[4],
+                                        'unit' => $unit,
+                                        'trnx_date' => $tb[1],
+                                        'reference' => $reference,
+                                        'qty_in' => $stk_qty_in,
+                                        'qty_out' => $stk_qty_out,
+                                        'fcp' => $price,
+                                        'price' => $price,
+                                        'whs_code' => $stock_loc,
+                                        'supl_code' => $supl_code,
+                                        'supl_name' => $supl_name,
+                                        'trn_type' => $this->stk_trns_type,
+                                        'branch' => $branch];
+
+                             $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                             if($insertStkcrd == 'true')
+                             {
+                               $flag = 'true'; 
+                             }
+                             else
+                             {
+                               return json_encode($insertStkcrd);
+                             }          
+                          }
+                          else
+                          {
+                              return json_encode($insertLine);
+                          }
                       }
-                      return json_encode($insertLine);
                   } else {
                       return json_encode($updateM99);
                   }
@@ -455,19 +675,65 @@ class I_BiologyController extends Controller
       
               $delLine=Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
               foreach($request->tbl_itemlist as $tb) {
-                  $data2=[
-                            'code' => $code,
-                            'date' => $tb[1],
-                            'ln_num' => $tb[0],
-                            'item_code' => $tb[2],
-                            'property_no' => $tb[3],
-                            'item_desc' => $tb[4],
-                            'numberofdisposition' => $tb[5],
-                            'natureofdisposition' => $tb[6],
-                            'remarks' => $tb[7],];
-                  $insertLine=Core::insertTable($tableln, $data2, $this->module);     
+                $data2=[
+                          'code' => $code,
+                          'date' => $tb[1],
+                          'ln_num' => $tb[0],
+                          'item_code' => $tb[2],
+                          'property_no' => $tb[3],
+                          'item_desc' => $tb[4],
+                          'numberofdisposition' => $tb[5],
+                          'numberofoffspring' => $tb[6],
+                          'natureofdisposition' => $tb[7],
+                          'remarks' => $tb[8],
+                        ];
+                  $insertLine=Core::insertTable($tableln, $data2, $this->module);
+
+                  if($insertLine == 'true')
+                    {
+                       $stk_qty_in = $tb[5];
+                       $stk_qty_out = "0";
+                       $unit = 'PIECE';
+                       $reference = '';
+                       $price = 0;
+                       $stock_loc = 'N/A';
+                       $supl_code = '';
+                       $supl_name = '';
+                       $branch = '001';
+
+
+                       $stkcrd = ['item_code' => $tb[2],
+                                  'item_desc' => $tb[4],
+                                  'unit' => $unit,
+                                  'trnx_date' => $tb[1],
+                                  'reference' => $reference,
+                                  'qty_in' => $stk_qty_in,
+                                  'qty_out' => $stk_qty_out,
+                                  'fcp' => $price,
+                                  'price' => $price,
+                                  'whs_code' => $stock_loc,
+                                  'supl_code' => $supl_code,
+                                  'supl_name' => $supl_name,
+                                  'trn_type' => $this->stk_trns_type,
+                                  'branch' => $branch];
+
+                       $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+
+                       if($insertStkcrd == 'true')
+                       {
+                         $flag = 'true'; 
+                       }
+                       else
+                       {
+                         return json_encode($insertStkcrd);
+                       }          
+                    }
+                    else
+                    {
+                        return json_encode($insertLine);
+                    }     
               }
-              return json_encode($insertLine);
+              
           }
           else {
               return json_encode($updHeader);
@@ -516,6 +782,13 @@ public function acqItemDetails($code)
 
       return $itemdetailsdata;
     }
+
+public function acqInventoryDetails($itemcode)
+{
+  
+  $inventorydetails = Inventory::acqInventoryDetails($itemcode);
+  return $inventorydetails;
+}    
 
 }
 

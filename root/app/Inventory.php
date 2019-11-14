@@ -941,12 +941,39 @@ class Inventory extends Model
 		}
 	}
 
+	public static function getBioQty($code)
+	{	
+		try 
+		{
+			$sql = 'SELECT qty_in FROM rssys.items WHERE item_code = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
 	// get acquisition header and line
 	public static function acqItemDetails($code)
 	{	
 		try 
 		{
 			$sql = "SELECT acqln.* , acqhd.* FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code WHERE acqhd.cancel = false AND acqhd.code = '$code'";
+
+			return DB::select(DB::raw($sql));
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+
+	public static function acqInventoryDetails($itemcode)
+	{	
+		try 
+		{
+			$sql = "SELECT i.item_code, COALESCE(SUM(st.qty_in),0.00) - COALESCE(SUM(st.qty_out),0.00) AS qty_onhand_su, i.part_no, i.serial_no, i.tag_no, i.cartype, i.item_desc, iu.unit_shortcode AS sale_unit, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric AS regular, i.sc_price AS senior, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, CASE WHEN st.branch IS NULL THEN i.branch ELSE st.branch END AS branchcode, CASE WHEN branch.name IS NULL THEN ibranch.name ELSE branch.name END AS branchname, COALESCE(c_name, 'None') AS c_name, i.active AS active FROM rssys.items  i LEFT JOIN rssys.itmunit iu ON i.sales_unit_id=iu.unit_id LEFT JOIN rssys.brand b ON i.brd_code=b.brd_code LEFT JOIN rssys.itmgrp ig ON ig.item_grp=i.item_grp LEFT JOIN rssys.stkcrd st ON st.item_code=i.item_code LEFT JOIN rssys.whouse w ON w.whs_code=st.whs_code LEFT JOIN rssys.branch ON w.branch=branch.code LEFT JOIN rssys.branch ibranch ON i.branch=ibranch.code LEFT JOIN rssys.m07 m7 ON m7.c_code = i.supl_code WHERE i.active = 'true' AND i.item_grp = 'BIO' AND i.item_code = '$itemcode' GROUP BY i.item_code, i.part_no, i.cartype, i.item_desc,iu.unit_shortcode, i.sales_unit_id, b.brd_name, i.brd_code, i.sell_pric, i.sc_price, i.bin_loc, i.unit_cost, ig.grp_desc, i.item_grp, st.whs_code, w.whs_desc, branchcode, branchname, c_name ORDER BY item_code";
 
 			return DB::select(DB::raw($sql));
 		} 
@@ -1660,8 +1687,33 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 
 			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
-			//$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'Select rechdr.rec_num, rechdr._reference, rechdr.to_date, rechdr.to_by, rechdr.cc_code, rechdr.to_receivedby, rechdr.trn_type, rechdr.recipient, rechdr.t_date, rechdr.t_time, m08.cc_desc as cc_desc, rechdr.are_receivebydesig From rssys.rechdr INNER JOIN rssys.m08 ON rechdr.cc_code = m08.cc_code Where rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	public static function getTOLine($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT ln_num, item_code, item_desc, item_code, to_article, recv_qty, notes FROM rssys.reclne WHERE rec_num = \''.$rec_num.'\' ORDER BY CAST(ln_num as integer)';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function printTOHeader($rec_num)
+	{	
+		try 
+		{
 			$sql = 'SELECT rh.to_date as date, m8.cc_desc as office, rh.to_by as turnoverby, rh.are_receivebydesig as designation FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rh.rec_num = \''.$rec_num.'\' LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
@@ -1670,7 +1722,8 @@ LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_
 			return $e->getMessage();
 		}
 	}
-	public static function getTOLine($rec_num) 
+
+	public static function printTOLine($rec_num) 
 	{
 		try
 		{
