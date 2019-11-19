@@ -40,6 +40,7 @@ class ROCADController extends Controller
     	
 	    	$arrRet = [
 	    		'or_issued' => DB::select("SELECT transid, opr_name, or_code, or_no, or_no_to from rssys.or_issuance join rssys.x08 on x08.uid = or_issuance.collector join rssys.or_types on or_types.or_type = or_issuance.or_type where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate') ) "),
+                'or' => DB::select("SELECT taxtype_id, taxtype_desc, tax_desc from rssys.tax_group groups left join rssys.tax_type types on types.tax_id = groups.tax_id where groups.active = TRUE AND types.active = TRUE"),
 	    		'_ch'=>"OR Issued"
 	    	];
 	    	return view('collection.ROCADor',$arrRet);
@@ -47,13 +48,20 @@ class ROCADController extends Controller
     	}
     	if($request->isMethod('post')){
             try {
-                 $toAddArr = [];
+                $toAddArr = $toDetaild = [];
+                // dd($request->all());
                 if(count($request->amount) == count($request->transid) && count($request->transid) == count($request->or_to)){
-
-                    for ($i=0; $i < count($request->amount); $i++) { 
-                        array_push($toAddArr, ['transid' => $request->transid[$i], 'or_to' => $request->or_to[$i], 'amount' => str_replace( ',', '', $request->amount[$i] ), 't_date' => Date('Y-m-d'), 't_time' => Date('H:i:s')]);
+                    foreach ($request->transid as $key => $value) {
+                       $toTotal = 0;
+                       for ($i=0; $i < count($request->ors[$value]); $i++) { 
+                           array_push($toDetaild, ['trans_id' => $value, 'or_to' => $request->or_to[$value][$i], 'amount' => str_replace( ',', '', $request->amount[$value][$i] ), 'or_type' => $request->ors[$value][$i], ]);
+                           $toTotal += str_replace( ',', '', $request->amount[$value][$i] );
+                       }
+                        array_push($toAddArr, ['transid' => $value, 'or_to' => array_sum($request->or_to[$value]), 'amount' => $toTotal, 't_date' => Date('Y-m-d'), 't_time' => Date('H:i:s')]);
                     }
-                    if(DB::table('rssys.or_issued')->insert($toAddArr)){
+
+
+                    if(DB::table('rssys.or_issued')->insert($toAddArr) && DB::table('rssys.or_issued_detailed')->insert($toDetaild)){
                         return 'done';
                     }
 
@@ -272,7 +280,7 @@ class ROCADController extends Controller
         $arrRet = [
             'data' => $arrPush
         ];
-        
+        dd($arrRet);
         return view('report.collection.RPTCollection',$arrRet);
 
     }
