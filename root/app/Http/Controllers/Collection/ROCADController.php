@@ -176,32 +176,29 @@ class ROCADController extends Controller
 
     public function abstractProcess(Request $request, $from, $to){
         $groupedTax = $groupData = $processedData = $processedHeaderDesc = [];
+        $oldDesc = null;
         if(isset($from) && isset($to)){
-            $data = DB::select("SELECT to_char(hd.trnx_date,'MM/DD/YYYY') as date, hd.or_no as orno, 'various taxpayer' as taxpayer, lne.payment_desc as description, SUM(amount) as amount from rssys.colhdr hd left join rssys.collne2 lne on lne.or_code = hd.col_code WHERE hd.trnx_date between '$from' and '$to' group by date, orno, description");
+            $data = DB::select("SELECT hd.*, lne.*, to_char(hd.trnx_date,'MM/DD/YYYY') as date from rssys.colhdr hd join rssys.collne2 lne on lne.or_code = hd.col_code join rssys.tax_type tax on tax.taxtype_id = lne.payment_id where tax.or_code NOT IN ('AF56') AND hd.trnx_date between '$from' and '$to'");
             $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id order by tax_group.tax_id ASC");
-            if(count($data) <= 0){
+            if(count($data) <= 0 || count($taxData) <= 0){
                 return abort(404);
             }
+            $oldDesc = $taxData[0]->tax_desc;
             foreach ($taxData as $key => $value) {
                 $groupedTax[$value->tax_id]['description'] = $value->tax_desc;
                 $groupedTax[$value->tax_id][] = $value;
             }
 
             foreach ($data as $key) {
-                $groupData[$key->date][] = $key;
+                $groupData[$key->date][$key->col_code][$key->payment_id][] = $key;
+                $groupData[$key->date][$key->col_code]['total'] = (isset($groupData[$key->date][$key->col_code]['total']) ? $groupData[$key->date][$key->col_code]['total'] + $key->amount : $key->amount);
+                $groupData[$key->date][$key->col_code][$key->payment_id]['total'] = (isset($groupData[$key->date][$key->col_code][$key->payment_id]['total']) ? $groupData[$key->date][$key->col_code][$key->payment_id]['total'] + $key->amount : $key->amount);
             }
+            // dd([$groupedTax,$groupData]);
 
-            if(isset($groupData)){
-                foreach ($groupData as $gkey => $gvalue) {
-                    foreach ($gvalue as $subvalue) {
-                       $processedData[strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $subvalue->description)))))] = $subvalue->amount;
-                    }      
-                }
-            }
             $arrRet = [
                 'groupedTax' => $groupedTax,
                 'groupedData' => $groupData,
-                'processedData' => $processedData,
             ];
             // return Excel::download(new OfficeExport('officeReport.abstractreport',$arrRet), 'ABSTRACT-Report-'.$from.'-'.$to.'.xlsx');
             return view('report.collection.abstractProcess', $arrRet);
@@ -245,7 +242,7 @@ class ROCADController extends Controller
 
     public function rocardDailyUserProcess(Request $request, $uid, $date){
         if(isset($uid) && isset($date)){
-            $data = DB::select("SELECT f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND d.t_date = '$date' ");
+            $data = DB::select("SELECT f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND (d.t_date = '$date' AND b.date = '$date' AND a.t_date = '$date') ");
             if(count($data) <= 0){
                 abort(404);
             }
@@ -292,7 +289,7 @@ class ROCADController extends Controller
     public function SOCProcess(Request $request, $from, $to){
         $users = $groupData = $processedData = $processedHeaderDesc = [];
         if(isset($from) && isset($to)){
-            $data = DB::select("SELECT issued.t_date, users.opr_name, users.uid, SUM(issued.amount::float) from rssys.or_issued issued left join rssys.or_issuance issue on issued.transid = issue.transid left join rssys.x08 users on issue.collector = users.uid  where issued.t_date >= '$from' AND issued.t_date <  '$to' GROUP BY issued.t_date, opr_name, users.uid");
+            $data = DB::select("SELECT issued.t_date, users.opr_name, users.uid, SUM(issued.amount::float) from rssys.or_issued issued left join rssys.or_issuance issue on issued.transid = issue.transid left join rssys.x08 users on issue.collector = users.uid  where issued.t_date >= '$from' AND issued.t_date <=  '$to' GROUP BY issued.t_date, opr_name, users.uid");
             if(count($data) <= 0){
                 return abort(404);
             }

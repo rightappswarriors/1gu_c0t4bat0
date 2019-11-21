@@ -216,8 +216,8 @@
                                                                 @if(count($m04_2) > 0)
                                                                     <option value="">Select Payment...</option>
                                                                     @foreach($m04_2 AS $m4a1)
-                                                                        <option value="{{$m4a1->at_code}}" id="payment_{{$m4a1->at_code}}" c_desc="{{urlencode($m4a1->at_desc)}}">{{$m4a1->at_code}} - {{$m4a1->at_desc}} @isset($m4a1->acro)
-                                                                        ({{$m4a1->acro}})@endisset</option>
+                                                                        <option value="{{$m4a1->taxtype_id}}" id="payment_{{$m4a1->taxtype_id}}" c_desc="{{urlencode($m4a1->taxtype_desc)}}">{{$m4a1->taxtype_id}} - {{$m4a1->taxtype_desc}} @isset($m4a1->taxtype_desc)
+                                                                        ({{urldecode($m4a1->taxtype_desc)}})@endisset</option>
                                                                     @endforeach
                                                                 @else
                                                                     <option value="">No Payment registered..</option>
@@ -427,7 +427,7 @@
                                     <td><span class="td_id" td_id="{{$c->td_bus_id}}"> {{(($c->td_bus_id != '') ? $c->td_bus_id : 'N/A')}}</span></td>
                                     <td><span class="payer" payer="{{$c->payer}}">{{$c->payer}}</span></td>
                                     <td><span class="py_typ" py_typ="{{$c->payment_type}}"><center>{{$c->payment_type}}</center></span></td>
-                                    <td><span class="tax_type" tax_typ_id="{{$c->type}}" tax_type="{{urlencode($c->payment_desc)}}">{{$c->payment_desc}}</span></td>
+                                    <td><span class="tax_type" tax_typ_id="{{$c->payment_id}}" tax_type="{{urlencode($c->payment_desc)}}">{{$c->payment_desc}}</span></td>
                                     <td><span class="qtr" qtr="{{$c->qtr}}">{{$c->qtr}}</span></td>
                                     <td><span class="year" year="{{$c->year}}">{{$c->year}}</span></td>
                                     <td><span class="soa_code" soa_code="{{$c->soa_code}}">{{($c->soa_code != '') ? $c->soa_code : 'N/A'}}</span></td>
@@ -442,7 +442,7 @@
                                     </td> --}}
                                     <td>
                                         <center>
-                                            <a class="btn btn-social-icon btn-warning"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$c->ln_num}}', '{{$c->tin}}', '{{$c->td_bus_id}}', '{{$c->payer}}', '{{$c->payment_type}}', '{{$c->type}}', '{{urlencode($c->payment_desc)}}', '{{$c->soa_code}}', '{{floatval($c->amount)}}');"></i></a>&nbsp;
+                                            <a class="btn btn-social-icon btn-warning"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$c->ln_num}}', '{{$c->tin}}', '{{$c->td_bus_id}}', '{{$c->payer}}', '{{$c->payment_type}}', '{{$c->payment_id}}', '{{$c->type}}', '{{urlencode($c->payment_desc)}}', '{{$c->soa_code}}', '{{floatval($c->amount)}}');"></i></a>&nbsp;
                                             {{-- {{$c->ln_num}}', '{{$c->type}}', '{{urlencode($c->payment_desc)}}', '{{floatval($c->amount)}}', '{{$c->chk_num}}', '{{$c->chk_date}}', '{{$c->deposited}}', '{{$c->soa_code}}' --}}
                                             <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$c->ln_num}}', '{{$c->tin}}', '{{$c->td_bus_id}}', '{{$c->payer}}', '{{$c->payment_type}}', '{{$c->type}}', '{{urlencode($c->payment_desc)}}', '{{$c->soa_code}}', '{{floatval($c->amount)}}');"><i class="fa fa-trash "></i></a>
                                         </center>
@@ -700,7 +700,7 @@
       }
   }
   // \''+line+'\', \''+payment+'\', \''+encodeURI(payment_desc)+'\', \''+parseFloat(amt)+'\', \''+chk_num+'\', \''+chk_dt+'\', \''+deposited+'\', \''+code+'\'
-  function EditMode(line, tin, td_bus, payer, itm_type, payment, payment_desc, soa_code, amt)
+  function EditMode(line, tin, td_bus, payer, itm_type, paymentid, payment, payment_desc, soa_code, amt)
   {
     // alert(acc_title_id);
     // $('input[name="true_bal"]').val(true_bal);
@@ -709,7 +709,7 @@
     $('input[name="itm_tdbd"]').val(td_bus);
     $('input[name="itm_payer"]').val(payer);
     $('input[name="itm_type"]').val(itm_type);
-    $('select[name="itm_payment"]').val(payment).trigger('change');
+    $('select[name="itm_payment"]').val(paymentid).trigger('change');
     $('select[name="itm_desc"]').val(urldecode(payment_desc));
 
     $('input[name="itm_soa"]').val(soa_code);

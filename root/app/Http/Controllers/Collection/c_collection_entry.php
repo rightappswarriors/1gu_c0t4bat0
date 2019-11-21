@@ -28,9 +28,10 @@ class c_collection_entry extends Controller
         $this->cashiers = Core::sql($sql);
         $SQLM04 =   "SELECT * FROM rssys.m04 WHERE active = TRUE AND payment = 'Y'";
         $SQLM04_2 = "SELECT * FROM rssys.m04 WHERE active = TRUE AND payment = 'N'";
+        $SQLTAXDATA = "SELECT taxtype_id, taxtype_desc from rssys.tax_type where active = TRUE";
         $this->m04 = DB::select($SQLM04);
         $this->m04_2 = DB::select($SQLM04_2);
-        
+        $this->taxData = DB::select($SQLTAXDATA);
         $this->qtr = (int)ceil( Date('m')/3 );
         // $this->retArr2 = array_reverse($this->retArr);
         // sort($this->retArr2);
@@ -107,7 +108,7 @@ class c_collection_entry extends Controller
             }
         }
         // return dd($this->retArr);
-    	return view('collection.collection_collection_entry_new', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'm04'=>$this->m04, 'm04_2' => $this->m04_2, 'or_num' =>$this->retArr]);
+    	return view('collection.collection_collection_entry_new', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'm04'=>$this->m04, 'm04_2' => $this->taxData, 'or_num' =>$this->retArr]);
     }
     public function getORTypes(Request $r) // TO GET OR TYPE 
     {
@@ -222,7 +223,7 @@ class c_collection_entry extends Controller
     	$d1 = Core::sql($sql1);
     	$d2 = Core::sql($sql2);
         // return dd($d2);
-    	return view('collection.collection_collection_entry_view', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'colhdr' =>$d1, 'colne' => $d2,  'm04_2' => $this->m04_2, 'm04'=>$this->m04, 'qtr' => $this->qtr]);
+    	return view('collection.collection_collection_entry_view', ['m05'=>$this->m05, 'or_type' => $this->or_type, 'm06' => $this->m06, 'm10' => $this->m10, 'soa' => $this->soa, 'fund' => $this->fund, 'cashiers' => $this->cashiers, 'colhdr' =>$d1, 'colne' => $d2,  'm04_2' => $this->taxData, 'm04'=>$this->m04, 'qtr' => $this->qtr]);
     }
     public function update(Request $r) // TO UPDATE EXISTING COLLECTION ENTRY
     {
@@ -259,7 +260,8 @@ class c_collection_entry extends Controller
                          [
                              'or_code' => $r->b_num,
                              'ln_num' => $j,
-                             'type' => $r->pay_typ[$i],
+                             'payment_id' => $r->pay_typ[$i],
+                             'type' => $r->typ[$i],
                              // 'chk_num' => $r->chk_num[$i],
                              // 'chk_date' => $r->chk_dt[$i],
                              'amount' => floatval($r->amt[$i]),
@@ -291,7 +293,7 @@ class c_collection_entry extends Controller
     public function import_view() // TO VIEW COLLECTION ENTRY IMPORT
     {
         // return dd($this->retArr2)
-        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->m04_2, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06, 'real' => $this->rp_class, 'qtr' => $this->qtr]);
+        return view('collection.collection_collection_entry_import', ['m04_2'=>$this->taxData, 'soa' => $this->soa, 'fund' =>  $this->fund, 'm05' => $this->m05, 'or_type' => $this->or_type, 'cashiers' => $this->cashiers, 'm06' => $this->m06, 'real' => $this->rp_class, 'qtr' => $this->qtr]);
     }
     public function import(Request $r) // TO IMPORT CSV FILE
     {
@@ -389,7 +391,9 @@ class c_collection_entry extends Controller
                             // $tax_codSQL = "SELECT at_code FROM rssys.m04 WHERE acro LIKE '%".urlencode($temp4["tax_type"])."%'";
                             // $temp4["tax_type_SQL"] = $tax_codSQL;
                             // $tax_code = DB::select($tax_codSQL);
-                            $tax_code = DB::table(DB::raw('rssys.m04'))->where('acro', 'like', '%'.urlencode($temp4["tax_type"]).'%')->pluck('at_code');
+                            // $tax_code = DB::table(DB::raw('rssys.m04'))->where('acro', 'like', '%'.urlencode($temp4["tax_type"]).'%')->pluck('at_code');
+                            $tax_code = DB::table(DB::raw('rssys.tax_type'))->where('taxtype_desc', 'like', '%'.$temp4["tax_type"].'%')->pluck('taxtype_id');
+                            // to change for tax types
                             // if($tax_code == null)
                             // {
                             //     array_push($error, 'Tax Code for '.$temp4["tax_type"].' is not found.');
@@ -509,6 +513,7 @@ class c_collection_entry extends Controller
                                      // 'deposited' => $r->is_dep[$i],
                                      'soa_code' => $r->hiddensoa_code[$r->hd_or_num[$i]][$k],
                                      'payment_desc' => urldecode($r->hiddentax_typ_id[$r->hd_or_num[$i]][$k]),
+                                     'payment_id' => $r->hiddentax_id[$r->hd_or_num[$i]][$k],
                                      'tin' => $r->hiddentin[$r->hd_or_num[$i]][$k],
                                      'qtr' => $r->hiddenqtr[$r->hd_or_num[$i]][$k],
                                      'year' => $r->hiddendp[$r->hd_or_num[$i]][$k],

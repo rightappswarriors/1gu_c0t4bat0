@@ -25,7 +25,7 @@
             	<form method="POST">
             		{{csrf_field()}}
             		<label for="liquidate">Total Cash given</label>
-            		<input required type="text" name="amount" class="form-control" id="liquidate" style="text-align: center;">
+            		<input required type="text" name="amount" class="form-control" value="{{$det[0]->total}}" id="liquidate" style="text-align: center;">
             		<div class="pull-left mt-3">
 		            	<button type="submit" class="btn btn-success"><i class="fa fa-paper-plane"></i> Submit form</button>
 		          	</div>

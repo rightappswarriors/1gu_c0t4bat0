@@ -352,7 +352,7 @@
                             <li><a href="#"><i class="fa fa-circle-o"></i> Posting</a></li>
                             @endif --}}
                             @if($LA_GRP["C1000003"]["restrict"] == 'Y')
-                            <li><a href="{{ url('collection/ROCAD/') }}"><i class="fa fa-circle-o"></i> ROCAD</a></li>
+                            <li><a href="{{ url('collection/ROCAD/') }}"><i class="fa fa-circle-o"></i> ROCAD/Posting</a></li>
                             @endif
                             @if($LA_GRP["C1000004"]["restrict"] == 'Y')
                             <li><a href="{{ url('collection/Liquidating-officer/') }}"><i class="fa fa-circle-o"></i> Verification of Liquidating Office</a></li>

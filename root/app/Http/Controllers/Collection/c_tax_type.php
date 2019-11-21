@@ -17,7 +17,7 @@ class c_tax_type extends Controller
     		'tax_group' => DB::table('rssys.tax_group')->where('active',TRUE)->get(),
             'tax_type' => DB::table('rssys.tax_type')
             ->join('rssys.tax_group','tax_group.tax_id','tax_type.tax_id')
-            ->join('rssys.or_types','or_types.or_code','tax_type.or_code')
+            ->join('rssys.or_types','or_types.or_type','tax_type.or_code')
             ->where([['tax_type.active',TRUE]])->get(),
             'or_types' => DB::table('rssys.or_types')->where('active',TRUE)->get(),
     	];
