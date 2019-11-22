@@ -206,29 +206,29 @@
 			  @endisset
 
 			  <tr>
-			  	<td colspan="2">Total this page</td>
-			  	<td></td><td></td><td></td><td></td>
+			  	<td class="tg-0pky" colspan="2">Total this page</td>
+			  	<td class="tg-0pky"></td><td class="tg-0pky"></td><td class="tg-0pky"></td><td class="tg-0pky"></td>
 			  	@for($i = 7; $i < 21; $i++)
 				@foreach($det as $orkey => $ordata)
 				@foreach($ordata as $qtrkey => $qtrdata)
 					<?php $totalTothis += $forTotal[$orkey][$qtrkey][$i]; ?>
 				@endforeach
 				@endforeach
-				<td>{{number_format($totalTothis,2)}}</td>
+				<td class="tg-0pky">{{number_format($totalTothis,2)}}</td>
 				<?php $totalTothis = 0; ?>
 				@endfor
 			  </tr>
 
 			  <tr>
-			  	<td colspan="3">CUMULATIVE TOTAL TO DATE</td>
-			  	<td></td><td></td><td></td>
+			  	<td class="tg-0pky" colspan="3">CUMULATIVE TOTAL TO DATE</td>
+			  	<td class="tg-0pky"></td><td class="tg-0pky"></td><td class="tg-0pky"></td>
 			  	@for($i = 7; $i < 21; $i++)
 				@foreach($det as $orkey => $ordata)
 				@foreach($ordata as $qtrkey => $qtrdata)
 					<?php $totalTothis += $forTotal[$orkey][$qtrkey][$i]; ?>
 				@endforeach
 				@endforeach
-				<td>{{number_format($totalTothis,2)}}</td>
+				<td class="tg-0pky">{{number_format($totalTothis,2)}}</td>
 				<?php $totalTothis = 0; ?>
 				@endfor
 			  </tr>
