@@ -346,7 +346,7 @@
                             <li><a href="{{ asset('accounting/collection/import') }}"><i class="fa fa-circle-o"></i> Import iTax</a></li>
                             @endif
                             @if($LA_GRP["C1000002"]["restrict"] == 'Y')
-                            <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Important thru iTax</a></li>
+                            <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Imported iTax</a></li>
                             @endif
                            {{--  @if($LA_GRP["C1000003"]["restrict"] == 'Y')
                             <li><a href="#"><i class="fa fa-circle-o"></i> Posting</a></li>

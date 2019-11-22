@@ -178,7 +178,7 @@ class ROCADController extends Controller
         $groupedTax = $groupData = $processedData = $processedHeaderDesc = [];
         $oldDesc = null;
         if(isset($from) && isset($to)){
-            $data = DB::select("SELECT hd.*, lne.*, to_char(hd.trnx_date,'MM/DD/YYYY') as date from rssys.colhdr hd join rssys.collne2 lne on lne.or_code = hd.col_code join rssys.tax_type tax on tax.taxtype_id = lne.payment_id where tax.or_code NOT IN ('AF56') AND hd.trnx_date between '$from' and '$to'");
+            $data = DB::select("SELECT hd.*, lne.*, to_char(hd.trnx_date,'MM/DD/YYYY') as date from rssys.colhdr hd join rssys.collne2 lne on lne.or_code = hd.col_code join rssys.tax_type tax on tax.taxtype_id = lne.payment_id left join rssys.or_types orT on orT.or_type = tax.or_code where orT.hassef = FALSE AND hd.trnx_date between '$from' and '$to'");
             $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id order by tax_group.tax_id ASC");
             if(count($data) <= 0 || count($taxData) <= 0){
                 return abort(404);
@@ -265,19 +265,19 @@ class ROCADController extends Controller
     public function RPTProcess(Request $request,$date){
         $arrPush = [];
         $yesterdayOfSelectedDate = Date('Y',strtotime($date.'-1 day'));
-        $unfilteredData = DB::select("SELECT hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'gross' as flag from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount >= 0 AND hdr.trnx_date = '$date'  GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code UNION select hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'discount' as flag from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount < 0 AND hdr.trnx_date = '$date' GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code");
+        $unfilteredData = DB::select("SELECT hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'gross' as flag, lne.td_bus_id as bus from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code left join rssys.tax_type tax on tax.taxtype_id = lne.payment_id left join rssys.or_types orT on orT.or_type = tax.or_code where amount >= 0 AND hdr.trnx_date = '$date' AND orT.hassef = TRUE GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code, bus UNION SELECT hdr.col_code, hdr.trnx_date as date, lne.payer as payer, lne.qtr as periodcoveredqtr, lne.year as periodcoveredyear, hdr.or_no, SUM(lne.amount), 'discount' as flag, lne.td_bus_id as bus from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code left join rssys.tax_type tax on tax.taxtype_id = lne.payment_id left join rssys.or_types orT on orT.or_type = tax.or_code where amount < 0 AND hdr.trnx_date = '$date' AND orT.hassef = TRUE GROUP BY date, payer, periodcoveredqtr, periodcoveredyear, or_no, hdr.col_code, bus order by periodcoveredqtr ASC");
         if(count($unfilteredData) <= 0){
             return abort(404);
         }
-        
+        // dd($unfilteredData);
         foreach ($unfilteredData as $key => $value) {
-            $arrPush[$value->date][$value->periodcoveredqtr.$value->periodcoveredyear][] = [$value,DB::SELECT("SELECT SUM(lne.amount) from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount < 0 AND to_char(trnx_date,'YYYY') < '2020' AND or_code ='$value->col_code' AND  year = '$value->periodcoveredyear' AND qtr = '$value->periodcoveredqtr' ")];
+            $arrPush[$value->date][$value->or_no][$value->periodcoveredqtr. ' ' .$value->periodcoveredyear][] = [$value/*,DB::SELECT("SELECT SUM(lne.amount) from rssys.colhdr hdr left join rssys.collne2 lne on hdr.col_code = lne.or_code where amount < 0 AND to_char(trnx_date,'YYYY') < '2020' AND or_code ='$value->col_code' AND  year = '$value->periodcoveredyear' AND qtr = '$value->periodcoveredqtr' ")*/];
         }
 
         $arrRet = [
             'data' => $arrPush
         ];
-        dd($arrRet);
+        // dd($arrRet);
         return view('report.collection.RPTCollection',$arrRet);
 
     }

@@ -12,7 +12,7 @@
 	.tg .tg-dvpl{border-color:inherit;text-align:right;vertical-align:top}
 	</style>
 
-	<?php $dateFlag = null; ?>
+	<?php $dateFlag = null; $forGross = $forDiscount = $prioryear = $totalTothis = 0; $forTotal = [];?>
 
 	<section class="content">
 		<h4>Daily Report on Real Property Tax Collections</h4>
@@ -73,31 +73,166 @@
 			  </tr>
 			  @isset($data)
 			  @foreach($data as $key => $det)
+			  @foreach($det as $orkey => $ordata)
+			  @foreach($ordata as $qtrkey => $qtrdata)
+			  <?php $forGross = $forDiscount = $prioryear = 0; ?>
 			  <tr>
-			    <td class="tg-0pky">{{( $dateFlag != $key ? $key : '')}}</td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-dvpl"></td>
-			    <td class="tg-dvpl"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
-			    <td class="tg-0pky"></td>
+			    <td class="tg-0pky">
+			    	{{-- date --}}
+			    	{{$key}}
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- payer --}}
+			    	{{$qtrdata[0][0]->payer}}
+			    </td>
+			    <td class="tg-dvpl">
+			    	{{-- quarter --}}
+			    	{{$qtrkey}}
+			    </td>
+			    <td class="tg-dvpl">
+			    	{{-- or --}}
+			    	{{$orkey}}
+				</td>
+			    <td class="tg-0pky">
+			    	{{-- bus --}}
+			    	{{$qtrdata[0][0]->bus}}
+			    </td>
+			    <td class="tg-0pky">NOT SPECIFIED</td>
+			    <td class="tg-0pky">
+			    	{{-- gorss --}}
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'gross')
+			    		<?php $forGross +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	{{number_format($forGross,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][7] = $forGross; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- discount --}}
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'discount')
+			    		<?php $forDiscount +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	{{number_format($forDiscount,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][8] = $forDiscount; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- prior year --}}
+			    	<?php $forTotal[$orkey][$qtrkey][9] = 0; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- penalties current year --}}
+			    	@if(is_int($forTotal[$orkey][$qtrkey][7]))
+						<?php $prioryear = 0; ?>
+			    	@else
+						<?php $prioryear = ($forTotal[$orkey][$qtrkey][7] * .12); ?>
+			    	@endif
+			    	{{number_format($prioryear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][10] = $prioryear; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- penalties prior year --}}
+			    	<?php $forTotal[$orkey][$qtrkey][11] = 0; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- sub total gross collections --}}
+			    	<?php $forTotal[$orkey][$qtrkey][12] = $forTotal[$orkey][$qtrkey][7] + $forTotal[$orkey][$qtrkey][9] + $forTotal[$orkey][$qtrkey][10] + $forTotal[$orkey][$qtrkey][11] ?>
+			    	{{number_format( $forTotal[$orkey][$qtrkey][12] ,2 ) }}
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- sub total total net collections --}}
+			    	<?php $forTotal[$orkey][$qtrkey][13] = $forTotal[$orkey][$qtrkey][12] - $forTotal[$orkey][$qtrkey][8];?>
+			    	{{number_format( $forTotal[$orkey][$qtrkey][13] ,2 ) }}
+			    </td>
+
+
+				<?php $forGross = $forDiscount = $prioryear = 0; ?>
+
+			    <td class="tg-0pky">
+			    	{{-- gross --}}
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'gross')
+			    		<?php $forGross +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	{{number_format($forGross,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][14] = $forGross; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- discount --}}
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'discount')
+			    		<?php $forDiscount +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	{{number_format($forDiscount,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][15] = $forDiscount; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- prior year --}}
+			    	<?php $forTotal[$orkey][$qtrkey][16] = 0; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- penalties current year --}}
+			    	@if(is_int($forTotal[$orkey][$qtrkey][14]))
+						<?php $prioryear = 0; ?>
+			    	@else
+						<?php $prioryear = ($forTotal[$orkey][$qtrkey][14] * .12); ?>
+			    	@endif
+			    	{{number_format($prioryear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][17] = $prioryear; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- penalties prior year --}}
+			    	<?php $forTotal[$orkey][$qtrkey][18] = 0; ?>
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- sub total gross collections --}}
+			    	<?php $forTotal[$orkey][$qtrkey][19] = $forTotal[$orkey][$qtrkey][14] + $forTotal[$orkey][$qtrkey][16] + $forTotal[$orkey][$qtrkey][17] ?>
+			    	{{number_format( $forTotal[$orkey][$qtrkey][19] ,2 ) }}
+			    </td>
+			    <td class="tg-0pky">
+			    	{{-- sub total total net collections --}}
+			    	<?php $forTotal[$orkey][$qtrkey][20] = $forTotal[$orkey][$qtrkey][19] - $forTotal[$orkey][$qtrkey][15];?>
+			    	{{number_format( $forTotal[$orkey][$qtrkey][20] ,2 ) }}
+			    </td>
 			  </tr>
 			  <?php $dateFlag = $key; ?>
 			  @endforeach
+			  @endforeach
+			  @endforeach
 			  @endisset
+
+			  <tr>
+			  	<td colspan="2">Total this page</td>
+			  	<td></td><td></td><td></td><td></td>
+			  	@for($i = 7; $i < 21; $i++)
+				@foreach($det as $orkey => $ordata)
+				@foreach($ordata as $qtrkey => $qtrdata)
+					<?php $totalTothis += $forTotal[$orkey][$qtrkey][$i]; ?>
+				@endforeach
+				@endforeach
+				<td>{{number_format($totalTothis,2)}}</td>
+				<?php $totalTothis = 0; ?>
+				@endfor
+			  </tr>
+
+			  <tr>
+			  	<td colspan="3">CUMULATIVE TOTAL TO DATE</td>
+			  	<td></td><td></td><td></td>
+			  	@for($i = 7; $i < 21; $i++)
+				@foreach($det as $orkey => $ordata)
+				@foreach($ordata as $qtrkey => $qtrdata)
+					<?php $totalTothis += $forTotal[$orkey][$qtrkey][$i]; ?>
+				@endforeach
+				@endforeach
+				<td>{{number_format($totalTothis,2)}}</td>
+				<?php $totalTothis = 0; ?>
+				@endfor
+			  </tr>
+
 			</table>
 		
 	</section>
