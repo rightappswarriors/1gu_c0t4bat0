@@ -228,10 +228,12 @@
                       @isset($m04_2)
                         @if(count($m04_2) > 0)
                             <option value="">Select Payment...</option>
+
                             @foreach($m04_2 AS $m4a1)
-                                <option value="{{$m4a1->at_code}}" id="payment_{{$m4a1->at_code}}" c_desc="{{urlencode($m4a1->at_desc)}}">{{$m4a1->at_code}} - {{$m4a1->at_desc}} @isset($m4a1->acro)
-                                ({{urldecode($m4a1->acro)}})@endisset</option>
+                                <option value="{{$m4a1->taxtype_id}}" id="payment_{{$m4a1->taxtype_id}}" c_desc="{{urlencode($m4a1->taxtype_desc)}}">{{$m4a1->taxtype_id}} - {{$m4a1->taxtype_desc}} @isset($m4a1->taxtype_desc)
+                                ({{urldecode($m4a1->taxtype_desc)}})@endisset</option>
                             @endforeach
+                            
                         @else
                             <option value="">No Payment registered..</option>
                         @endif
@@ -735,7 +737,7 @@
 
                 '<span class="py_typ" py_typ="'+data[i].data[j].type+'"><center>'+data[i].data[j].type+'</center></span><input name="hiddenpy_typ['+data[i].or_no+'][]" type="hidden" value="'+data[i].data[j].type+'">',
 
-                '<span class="tax_type" tax_typ_id="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'" tax_type="'+encodeURI(data[i].data[j].tax_type)+'">'+data[i].data[j].tax_type+'</span><input name="hiddentax_typ_id['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'">',
+                '<span class="tax_type" tax_typ_id="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'" tax_type="'+encodeURI(data[i].data[j].tax_type)+'">'+data[i].data[j].tax_type+'</span><input name="hiddentax_typ_id['+data[i].or_no+'][]" type="hidden" value="'+encodeURI(data[i].data[j].tax_type)+'"><input name="hiddentax_id['+data[i].or_no+'][]" type="hidden" value="'+((data[i].data[j].tax_code[0] != undefined) ? data[i].data[j].tax_code[0] : '')+'">',
 
                 '<td><span class="qtr" qtr="">NOT SET</span><input name="hiddenqtr['+data[i].or_no+'][]" value="" type="hidden"></td></td>',
 
@@ -836,10 +838,30 @@
       }
     }
     function ifCheck ()
-    {}
+    {
+      var test = $('select[name="itm_payment"]').val();
+      if(test == '114'){
+          $('#ifCheck').show();
+          $('input[name="itm_chk_dt"]').attr('required', '');
+          $('input[name="itm_chk_num"]').attr('required', '');
+      } else {
+          $('#ifCheck').hide();
+          $('input[name="itm_chk_dt"]').removeAttr('required');
+          $('input[name="itm_chk_num"]').removeAttr('required');
+      }
+      $('input[name="itm_chk_dt"]').val('');
+      $('input[name="itm_chk_num"]').val('');
+      $('input[name="itm_dep"]').prop('checked', false);
+    }
     function getPaymentDesc()
     {
-
+      var charge_code = $('select[name="itm_payment"]').val();
+        if(charge_code != '') {
+            (typeof($('#payment_'+charge_code).attr('c_desc')) != 'undefined' ? $('input[name="itm_desc"]').val(urldecode($('#payment_'+charge_code).attr('c_desc'))) : '') ;
+        } else {
+          $('input[name="itm_desc"]').val('');
+            // alert('No Charge Selected...');
+        }
     }
     function AddMode(or_no, no)
     {
@@ -942,7 +964,7 @@
             '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span><input name="hiddentd['+or_no+'][]" value="'+td_bus+'" type="hidden">',
             '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
-            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden"><input name="hiddentax_id['+or_no+'][]" type="hidden" value="'+payment+'">',
             '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span><input name="hiddenqtr['+or_no+'][]" value="'+qtr+'" type="hidden"></td>',
             '<td><span class="year" year="'+dp+'">'+dp+'</span><input name="hiddendp['+or_no+'][]" value="'+dp+'" type="hidden"></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
@@ -962,7 +984,7 @@
             '<span class="td_id" td_id="'+td_bus+'">'+((td_bus != '') ? td_bus : 'N/A')+'</span><input name="hiddentd['+or_no+'][]" value="'+td_bus+'" type="hidden">',
             '<span class="payer" payer="'+payer+'">'+payer+'</span><input name="hiddenpayer['+or_no+'][]" value="'+payer+'" type="hidden">',
             '<span class="py_typ" py_typ="'+itm_type+'"><center>'+itm_type+'</center></span><input name="hiddenpy_typ['+or_no+'][]" value="'+itm_type+'" type="hidden">',
-            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden">',
+            '<span class="tax_type" tax_typ_id="'+payment+'" tax_type="'+encodeURI(payment_desc)+'">'+payment_desc+'</span><input name="hiddentax_typ_id['+or_no+'][]" value="'+encodeURI(payment_desc)+'" type="hidden"><input name="hiddentax_id['+or_no+'][]" type="hidden" value="'+payment+'">',
             '<td><span class="qtr" qtr="'+qtr+'">'+qtrDesc+'</span><input name="hiddenqtr['+or_no+'][]" value="'+qtr+'" type="hidden"></td>',
             '<td><span class="year" year="'+dp+'">'+dp+'</span><input name="hiddendp['+or_no+'][]" value="'+dp+'" type="hidden"></td>',
             '<span class="soa_code" soa_code="'+code+'">'+((code != '') ? code : 'N/A')+'</span><input name="hiddensoa_code['+or_no+'][]" value="'+code+'" type="hidden"><input name="hiddenpaymentdesc['+or_no+'][]" type="hidden" value="'+encodeURI(payment_desc)+'">',
@@ -1043,7 +1065,7 @@
           {
            // save here
           var AllData = [];
-          let arrOfHidden = ['hiddentin','hiddentd','hiddenpayer','hiddenpy_typ','hiddentax_typ_id','hiddenpaymentdesc','hiddenqtr','hiddendp','hiddensoa_code','hiddenamt'];
+          let arrOfHidden = ['hiddentin','hiddentd','hiddenpayer','hiddenpy_typ','hiddentax_typ_id','hiddentax_id','hiddenpaymentdesc','hiddenqtr','hiddendp','hiddensoa_code','hiddenamt'];
           for(var i = 0; i < COL_OR_NUM.length; i++)
           {
             var TempoRaryStorage1 = [];

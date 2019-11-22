@@ -63,7 +63,7 @@
                                                                     <option value="" selected="" hidden disabled>Please Select</option>
                                                                     @isset($or_types)
                                                                         @foreach($or_types as $ot)
-                                                                        <option value="{{$ot->or_code}}">{{$ot->or_type}}</option>
+                                                                        <option value="{{$ot->or_type}}">{{$ot->or_code}}</option>
                                                                         @endforeach
                                                                     @endisset
                                                                 </select>
@@ -121,7 +121,7 @@
                                                 <td>{{$tax->or_type}}</td>
                                                 <td>
                                                     <center>
-                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$tax->taxtype_id}}', '{{$tax->taxtype_desc}}', '{{$tax->tax_id}}', '{{$tax->or_code}}', '{{$tax->tax_code}}');"></i></a>
+                                                       <a class="btn btn-social-icon btn-warning" data-toggle="modal" data-target="#modal-default"><i class="fa fa-pencil" onclick="EditMode('{{$tax->taxtype_id}}', '{{$tax->taxtype_desc}}', '{{$tax->tax_id}}', '{{$tax->or_type}}', '{{$tax->tax_code}}');"></i></a>
                                                        <a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#modal-default" onclick="DeleteMode('{{$tax->taxtype_id}}', '{{$tax->tax_desc}}');"><i class="fa fa-trash "></i></a>
                                                     </center>
                                                 </td>

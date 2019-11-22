@@ -251,8 +251,8 @@
                                                                 @if(count($m04_2) > 0)
                                                                     <option value="">Select Payment...</option>
                                                                     @foreach($m04_2 AS $m4a1)
-                                                                        <option value="{{$m4a1->at_code}}" id="payment_{{$m4a1->at_code}}" c_desc="{{urlencode($m4a1->at_desc)}}">{{$m4a1->at_code}} - {{$m4a1->at_desc}} @isset($m4a1->acro)
-                                                                        ({{$m4a1->acro}})@endisset</option>
+                                                                        <option value="{{$m4a1->taxtype_id}}" id="payment_{{$m4a1->taxtype_id}}" c_desc="{{urlencode($m4a1->taxtype_desc)}}">{{$m4a1->taxtype_id}} - {{$m4a1->taxtype_desc}} @isset($m4a1->taxtype_desc)
+                                                                        ({{urldecode($m4a1->taxtype_desc)}})@endisset</option>
                                                                     @endforeach
                                                                 @else
                                                                     <option value="">No Payment registered..</option>

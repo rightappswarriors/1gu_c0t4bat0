@@ -1,6 +1,6 @@
 @extends('_main')
 @section('content')
-<?php $old = $flagData = null; $runningAmountTotal = $headerDataCount = $amountFromLoop = $runningAmountTotal = $runningt = $runningGT = $runningRowTotal = 0; $runningColTotal = []; $flag = true;?>
+<?php $old = $flagData = null; $runningAmountTotal = $headerDataCount = $amountFromLoop = $runningAmountTotal = $runningt = $runningGT = $runningRowTotal = $totalOR = 0; $runningColTotal = []; $flag = true;?>
   <section class="content">
       <div class="box box-default">
  
@@ -32,7 +32,7 @@
                @foreach($groupedTax as $tax)
                <?php $headerDataCount += count($tax) - 1; ?>
                @for($i = 0; $i < count($tax) - 1 ; $i++)
-                  <th scope="col" class="text-center"><p>{{$tax[$i]->taxtype_desc}}</p> ({{$tax[$i]->tax_code}})</th>              
+                  <th scope="col" class="text-center"><p>{{($tax[$i]->taxtype_desc)}}</p> ({{$tax[$i]->tax_code}})</th>              
                @endfor
                @endforeach
                <td style="vertical-align : middle;text-align:center; font-weight: bold;">TOTAL</td>
@@ -43,81 +43,94 @@
             </thead>
             <tbody>
               @isset($groupedData)
+              {{-- start loop of groupedData --}}
               @foreach($groupedData as $key => $values)
-              <?php $flagData = $key;?>
-               @for($j = 0; $j < count($values); $j++)
-               <tr>
+                <?php $flagData = $key;?>
+                {{-- start 2nd dimension loop of groupedData --}}
+                @foreach($values as $keyGroup => $valuesGroup)
+                <?php $totalOR += $valuesGroup['total']; ?>
+                <tr>
+                  {{-- for head data (date, or payee) --}}
                   <td>
-                  @if($flagData != $old)
-                  <?php $old = $flagData; $runningAmountTotal += $groupedData[$key][$j]->amount; ?>
-                  {{$key}}
-                  @endif
-                  
+                    @if($flagData != $old)
+                      <?php $old = $flagData;?>
+                      {{$key}}
+                    @endif
                   </td>
-                  <td scope="col" class="text-center">{{$groupedData[$key][$j]->orno}}</td>
-                  <td scope="col" class="text-center">{{$groupedData[$key][$j]->taxpayer}}</td>
-                  <td scope="col" class="text-center">{{number_format($groupedData[$key][$j]->amount,2)}}</td>
-                  {{-- for extra TD and DATA --}}
+                  <td>{{key($values)}}</td>
+                  <td>various taxpayers</td>
+                  <td>{{number_format($valuesGroup['total'],2)}}</td>
+                  {{-- end for head data (date, or payee) --}}
+
+                  {{-- for groupedTax loop --}}
                   @foreach($groupedTax as $tax)
-                   @for($l = 0; $l < count($tax) - 1 ; $l++)
-                        <?php $formattedTaxDesc = strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $tax[$l]->taxtype_desc)))));?>
+                    {{-- inside loop for taxtypes --}}
+                    @for($l = 0; $l < count($tax) - 1 ; $l++)
+                      <?php $formedData = $tax[$l]->taxtype_id; $amountFromLoop = 0 ?>
 
-                        @if(strpos(strtolower(trim(str_replace(' ', '', urldecode(preg_replace("/[^A-Za-z]/", '', $groupedData[$key][$j]->description))))), $formattedTaxDesc) !== false)
+                      @if(isset($valuesGroup[$formedData]))
+                        <?php 
+                        $amountFromLoop = $valuesGroup[$formedData]['total']; $runningRowTotal += $amountFromLoop;
+                        ?>
+                      @endif
+                      {{-- for filling in data on each fields --}}
+                      <td>{{number_format($amountFromLoop,2)}}</td>
+                      <?php
+                       $runningColTotal[$tax[$l]->taxtype_id] = (isset($runningColTotal[$tax[$l]->taxtype_id]) ? $runningColTotal[$tax[$l]->taxtype_id] + $amountFromLoop : $amountFromLoop);
+                      ?>
+                      {{-- end for filling in data on each fields --}}
+                    @endfor
+                    {{-- end of inside loop for taxtypes --}}
 
-                        <?php $amountFromLoop = $groupedData[$key][$j]->amount; $flag = false;?>
-                        @endif
-
-                        @if($flag == true && $tax[$l]->taxtype_id == 25)
-                        <?php $amountFromLoop = $groupedData[$key][$j]->amount; $flag = true;?>
-                        @endif
-
-                      <td scope="col" class="text-center">{{Number_format($amountFromLoop,0)}}</td>
-                      <?php $runningColTotal[$formattedTaxDesc.''.$l] = (isset($runningColTotal[$formattedTaxDesc.''.$l]) ? $runningColTotal[$formattedTaxDesc.''.$l] + $amountFromLoop : $amountFromLoop); ?>
-                      <?php $runningRowTotal += $amountFromLoop; ?>
-                      <?php $amountFromLoop = 0.00; ?>
-                   @endfor
-                   {{-- total area  --}}
                   @endforeach
-                  <td>{{Number_format($runningRowTotal,2)}} <?php $runningt += $runningRowTotal; ?></td>
-                  <td>{{number_format($groupedData[$key][$j]->amount,2)}} <?php $runningGT += $groupedData[$key][$j]->amount; ?></td>
+                  {{-- end for groupedTax loop --}}
+                  <td>{{number_format($runningRowTotal,2)}} <?php $runningt += $runningRowTotal; ?></td>
+                  <td>{{number_format($runningRowTotal,2)}} <?php $runningGT += $runningRowTotal; ?></td>
                   <?php $runningRowTotal = 0; ?>
-               </tr>
-               @endfor
-               <tr style="font-weight: bold;">
-                 <td></td>
-                 <td colspan="2">TOTAL</td>
-                 <td>{{Number_format($runningAmountTotal,2)}}</td>
+                </tr>
+                  
 
-                 {{-- for extra TD --}}
-                 @for($k = 0; $k < ($headerDataCount  + 2); $k++)
-                  <td scope="col" class="text-center"></td>
-                 @endfor
-               </tr>
-
-               @endforeach
-               <tr style="font-weight: bold;">
-                 <td colspan="4">Total This Page</td>
-                 {{-- for extra TD --}}
-                 <?php $editedArr = array_values($runningColTotal); ?>
-                 @for($p = 0; $p < ($headerDataCount ); $p++)
-                  <td scope="col" class="text-center">{{$editedArr[$p]}}</td>
-                 @endfor
-                 <td>{{Number_format($runningt)}}</td>
-                 <td>{{Number_format($runningGT)}}</td>
-               </tr>
-               <tr style="font-weight: bold;">
-                 <td colspan="2">Cumulative Total to Date</td>
-                 <td colspan="2"></td>
-                  {{-- for extra TD --}}
-                 @for($p = 0; $p < ($headerDataCount ); $p++)
-                  <td scope="col" class="text-center">{{$editedArr[$p]}}</td>
-                 @endfor
-                 <td>{{Number_format($runningt)}}</td>
-                 <td>{{Number_format($runningGT)}}</td>
-               </tr>
+                @endforeach
+                {{-- end 2nd dimension loop of groupedData --}}
                 
-               
+
+
+              @endforeach
+              {{-- end loop of groupedData --}}
+
+              {{-- for total under OR --}}
+              <?php 
+                $editedArr = array_values($runningColTotal);
+              ?>
+              <tr style="font-weight: bold;">
+                  <td></td>
+                  <td>TOTAL</td>
+                  <td></td>
+                  <td>{{number_format($totalOR,2)}}</td>
+               </tr>
+               {{-- end for total under OR --}}
+
+                <tr style="font-weight: bold;">
+                  <td>Total This Page</td>
+                  <td colspan="3"></td>
+                  @for($p = 0; $p < ($headerDataCount ); $p++)
+                    <td scope="col" class="text-center">{{$editedArr[$p]}}</td>
+                  @endfor
+                  <td>{{Number_format($runningt)}}</td>
+                  <td>{{Number_format($runningGT)}}</td>
+               </tr>
+               <tr style="font-weight: bold;">
+                 <td>Cumulative Total to Date</td>
+                 <td colspan="3"></td>
+                 @for($p = 0; $p < ($headerDataCount ); $p++)
+                    <td scope="col" class="text-center">{{$editedArr[$p]}}</td>
+                 @endfor
+                   <td>{{Number_format($runningt)}}</td>
+                   <td>{{Number_format($runningGT)}}</td>
+               </tr>
               @endisset
+
+
             </tbody>
           </table>
         </div>
