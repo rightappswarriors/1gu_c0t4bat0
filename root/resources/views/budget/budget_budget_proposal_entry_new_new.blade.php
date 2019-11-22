@@ -502,7 +502,8 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-success pull-right" onclick="addItem()"><i class="fa fa-plus-circle"></i></button>
+                                        <button id="btn_additem_{{$data[10][$i]->subgrpid}}" class="btn btn-success pull-right" onclick="addItem()"><i class="fa fa-plus-circle"></i></button>
+                                        <button id="btn_additemwithsub_{{$data[10][$i]->subgrpid}}" class="btn btn-info pull-right" onclick="addItemwithSub()"><i class="fa fa-plus-circle"></i></button>
                                     </div>
                                 </div>
                                 <br>
@@ -514,6 +515,7 @@
                                                 <th>Account Title/ PPA</th>
                                                 <th>Description</th>
                                                 <th>Amount</th>
+                                                <th width="100"></th>
                                                 {{-- <th><center>Allocated</center></th> --}}
                                                 <th width="10%"><center>Options</center></th>
                                             </tr>
@@ -551,6 +553,9 @@
                                                     <td style="width: 100px;">
                                                         <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="text" value="{{number_format($al->appro_amnt, 2)}}" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
                                                         <span id="validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                    </td>
+                                                    <td>
+                                                      <select class="form-control select2 select2-hidden-accessible" name="select_ppasub" style="width: 100%;" tabindex="-1" aria-hidden="true"><option value="{{$al->subppa}}" selected="">{{$al->subppa}}</option></select>
                                                     </td>
                                                     <td>
                                                         <center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>
@@ -803,6 +808,9 @@
                 '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea>',
 
                 '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt'+ SelectedTabPPA+line+'" required> <span id="validate_txt_amt'+ SelectedTabPPA+line+'"></span>',
+
+                '',
+
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
            $('select.select2').select2();
@@ -814,6 +822,68 @@
         {
           alert('Entered Account Title/PPA already exists.');
         }
+    }
+
+    function addItemwithSub()
+    {
+        var howMany = $('li.tabHD').length;
+        var SelectedTabPPA = '';
+        if(howMany > 0)
+        {
+            for(var i = 0; i < howMany;i++)
+            {
+                if($($('li.tabHD')[i]).hasClass('active'))
+                {
+                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
+                    break;
+                }
+            }
+        }
+
+        var line = ($('#table_'+SelectedTabPPA).DataTable().rows().count()) + 1;
+        var table = $('#table_'+SelectedTabPPA).DataTable();
+
+        if(checkAcctDescExist)
+        {
+           table.row.add([
+                '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountCode(value); getAccountTitleDesc(value);"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
+
+                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value); checkIfAcctDescExist('+line+', value);" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span> <span id="validate_ifAlreadyExist'+ SelectedTabPPA+line+'" style="color: red;"></span>',
+
+                '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea>',
+
+                '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text">',
+
+                '<select class="form-control select2 select2-hidden-accessible" name="select_ppasub" style="width: 100%;" tabindex="-1" aria-hidden="true">'+ppasubgrp(SelectedTabPPA)+'</select>',
+
+                '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
+            ]).draw();
+           $('select.select2').select2();
+
+           loadTotal();
+           loadSubTotal(SelectedTabPPA);
+        }
+        else
+        {
+          alert('Entered Account Title/PPA already exists.');
+        }
+    }
+
+    function ppasubgrp(SelectedTabPPA)
+    {
+      var ppa = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
+      var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+
+       var option = '<option selected="selected" value=""> </option>';
+        for(i = 0; i < ppa.length; i++)
+        {
+          if(subgrpid[i] == SelectedTabPPA)
+          {
+           option += '<option value="'+ppa[i]+'">'+ ppa[i] +'</option>';
+          }
+        }
+
+       return option;  
     }
 
 
@@ -1179,6 +1249,8 @@
                          var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
                          var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
 
+                         var ppasubgrp = $('select[name="select_ppasub"]').map(function(){return $(this).val();}).get();
+
                          var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                          var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
                          var data = {
@@ -1187,6 +1259,7 @@
                                  at_desc : at_desc,
                                  amt : amt,
                                  subgrpid : subgrpid,
+                                 ppasubgrp : ppasubgrp,
                                  desc: desc,
                                  fy : $('select[name="fy"]').val(),
                                  fid : $('select[name="hdr_fid"]').val(),
@@ -1255,6 +1328,7 @@
                          var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
                          var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
                          var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                         var ppasubgrp = $('select[name="select_ppasub"]').map(function(){return $(this).val();}).get();
 
                          var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                          var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
@@ -1264,6 +1338,7 @@
                                  at_desc : at_desc,
                                  amt : amt,
                                  subgrpid : subgrpid,
+                                 ppasubgrp : ppasubgrp,
                                  desc: desc,
                                  fy : $('select[name="fy"]').val(),
                                  fid : $('select[name="hdr_fid"]').val(),
@@ -1509,6 +1584,7 @@
                          var codes = $('input[name="select_acctCode"]').map(function(){return $(this).val();}).get();
                          var at_desc = $('input[name="select_acctDesc"]').map(function(){return $(this).val();}).get();
                          var subgrpid = $('input[name="select_acctCode"]').map(function(){return $(this).attr("subgrpid");}).get();
+                         var ppasubgrp = $('select[name="select_ppasub"]').map(function(){return $(this).val();}).get();
 
                          var desc = $('textarea[name="txt_desc"]').map(function(){return $(this).val();}).get();
                          var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
@@ -1518,6 +1594,7 @@
                                  at_desc : at_desc,
                                  amt : amt,
                                  subgrpid : subgrpid,
+                                 ppasubgrp : ppasubgrp,
                                  desc: desc,
                                  fy : $('select[name="fy"]').val(),
                                  fid : $('select[name="hdr_fid"]').val(),

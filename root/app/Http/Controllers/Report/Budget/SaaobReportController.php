@@ -33,6 +33,10 @@ class SaaobReportController extends Controller
       $Function = Budget::printSAAOBFunc($fy, $fid);
       $PPA = Budget::printSAAOBPPA($fy, $fid);
 
-      return view('report.saaob.saaob-print', compact('Header', 'Line', 'fund', 'Function', 'PPA'));
+      $SPAHeader = Budget::printSAAOBSPAHdr($fy, $fid);
+      $SPALine = Budget::printSAAOBSPALine($fy, $fid, $mo1, $mo2);
+      $SPAPPA = Budget::printSAAOBSPAPPA($fy, $fid);
+  
+      return view('report.saaob.saaob-print', compact('Header', 'Line', 'fund', 'Function', 'PPA', 'SPAHeader', 'SPALine', 'SPAPPA'));
   }
 }

@@ -54,7 +54,9 @@
               </tr>
 
               @php
-                $grandtotal = 0.00;
+                $grandtotal_appro = 0.00;
+                $grandtotal_allot = 0.00;
+                $grandtotal_obr = 0.00;
               @endphp
 
               @isset($Function)
@@ -86,7 +88,9 @@
                 @foreach($PPA as $P) {{-- PPA --}}
 
                 @php
-                $total_ppaamt = 0.00;
+                $total_approamt = 0.00;
+                $total_allotamt = 0.00;
+                $total_obramt = 0.00;
                 @endphp
 
                 @if($h->b_num == $P->b_num) {{-- HEADER == PPA --}}
@@ -115,8 +119,12 @@
                   </tr>
 
                   @php
-                  $total_ppaamt += $L->appro_amnt;
-                  $grandtotal += $L->appro_amnt;
+                  $total_approamt += $L->appro_amnt;
+                  $total_allotamt += $L->allot_amnt;
+                  $total_obramt += $L->obr;
+                  $grandtotal_appro += $L->appro_amnt;
+                  $grandtotal_allot += $L->allot_amnt;
+                  $grandtotal_obr += $L->obr;
                   @endphp
 
                   @endif
@@ -126,9 +134,9 @@
                   <tr class="noborder noborder3">
                     <td style="border-bottom:none !important;border-top:none !important;"></td>
                     <td style="border-bottom:none !important;border-top:none !important;"><b>Total {{$P->subgrpdesc}}</b></td>
-                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_ppaamt, 2)}}</b></td>
-                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
-                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_approamt, 2)}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_allotamt, 2)}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_obramt, 2)}}</b></td>
                     <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
                     <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
                   </tr>
@@ -144,12 +152,95 @@
               @endisset  
               @endforeach
               @endisset    
+
+                  <tr class="noborder">
+                    <td  style="border-bottom:none !important;border-top:none !important;"><center><b>9999</b></center></td>
+                    <td style="border-bottom:none !important;border-top:none !important;text-indent: 20px;"><b>SPECIAL PURPOSE APPROPRIATIONS</b></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                  </tr>
+
+                  @isset($SPAHeader)
+                  @foreach($SPAHeader as $sh)
+                      <tr class="noborder">
+                        <td style="border-bottom:none !important;border-top:none !important;"><center><b>{{$sh->secid}}</b></center></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"><b><u>{{strtoupper($sh->secdesc)}}</u></b></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"></td>
+                        <td style="border-bottom:none !important;border-top:none !important;"></td>
+                      </tr>
+
+                       @foreach($SPAPPA as $sp)
+                          @php
+                             $total_approamt = 0.00;
+                             $total_allotamt = 0.00;
+                             $total_obramt = 0.00;
+                          @endphp
+
+                          @if($sh->b_num == $sp->b_num) {{-- SPAHEADER == SPAPPA --}}
+                          <tr class="noborder">
+                            <td style="border-bottom:none !important;border-top:none !important;"></td>
+                            <td style="border-bottom:none !important;border-top:none !important;text-indent: 10px; vertical-align: bottom;"><b>{{$sp->subgrpdesc}}</b></td>
+                            <td style="border-bottom:none !important;border-top:none !important;"></td>
+                            <td style="border-bottom:none !important;border-top:none !important;"></td>
+                            <td style="border-bottom:none !important;border-top:none !important;"></td>
+                            <td style="border-bottom:none !important;border-top:none !important;"></td>
+                             <td style="border-bottom:none !important;border-top:none !important;"></td>
+                          </tr>
+                          @endif
+
+                                 @foreach($SPALine as $sl) {{-- LINE --}}
+                                 @if($sh->b_num == $sl->b_num)
+                                 @if($sp->grpid == $sl->grpid)
+                                 <tr class="noborder noborder2">
+                                   <td style="border-bottom:none !important;border-top:none !important;"><center>@if($sl->isspa == "Y") <b>{{$sl->at_code}}</b> @else {{$sl->at_code}} @endif </center>               </td>
+                                   <td style="border-bottom:none !important;border-top:none !important;">@if($sl->isspa == "Y") <b> {{$sl->at_desc}} </b> @else {{$sl->at_desc}} @endif</td>
+                                   <td align="right">{{number_format($sl->appro_amnt, 2)}}</td>
+                                   <td align="right">{{number_format($sl->allot_amnt, 2)}}</td>
+                                   <td align="right">{{number_format($sl->obr, 2)}}</td>
+                                   <td align="right">{{number_format($sl->appro_amnt - $sl->allot_amnt, 2)}}</td>
+                                   <td align="right">{{number_format($sl->allot_amnt - $sl->obr, 2)}}</td>
+                                 </tr>
+
+                                 @php
+                                 $total_approamt += $sl->appro_amnt;
+                                 $total_allotamt += $sl->allot_amnt;
+                                 $total_obramt += $sl->obr;
+                                 $grandtotal_appro += $sl->appro_amnt;
+                                 $grandtotal_allot += $sl->allot_amnt;
+                                 $grandtotal_obr += $sl->obr;
+                                 @endphp
+
+                                 @endif
+                                 @endif
+                                 @endforeach {{-- LINE --}}
+
+                                 <tr class="noborder noborder3">
+                    <td style="border-bottom:none !important;border-top:none !important;"></td>
+                    <td style="border-bottom:none !important;border-top:none !important;"><b>Total {{$sp->subgrpdesc}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_approamt, 2)}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_allotamt, 2)}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"><b>{{number_format($total_obramt, 2)}}</b></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
+                    <td style="border-bottom:2px solid !important;border-top:2px solid !important;"align="right"></td>
+                  </tr>
+
+
+                       @endforeach
+                  @endforeach
+                  @endisset
+
                   <tr class="noborder noborder3">
                     <td></td>
                     <td style="vertical-align: bottom;"><b>GRAND TOTAL</b></td>
-                    <td align="right" style="vertical-align: bottom;"><b>{{number_format($grandtotal, 2)}}</b></td>
-                    <td></td>
-                    <td></td>
+                    <td align="right" style="vertical-align: bottom;"><b>{{number_format($grandtotal_appro, 2)}}</b></td>
+                    <td align="right" style="vertical-align: bottom;"><b>{{number_format($grandtotal_allot, 2)}}</b></td>
+                    <td align="right" style="vertical-align: bottom;"><b>{{number_format($grandtotal_obr, 2)}}</b></td>
                     <td></td>
                     <td></td>
                   </tr>

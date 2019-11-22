@@ -66,7 +66,7 @@ class c_budget_proposal_entry extends Controller
     public function getFunctions(Request $r) // GET FUNCTIONS (FILTERED) MODULES
     {
         // return dd($r->all());
-        $SQL = "SELECT * FROM rssys.function fn WHERE fn.secid = '".$r->id."' AND fn.active = TRUE";
+        $SQL = "SELECT * FROM rssys.function fn WHERE fn.secid = '".$r->id."' OR fn.funcid = 'SPA' AND fn.active = TRUE";
         return DB::select($SQL);
     }
 
@@ -141,6 +141,7 @@ class c_budget_proposal_entry extends Controller
                           'sl_name' => '',
                           'appro_amnt' => (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]),
                           'grpid' => $r->subgrpid[$i],
+                          'subppa' => $r->ppasubgrp[$i],
                       ];
                   if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
                   {
@@ -216,6 +217,7 @@ class c_budget_proposal_entry extends Controller
                         'sl_name' => '',
                         'appro_amnt' => (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]),
                         'grpid' => $r->subgrpid[$i],
+                        'subppa' => $r->ppasubgrp[$i]
                     ];
 
                     //return (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]);
@@ -305,6 +307,7 @@ class c_budget_proposal_entry extends Controller
                           'sl_name' => '',
                           'appro_amnt' => (float)preg_replace("/([^0-9\\.])/i", "", $r->amt[$i]),
                           'grpid' => $r->subgrpid[$i],
+                          'subppa' => $r->ppasubgrp[$i]
                       ];
                   if (Core::insertTable('rssys.bgtps02', $insertIntoBgtps02, 'Budget Proposal Entry')) 
                   {
