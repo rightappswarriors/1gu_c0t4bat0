@@ -63,9 +63,9 @@
                   @foreach($Line as $L)
                   @if($P->subgrpid == $L->grpid)
                   <tr class="noborder noborder2">
-                    <td><center>{{$L->at_code}}</center></td>
-                    <td>{{$L->at_desc}}</td>
-                    <td align="right">{{number_format($L->appro_amnt, 2)}}</td>
+                    <td><center>@if($L->isspa == 'Y') <b>{{$L->at_code}}</b> @else {{$L->at_code}} @endif</center></td>
+                    <td>@if($L->isspa == 'Y') <b>{{$L->at_desc}}</b> @else {{$L->at_desc}} @endif</td>
+                    <td align="right">@if($L->isspa == 'Y') <b> {{number_format($L->appro_amnt, 2)}} </b> @else {{number_format($L->appro_amnt, 2)}} @endif</td>
                   </tr>
                   @endif
                   @endforeach
