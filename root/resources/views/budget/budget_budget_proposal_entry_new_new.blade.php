@@ -503,21 +503,22 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <button id="btn_additem_{{$data[10][$i]->subgrpid}}" class="btn btn-success pull-right" onclick="addItem()"><i class="fa fa-plus-circle"></i></button>
-                                        <button id="btn_additemwithsub_{{$data[10][$i]->subgrpid}}" class="btn btn-info pull-right" onclick="addItemwithSub()"><i class="fa fa-plus-circle"></i></button>
+                                        <button id="btn_additemwithsub_{{$data[10][$i]->subgrpid}}" class="btn btn-info pull-right" onclick="addItemwithSub()">Add SPA <i class="fa fa-plus-circle"></i></button>
                                     </div>
                                 </div>
                                 <br>
+                                <div class="table-responsive">
                                     <table id="table_{{$data[10][$i]->subgrpid}}" class="table table-bordered table-striped data_table">
                                         <thead>
                                             <tr>
                                                 {{-- <th style="display: none">#</th> --}}
-                                                <th>Account Code</th>
+                                                <th nowrap width="13%">Account Code</th>
                                                 <th>Account Title/ PPA</th>
                                                 <th>Description</th>
                                                 <th>Amount</th>
-                                                <th width="100"></th>
+                                                <th width="25%">&nbsp;</th>
                                                 {{-- <th><center>Allocated</center></th> --}}
-                                                <th width="10%"><center>Options</center></th>
+                                                <th width="10;"><center>Options</center></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -529,11 +530,11 @@
                                                   {{-- '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
 
                 '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span>', --}}
-                                                    <td style="width: 100px;">
-                                                       <input list="select_acctCode" name="select_acctCode" value="{{$al->at_code}}" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>
+                                                    <td>
+                                                       <input list="select_acctCode" name="select_acctCode" value="{{$al->at_code}}" subgrpid="{{$data[10][$i]->subgrpid}}" onchange="getAccountTitleDesc(value)"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>
                                                     </td>
                                                     <td>
-                                                      <input list="select_acctDesc" name="select_acctDesc" value="{{$al->at_desc}}" style="width: 100%;" onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
+                                                      <input list="select_acctDesc" name="select_acctDesc" value="{{$al->at_desc}}"  onchange="getAccountCode(value)" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
                                                     </td>
                                                     {{-- <td>
                                                         <select class="form-control select2 select2-hidden-accessible test" id="select_acctCode" name="select_acctCode" subgrpid="{{$data[10][$i]->subgrpid}}" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="Please select Account Title/PPA." data-parsley-errors-container="#validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}" required>
@@ -548,14 +549,14 @@
                                                         <span id="validate_select_acctCode{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
                                                     </td> --}}
                                                     <td>
-                                                        <textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text">{{$al->seq_desc}}</textarea>
+                                                        <textarea class="form-control" id="txt_desc" name="txt_desc" type="text">{{$al->seq_desc}}</textarea>
                                                     </td>
-                                                    <td style="width: 100px;">
-                                                        <input class="form-control" id="txt_amt" name="txt_amt" style="width:100%" type="text" value="{{number_format($al->appro_amnt, 2)}}" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
+                                                    <td>
+                                                        <input class="form-control" id="txt_amt" name="txt_amt" type="text" value="{{number_format($al->appro_amnt, 2)}}" data-parsley-required-message="Amount is required." data-parsley-errors-container="#validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}" required> 
                                                         <span id="validate_txt_amt{{$data[10][$i]->subgrpid}}{{$ln_num}}"></span>
                                                     </td>
                                                     <td>
-                                                      <select class="form-control select2 select2-hidden-accessible" name="select_ppasub" style="width: 100%;" tabindex="-1" aria-hidden="true"><option value="{{$al->subppa}}" selected="">{{$al->subppa}}</option></select>
+                                                      {{-- <select class="form-control" name="select_ppasub"                    tabindex="-1" aria-hidden="true"><option value="{{$al->subppa}}" selected="">{{$al->subppa}}</option></select> --}}
                                                     </td>
                                                     <td>
                                                         <center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>
@@ -567,6 +568,7 @@
                                             @endif
                                         </tbody>
                                     </table>
+                                    </div>
                                     <div class="row">
                                         <div class="col-sm-8">&nbsp;</div>
                                         <div class="col-sm-4">
@@ -854,7 +856,7 @@
 
                 '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text">',
 
-                '<select class="form-control select2 select2-hidden-accessible" name="select_ppasub" style="width: 100%;" tabindex="-1" aria-hidden="true">'+ppasubgrp(SelectedTabPPA)+'</select>',
+                '<select class="form-control" style="white-space: normal;width:100%;" name="select_ppasub"  aria-hidden="true"><option><i style="word-break:break-all;">'+ppasubgrp(SelectedTabPPA)+'</i></option></select>',
 
                 '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
             ]).draw();
