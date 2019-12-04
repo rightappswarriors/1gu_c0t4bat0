@@ -993,32 +993,25 @@
     }
 
 
-    /* modify by: DAN 07/19/19
-     */
     function loadSubTotal(acct_id)
     {
-        var tempAmount = 0; 
+      var total_amt = 0.00;
+      var val = 0.00;
 
-        var amt = $("#table_"+acct_id+" tbody td").map(function() {
-              return $('input[name="txt_amt"]', this).val(); // else return text content
-            }).get();
+      $('#table_'+acct_id+'').DataTable().rows().every(function(){
+       $(this.node()).each(function(index, el) {
 
-        if(amt.length > 0)
-        {
-            for(let i = 0; i < amt.length; i++)
-            {
-                 if(amt[i] != null && amt[i] != '')
-                 {
-                   tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
-                 }
-            }
-            
-            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(tempAmount));
-        } 
-        else 
-        {
-            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(0));
-        }
+         val = $(this).find('td [name=txt_amt]').val();
+           
+         if(val != null && val != '')
+         {
+           total_amt += parseFloat(val.replace(/[^0-9.-]+/g,""));
+         }
+        
+       });
+      });
+
+      $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(total_amt));
     }
 
     /* src code of Mhel
