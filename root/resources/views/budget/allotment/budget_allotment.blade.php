@@ -34,7 +34,7 @@
  <div class="box-body" style="">
  </div>
  <!-- /.box-body -->
- <div class="row">
+ <div class="row" hidden="">
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
