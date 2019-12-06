@@ -32,11 +32,12 @@ class I_StockReleaseController extends Controller
             $costcenter = Core::getAll('rssys.m08');
             $vat = Core::getAll('rssys.vat');
             $x08 = Core::getAll('rssys.x08');
+            $are_position = Core::getAll('rssys.are_position');
             $isnew = true;
 
             $disp_items = Inventory::getItemSearch();
 
-            return view('inventory.stockrelease.stockrelease-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08'));
+            return view('inventory.stockrelease.stockrelease-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'isnew', 'x08', 'are_position'));
         }
         else if($request->isMethod('post'))
         {
@@ -55,6 +56,7 @@ class I_StockReleaseController extends Controller
             $ris_no = $request->ris_no;
             $sai_no = $request->sai_no;
             $personnel = $request->personnel;
+            $designation = $request->receivedbydesig;
             $stk_ref = $this->stk_trns_type."#".$code;
             
             $data = ['rec_num' => $code,  
@@ -69,7 +71,8 @@ class I_StockReleaseController extends Controller
                      't_date' => $datetime->toDateString(),
                      't_time' => $datetime->toTimeString(),
                      'personnel' => $personnel,
-                     'approve' => 'true'
+                     'approve' => 'true',
+                     'are_receivebydesig' => $designation
                     ];        
 
             if(Core::insertTable($table, $data, $this->module) == true)
@@ -143,6 +146,7 @@ class I_StockReleaseController extends Controller
           $vat = Core::getAll('rssys.vat');
           $x08 = Core::getAll('rssys.x08');
           $disp_items = Inventory::getItemSearch();
+          $are_position = Core::getAll('rssys.are_position');
     
           $rechdr = Inventory::getStockReleaseHeader($code);
           $reclne = Inventory::getStockReleaseLine($code);
@@ -150,7 +154,7 @@ class I_StockReleaseController extends Controller
           $isnew = false;
 
     
-          return view('inventory.stockrelease.stockrelease-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'grandtotal', 'isnew', 'x08'));
+          return view('inventory.stockrelease.stockrelease-entry', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'grandtotal', 'isnew', 'x08', 'are_position'));
       }
       elseif($request->isMethod('post'))
       {
@@ -164,6 +168,7 @@ class I_StockReleaseController extends Controller
           $invoicedt = $request->invoicedt;
           $stock_loc = $request->stock_loc;
           $personnel = $request->personnel;
+          $designation = $request->receivedbydesig;
           $reference = $request->reference;
           $costcenter = $request->costcenter;
           $ris_no = $request->ris_no;
@@ -180,7 +185,8 @@ class I_StockReleaseController extends Controller
                    't_date' => $datetime->toDateString(),
                    't_time' => $datetime->toTimeString(),
                    'personnel' => $personnel,
-                   'approve' => 'true'
+                   'approve' => 'true',
+                   'are_receivebydesig' => $designation
                   ];
 
           if(Core::updateTable($table, 'rec_num', $code, $data, $this->module) == true)

@@ -35,7 +35,7 @@
         <!-- /.box-header -->
         <div class="box-body" style="">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Invoice No</label>
                 @if($isnew)
@@ -45,7 +45,7 @@
                 @endif
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Invoice Date</label>
                 <div class="input-group date">
@@ -60,11 +60,11 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Office</label>
                 @if($isnew)
-                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="" disabled="">
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" required="">
                   <option value="" selected="selected">--- Select Office ---</option>
                   @foreach($costcenter as $cc)
                   <option value="{{$cc->cc_code}}">{{$cc->cc_desc}}</option>
@@ -129,6 +129,25 @@
                 <span id="validate_personnel"></span>
               </div>
             </div>
+
+             <div class="col-md-3">
+              <div class="form-group">
+                <label>Personnel to Receive Designation</label>
+
+                @if($isnew)
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @endif
+
+                <datalist id="select_receivedbydesig">
+                  @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                  @endforeach
+                </datalist>
+                <span id="validate_selectreceivedfromdesig"></span>
+              </div>
+            </div>
             
           </div>
           <!-- /.row -->
@@ -144,6 +163,7 @@
                   <h3 class="box-title">Item Details</h3>
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemsearch-modal"><i class="fa fa-plus"></i> Add item</button> -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additemfromris-modal"><i class="fa fa-plus"></i> Add item(s) from RIS</button>
+                    <button type="button" class="btn btn-warning" onclick="EnterItem_Add('', '', '', '', '', 'TEXT-ITEM')"><i class="fa fa-plus"></i> Add Text Item</button>
                 </div>
                 <!-- <div class="col-sm-6">
                   <h5 class="box-title">Total amount:</h5>
@@ -234,6 +254,7 @@
                   <th>Qty</th>
                   <th>Unit Code</th>
                   <th>Unit Desc</th>
+                  <th>Unit Cost</th>
                   <th>Actions</th>
                 </tr>
                 </thead>
@@ -250,7 +271,8 @@
                   <td>{{$rl->qty}}</td>
                   <td>{{$rl->unit_code}}</td>
                   <td>{{$rl->unit_desc}}</td>
-                  <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
+                  <td>{{$rl->price}}</td>
+                  <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}}, '{{$rl->item_code}}');"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
                   </td>
                 </tr>  
                 @endforeach
@@ -361,7 +383,12 @@
                                 </select>
                             </div>
                           </div>
-                          
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Unit Cost</label>
+                                <input id="txt_unitcost" type="text" class="form-control" name="txt_unitcost" required="" readonly="">
+                            </div>
+                          </div>
                         </div>
                         
                       </div>
@@ -373,18 +400,104 @@
                       </center>
                     </span>
                       </form>
+
+                    {{-- TEXT-ITEM FORM --}}
+                    <span class="AddModeText EditModeText">
+                    <form id="add-formtext" data-parsley-validate novalidate>
+                      <div class="box-body">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Line No</label>
+                              <input type="text" class="form-control" name="txt_lineno_text" readonly="">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Item Code</label>
+                              <input type="text" class="form-control" name="txt_itemcode_text" readonly="">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Unit Desc</label>
+                              <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="unit_desc_text" required="">
+                                <option value="" selected="selected">--- Select Unit ---</option>
+                                @foreach($itemunit as $iu)
+                                <option value="{{$iu->unit_id}}">{{$iu->unit_shortcode}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                              <label>Description</label>
+                               <textarea class="form-control" rows="2" id="txt_description_text" name="txt_description_text"></textarea>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Serial No</label>
+                              <input type="text" class="form-control" name="txt_serialno_text" id="txt_serial_text">
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Tag No</label>
+                              <input type="text" class="form-control" name="txt_tagno_text" id="txt_tag_text">
+                            </div>
+                          </div> 
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Unit Cost</label>
+                              <input type="number" class="form-control" name="txt_unitcost_text" id="txt_unitcost_text">
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Qty.</label>
+                              <input type="number" class="form-control" min="0" name="txt_qty_text">
+                            </div>
+                          </div> 
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              <label>Property No.</label>
+                              <input type="text" class="form-control" name="txt_partno_text">
+                            </div>
+                          </div>                              
+                        </div>
+                      </div>
+                    </form>
+                    </span>
+
                     </div>
                     <div class="modal-footer">
                       <span class="AddModeBtn">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa')">Save & add more</button>
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Save & close</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa-item', 'item')">Save & add more</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'item')">Save & close</button>
                       </span>
+
+                      <span class="AddModeBtnText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sa-textitem', 'text-item')">Save & add more</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-textitem', 'text-item')">Save & close</button>
+                      </span>
+                                              
                       <span class="EditModeBtn">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Save & close</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'item')">Save & close</button>
                       </span>
+
+                      <span class="EditModeBtnText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-textitem', 'text-item')">Save & close</button>
+                      </span>
+                      
                       <span class="DeleteMode">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Delete</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'remove-item')">Delete</button>
                       </span>
+                      
+                      <span class="DeleteModeText">
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc-item', 'remove-item')">Delete</button>
+                      </span>
+
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                     </div>
                   </div>
@@ -395,7 +508,6 @@
               </div>
               <!-- End Modal -->
               <!-- Enter Item Modal Form -->
-
 
 
        <!-- Add item(s) from RIS -->
@@ -503,12 +615,13 @@
       $('#tbl_itemlist').DataTable( {
         "columnDefs": [
             {
-                "targets": [ 7 ], // hide unit code col
+                "targets": [7], // hide unit code col
                 "visible": false,
                 "searchable": false
 
             }
         ]
+
       } );
       } );
 
@@ -538,48 +651,88 @@
       // });
 
 
-      function EnterItem_Add(code, part_no, item_desc, unit, cost_price)
+      function EnterItem_Add(code, part_no, item_desc, unit, cost_price, typeitem)
       {
-        clear();
-        $('#ENTER_ITEM').text('Add');
-        $('.AddMode').show();
-        $('.AddModeBtn').show();
-        $('.EditMode').show();
-        $('.EditModeBtn').hide();
-        $('.DeleteMode').hide();
-        
-        var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+        if(typeitem == 'TEXT-ITEM')
+        {
+          var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+          clear();
+          $('#ENTER_ITEM').text('Add Text');
+          $('.AddModeText').show();
+          $('EditModeText').show();
+          $('.AddMode').hide();
+          $('.AddModeBtn').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtnText').hide();
+          $('.AddModeBtnText').show();
+          $('.EditModeBtn').hide();
+          $('.DeleteMode').hide();
+          $('.DeleteModeText').hide();
 
-        $('input[name="txt_lineno"]').val(line);
-        $('input[name="txt_itemcode"]').val(code);
-        $('input[name="txt_part_no"]').val(part_no);
-        $('input[name="txt_itemdesc"]').val(item_desc);
-        //$('input[name="txt_partno"]').val(part_no);
-        //$('input[name="txt_cost"]').val(cost_price);
-        $('select[name="select_unit"]').val(unit).trigger('change');
+          
+          var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+
+          $('input[name="txt_lineno_text"]').val(line);
+          $('input[name="txt_itemcode_text"]').val('TEXT-ITEM');
+
+
+          $('#enteritem-modal').modal('toggle');
+        }
+        else
+        {
+          clear();
+          $('#ENTER_ITEM').text('Add');
+          $('.AddMode').show();
+          $('.AddModeBtn').show();
+          $('.EditMode').show();
+          $('.EditModeBtn').hide();
+          $('.DeleteMode').hide();
+          
+          var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+
+          $('input[name="txt_lineno"]').val(line);
+          $('input[name="txt_itemcode"]').val(code);
+          $('input[name="txt_part_no"]').val(part_no);
+          $('input[name="txt_itemdesc"]').val(item_desc);
+          //$('input[name="txt_partno"]').val(part_no);
+          //$('input[name="txt_cost"]').val(cost_price);
+          $('select[name="select_unit"]').val(unit).trigger('change');
+        }
       }
 
-      function EnterItem_Edit(line)
+      function EnterItem_Edit(line, typeitem)
       {
-          $('#ENTER_ITEM').text('Edit');
-          $('.AddMode').show();
+        if(typeitem == 'TEXT-ITEM')
+        {
+          clear();
+          $('#ENTER_ITEM').text('Edit Text');
+          $('.AddMode').hide();
+          $('.EditMode').hide();
+          $('.EditModeBtn').hide();
+          $('.EditModeText').show();
+          $('.AddModeText').show();
           $('.AddModeBtn').hide();
-          $('.EditMode').show();
-          $('.EditModeBtn').show();
+          $('.AddModeBtnText').hide();
           $('.DeleteMode').hide();
+          $('.EditModeBtnText').show();
+          $('.DeleteModeText').hide();
 
           var table = $('#tbl_itemlist').DataTable();
           var row = line - 1;
           var data = table.row(row).data();
           
-          $('input[name="txt_lineno"]').val(data[0]);
-          $('input[name="txt_itemcode"]').val(data[1]);
-          $('input[name="txt_partno"]').val(data[2]);
-          $('input[name="txt_serialno"]').val(data[3]);
-          $('input[name="txt_tagno"]').val(data[4]);
-          $('input[name="txt_itemdesc"]').val(data[5]);
-          $('input[name="txt_qty"]').val(data[6]);
-          $('select[name="select_unit"]').val(data[7]).trigger('change');
+          $('input[name="txt_lineno_text"]').val(data[0]);
+          $('input[name="txt_itemcode_text"]').val(data[1]);
+          $('input[name="txt_partno_text"]').val(data[2]);
+          $('input[name="txt_serialno_text"]').val(data[3]);
+          $('input[name="txt_tagno_text"]').val(data[4]);
+          $('textarea[name="txt_description_text"]').val(data[5]);
+          $('input[name="txt_qty_text"]').val(data[6]);
+          $('select[name="unit_desc_text"]').val(data[7]).trigger('change');
+          $('input[name="txt_unitcost_text"]').val(data[9]);
+          
+
+
           //$('input[name="txt_cost"]').val(data[7]);
           //$('input[name="txt_disc"]').val(data[8]);
           // $('input[name="txt_lineamt"]').val(data[9]);
@@ -590,82 +743,217 @@
           $('#enteritem-modal').modal('toggle');
 
           //console.log(data);
+        }
+        else
+        {
+          clear();
+          $('#ENTER_ITEM').text('Edit');
+          $('.AddMode').show();
+          $('.EditMode').show();
+          $('.EditModeBtn').show();
+          $('.EditModeText').hide();
+          $('.AddModeText').hide();
+          $('.AddModeBtn').hide();
+          $('.AddModeBtnText').hide();
+          $('.DeleteMode').hide();
+          $('.EditModeBtnText').hide();
+          $('.DeleteModeText').hide();
+
+          
+
+          var table = $('#tbl_itemlist').DataTable();
+          var row = line - 1;
+          var data = table.row(row).data();
+          var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+          $('input[name="txt_lineno"]').val(data[0]);
+          $('input[name="txt_itemcode"]').val(data[1]);
+          $('input[name="txt_partno"]').val(data[2]);
+          $('input[name="txt_serialno"]').val(data[3]);
+          $('input[name="txt_tagno"]').val(data[4]);
+          $('input[name="txt_itemdesc"]').val(data[5]);
+          $('input[name="txt_qty"]').val(data[6]);
+          $('select[name="select_unit"]').val(data[7]).trigger('change');
+          $('input[name="txt_unitcost"]').val(data[9]);
+          //$('input[name="txt_cost"]').val(data[7]);
+          //$('input[name="txt_disc"]').val(data[8]);
+          // $('input[name="txt_lineamt"]').val(data[9]);
+          // $('input[name="txt_netprice"]').val(data[10]);
+          // $('select[name="select_vat"]').val(data[11]).trigger('change');
+          // $('input[name="txt_vatamt"]').val(data[12]);
+          $('#enteritem-modal').modal('toggle');
+
+          //console.log(data);
+        }
+         
       }
 
       function EnterItem_Delete(line)
       {
-        $('#ENTER_ITEM').text('Delete');
+        $('#ENTER_ITEM').text('Delete Text');
         $('.AddMode').hide();
         $('.AddModeBtn').hide();
+        $('.AddModeText').hide();
+        $('.AddModeBtnText').hide();
         $('.EditMode').hide();
+        $('EditModeText').hide();
         $('.EditModeBtn').hide();
+        $('.EditModeBtnText').hide();
         $('.DeleteMode').show();
 
         $('#enteritem-modal').modal('toggle');
       }
 
-      function set_tbl_itemlist(type)
+      function set_tbl_itemlist(type, typeitem)
       {
         var table = $('#tbl_itemlist').DataTable();
 
-        var line = $('input[name="txt_lineno"]').val();
-        var item_code = $('input[name="txt_itemcode"]').val();
-        var part_no = $('input[name="txt_partno"]').val();
-        var serial_no = $('input[name="txt_serialno"]').val();
-        var tag_no = $('input[name="txt_tagno"]').val();
-        var item_desc = $('input[name="txt_itemdesc"]').val();
-        var qty = $('input[name="txt_qty"]').val();
-        var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
-        var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
-        // var cost_price = $('input[name="txt_cost"]').val();
-        // var disc_amnt = $('input[name="txt_disc"]').val();
-        // var line_amnt = $('input[name="txt_lineamt"]').val();
-        // var net_price = $('input[name="txt_netprice"]').val();
-        // var line_vat = $('select[name="select_vat"]').select2('data')[0].id;
-        // var vat_amt = $('input[name="txt_vatamt"]').val();
-        var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+        //SET TABLE ITEMLIST FOR ITEM
+        if(typeitem == 'item')
+        {
+          var line = $('input[name="txt_lineno"]').val();
+          var item_code = $('input[name="txt_itemcode"]').val();
+          var part_no = $('input[name="txt_partno"]').val();
+          var serial_no = $('input[name="txt_serialno"]').val();
+          var tag_no = $('input[name="txt_tagno"]').val();
+          var item_desc = $('input[name="txt_itemdesc"]').val();
+          var qty = $('input[name="txt_qty"]').val();
+          var unit_code = $('select[name="select_unit"]').select2('data')[0].id;
+          var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
+          var unit_cost = $('input[name="txt_unitcost"]').val();
+          // var cost_price = $('input[name="txt_cost"]').val();
+          // var disc_amnt = $('input[name="txt_disc"]').val();
+          // var line_amnt = $('input[name="txt_lineamt"]').val();
+          // var net_price = $('input[name="txt_netprice"]').val();
+          // var line_vat = $('select[name="select_vat"]').select2('data')[0].id;
+          // var vat_amt = $('input[name="txt_vatamt"]').val();
+          var buttons = '<center>' +
+                            '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
-            '</center>';
+                        '</center>';
 
-        if($('#ENTER_ITEM').text() == 'Add')
-        {
-
-        table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
-
-        }
-        else if($('#ENTER_ITEM').text() == 'Edit')
-        {
-          table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, buttons]).draw();
-        }
-        else // remove item
-        {
-          table.row(selectedRow).remove().draw();
-          
-          var i;
-          var r = 1;
-
-          for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+          if($('#ENTER_ITEM').text() == 'Add')
           {
-            table.cell({row:i, column:0}).data(r);
-            r++;
+          table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, unit_cost, buttons]).draw();
+          }
+          else if($('#ENTER_ITEM').text() == 'Edit')
+          {
+            table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, unit_cost, buttons]).draw();
+          }
+          else // remove item
+          {
+            table.row(selectedRow).remove().draw();
+            
+            var i;
+            var r = 1;
+
+            for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+            {
+              table.cell({row:i, column:0}).data(r);
+              r++;
+            }
+            alert('Successfully deleted.');
           }
 
-          alert('Successfully deleted.');
+          // total_amount();
+          clear();
+
+          if(type == 'sc-item') // save and close
+          {
+              $('#enteritem-modal').modal('toggle');
+          }
+          else
+          {
+              $('#enteritem-modal').modal('toggle');
+              $('#itemsearch-modal').modal('show');
+          }
         }
 
-        // total_amount();
-        clear();
+        //SET TABLE LIST FOR TEXT-ITEM
+        else if(typeitem == 'text-item')
+        {
+          var line = $('input[name="txt_lineno_text"]').val();
+          var item_code = $('input[name="txt_itemcode_text"]').val();
+          var part_no = $('input[name="txt_partno_text"]').val();
+          var serial_no = $('input[name="txt_serialno_text"]').val();
+          var tag_no = $('input[name="txt_tagno_text"]').val();
+          var item_desc = $('textarea[name="txt_description_text"]').val();
+          var qty = $('input[name="txt_qty_text"]').val();
+          var unit_code = $('select[name="unit_desc_text"]').select2('data')[0].id;
+          var unit_desc = $('select[name="unit_desc_text"]').select2('data')[0].text;
+          var unit_cost = $('input[name="txt_unitcost_text"]').val();
+          // var cost_price = $('input[name="txt_cost"]').val();
+          // var disc_amnt = $('input[name="txt_disc"]').val();
+          // var line_amnt = $('input[name="txt_lineamt"]').val();
+          // var net_price = $('input[name="txt_netprice"]').val();
+          // var line_vat = $('select[name="select_vat"]').select2('data')[0].id;
+          // var vat_amt = $('input[name="txt_vatamt"]').val();
+          console.log(unit_code);
+          console.log(unit_desc);
 
-        if(type == 'sc') // save and close
-        {
-            $('#enteritem-modal').modal('toggle');
+          var buttons = '<center>' +
+                          '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\', \''+item_code+'\');"></i></a>&nbsp;' +
+                          '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\', \''+item_code+'\');"></i></a>' +
+                        '</center>';
+
+          if($('#ENTER_ITEM').text() == 'Add Text')
+          {
+          table.row.add([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, unit_cost, buttons]).draw();
+          }
+          else if($('#ENTER_ITEM').text() == 'Edit Text')
+          {
+            table.row(selectedRow).data([line, item_code, part_no, serial_no, tag_no, item_desc, qty, unit_code, unit_desc, unit_cost, buttons]).draw();
+          }
+          // else // remove item
+          // {
+          //   table.row(selectedRow).remove().draw();
+            
+          //   var i;
+          //   var r = 1;
+
+          //   for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+          //   {
+          //     table.cell({row:i, column:0}).data(r);
+          //     r++;
+          //   }
+          //   alert('Successfully deleted.');
+          // }
+
+
+          // total_amount();
+          clear();
+
+          if(type == 'sc-textitem') // save and close
+          {
+              $('#enteritem-modal').modal('toggle');
+          }
+          else
+          {
+              let line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+              $('input[name="txt_lineno_text"]').val(line);
+              $('input[name="txt_itemcode_text"]').val('TEXT-ITEM');
+          }
         }
-        else
-        {
+        else if(typeitem == 'remove-item')
+          {
+            table.row(selectedRow).remove().draw();
+                
+            var i;
+            var r = 1;
+      
+            for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+            {
+              table.cell({row:i, column:0}).data(r);
+               r++;
+            }
+      
+            alert('Successfully deleted.');
             $('#enteritem-modal').modal('toggle');
-            $('#itemsearch-modal').modal('show');
-        }
+          }
+          else
+          {
+            console.log('fail');
+          }
+        
       }
 
 
@@ -686,6 +974,15 @@
         // $('input[name="txt_vatamt"]').val('0.00');
         // $('input[name="txt_netprice"]').val('0.00');
 
+        $('input[name="txt_lineno_text"]').val('');
+        $('input[name="txt_itemcode_text"]').val('');
+        $('input[name="txt_partno_text"]').val('');
+        $('input[name="txt_serialno_text"]').val('');
+        $('input[name="txt_tagno_text"]').val('');
+        $('textarea[name="txt_description_text"]').val('');
+        $('input[name="txt_qty_text"]').val('0');
+        $('input[name="txt_unitcost_text"]').val('0');
+        $('select[name="unit_desc_text"]').val('').trigger('change');
       }
 
       function Save()
@@ -703,6 +1000,7 @@
                       reference: $('input[name="txt_reference"]').val(),
                       ics_no: $('input[name="txt_ics_no"]').val(),
                       personnel: $('select[name="select_personnel"]').select2('data')[0].id,
+                      desig: $('input[name="select_receivedbydesig"]').val(),
                       ris_code: riscode,
                    };
 
@@ -742,6 +1040,7 @@
                       reference: $('input[name="txt_reference"]').val(),
                       ics_no: $('input[name="txt_ics_no"]').val(),
                       personnel: $('select[name="select_personnel"]').select2('data')[0].id,
+                      desig: $('input[name="select_receivedbydesig"]').val()
                    };
 
            $.ajax({
@@ -799,9 +1098,21 @@
                 {
                   loadedItemsFromRIS = data[0];
                   dataar = data[0];
-
+                  console.log(data[0]);
+                  console.log(data[1]);
+                  console.log(data[2]);
                   for(var i = 0; i < dataar.length; i++)
                   {
+                    loadedPrice = dataar[i].price;
+                    if(loadedPrice == null){
+                      priceVal = 0;
+                    }
+                    else
+                    {
+                      priceVal = dataar[i].price;
+                    }
+                    var price = priceVal;
+                    var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
                     tbl_risitemlist.row.add(['<input type="checkbox" id="chk_risitems" class="chk_risitems" value="'+dataar[i].ln_num+'">',
                                              dataar[i].ln_num, 
                                              dataar[i].item_code,
@@ -811,12 +1122,14 @@
                                              dataar[i].item_desc,
                                              dataar[i].issued_qty,
                                              dataar[i].unit_code,
-                                             dataar[i].unit_desc
+                                             dataar[i].unit_desc,
+                                             price
                                             ]).draw();
                   }
 
                   $('select[name="select_costcenter"]').val(data[1]).trigger('change');
                   $('select[name=select_personnel]').val($('[name=select_ris]').find('option:selected').attr('personneltoreceive')).trigger('change');
+                  $('input[name="select_receivedbydesig"]').val(data[2]);
 
                 }
 
@@ -848,11 +1161,21 @@
             loadedItemsFromRIS.forEach(function (a, b, c) {
                 if(a.ln_num == chk_risitems[i].value)
                 {
-
-                  tbl_itemlist.row.add([a.ln_num, a.item_code, a.part_no, a.serial_no, a.tag_no, a.item_desc, a.issued_qty, a.unit_code, a.unit_desc, '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+a.ln_num+'\');"></i></a>&nbsp;' +
-                            '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+a.ln_num+'\');"></i></a>' +
-            '</center>']).draw();
+                   loadedPrice = a.price;
+                    if(loadedPrice == null){
+                      priceVal = 0;
+                    }
+                    else
+                    {
+                      priceVal = a.price;
+                    }
+                    var price = priceVal;
+                  var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
+                  tbl_itemlist.row.add([line, a.item_code, a.part_no, a.serial_no, a.tag_no, a.item_desc, a.issued_qty, a.unit_code, a.unit_desc,price, 
+                  '<center>' +
+                    '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+                    '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
+                  '</center>']).draw();
                 }
             });
           }

@@ -32,13 +32,14 @@ class I_ICSController extends Controller
             $costcenter = Core::getAll('rssys.m08');
             $vat = Core::getAll('rssys.vat');
             $x08 = Core::getAll('rssys.x08');
+            $are_position = Core::getAll('rssys.are_position');
             $isnew = true;
 
             $disp_items = Inventory::getItemSearch();
 
             $ris_approved = Inventory::getRISFromICS();
 
-            return view('inventory.ics.ics-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'x08', 'ris_approved', 'isnew'));
+            return view('inventory.ics.ics-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'x08', 'ris_approved', 'isnew', 'are_position'));
         }
         else if($request->isMethod('post'))
         {
@@ -57,6 +58,7 @@ class I_ICSController extends Controller
             $costcenter = $request->costcenter;
             $ics_no = $request->ics_no;
             $personnel = $request->personnel;
+            $designation = $request->desig;
             //$stk_ref = $this->stk_trns_type."#".$code;
             $purc_ord = $request->ris_code;
             
@@ -71,7 +73,8 @@ class I_ICSController extends Controller
                      'recipient' => strtoupper(Session::get('_user')['id']),
                      't_date' => $datetime->toDateString(),
                      't_time' => $datetime->toTimeString(),
-                     'purc_ord' => $purc_ord
+                     'purc_ord' => $purc_ord,
+                     'are_receivebydesig' => $designation,
                      // 'branch' => $branch
                     ];
 
@@ -89,7 +92,8 @@ class I_ICSController extends Controller
                               'item_desc' => $tb[5], 
                               'recv_qty' => $tb[6], 
                               // 'issued_qty' => $tb[4], 
-                              'unit' => $tb[7] 
+                              'unit' => $tb[7],
+                              'price' => $tb[9] 
                               // 'price' => $tb[7], 
                               // 'discount' => $tb[8], 
                               // 'ln_amnt' => $tb[9],
@@ -150,6 +154,7 @@ class I_ICSController extends Controller
 
       if($request->isMethod('get')) // for entry
       {
+
           $isnew = false;
           $stock_loc = Core::getAll('rssys.whouse');
           $branch = Core::getAll('rssys.branch');
@@ -158,8 +163,8 @@ class I_ICSController extends Controller
           $vat = Core::getAll('rssys.vat');
     
           $disp_items = Inventory::getItemSearch();
-    
-          $rechdr = Inventory::getICSHeader($code);
+          $are_position = Core::getAll('rssys.are_position');
+          $rechdr = Inventory::getICSHeader($code); 
           $reclne = Inventory::getICSLine($code);
           //$grandtotal = Inventory::getTotalAmtRIS($code);
           $ris_approved = Inventory::getRISFromICS();
@@ -167,7 +172,7 @@ class I_ICSController extends Controller
     
           //return view('inventory.ris.ris-edit', compact('rechdr', 'reclne', 'stock_loc', 'branch', 'itemunit', 'costcenter', 'vat', 'disp_items', 'grandtotal'));
 
-          return view('inventory.ics.ics-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'x08', 'ris_approved', 'isnew', 'rechdr', 'reclne'));
+          return view('inventory.ics.ics-entry', compact('stock_loc', 'branch', 'disp_items', 'itemunit', 'costcenter', 'vat', 'x08', 'ris_approved', 'isnew', 'rechdr', 'reclne', 'are_position'));
       }
       elseif($request->isMethod('post'))
       {
@@ -186,6 +191,7 @@ class I_ICSController extends Controller
           $ics_no = $request->ics_no;
           $personnel = $request->personnel;
           $purc_ord = $request->ris_no;
+          $designation = $request->desig;
           //$stk_ref = $this->stk_trns_type."#".$code;
             
           $data = ['_reference' => $reference, 
@@ -197,7 +203,8 @@ class I_ICSController extends Controller
                    'recipient' => strtoupper(Session::get('_user')['id']),
                    't_date' => $datetime->toDateString(),
                    't_time' => $datetime->toTimeString(),
-                   'purc_ord' => $purc_ord
+                   'purc_ord' => $purc_ord,
+                   'are_receivebydesig' => $designation
                    // 'branch' => $branch
                   ];
 
@@ -218,7 +225,9 @@ class I_ICSController extends Controller
                               'item_desc' => $tb[5], 
                               'recv_qty' => $tb[6], 
                               // 'issued_qty' => $tb[4], 
-                              'unit' => $tb[7] 
+                              'unit' => $tb[7],
+                              'price' => $tb[9]
+
                               // 'price' => $tb[7], 
                               // 'discount' => $tb[8], 
                               // 'ln_amnt' => $tb[9],
@@ -302,9 +311,8 @@ class I_ICSController extends Controller
     {
        $ris_data = Inventory::getRISLineFromICS($ris_code);
        $cc_code = Inventory::getRISOffice($ris_code);
-
-       $data = array($ris_data, $cc_code->cc_code);
-
+       $rechdr = Inventory::getHeaders($ris_code);
+       $data = array($ris_data, $cc_code->cc_code, $rechdr->are_receivebydesig);
        return $data;
     }
 }

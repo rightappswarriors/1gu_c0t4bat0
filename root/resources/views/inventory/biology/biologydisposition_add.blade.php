@@ -34,6 +34,7 @@
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
           </div>
         </div>
+
         <!-- /.box-header -->
         <form id="HeaderForm" data-parsley-validate novalidate>
         <div class="box-body" style="">
@@ -194,7 +195,6 @@
                   @if(!$isnew)
                   @foreach($bioln as $rl)
                      <tr>
-                      
                        <td>{{$rl->ln_num}}</td>
                        <td>{{$rl->date}}</td> 
                        <td>{{$rl->item_code}}</td> 
@@ -309,24 +309,26 @@
                         </div>
                         <div class="row">
                           <div class="col-sm-6">
-                            <label>Date <span style="color:red"><strong>*</strong></span></label>
-                            <div class="input-group">
-                              <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                              </div>
-                              <input  value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
+                            <div class="form-group">
+                              <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
+                                <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
+                                <span id="limit2" style="color: red; font-size: 11px;"></span>
                             </div>
                           </div>
                           <div class="col-sm-6">
                             <div class="form-group">
                               <label>Number Disposed of <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" >
+                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0">
+                                <span id="limit" style="color: red; font-size: 11px;"></span>
                             </div>
                           </div>
                           <div class="col-sm-6">
-                            <div class="form-group">
-                              <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
+                            <label>Date <span style="color:red"><strong>*</strong></span></label>
+                            <div class="input-group">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
                             </div>
                           </div>
                         </div>
@@ -425,6 +427,7 @@
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                      
                     </div>
+                    
                   </div>
                   <!-- /.modal-content -->
                 </div>
@@ -433,9 +436,8 @@
               </div>
               <!-- End Modal -->
               <!-- Add item(s) from ACQUISITION -->  
-
     <script>
-
+    $('#alert-well').hide();
    // Fix modal scroll disabled.
     $('body').on('hidden.bs.modal', function () {
      if($('.modal.in').length > 0)
@@ -468,8 +470,6 @@
         ]
       } );
       } );
-
-
 
       function EnterItem_Add(code)
       {
@@ -510,7 +510,9 @@
           var row = line - 1;
           var data = table.row(row).data();
           var itemcode = data[2];
-         
+          var max_num = 0;
+          var code = $('input[name="txt_code"]').val();
+
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_partno"]').val(data[3]);
@@ -520,20 +522,31 @@
           $('input[name="txt_nature"]').val(data[7]);
           $('input[name="txt_remarks"]').val(data[8]);
           $('input[name="txt_off"]').val(data[6]);
-
+          console.log(itemcode);
+          console.log(code);
           $.ajax({
              url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
              method: 'GET',
              success : function(data)
              {
+                var max = data[0].qty_onhand_su;
+                var maxs = parseInt(max);
                 if(data.length > 0){
-                  var max = data[0].qty_onhand_su;
+                  $("#limit").text('max');
                   $("input[name='txt_off']").attr({
                      "max" : max,        // substitute your own
                   });
+
+                  $("input[name='txt_qty']").attr({
+                     "max" : max,        // substitute your own
+                  });
+                  $("#limit").text("You Can Only Dispose " + maxs + " Animals");
+                  $("#limit2").text("You Can Only Dispose " + maxs + " Animals");
                 }
              }
            });
+
+
 
           $('#enteritem-modal').modal('toggle');
 
@@ -573,9 +586,9 @@
         var remarks = $('input[name="txt_remarks"]').val();
         var offspring = $('input[name="txt_off"]').val();
         var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
-              '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
-            '</center>';
+                        '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+                        '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
+                      '</center>';
 
         if($('#ENTER_ITEM').text() == 'Add')
         {
@@ -721,6 +734,8 @@
 
        function Save()
       {
+
+
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
 
         if($('#HeaderForm').parsley().validate()) // check required fields of the header
@@ -827,6 +842,10 @@
 
         $('input[name="txt_grandtotalamt"]').val(total_amt.toFixed(2));
 
+      }
+      function alert()
+      {
+        $('.toast').toast('show')
       }
 
     </script>
