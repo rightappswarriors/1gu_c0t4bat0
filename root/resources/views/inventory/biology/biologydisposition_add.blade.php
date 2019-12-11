@@ -34,6 +34,7 @@
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
           </div>
         </div>
+
         <!-- /.box-header -->
         <form id="HeaderForm" data-parsley-validate novalidate>
         <div class="box-body" style="">
@@ -183,7 +184,7 @@
                   <th>Property No.</th>
                   <th>Description</th>
                   <th>Number Disposed Of</th>
-                  <th>Number of Disposed Offspring</th>
+                  {{-- <th>Number of Disposed Offspring</th> --}}
                   <th>Nature Of Disposition</th>
                   <th>Remarks</th>
                   <th>Actions</th>
@@ -194,14 +195,13 @@
                   @if(!$isnew)
                   @foreach($bioln as $rl)
                      <tr>
-                      
                        <td>{{$rl->ln_num}}</td>
                        <td>{{$rl->date}}</td> 
                        <td>{{$rl->item_code}}</td> 
                        <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
                        <td>{{$rl->numberofdisposition}}</td>
-                       <td>{{$rl->numberofoffspring}}</td>
+                       {{-- <td>{{$rl->numberofoffspring}}</td> --}}
                        <td>{{$rl->natureofdisposition}}</td>
                        <td>{{$rl->remarks}}</td>
                        <td style="white-space: nowrap;"><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
@@ -308,25 +308,33 @@
                           </div>
                         </div>
                         <div class="row">
+                          {{-- <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
+                                <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
+                                <span id="limit2" style="color: red; font-size: 11px;"></span>
+                            </div>
+                          </div> --}}
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>Number Disposed of <span style="color:red"><strong>*</strong></span></label>
+                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0">
+                                <span id="limit" style="color: red; font-size: 11px;"></span>
+                            </div>
+                          </div>
                           <div class="col-sm-6">
                             <label>Date <span style="color:red"><strong>*</strong></span></label>
                             <div class="input-group">
                               <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                               </div>
-                              <input  value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
+                              <input value="{{date('Y-m-d',strtotime('now'))}}" name="txt_date" type="date" class="form-control">
                             </div>
                           </div>
-                          <div class="col-sm-6">
-                            <div class="form-group">
-                              <label>Number Disposed of <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0" >
-                            </div>
-                          </div>
-                          <div class="col-sm-6">
-                            <div class="form-group">
-                              <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
-                                <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
+                          <div class="col-sm-6 hidden">
+                            <label>Maximum <span style="color:red"><strong>*</strong></span></label>
+                            <div class="input-group">
+                              <input name="txt_max" type="number" class="form-control">
                             </div>
                           </div>
                         </div>
@@ -425,6 +433,7 @@
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                      
                     </div>
+                    
                   </div>
                   <!-- /.modal-content -->
                 </div>
@@ -433,9 +442,8 @@
               </div>
               <!-- End Modal -->
               <!-- Add item(s) from ACQUISITION -->  
-
     <script>
-
+    $('#alert-well').hide();
    // Fix modal scroll disabled.
     $('body').on('hidden.bs.modal', function () {
      if($('.modal.in').length > 0)
@@ -468,8 +476,6 @@
         ]
       } );
       } );
-
-
 
       function EnterItem_Add(code)
       {
@@ -510,7 +516,9 @@
           var row = line - 1;
           var data = table.row(row).data();
           var itemcode = data[2];
-         
+          var max_num = 0;
+          var code = $('input[name="txt_code"]').val();
+
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_partno"]').val(data[3]);
@@ -520,20 +528,29 @@
           $('input[name="txt_nature"]').val(data[7]);
           $('input[name="txt_remarks"]').val(data[8]);
           $('input[name="txt_off"]').val(data[6]);
-
           $.ajax({
              url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
              method: 'GET',
              success : function(data)
              {
+                var max = data[0].qty_onhand_su;
+                var maxs = parseInt(max);
                 if(data.length > 0){
-                  var max = data[0].qty_onhand_su;
                   $("input[name='txt_off']").attr({
                      "max" : max,        // substitute your own
                   });
+
+                  $("input[name='txt_qty']").attr({
+                     "max" : max,        // substitute your own
+                  });
+                  // $("#limit").text("You Can Only Dispose " + maxs + " Animals");
+                  // $("#limit2").text("You Can Only Dispose " + maxs + " Animals");
+                  var sample = $('input[name="txt_max"]').val(maxs);
                 }
              }
            });
+
+
 
           $('#enteritem-modal').modal('toggle');
 
@@ -559,63 +576,62 @@
       {
         if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
         {
+          var max = $('input[name="txt_max"]').val();
+          var qty = $('input[name="txt_qty"]').val();
+          var table = $('#tbl_itemlist').DataTable();
+          var line = $('input[name="txt_lineno"]').val();
+          var item_code = $('input[name="txt_itemcode"]').val();
+          var part_no = $('input[name="txt_partno"]').val();
+          var item_desc = $('input[name="txt_itemdesc"]').val();
+          var date = $('input[name="txt_date"]').val();
+          var nature = $('input[name="txt_nature"]').val();
+          var remarks = $('input[name="txt_remarks"]').val();
+          var offspring = $('input[name="txt_off"]').val();
+          var buttons = '<center>' +
+                          '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+                          '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
+                        '</center>';
 
-        var table = $('#tbl_itemlist').DataTable();
-
-        
-        var line = $('input[name="txt_lineno"]').val();
-        var item_code = $('input[name="txt_itemcode"]').val();
-        var part_no = $('input[name="txt_partno"]').val();
-        var item_desc = $('input[name="txt_itemdesc"]').val();
-        var qty = $('input[name="txt_qty"]').val();
-        var date = $('input[name="txt_date"]').val();
-        var nature = $('input[name="txt_nature"]').val();
-        var remarks = $('input[name="txt_remarks"]').val();
-        var offspring = $('input[name="txt_off"]').val();
-        var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
-              '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
-            '</center>';
-
-        if($('#ENTER_ITEM').text() == 'Add')
-        {
-
-        table.row.add([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
-
-        }
-        else if($('#ENTER_ITEM').text() == 'Edit')
-        {
-          table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
-        }
-        else // remove item
-        {
-          table.row(selectedRow).remove().draw();
-          
-          var i;
-          var r = 1;
-
-          for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+          if($('#ENTER_ITEM').text() == 'Add')
           {
-            table.cell({row:i, column:0}).data(r);
-            r++;
+
+            // table.row.add([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();  
+            table.row.add([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+          }
+          else if($('#ENTER_ITEM').text() == 'Edit')
+          {
+            // table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
+            table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+          }
+          else // remove item
+          {
+            table.row(selectedRow).remove().draw();
+            
+            var i;
+            var r = 1;
+
+            for(i = 0; i < $('#tbl_itemlist').DataTable().rows().count(); i ++)
+            {
+              table.cell({row:i, column:0}).data(r);
+              r++;
+            }
+
+            alert('Successfully deleted.');
           }
 
-          alert('Successfully deleted.');
-        }
+          total_amount();
+          clear();
 
-        total_amount();
-        clear();
-
-        if(type == 'sc') // save and close
-        {
-            $('#enteritem-modal').modal('toggle');
+          if(type == 'sc') // save and close
+          {
+              $('#enteritem-modal').modal('toggle');
+          }
+          else
+          {
+              $('#enteritem-modal').modal('toggle');
+              $('#itemsearch-modal').modal('show');
+          }
         }
-        else
-        {
-            $('#enteritem-modal').modal('toggle');
-            $('#itemsearch-modal').modal('show');
-        }
-      }
       }
 
       function clear()
@@ -709,7 +725,7 @@
                                   '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                                   '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+a.ln_num+'\');"></i></a>' +
                                 '</center>';
-                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, null, null, buttons]).draw();
+                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, null, buttons]).draw();
                 }
             });
           }
@@ -721,6 +737,8 @@
 
        function Save()
       {
+
+
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
 
         if($('#HeaderForm').parsley().validate()) // check required fields of the header

@@ -25,7 +25,7 @@
         <form id="HeaderForm" data-parsley-validate novalidate>
         <div class="box-body" style="">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Purchase Order No</label>
                 @if($isnew)
@@ -35,7 +35,7 @@
                 @endif
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Purchase Date</label>
                 <div class="input-group date">
@@ -51,7 +51,7 @@
                 <span id="validate_invoicedt"></span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Office</label>
                   @if($isnew)
@@ -76,7 +76,40 @@
                   <span id="validate_office"></span>
               </div>
             </div>
-            <div class="col-md-3">
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Reference</label>
+                @if($isnew)
+                  <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_reference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
+                @else
+                  <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" readonly="">
+                @endif
+                <span id="validate_reference"></span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>RIS NO</label>
+                @if($isnew)
+                  <input type="text" class="form-control" name="txt_ris_no">
+                @else
+                  <input type="text" class="form-control" name="txt_ris_no" value="{{$rechdr->ris_no}}" readonly="">
+                @endif  
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>SAI NO</label>
+                @if($isnew)
+                  <input type="text" class="form-control" name="txt_sai_no">
+                @else
+                  <input type="text" class="form-control" name="txt_sai_no" value="{{$rechdr->sai_no}}" readonly="">
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Stock Location From</label>
                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_stocklocation" data-parsley-errors-container="#validate_stockloc" data-parsley-required-message="<strong>Stock Location From is required.</strong>" required>
@@ -95,40 +128,7 @@
                 <span id="validate_stockloc"></span>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Reference</label>
-                @if($isnew)
-                  <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_reference" data-parsley-required-message="<strong>Reference is required.</strong>" required>
-                @else
-                  <input type="text" class="form-control" name="txt_reference" value="{{$rechdr->_reference}}" readonly="">
-                @endif
-                <span id="validate_reference"></span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>RIS NO</label>
-                @if($isnew)
-                  <input type="text" class="form-control" name="txt_ris_no">
-                @else
-                  <input type="text" class="form-control" name="txt_ris_no" value="{{$rechdr->ris_no}}" readonly="">
-                @endif  
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>SAI NO</label>
-                @if($isnew)
-                  <input type="text" class="form-control" name="txt_sai_no">
-                @else
-                  <input type="text" class="form-control" name="txt_sai_no" value="{{$rechdr->sai_no}}" readonly="">
-                @endif
-              </div>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Personnel to Receive</label>
                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_personnel" data-parsley-errors-container="#validate_personnel" data-parsley-required-message="<strong>Personnel to receive is required.</strong>" required>
@@ -140,8 +140,8 @@
                   @else
                     <option value="">-- Select Personnel to Receive --</option>
                     @foreach($x08 as $x8)
-                      @if($rechdr->personnel == $x8->uid)
-                        <option selected="selected" value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @if($rechdr->are_receivedby == $x8->uid)
+                        <option selected="selected" value="{{$x8->uid}}">{{ $rechdr->are_receivedby }}</option>
                       @else  
                         <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
                       @endif
@@ -149,6 +149,24 @@
                   @endif
                 </select>
                 <span id="validate_personnel"></span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Personnel to Receive Designation</label>
+
+                @if($isnew)
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @else
+                  <input list="select_receivedbydesig" name="select_receivedbydesig" value="{{$rechdr->are_receivebydesig}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfromdesig" data-parsley-required-message="<strong>Received From Designation is required.</strong>" required>
+                @endif
+
+                <datalist id="select_receivedbydesig">
+                  @foreach($are_position as $ap)
+                    <option value="{{$ap->name}}">
+                  @endforeach
+                </datalist>
+                <span id="validate_selectreceivedfromdesig"></span>
               </div>
             </div>
           </div>
@@ -763,6 +781,7 @@
                            reference: $('input[name="txt_reference"]').val(),
                            ris_no: $('input[name="txt_ris_no"]').val(),
                            sai_no: $('input[name="txt_sai_no"]').val(),
+                           receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                         };
 
              $.ajax({
@@ -812,6 +831,7 @@
                            reference: $('input[name="txt_reference"]').val(),
                            ris_no: $('input[name="txt_ris_no"]').val(),
                            sai_no: $('input[name="txt_sai_no"]').val(),
+                           receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                         };
 
              $.ajax({

@@ -821,7 +821,7 @@ class Inventory extends Model
 
 		// $sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc as acqdesc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.item_desc as offdesc, offspring.numberofoffspring as offspringqty, offspring.date as offdate, offspring.property_no as offprono, disposition.date as dispodate, disposition.property_no as dispoprono, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.fund = '$selected_fund' AND offhd.kindofanimals = '$select_koa') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.fund = '$selected_fund' AND dispohd.kindofanimals = '$select_koa') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.fund = '$selected_fund' AND acqhd.kindofanimals = '$select_koa'";
 
-		$sql = "SELECT acqln.date, acqln.item_code, acqln.item_desc as acqdesc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.item_desc as offdesc, offspring.numberofoffspring as offspringqty, offspring.date as offdate, offspring.property_no as offprono, disposition.date as dispodate, disposition.property_no as dispoprono, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.acq_code = '$selected_code') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.acq_code = '$selected_code') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.code = '$selected_code'";
+		$sql = "SELECT DISTINCT acqln.date, acqln.item_code, acqln.item_desc as acqdesc, acqln.property_no, acqln.qty as acquisitionqty, acqhd.fund, acqhd.kindofanimals, offspring.item_desc as offdesc, offspring.numberofoffspring as offspringqty, offspring.date as offdate, offspring.property_no as offprono, disposition.date as dispodate, disposition.property_no as dispoprono, disposition.numberofdisposition, disposition.natureofdisposition FROM rssys.biology_acquistionln acqln LEFT JOIN rssys.biology_acquisitionhd acqhd ON acqln.code = acqhd.code LEFT JOIN (SELECT DISTINCT * FROM rssys.biology_offspringln offln LEFT JOIN rssys.biology_offspringhd offhd ON offln.code = offhd.code WHERE offhd.acq_code = '$selected_code') offspring ON acqln.item_code = offspring.item_code LEFT JOIN (SELECT DISTINCT * FROM rssys.biology_dispositionln dispoln LEFT JOIN rssys.biology_dispositionhd dispohd ON dispoln.code = dispohd.code WHERE dispohd.acq_code = '$selected_code') disposition ON acqln.item_code = disposition.item_code WHERE acqhd.code = '$selected_code'";
 
 		return DB::select(DB::raw($sql));
 	}
@@ -1150,7 +1150,21 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig, are_receivedby, are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, personnel, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig, are_receivedby, are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	//get RIS and Stock Release header
+	public static function getHeaders($rec_num)
+	{	
+		try 
+		{
+			$sql = 'SELECT are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1256,7 +1270,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, personnel FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, _reference, are_receivebydesig, are_receivedby, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, personnel FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1380,7 +1394,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rec_num, _reference, trnx_date, ics_no, personnel, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, x08.opr_name as nameofpersonnel FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code LEFT JOIN rssys.x08 x8 ON rh.personnel = x8.uid join rssys.x08 on x08.uid = rh.personnel WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rec_num, personnel, _reference, ics_no, trnx_date, ris_no, sai_no, cc_code, whs_code, branch, recipient, are_receivedfrom, are_receivedfromdesig, are_receivedby, are_receivebydesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -1408,13 +1422,7 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, 
-rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, 
-rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc 
-FROM rssys.reclne rl 
-LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code 
-LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code 
-LEFT JOIN rssys.items i ON rl.item_code = i.item_code  WHERE rec_num = \''.$rec_num.'\'';
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\'';
             
             return DB::select(DB::raw($sql));
 		}

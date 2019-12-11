@@ -157,19 +157,25 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Personnel to Received</label>                
-                @if($isnew)
-                  <input list="select_receivedby" name="select_receivedby" style="width: 100%;"  data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Personnel to Received is required.</strong>" required>
-                @else
-                  <input list="select_receivedby" name="select_receivedby" value="{{$rechdr->are_receivedby}}" style="width: 100%;" data-parsley-errors-container="#validate_selectreceivedfrom" data-parsley-required-message="<strong>Personnel to Received is required.</strong>" required>
-                @endif  
-
-                <datalist id="select_receivedby">
-                  @foreach($are_users as $au)
-                    <option value="{{$au->name}}">
-                  @endforeach
-                </datalist>
-                <span id="validate_selectreceivedby"></span>
+                <label>Personnel to Receive</label>
+                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_personnel" data-parsley-errors-container="#validate_personnel" data-parsley-required-message="<strong>Personnel to receive is required.</strong>" required>
+                  @if($isnew)
+                    <option value="" selected="selected">-- Select Personnel to Receive --</option>
+                    @foreach($x08 as $x8)
+                    <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                    @endforeach
+                  @else
+                    <option value="">-- Select Personnel to Receive --</option>
+                    @foreach($x08 as $x8)
+                      @if($rechdr->are_receivedby == $x8->uid)
+                        <option selected="selected" value="{{$x8->uid}}">{{ $rechdr->are_receivedby }}</option>
+                      @else  
+                        <option value="{{$x8->uid}}">{{$x8->opr_name}}</option>
+                      @endif
+                    @endforeach
+                  @endif
+                </select>
+                <span id="validate_personnel"></span>
               </div>
             </div>
             <div class="col-md-3">
@@ -676,7 +682,7 @@
                       sai_no: $('input[name="txt_sai_no"]').val(),
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
-                      receivedby: $('input[name="select_receivedby"]').val(),
+                      receivedby: $('select[name="select_personnel"]').val(),
                       receivedbydesig: $('input[name="select_receivedbydesig"]').val()
                    };
 
@@ -716,7 +722,7 @@
                       sai_no: $('input[name="txt_sai_no"]').val(),
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
-                      receivedby: $('input[name="select_receivedby"]').val(),
+                      receivedby: $('select[name="select_personnel"]').val(),
                       receivedbydesig: $('input[name="select_receivedbydesig"]').val()
 
                    };
