@@ -970,26 +970,54 @@
      */
     function loadTotal()
     {
-        var tempAmount = 0; 
-        var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+       var total_amt = 0.00;
+       var val = 0.00;
 
 
-        if(amt.length > 0)
-        {
-            for(let i = 0; i < amt.length; i++)
-            {
-                if(amt[i] != null && amt[i] != '')
-                {
-                  tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
-                }
-            }
+       @isset($data[10])
+       @foreach ($data[10] as $p)
+           $('#table_'+'{{$p->subgrpid}}'+'').DataTable().rows().every(function(){
+            $(this.node()).each(function(index, el) {
+
+              val = $(this).find('td [name=txt_amt]').val();
+           
+              if(val != null && val != '')
+              {
+                total_amt += parseFloat(val.replace(/[^0-9.-]+/g,""));
+              }
+             
+            });
+           });
+       @endforeach
+       @endisset
+
+       $('input[name="total_line"]').val(formatNumberToMoney(total_amt));
+
+
+
+
+
+
+        // var tempAmount = 0; 
+        // var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
+
+
+        // if(amt.length > 0)
+        // {
+        //     for(let i = 0; i < amt.length; i++)
+        //     {
+        //         if(amt[i] != null && amt[i] != '')
+        //         {
+        //           tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
+        //         }
+        //     }
             
-            $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
-        }
-        else
-        {
-          $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
-        }  
+        //     $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
+        // }
+        // else
+        // {
+        //   $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
+        // }  
     }
 
 
