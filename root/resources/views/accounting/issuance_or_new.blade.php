@@ -136,7 +136,7 @@
   <script type="text/javascript">
     $("#orFrom").keyup(function(event) {
 
-      let suggestive = $('[name=or_type]').find('option:selected').attr('suggestive');
+      let suggestive = ($('[name=or_type]').find('option:selected').attr('suggestive') - 1);
       if(typeof(suggestive) != 'undefined'){
         $('[name=or_no_to]').val(Number($("#orFrom").val()) + Number(suggestive));
       }

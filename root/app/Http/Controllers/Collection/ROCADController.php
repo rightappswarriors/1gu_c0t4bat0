@@ -17,6 +17,7 @@ class ROCADController extends Controller
 
     public function __construct(){  
         $this->currentDate = Date('Y-m-d');
+        $this->yesterdayDate = Date('Y-m-d',strtotime('-1 days'));
     }
     //
     public function view(){
@@ -32,48 +33,80 @@ class ROCADController extends Controller
     }
 
 
-    public function viewOR(Request $request, $uid){
-    	if(DB::select("SELECT count(*) as counted from rssys.or_issuance left join rssys.x08 on x08.uid = or_issuance.collector where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate')) ")[0]->counted <= 0){
-    		return abort(404);
-    	}
-    	if($request->isMethod('get')){
+    // public function viewOR(Request $request, $uid){
+    // 	if(DB::select("SELECT count(*) as counted from rssys.or_issuance left join rssys.x08 on x08.uid = or_issuance.collector where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate')) ")[0]->counted <= 0){
+    // 		return abort(404);
+    // 	}
+    // 	if($request->isMethod('get')){
     	
-	    	$arrRet = [
-	    		'or_issued' => DB::select("SELECT transid, opr_name, or_code, or_no, or_no_to from rssys.or_issuance join rssys.x08 on x08.uid = or_issuance.collector join rssys.or_types on or_types.or_type = or_issuance.or_type where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate') ) "),
-                'or' => DB::select("SELECT taxtype_id, taxtype_desc, tax_desc from rssys.tax_group groups left join rssys.tax_type types on types.tax_id = groups.tax_id where groups.active = TRUE AND types.active = TRUE"),
-	    		'_ch'=>"OR Issued"
-	    	];
-	    	return view('collection.ROCADor',$arrRet);
+	   //  	$arrRet = [
+	   //  		'or_issued' => DB::select("SELECT transid, opr_name, or_code, or_no, or_no_to from rssys.or_issuance join rssys.x08 on x08.uid = or_issuance.collector join rssys.or_types on or_types.or_type = or_issuance.or_type where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate') ) "),
+    //             'or' => DB::select("SELECT taxtype_id, taxtype_desc, tax_desc from rssys.tax_group groups left join rssys.tax_type types on types.tax_id = groups.tax_id where groups.active = TRUE AND types.active = TRUE"),
+	   //  		'_ch'=>"OR Issued"
+	   //  	];
+	   //  	return view('collection.ROCADor',$arrRet);
 
-    	}
-    	if($request->isMethod('post')){
-            try {
-                $toAddArr = $toDetaild = [];
-                // dd($request->all());
-                if(count($request->amount) == count($request->transid) && count($request->transid) == count($request->or_to)){
-                    foreach ($request->transid as $key => $value) {
-                       $toTotal = 0;
-                       for ($i=0; $i < count($request->ors[$value]); $i++) { 
-                           array_push($toDetaild, ['trans_id' => $value, 'or_to' => $request->or_to[$value][$i], 'amount' => str_replace( ',', '', $request->amount[$value][$i] ), 'or_type' => $request->ors[$value][$i], ]);
-                           $toTotal += str_replace( ',', '', $request->amount[$value][$i] );
-                       }
-                        array_push($toAddArr, ['transid' => $value, 'or_to' => array_sum($request->or_to[$value]), 'amount' => $toTotal, 't_date' => Date('Y-m-d'), 't_time' => Date('H:i:s')]);
-                    }
+    // 	}
+    // 	if($request->isMethod('post')){
+    //         try {
+    //             $toAddArr = $toDetaild = [];
+    //             if(count($request->amount) == count($request->transid) && count($request->transid) == count($request->or_to)){
+    //                 foreach ($request->transid as $key => $value) {
+    //                    $toTotal = 0;
+    //                    for ($i=0; $i < count($request->ors[$value]); $i++) { 
+    //                        array_push($toDetaild, ['trans_id' => $value, 'or_to' => $request->or_to[$value][$i], 'amount' => str_replace( ',', '', $request->amount[$value][$i] ), 'or_type' => $request->ors[$value][$i], ]);
+    //                        $toTotal += str_replace( ',', '', $request->amount[$value][$i] );
+    //                    }
+    //                     array_push($toAddArr, ['transid' => $value, 'or_to' => array_sum($request->or_to[$value]), 'amount' => $toTotal, 't_date' => Date('Y-m-d'), 't_time' => Date('H:i:s')]);
+    //                 }
 
 
-                    if(DB::table('rssys.or_issued')->insert($toAddArr) && DB::table('rssys.or_issued_detailed')->insert($toDetaild)){
-                        return 'done';
-                    }
+    //                 if(DB::table('rssys.or_issued')->insert($toAddArr) && DB::table('rssys.or_issued_detailed')->insert($toDetaild)){
+    //                     return 'done';
+    //                 }
 
-                } else {
-                    return 'Please check other fields for possible unanswered inputs';
-                }
-            } 
-            catch (Exception $e) {
-                return $e;           
+    //             } else {
+    //                 return 'Please check other fields for possible unanswered inputs';
+    //             }
+    //         } 
+    //         catch (Exception $e) {
+    //             return $e;           
+    //         }
+    // 	}
+
+    // }
+
+        public function viewOR(Request $request, $uid){
+
+            if(DB::select("SELECT count(*) as counted from rssys.or_issuance left join rssys.x08 on x08.uid = or_issuance.collector where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate')) ")[0]->counted <= 0){
+                return abort(404);
             }
-    	}
-
+            if($request->isMethod('get')){
+            
+                $arrRet = [
+                    'or_issued' => DB::select("SELECT transid, opr_name, or_code, or_no, or_no_to from rssys.or_issuance join rssys.x08 on x08.uid = or_issuance.collector join rssys.or_types on or_types.or_type = or_issuance.or_type where (t_date = '$this->currentDate' AND or_issuance.collector = '$uid' AND transid NOT IN (SELECT transid from rssys.or_issued where t_date = '$this->currentDate') ) "),
+                    '_ch'=>"OR Issued"
+                ];
+                return view('collection.ROCADor',$arrRet);
+            }
+            if($request->isMethod('post')){
+                try {
+                     $toAddArr = [];
+                    if(count($request->amount) == count($request->transid) && count($request->transid) == count($request->or_to)){
+                        for ($i=0; $i < count($request->amount); $i++) { 
+                            array_push($toAddArr, ['transid' => $request->transid[$i], 'or_to' => $request->or_to[$i], 'amount' => str_replace( ',', '', $request->amount[$i] ), 't_date' => Date('Y-m-d'), 't_time' => Date('H:i:s')]);
+                        }
+                        if(DB::table('rssys.or_issued')->insert($toAddArr)){
+                            return 'done';
+                        }
+                    } else {
+                        return 'Please check other fields for possible unanswered inputs';
+                    }
+                } 
+                catch (Exception $e) {
+                    return $e;           
+                }
+            }
     }
 
     public function viewLiquidate(Request $request){
@@ -179,7 +212,7 @@ class ROCADController extends Controller
         $oldDesc = null;
         if(isset($from) && isset($to)){
             $data = DB::select("SELECT hd.*, lne.*, to_char(hd.trnx_date,'MM/DD/YYYY') as date from rssys.colhdr hd join rssys.collne2 lne on lne.or_code = hd.col_code join rssys.tax_type tax on tax.taxtype_id = lne.payment_id left join rssys.or_types orT on orT.or_type = tax.or_code where orT.hassef = FALSE AND hd.trnx_date between '$from' and '$to'");
-            $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id where tax_group.active = TRUE AND tax_type.active = TRUE GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id order by tax_group.tax_id ASC");
+            $taxData = DB::select("SELECT * from rssys.tax_group join rssys.tax_type on tax_group.tax_id = tax_type.tax_id join rssys.or_types on tax_type.or_code = or_types.or_type where tax_group.active = TRUE AND tax_type.active = TRUE AND hassef = false GROUP BY tax_group.tax_desc, tax_group.active, tax_group.tax_id, tax_type.taxtype_id, or_types.or_type, or_types.or_code order by tax_group.tax_id ASC ");
             if(count($data) <= 0 || count($taxData) <= 0){
                 return abort(404);
             }
@@ -242,13 +275,27 @@ class ROCADController extends Controller
 
     public function rocardDailyUserProcess(Request $request, $uid, $date){
         if(isset($uid) && isset($date)){
-            $data = DB::select("SELECT f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a  join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND (d.t_date = '$date' AND b.date = '$date' AND a.t_date = '$date') ");
+            $dataExtra = $dataFiltered = [];
+            $yesterday = Date('Y-m-d',strtotime('-1 days', strtotime($date)));
+            $data = DB::select("SELECT '1' as today, '' as yesterday, f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND (d.t_date = '$date' AND b.date = '$date' AND a.t_date = '$date') UNION SELECT '' as today, '1' as yesterday, f.or_type as ortype, f.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no issuedfrom, c.or_no_to issuedto, d.or_to as issueduntil, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived from rssys.deposittobank a join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types f on c.or_type = f.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid  where e.uid = '$uid' AND (d.t_date = '$yesterday' AND b.date = '$yesterday' AND a.t_date = '$yesterday')");
             if(count($data) <= 0){
                 abort(404);
             }
+            foreach($data as $d){
+                if($d->today == 1){
+                    $dataExtra['accountableofficer']['name'] = $d->liquidatingofficer;
+                    $dataExtra['accountableofficer']['amount'] = number_format($d->liquidatereceived,2);
+                    $dataExtra['bank']['name'] = $d->depositofficer;
+                    $dataExtra['bank']['amount'] = number_format($d->depossitedamount,2);
+                    $dataExtra['collector']['name'] = $d->collector;
+                    $dataExtra['data'][$d->ortype] = $d->issuedto - (($d->issueduntil - $d->issuedfrom) + $d->issuedfrom);
+                }
+                $dataFiltered[$d->ortype][] = $d;
+            }
             $arrRet = [
-                'data'=>$data,
-                'date' => $date
+                'data'=>$dataFiltered,
+                'date' => $date,
+                'dataExtra' => $dataExtra
             ];
             return view('report.collection.ROCADdailyperuser',$arrRet);
         }

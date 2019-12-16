@@ -340,13 +340,13 @@
                         </a>
                         <ul class="treeview-menu" style="white-space: normal;" id="collection_menu">
                             @if($LA_GRP["C1000001"]["restrict"] == 'Y')
-                            <li><a href="{{ asset('accounting/collection/or_issuance') }}"><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
-                            @endif
-                            @if($LA_GRP["C1000001"]["restrict"] == 'Y')
                             <li><a href="{{ asset('accounting/collection/import') }}"><i class="fa fa-circle-o"></i> Import iTax</a></li>
                             @endif
                             @if($LA_GRP["C1000002"]["restrict"] == 'Y')
                             <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Imported iTax</a></li>
+                            @endif
+                            @if($LA_GRP["C1000001"]["restrict"] == 'Y')
+                            <li><a href="{{ asset('accounting/collection/or_issuance') }}"><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
                             @endif
                            {{--  @if($LA_GRP["C1000003"]["restrict"] == 'Y')
                             <li><a href="#"><i class="fa fa-circle-o"></i> Posting</a></li>
@@ -540,7 +540,7 @@
                                             <i class="fa fa-angle-left pull-right"></i>
                                         </span>
                                         <ul class="treeview-menu">
-                                            <li><a href="{{ url('reports/collection/Real-Property-Tax') }}"><i class="fa fa-circle-o"></i>Daily Collections</a></li>
+                                            <li><a href="{{ url('reports/collection/Real-Property-Tax') }}"><i class="fa fa-circle-o"></i>Daily</a></li>
                                         </ul>
                                     </a>
                                 </li>

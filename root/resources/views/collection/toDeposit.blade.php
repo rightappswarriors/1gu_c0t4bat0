@@ -41,10 +41,10 @@
             		<input required type="text" name="acct" id="acctno" class="form-control" style="text-align: center;">
 
             		<label for="depodate">Date Deposited</label>
-            		<input required type="date" name="dateDep" id="depodate" class="form-control" style="text-align: center;">
+            		<input required type="date" value="{{Date('Y-m-d')}}" name="dateDep" id="depodate" class="form-control" style="text-align: center;">
 
             		<label for="depotime">Time Deposited</label>
-            		<input required type="time" name="timeDep" id="depotime" class="form-control" style="text-align: center;">
+            		<input required type="time" value="{{Date('h:i:s')}}" name="timeDep" id="depotime" class="form-control" style="text-align: center;">
 
 
 

@@ -532,92 +532,92 @@
                     // ROW 1
                     '<div class="row">' +
                       // OR TYPE
-                      '<div class="col-md-4">' +
-                        '<div class="form-group">' +
-                          '<label>OR Type <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" {{--onchange="loadORIssuance()"--}} name="hd_or_typ['+data[i].or_no+']" style="width: 100%;" id="head_or_typ_'+data[i].or_no+'" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_or_typ_'+data[i].or_no+'"" data-parsley-required-message="<strong>OR Type</strong> is required." {{-- required --}}>' +
-                            @isset($or_type)
-                                '<option value="">Select OR Type...</option>' +
-                              @foreach($or_type as $o)
-                                  '<option value="{{$o->or_type}}">{{$o->or_code}}</option>'+
-                              @endforeach
-                            @else
-                              '<option value="">No OR Type registered...</option>' +
-                            @endisset
-                          '</select>' +
-                          '<span id="hd_or_typ_'+data[i].or_no+'"></span>' +
-                        '</div>' +
-                      '</div>' +
+                      // '<div class="col-md-3">' +
+                      //   '<div class="form-group">' +
+                      //     '<label>OR Type <span style="color:red"><strong>*</strong></span></label>' +
+                      //     '<select class="form-control select2 select2-hidden-accessible" {{--onchange="loadORIssuance()"--}} name="hd_or_typ['+data[i].or_no+']" style="width: 100%;" id="head_or_typ_'+data[i].or_no+'" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_or_typ_'+data[i].or_no+'"" data-parsley-required-message="<strong>OR Type</strong> is required." {{-- required --}}>' +
+                      //       @isset($or_type)
+                      //           '<option value="">Select OR Type...</option>' +
+                      //         @foreach($or_type as $o)
+                      //             '<option value="{{$o->or_type}}">{{$o->or_code}}</option>'+
+                      //         @endforeach
+                      //       @else
+                      //         '<option value="">No OR Type registered...</option>' +
+                      //       @endisset
+                      //     '</select>' +
+                      //     '<span id="hd_or_typ_'+data[i].or_no+'"></span>' +
+                      //   '</div>' +
+                      // '</div>' +
                       // OR TYPE
                       // JOURNAL
-                      '<div class="col-md-4">' +
-                        '<div class="form-group">' +
-                          '<label>Journal <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_jr['+data[i].or_no+']" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
-                            @isset($m05)
-                              '<option value="">Select Journal...</option>' +
-                                @foreach($m05 as $s)
-                                    '<option value="{{$s->j_code}}">{{$s->j_desc}}</option>' +
-                                @endforeach
-                            @else
-                              '<option value="">No Journal  registered...</option>' +
-                            @endisset
-                          '</select>' +
-                          '<span id="hd_jr_'+data[i].or_no+'"></span>' +
-                        '</div>' +
-                      '</div>' +
+                      // '<div class="col-md-4">' +
+                      //   '<div class="form-group">' +
+                      //     '<label>Journal <span style="color:red"><strong>*</strong></span></label>' +
+                      //     '<select class="form-control select2 select2-hidden-accessible" name="hd_jr['+data[i].or_no+']" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
+                      //       @isset($m05)
+                      //         '<option value="">Select Journal...</option>' +
+                      //           @foreach($m05 as $s)
+                      //               '<option value="{{$s->j_code}}">{{$s->j_desc}}</option>' +
+                      //           @endforeach
+                      //       @else
+                      //         '<option value="">No Journal  registered...</option>' +
+                      //       @endisset
+                      //     '</select>' +
+                      //     '<span id="hd_jr_'+data[i].or_no+'"></span>' +
+                      //   '</div>' +
+                      // '</div>' +
                       // JOURNAL
                       // FUND
-                      '<div class="col-md-4">' +
-                        '<div class="form-group">' +
-                          '<label>Fund <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_fund['+data[i].or_no+']" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#hd_fd_'+data[i].or_no+'" >' +
-                            @isset($fund)
-                                '<option value="">Select Fund...</option>' +
-                                @foreach($fund as $bp)
-                                  '<option value="{{$bp->fid}}">{{$bp->fdesc}}</option>' +
-                                @endforeach
-                            @else
-                                '<option value="">No Fund registered...</option>' +
-                            @endisset
-                          '</select>' +
-                          '<span id="hd_fd_'+data[i].or_no+'"></span>' +
-                        '</div>' +
-                      '</div>' +
+                      // '<div class="col-md-4">' +
+                      //   '<div class="form-group">' +
+                      //     '<label>Fund <span style="color:red"><strong>*</strong></span></label>' +
+                      //     '<select class="form-control select2 select2-hidden-accessible" name="hd_fund['+data[i].or_no+']" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#hd_fd_'+data[i].or_no+'" >' +
+                      //       @isset($fund)
+                      //           '<option value="">Select Fund...</option>' +
+                      //           @foreach($fund as $bp)
+                      //             '<option value="{{$bp->fid}}">{{$bp->fdesc}}</option>' +
+                      //           @endforeach
+                      //       @else
+                      //           '<option value="">No Fund registered...</option>' +
+                      //       @endisset
+                      //     '</select>' +
+                      //     '<span id="hd_fd_'+data[i].or_no+'"></span>' +
+                      //   '</div>' +
+                      // '</div>' +
                       // FUND
-                    '</div>' +
+                    // '</div>' +//HEHE
                     // ROW 1
                     // ROW 2
-                    '<div class="row">' +
+                    // '<div class="row">' +//HEHE
                       // OR NUMBER
-                      '<div class="col-md-3">' +
+                      '<div class="col-md-4">' +
                         '<div class="form-group">' +
-                          '<label>OR No. <span style="color:red"><strong>*</strong></span></label>' +
+                          '<label>OR No.</label>' +
                           '<input type="text" class="form-control" data-parsley-required-message="<strong>Reference</strong> is required." required value="'+data[i].or_no+'" name="hd_or_num[]" readonly="" or_num="'+data[i].no+'">' +
                         '</div>' +
                       '</div>'+
                       // OR NUMBER
                       // CUSTOMER
-                      '<div class="col-md-3">' +
-                        '<div class="form-group">' +
-                          '<label>Customer <span style="color:red"><strong>*</strong></span></label>' +
-                          // '<input type="text" class="form-control" data-parsley-required-message="<strong>Customer</strong> is required." value="'+(data[i].paid_by != false ? data[i].paid_by : '')+'" name="hd_cust" required>' +
-                          '<select required class="form-control select2 select2-hidden-accessible" name="hd_cust['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Customer</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
-                            @isset($m06)
-                              '<option value="">Select Customer...</option>' +
-                                @foreach($m06 as $x3)
-                                  '<option value="{{$x3->d_code}}" id="cust_{{$x3->d_code}}" cust_name="{{urlencode($x3->d_name)}}">{{$x3->d_code}} {{$x3->d_name}}</option>' +
-                                @endforeach
-                            @else
-                                '<option value="">No Customer registered...</option>' +
-                            @endisset
-                          '</select>' +
-                          '<span id="budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'"></span>' +
-                        '</div>' +
-                      '</div>'+
+                      // '<div class="col-md-3">' +
+                      //   '<div class="form-group">' +
+                      //     '<label>Customer <span style="color:red"><strong>*</strong></span></label>' +
+                      //     // '<input type="text" class="form-control" data-parsley-required-message="<strong>Customer</strong> is required." value="'+(data[i].paid_by != false ? data[i].paid_by : '')+'" name="hd_cust" required>' +
+                      //     '<select required class="form-control select2 select2-hidden-accessible" name="hd_cust['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Customer</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
+                      //       @isset($m06)
+                      //         '<option value="">Select Customer...</option>' +
+                      //           @foreach($m06 as $x3)
+                      //             '<option value="{{$x3->d_code}}" id="cust_{{$x3->d_code}}" cust_name="{{urlencode($x3->d_name)}}">{{$x3->d_code}} {{$x3->d_name}}</option>' +
+                      //           @endforeach
+                      //       @else
+                      //           '<option value="">No Customer registered...</option>' +
+                      //       @endisset
+                      //     '</select>' +
+                      //     '<span id="budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'"></span>' +
+                      //   '</div>' +
+                      // '</div>'+
                       // CUSTOMER
                       // DATE
-                      '<div class="col-md-3">' +
+                      '<div class="col-md-4">' +
                         '<div class="form-group">' +
                           '<label>Date <span style="color:red;"><strong>*</strong></span></label>' +
                           '<div class="input-group date">' +
@@ -630,11 +630,11 @@
                       '</div>'+
                       // DATE
                       // Real property type
-                      '<div class="col-md-3">' +
+                      '<div class="col-md-4">' +
                         '<div class="form-group">' +
-                          '<label>Real Property Class <span style="color:red"><strong>*</strong></span></label>' +
+                          '<label>Real Property Class </label>' +
                           // '<input type="text" class="form-control" data-parsley-required-message="<strong>Customer</strong> is required." value="'+(data[i].paid_by != false ? data[i].paid_by : '')+'" name="hd_cust" required>' +
-                          '<select required class="form-control select2 select2-hidden-accessible" name="hd_real_property['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" data-parsley-required-message="<strong>Real Property Class</strong> is required." data-parsley-errors-container="#budget_hd_cust_'+data[i].or_no+'_'+data[i].no+'" {{-- required --}}>' +
+                          '<select class="form-control select2 select2-hidden-accessible" name="hd_real_property['+data[i].or_no+']" id="hd_cust_'+data[i].or_no+'_'+data[i].no+'" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" leCustomer="'+data[i].paid_by_encode+'" {{-- required --}}>' +
                             @isset($real)
                               '<option value="">Select Real Property Class...</option>' +
                                 @foreach($real as $r)

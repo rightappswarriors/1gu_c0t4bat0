@@ -5,7 +5,7 @@
         ['link'=>'#','desc'=>'Collection','icon'=>'none','st'=>true],
         ['link'=>'#','desc'=>'Daily Collection','icon'=>'none','st'=>true]
     ];
-    $_ch = "Daily Collection"; // Module Name
+    $_ch = (isset($forRPT) ? 'Real Property Tax' : "Daily Collection"); // Module Name
 @endphp
 @section('content')
   @include('layout._contentheader')

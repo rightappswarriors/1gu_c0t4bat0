@@ -44,10 +44,10 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-4 control-label">Tax Group <span class="text-red">*</span></label>
+                                                            <label class="col-sm-4 control-label">Tax Group</label>
                                                             <div class="col-sm-8" style="margin-bottom:10px;">
-                                                                <select name="tax_grp" style="width: 100%;" class="form-control" placeholder="Description" data-parsley-required-message="<strong>Tax Group</strong> is required." required>
-                                                                    <option value="" selected="" hidden disabled>Please Select</option>
+                                                                <select name="tax_grp" style="width: 100%;" class="form-control" placeholder="Description">
+                                                                    <option value="" selected="" hidden disabled>None</option>
                                                                     @isset($tax_group)
                                                                         @foreach($tax_group as $tg)
                                                                         <option value="{{$tg->tax_id}}">{{$tg->tax_desc}}</option>
@@ -157,7 +157,7 @@
             $('input[name="txt_name"]').val('');
             $('input[name="txt_name"]').attr('required', '');
             $('select[name="tax_grp"]').val('');
-            $('select[name="tax_grp"]').attr('required', '');
+            // $('select[name="tax_grp"]').attr('required', '');
             $('select[name="txt_taxtype_id"]').val('');
             $('select[name="txt_taxtype_id"]').attr('required', '');
             $('input[name="txt_id"]').removeAttr('required');
@@ -174,7 +174,7 @@
             $('input[name="txt_name"]').val(desc);
             $('input[name="txt_name"]').attr('required', '');
             $('select[name="tax_grp"]').val(groupid).trigger('change');
-            $('select[name="tax_grp"]').attr('required', '');
+            // $('select[name="tax_grp"]').attr('required', '');
             $('select[name="txt_taxtype_id"]').val(or_code).trigger('change');
             $('select[name="txt_taxtype_id"]').attr('required', '');
             $('input[name="txt_code"]').val(code).trigger('change');

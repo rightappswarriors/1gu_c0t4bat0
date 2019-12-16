@@ -19,7 +19,7 @@
 			  <div></div>
 			  <div>Date : <u>{{Date('F d, Y',strtotime($date))}}</u></div>
 			  <div></div>
-			  <div>Name of Accountable Officer : <u>{{$data[0]->collector}}</u></div>
+			  <div>Name of Accountable Officer : <u>{{($dataExtra['collector']['name'] ?? '')}}</u></div>
 			  <div></div>
 			  <div>Report No. : <u>APD-JLBE-100-009-02</u></div>
 			  <div></div>
@@ -44,17 +44,20 @@
 		            </tr>
 					
 					@isset($data)
-					@foreach($data as $collectorData)
+					@foreach($data as $collectorDatas)
+						@foreach($collectorDatas as $collectorData)
+							@if($collectorData->today == 1)
+				            <tr>
 
-			            <tr>
+				            	<td class="text-center" colspan="7">{{$collectorData->ortype}}</td>
+				                <td class="text-center" colspan="5">{{$collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="5">{{$collectorData->issueduntil}}</td>
+				                <td class="text-center" colspan="5">{{number_format($collectorData->amount,2)}}</td>
 
-			            	<td class="text-center" colspan="7">{{$collectorData->ortype}}</td>
-			                <td class="text-center" colspan="5">{{$collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="5">{{$collectorData->issueduntil}}</td>
-			                <td class="text-center" colspan="5">{{number_format($collectorData->amount,2)}}</td>
-
-			            </tr>
-			            <?php $total += $collectorData->amount; ?>
+				            </tr>
+				            <?php $total += $collectorData->amount; ?>
+				            @endif
+			            @endforeach
 		            @endforeach
 		            @endisset
 
@@ -73,9 +76,9 @@
 		                 <td class="text-center" colspan="9">Amount</td>
 		            </tr>
 		            <tr>
-		                 <td class="text-center" align="justify" colspan="7">{{$data[0]->liquidatingofficer}}</td>
+		                 <td class="text-center" align="justify" colspan="7">{{($dataExtra['accountableofficer']['name'] ?? '')}}</td>
 		                 <td class="text-center" colspan="5"></td>
-		                 <td class="text-center" colspan="9">{{Number_format($data[0]->liquidatereceived,2)}}</td>
+		                 <td class="text-center" colspan="9">{{($dataExtra['accountableofficer']['amount'] ?? '')}}</td>
 		            </tr>
 		            <tr>
 		                 <td class="text-center" colspan="7">B. Remittances/Deposits</td>
@@ -87,9 +90,9 @@
 		                 <td class="text-center" colspan="9">Amount</td>
 		            </tr>
 		            <tr>
-		                 <td class="text-center" align="justify" colspan="7">{{$data[0]->depositofficer}}</td>
+		                 <td class="text-center" align="justify" colspan="7">{{($dataExtra['bank']['name'] ?? '')}}</td>
 		                 <td class="text-center" colspan="5"></td>
-		                 <td class="text-center" colspan="9">{{Number_format($data[0]->depossitedamount,2)}}</td>
+		                 <td class="text-center" colspan="9">{{($dataExtra['bank']['amount'] ?? '')}}</td>
 		            </tr>
 		            <tr>
 		                 <td class="text-left" colspan="22">C. ACCOUNTABILITY FOR ACCOUNTABLE FORMS</td>
@@ -130,29 +133,53 @@
 		                 <td class="text-center" colspan="2">1997 </td>
 		                 <td class="text-center" colspan="2">2019 </td>
 		            </tr> --}}
-		            @foreach($data as $collectorData)
-		            	<?php 
-		            		if($collectorData->hassef === true){
-		            			$totalArr['hassef'][] = $collectorData->amount;
-		            		} else {
-		            			$totalArr['nosef'][] = $collectorData->amount;
-		            		}
-		            	?>
-						<tr>
-			            	<td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
-			            	<td class="text-center" colspan="1"></td>
-			                <td class="text-center" colspan="2"></td>
-			                <td class="text-center" colspan="2"></td>
-			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
-			            	<td class="text-center" colspan="1">{{$collectorData->issuedto - $collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
-			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
-			                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
-			                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
-			            </tr>
+		            @foreach($data as $collectorDatas)
+		            	@foreach($collectorDatas as $collectorData)
+			            	<tr>
+			            		<td class="text-center" colspan="2">{{$collectorData->ortype}}</td>
+			            	@if($collectorData->today != 1)
+								<td class="text-center" colspan="1">{{($dataExtra['data'][$collectorData->ortype] ?? '')}}</td>
+				                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{$collectorData->issuedto}}</td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                {{-- issued --}}
+				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+				                {{-- ending balance --}}
+				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{($collectorData->issueduntil - $collectorData->issuedfrom) + $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+
+			            	@else
+			            	<?php 
+			            		if($collectorData->hassef === true){
+			            			$totalArr['hassef'][] = $collectorData->amount;
+			            		} else {
+			            			$totalArr['nosef'][] = $collectorData->amount;
+			            		}
+			            	?>	
+
+			            		<td class="text-center" colspan="5"></td>
+			            		{{-- receipt --}}
+				                <td class="text-center" colspan="1">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+				            	<td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+				            	{{-- issued --}}
+				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+				                {{-- ending balance --}}
+				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="2">{{($collectorData->issueduntil - $collectorData->issuedfrom) + $collectorData->issuedfrom}}</td>
+				                <td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+				            
+				            @endif
+				            </tr>
+			            @endforeach
 		            @endforeach
 		            <tr>
 		            	<td class="text-left" colspan="22">D. SUMMARY OF COLLECTION AND REMITTANCES / DEPOSITS</td>
@@ -247,7 +274,7 @@
 							</center></p>
 			              <br>
 						<div class="grider-container">
-				  			<div><u>{{$data[0]->collector}}</u></div>
+				  			<div><u>{{($dataExtra['collector']['name'] ?? '')}}</u></div>
 				  			<div><u>{{Date('m/d/Y')}}</u></div>
 				  			<div><b>RCC II</b></div>
 				  			<div>Date</div>

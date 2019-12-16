@@ -483,7 +483,7 @@ class c_collection_entry extends Controller
                     'debt_code' => ($r->hd_cust[$r->hd_or_num[$i]] ?? 'NOT SET'),
                     'debt_name' => (DB::table('rssys.m06')->where('d_code',$r->hd_cust[$r->hd_or_num[$i]])->select('d_name')->first()->d_name ?? 'NOT FOUND'),
                     'trnx_date' => ($r->hd_dt[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
-                    'or_type' => ($r->hd_or_typ[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
+                    'or_type' => ($r->hd_or_typ[$r->hd_or_num[$i]] ?? null),
                     'or_ref' => 'From Import',
                     'coll_code' => $r->hdr_cash,
                     'jrnlz' => 'N',
