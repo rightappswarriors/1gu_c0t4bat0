@@ -31,7 +31,8 @@ class c_budget_proposal_entry extends Controller
     {
     	$data = array($this->x03, $this->fund);
     	// return dd($data[0]);
-    	return view('budget.budget_budget_proposal_entry', compact('data'));
+    	//return view('budget.budget_budget_proposal_entry', compact('data'));
+        return view('budget.appropriation.list', compact('data'));
     }
     public function getEntries(Request $r) // GET EXISTING BUDGET APPROPRIATION ENTRIES MODULES
     {
@@ -60,7 +61,11 @@ class c_budget_proposal_entry extends Controller
     	$data = array($this->x03, $this->fund, $this->m08, $this->sector, $this->branch, $fy, '', '', $this->m04, '', $this->ppa, $this->budget_period);
         $isnew = true;
     	// return dd($data[10]);
-    	return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew'));
+    	//return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew'));
+        
+        $toolbar = ['link'=>url("budget/budget-proposal-entry/new"),'desc'=>'New','icon'=>'none','st'=>true];
+
+        return view('budget.appropriation.entry', compact('data', 'isnew', 'toolbar'));
     }
 
     public function getFunctions(Request $r) // GET FUNCTIONS (FILTERED) MODULES
@@ -74,7 +79,7 @@ class c_budget_proposal_entry extends Controller
      */
     public function getOffice($code) 
     {
-        $SQL = "SELECT * FROM rssys.m08 WHERE funcid = '".$code."' AND active = TRUE";
+        $SQL = "SELECT * FROM rssys.m08 WHERE funcid = '".$code."' OR cc_code = 'SPA' AND active = TRUE";
         return DB::select($SQL);
     }
 
@@ -171,7 +176,11 @@ class c_budget_proposal_entry extends Controller
 
         //dd($data);
         
-        return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew', 'approHeader', 'approLine'));
+        //return view('budget.budget_budget_proposal_entry_new_new', compact('data', 'isnew', 'approHeader', 'approLine'));
+
+        $toolbar = ['link'=>url("budget/budget-proposal-entry/new"),'desc'=>'Edit','icon'=>'none','st'=>true];
+
+        return view('budget.appropriation.entry', compact('data', 'isnew', 'toolbar', 'approHeader', 'approLine'));
     }
 
     /* modify by: DAN 07/19/19
@@ -356,7 +365,8 @@ class c_budget_proposal_entry extends Controller
         $Line = Budget::printApproLine($b_num);
         $PPA = Budget::printApproPPA($b_num);
 
-        return view('budget.budget_appro_print', compact('Header', 'Line', 'PPA'));
+
+        return view('budget.appropriation.budget_appro_print', compact('Header', 'Line', 'PPA'));
     }
 
     public function print_entry($data)
@@ -372,7 +382,7 @@ class c_budget_proposal_entry extends Controller
                      'codes' => $data[5]
                   ];          
         dd($data);
-        return view('budget.budget_appro_print_entry', compact('Header'));
+        return view('budget.appropriation.budget_appro_print_entry', compact('Header'));
     }
 
     public function printall($data)
@@ -389,6 +399,6 @@ class c_budget_proposal_entry extends Controller
         $PPA = Budget::printApproPPAAll($fy, $fid);
         $appro = Budget::printApproAll($fy, $fid);
 
-        return view('budget.budget_appro_printall', compact('Header', 'Line', 'fund', 'Function', 'PPA', 'appro'));
+        return view('budget.appropriation.budget_appro_printall', compact('Header', 'Line', 'fund', 'Function', 'PPA', 'appro'));
     }
 }

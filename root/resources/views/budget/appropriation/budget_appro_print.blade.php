@@ -60,6 +60,7 @@
                     <td height="50" style="text-indent: 10px; vertical-align: bottom;"><b>{{$P->subgrpdesc}}</b></td>
                     <td></td>
                   </tr>
+                  @isset($Line)
                   @foreach($Line as $L)
                   @if($P->subgrpid == $L->grpid)
                   <tr class="noborder noborder2">
@@ -69,6 +70,7 @@
                   </tr>
                   @endif
                   @endforeach
+                  @endisset
                   <tr class="noborder noborder3">
                     <td></td>
                     <td><b>Total {{$P->subgrpdesc}}</b></td>
@@ -78,6 +80,7 @@
                   $total_amt += $P->total_amt;
                   @endphp
                 @endforeach
+
                   
                   <tr class="noborder noborder3">
                     <td></td>

@@ -93,9 +93,9 @@ class Budget extends Model
     {
     	try
     	{
-    		$sql = 'SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.b_num = \''.$code.'\' LIMIT 1';
+    		$sql = 'SELECT f.fdesc as fund, ft.funcid, ft.funcdesc as function, m8.cc_code as office_code, m8.cc_desc as office FROM rssys.bgtps01 bt1 LEFT JOIN rssys.fund f ON bt1.fid = f.fid LEFT JOIN rssys.function ft ON bt1.funcid = ft.funcid LEFT JOIN rssys.m08 m8 ON bt1.cc_code = m8.cc_code WHERE bt1.b_num = \''.$code.'\' LIMIT 1';            
 
-    		return DB::select(DB::raw($sql))[0];
+    		return (DB::select($sql)[0] ?? null);
     	}
     	catch (\Exception $e) {
 			return $e->getMessage();
@@ -121,7 +121,7 @@ class Budget extends Model
     	{
     		$sql = "SELECT *, CASE WHEN at_desc IN (SELECT DISTINCT subppa FROM rssys.bgtps02 WHERE b_num = '".$code."' AND COALESCE(subppa, '') != '') THEN 'Y' ELSE 'N' END as isspa FROM rssys.bgtps02 WHERE b_num = '".$code."'";
 
-    		return DB::select(DB::raw($sql));
+    		return DB::select($sql);
     	}
     	catch (\Exception $e) {
 			return $e->getMessage();
