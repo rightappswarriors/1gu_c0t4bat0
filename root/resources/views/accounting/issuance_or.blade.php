@@ -20,6 +20,12 @@
               <a href="{{ asset('accounting/collection/or_issuance/new') }}"><button type="button" class="btn btn-block btn-primary"><i class="fa fa-plus"></i> New OR Issuance</button></a>
             </div>
           </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <center><label>&nbsp;</label></center>
+              <a href="{{ asset('accounting/collection/or_issuance/Update-History') }}"><button type="button" class="btn btn-block btn-success"><i class="fa fa-edit"></i> Update Previous OR Issues</button></a>
+            </div>
+          </div>
           <div class="col-md-2">
             <div class="form-group">
               <center><label>&nbsp;</label></center>
@@ -56,10 +62,9 @@
                   <td>{{$each->or_code}}</td>
                   <td>{{$each->or_no}}</td>
                   <td>{{$each->or_no_to}}</td>
-                  <td>{{$each->opr_name}}</td>
+                  <td>{{$each->collector}}</td>
                   <td>
-                    <a href="{{ asset('accounting/collection/or_issuance') }}/{{$each->transid}}"><button class="btn btn-warning"><i class="fa fa-edit"></i></button></a>
-                    <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    <a href="{{isset($each->liquidatingofficer) ? url('accounting/collection/or_issuance/Update-History/') : url('accounting/collection/or_issuance') }}/{{$each->transid}}"><button class="btn btn-warning"><i class="fa fa-edit"></i></button></a>
                   </td>
                 </tr>
                 @endforeach

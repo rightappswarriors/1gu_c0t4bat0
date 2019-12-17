@@ -546,6 +546,57 @@ class AccountingControllers extends Controller {
         ];
         return view('accounting.issuance_or_new', $arrRet);
     }
+
+    public function __obr_issuanceupdate() {
+        $retArr = FunctionsAccountingControllers::checkSession(true);
+        if(count($retArr) > 0) {
+            return redirect($retArr[0])->with($retArr[1], $retArr[2]);
+        }
+        $dateToday = Date('Y-m-d');
+        $arrRet = [
+            'or_issuance'=>DB::select("SELECT distinct orTypes.or_type as or_code, orTypes.hassef , g.opr_name as liquidatingofficer, h.opr_name as depositofficer, e.opr_name as collector, c.or_no or_no, c.or_no_to issuedto, d.or_to as or_no_to, d.amount, a.amount as depossitedamount, b.amountreceive as liquidatereceived, d.orissuedid as transid from rssys.deposittobank a join rssys.liquidate b on a.liquidateid = b.liquidateid join rssys.or_issuance c on b.collector = c.collector join rssys.or_issued d on c.transid = d.transid join rssys.x08 e on c.collector = e.uid join rssys.or_types orTypes on c.or_type = orTypes.or_type join rssys.x08 g on b.liquidatingofficer = g.uid join rssys.x08 h on h.uid = a.uid where (c.or_no_to::int - ((d.or_to - c.or_no::int) + c.or_no::int)) > 1 AND d.t_date < '$dateToday' AND b.date < '$dateToday' AND a.t_date < '$dateToday'"),
+            'isrelease'=>true,
+            'cashiers'=>DB::select("SELECT uid, opr_name FROM rssys.x08 WHERE rssys.x08.grp_id = '005'"),
+            '_bc'=>[
+                    ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
+                    ['link'=>url("accounting/collection/or_issuance"),'desc'=>'Issuance OR','icon'=>'file-text','st'=>true]
+                ],
+            '_ch'=>"Issuance OR"
+        ];
+        return view('accounting.issuance_or', $arrRet);
+    }
+
+    public function __or_issuanceupdate(Request $request, $transid) {
+        $retArr = FunctionsAccountingControllers::checkSession(true);
+        if(count($retArr) > 0) {
+            return redirect($retArr[0])->with($retArr[1], $retArr[2]);
+        }
+        $message = "";
+        if($request->isMethod('post')) {
+            if(isset($request->or_no_to)){
+                $currentUser = session()->get('_user')['id'];
+                if(DB::select("INSERT INTO rssys.or_issuedHistory (orissuedid, transid, or_to, t_date, t_time, amount, hist_date, histt_time, updatedby) SELECT *, current_timestamp as hist_date, current_timestamp as histt_time, '$currentUser' as updatedby from rssys.or_issued where orissuedid = '$transid'") && DB::table('rssys.or_issued')->where('orissuedid',$transid)->update(['or_to' => $request->or_no_to])){
+                    return back()->with('alert', ['Success', 'success', 'Updated Successfully']);
+                }
+            }
+        }
+        $arrRet = [
+            'or_issuance'=>DB::select("SELECT or_issuance.*, or_issued.or_to as toeditor, or_types.or_code, x08.opr_name FROM rssys.or_issuance LEFT JOIN rssys.or_types ON or_issuance.or_type = or_types.or_type JOIN rssys.or_issued ON or_issuance.transid = or_issued.transid LEFT JOIN rssys.x08 ON x08.uid = or_issuance.collector WHERE or_issued.orissuedid = '$transid'"),
+            'or_types'=>DB::table(DB::raw('rssys.or_types'))->where('active',TRUE)->get(),
+            'isrelease'=>true,
+            'cashiers'=>DB::select("SELECT uid, opr_name FROM rssys.x08 WHERE rssys.x08.grp_id = '005'"),
+            '_bc'=>[
+                ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
+                ['link'=>url("accounting/collection/or_issuance"),'desc'=>'Issuance OR','icon'=>'file-text','st'=>true]
+            ],
+            '_ch'=>"Issuance OR",
+            'message'=>$message,
+            'user' => session()->get('_user')
+        ];
+        return view('accounting.issuance_orEdit', $arrRet);
+    }
+
+
     public function __obr_issuanceedit(Request $request, $transid) {
         $retArr = FunctionsAccountingControllers::checkSession(true);
         if(count($retArr) > 0) {
