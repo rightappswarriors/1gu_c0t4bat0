@@ -474,9 +474,9 @@ class c_collection_entry extends Controller
             for ($i=0; $i < count($r->hd_or_num); $i++) { 
                 $dt = Carbon::now();
                 $b_num = Core::getm99One('col_code');
-                $fromImport = $r->hd_jr[$r->hd_or_num[$i]];
-                $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$fromImport'";
-                $testData = Core::sql($sql00);
+                // $fromImport = $r->hd_jr[$r->hd_or_num[$i]];
+                // $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$fromImport'";
+                // $testData = Core::sql($sql00);
                 $insertIntoBgt01 =
                 [
                     'col_code' => $b_num->col_code,
@@ -491,8 +491,8 @@ class c_collection_entry extends Controller
                     'user_id' => strtoupper(Session::get('_user')['id']),
                     't_date' => $dt->toDateString(),
                     't_time' => $dt->toTimeString(),
-                    'j_code' => $fromImport,
-                    'j_num' => $testData[0]->j_num,
+                    // 'j_code' => $fromImport,
+                    // 'j_num' => $testData[0]->j_num,
                     't_ipaddress' => request()->ip(),
                     'fid' => ($r->hd_fund[$r->hd_or_num[$i]] ?? Date('Y-m-d')),
                     'rptype' => ($r->hd_real_property[$r->hd_or_num[$i]] ?? 'NOT SET'),

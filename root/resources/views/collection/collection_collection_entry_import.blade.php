@@ -550,22 +550,22 @@
                       // '</div>' +
                       // OR TYPE
                       // JOURNAL
-                      '<div class="col-md-4">' +
-                        '<div class="form-group">' +
-                          '<label>Journal <span style="color:red"><strong>*</strong></span></label>' +
-                          '<select class="form-control select2 select2-hidden-accessible" name="hd_jr['+data[i].or_no+']" style="width: 100%;" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
-                            @isset($m05)
-                              '<option value="">Select Journal...</option>' +
-                                @foreach($m05 as $s)
-                                    '<option value="{{$s->j_code}}">{{$s->j_desc}}</option>' +
-                                @endforeach
-                            @else
-                              '<option value="">No Journal  registered...</option>' +
-                            @endisset
-                          '</select>' +
-                          '<span id="hd_jr_'+data[i].or_no+'"></span>' +
-                        '</div>' +
-                      '</div>' +
+                      // '<div class="col-md-4">' +
+                      //   '<div class="form-group">' +
+                      //     '<label>Journal <span style="color:red"><strong>*</strong></span></label>' +
+                      //     '<select class="form-control select2 select2-hidden-accessible" name="hd_jr['+data[i].or_no+']" style="width: 100%;" aria-hidden="true" data-parsley-errors-container="#hd_jr_'+data[i].or_no+'" data-parsley-required-message="<strong>Journal</strong> is required." required>' +
+                      //       @isset($m05)
+                      //         '<option value="">Select Journal...</option>' +
+                      //           @foreach($m05 as $s)
+                      //               '<option value="{{$s->j_code}}">{{$s->j_desc}}</option>' +
+                      //           @endforeach
+                      //       @else
+                      //         '<option value="">No Journal  registered...</option>' +
+                      //       @endisset
+                      //     '</select>' +
+                      //     '<span id="hd_jr_'+data[i].or_no+'"></span>' +
+                      //   '</div>' +
+                      // '</div>' +
                       // JOURNAL
                       // FUND
                       // '<div class="col-md-4">' +
@@ -795,7 +795,7 @@
           $('select[name^="hd_fund"]').val('00000008').trigger('change');
         }
       }
-      // $('select[name^="hd_real_property"]').select2()
+      // $('select').select2();
       $("select").not('select[name^="hd_real_property"]').select2();
       // $('select[name^="hd_real_property"]').select2();
     }
