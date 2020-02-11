@@ -44,6 +44,7 @@
             <tr>
               <td></td>
               <td>Quantity Issued</td>
+              
               <td></td>
               <td></td>
               <td></td>
