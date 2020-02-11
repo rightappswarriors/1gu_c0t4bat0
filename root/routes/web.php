@@ -722,6 +722,11 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::post('report/biology/bioreportsprint', 'Report\InventoryReports@generate')->name('report.biology.bioreportsprint');
 
 		/* ----- BUDGET */
+		/* ----- INVENTORY */
+		   /* ----- SSMI */
+				Route::get('reports/inventory/ssmi', 'Report\Inventory\SSMI@view')->name('inventoryreports.ssmi');
+			/* ----- SSMI */
+		/* ----- INVENTORY */
 	/* REPORT -------------------------------*/
 
 	/* SETTING -------------------------------*/
