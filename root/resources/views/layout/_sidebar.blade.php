@@ -189,6 +189,8 @@
                         <ul class="treeview-menu" style="white-space: normal;" id="TreeView_MasterFile_Others2">
                             @if($LA_GRP["M2000001"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/Miscellaneous/bank') }}"><i class="fa fa-circle-o" id="SideBar_MFile_BRAND_NAME"></i> Banks</a></li>
+                            {{-- <li><a href="{{ url('master-file/Miscellaneous/Barangay') }}"><i class="fa fa-circle-o" id="SideBar_MFile_BARANGAY"></i> Barangay</a></li> --}}
+                            <li><a href="{{ url('master-file/general/barangay') }}"><i class="fa fa-circle-o" id="SideBar_MFile_GEN_BAR"></i> Barangay</a></li>
                             @endif
                         </ul>
                     </li>

@@ -148,7 +148,7 @@
 				                {{-- issued --}}
 				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
 				                <td class="text-center" colspan="2">{{$collectorData->issuedfrom}}</td>
-				                <td class="text-center" colspan="1">{{$collectorData->issuedto}}</td>
+				                <td class="text-center" colspan="1">{{$collectorData->issueduntil}}</td>
 				                {{-- ending balance --}}
 				                <td class="text-center" colspan="2">{{$collectorData->issueduntil - $collectorData->issuedfrom}}</td>
 				                <td class="text-center" colspan="2">{{($collectorData->issueduntil - $collectorData->issuedfrom) + $collectorData->issuedfrom}}</td>

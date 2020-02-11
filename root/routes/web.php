@@ -821,6 +821,14 @@ Route::group(['middleware'=>['checkauth']], function () {
 				Route::prefix('or_issuance')->group(function() {
 					Route::get('/', 'Accounting\AccountingControllers@__obr_issuance')->name('accounting.obr_issuance');
 					Route::match(['get', 'post'], 'new', 'Accounting\AccountingControllers@__obr_issuancenew')->name('accounting.obr_issuancenew');
+
+
+					Route::prefix('Update-History')->group(function() {
+						Route::match(['get', 'post'], '/', 'Accounting\AccountingControllers@__obr_issuanceupdate');
+						Route::match(['get', 'post'], '{id}', 'Accounting\AccountingControllers@__or_issuanceupdate');
+					});
+
+					
 					Route::match(['get', 'post'], '{transid}', 'Accounting\AccountingControllers@__obr_issuanceedit')->name('accounting.obr_issuanceedit');
 				});
 				Route::match(['get', 'post'], '/obr_new', 'Accounting\AccountingControllers@__obr_new')->name('accounting.obr_new');
