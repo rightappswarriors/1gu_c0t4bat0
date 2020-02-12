@@ -725,6 +725,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 		/* ----- INVENTORY */
 		   /* ----- SSMI */
 				Route::get('reports/inventory/ssmi', 'Report\Inventory\SSMI@view')->name('inventoryreports.ssmi');
+				Route::post('reports/inventory/ssmiprint', 'Report\Inventory\SSMI@print')->name('inventoryreports.ssmiprint');
 			/* ----- SSMI */
 		/* ----- INVENTORY */
 	/* REPORT -------------------------------*/
