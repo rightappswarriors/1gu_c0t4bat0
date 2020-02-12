@@ -1,10 +1,11 @@
 @extends('_main')
 @php
-    $_bc = [
+     $_bc = [
+        ['link'=>'#','desc'=>'Reports','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>url("inventory/are"),'desc'=>'Summary of Supplies and Materials Issued','icon'=>'none','st'=>true]
+        ['link'=>'','desc'=>'SSMI Report','icon'=>'none','st'=>true]
     ];
-    $_ch = "Summary of Supplies and Materials Issued"; // Module Name
+    $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT"; // Module Name
 @endphp
 @section('content')
 		<!-- Content Header (Page header) -->

@@ -1,8 +1,9 @@
 @extends('_main')
 @php
     $_bc = [
-        ['link'=>'#','desc'=>'Budget','icon'=>'none','st'=>false],
-        ['link'=>url("budget/budget-approved-entry"),'desc'=>'Generate SAAOB Report','icon'=>'none','st'=>true]
+        ['link'=>'#','desc'=>'Reports','icon'=>'none','st'=>false],
+        ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
+        ['link'=>'','desc'=>'SSMI Report','icon'=>'none','st'=>true]
     ];
     $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT"; // Module Name
 @endphp
