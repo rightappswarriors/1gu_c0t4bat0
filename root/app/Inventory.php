@@ -1921,5 +1921,35 @@ class Inventory extends Model
 			return $e->getMessage();
 		}
 	}
+
+	// Print IAC
+	public static function printIAC($date, $itmgrp) 
+	{
+		try
+		{
+            $sql = "SELECT iaf2.item_code, iaf2.item_desc, i.unit_cost as cost, it.unit_desc as unit, ROUND(iaf2.begbal) as begbal, ROUND(iaf2.begbal * i.unit_cost, 2) as begbalcost, ROUND(iaf2.addbal) as addbal, ROUND(iaf2.addbal * i.unit_cost, 2) as addbalcost, ROUND(iaf2.totalbal) as totalbal, ROUND(iaf2.totalbal * i.unit_cost, 2) as totalbalcost, ROUND(iaf2.issbal) as issbal, ROUND(iaf2.issbal * i.unit_cost, 2) as issbalcost, ROUND(iaf2.endbal) as endbal, ROUND(iaf2.endbal * i.unit_cost, 2) as endbalcost FROM (SELECT item_code, item_desc, SUM(begbal) as begbal, SUM(addbal) as addbal, SUM(begbal + addbal) as totalbal, SUM(issbal) as issbal, SUM((begbal + addbal) - issbal) as endbal FROM(SELECT rl.item_code, rl.item_desc, CASE WHEN rh.trn_type = 'P' THEN rl.recv_qty ELSE 0.00 END as begbal, CASE WHEN rh.trn_type = 'A' THEN rl.recv_qty ELSE 0.00 END as addbal, CASE WHEN rh.trn_type IN ('SR', 'R') THEN rl.recv_qty ELSE 0.00 END as issbal,rh.trnx_date as date, rh.trn_type as type FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE trn_type IN ('P', 'A', 'SR', 'R') AND item_code != 'TEXT-ITEM' ORDER BY type DESC) iaf1 WHERE date <= '$date' GROUP BY item_code, item_desc ORDER BY item_desc) iaf2 LEFT JOIN rssys.items i ON iaf2.item_code = i.item_code LEFT JOIN rssys.itmunit it ON i.purc_unit_id = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE ig.item_grp = '$itmgrp' ORDER BY item_desc";
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// Print IAC Total
+	public static function printIACTotal($date, $itmgrp) 
+	{
+		try
+		{
+            $sql = "SELECT SUM(begbalcost) as totalbegbalcost, SUM(addbalcost) as totaladdbalcost, SUM(totalbalcost) as totalbalcost, SUM(issbalcost) as totalissbalcost, SUM(endbalcost) as totalendbalcost FROM (SELECT iaf2.item_code, iaf2.item_desc, i.unit_cost as cost, it.unit_desc as unit, ROUND(iaf2.begbal) as begbal, ROUND(iaf2.begbal * i.unit_cost, 2) as begbalcost, ROUND(iaf2.addbal) as addbal, ROUND(iaf2.addbal * i.unit_cost, 2) as addbalcost, ROUND(iaf2.totalbal) as totalbal, ROUND(iaf2.totalbal * i.unit_cost, 2) as totalbalcost, ROUND(iaf2.issbal) as issbal, ROUND(iaf2.issbal * i.unit_cost, 2) as issbalcost, ROUND(iaf2.endbal) as endbal, ROUND(iaf2.endbal * i.unit_cost, 2) as endbalcost FROM (SELECT item_code, item_desc, SUM(begbal) as begbal, SUM(addbal) as addbal, SUM(begbal + addbal) as totalbal, SUM(issbal) as issbal, SUM((begbal + addbal) - issbal) as endbal FROM(SELECT rl.item_code, rl.item_desc, CASE WHEN rh.trn_type = 'P' THEN rl.recv_qty ELSE 0.00 END as begbal, CASE WHEN rh.trn_type = 'A' THEN rl.recv_qty ELSE 0.00 END as addbal, CASE WHEN rh.trn_type IN ('SR', 'R') THEN rl.recv_qty ELSE 0.00 END as issbal,rh.trnx_date as date, rh.trn_type as type FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE trn_type IN ('P', 'A', 'SR', 'R') AND item_code != 'TEXT-ITEM' ORDER BY type DESC) iaf1 WHERE date <= '$date' GROUP BY item_code, item_desc ORDER BY item_desc) iaf2 LEFT JOIN rssys.items i ON iaf2.item_code = i.item_code LEFT JOIN rssys.itmunit it ON i.purc_unit_id = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE ig.item_grp = '$itmgrp' ORDER BY item_desc) total";
+            
+            return DB::select(DB::raw($sql))[0];
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
 	
 }
