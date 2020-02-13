@@ -81,16 +81,16 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>TOTAL</td>
-                <td align="center">{{number_format($total->totalbegbalcost, 2)}}</td>
-                <td>TOTAL</td>
-                <td align="center">{{number_format($total->totaladdbalcost, 2)}}</td>
-                <td>TOTAL</td>
-                <td align="center">{{number_format($total->totalbalcost, 2)}}</td>
-                <td>TOTAL</td>
-                <td align="center">{{number_format($total->totalissbalcost, 2)}}</td>
-                <td>TOTAL</td>
-                <td align="center">{{number_format($total->totalendbalcost, 2)}}</td>
+                <td><b>TOTAL</b></td>
+                <td align="center"><b>{{number_format($total->totalbegbalcost, 2)}}</b></td>
+                <td><b>TOTAL</b></td>
+                <td align="center"><b>{{number_format($total->totaladdbalcost, 2)}}</b></td>
+                <td><b>TOTAL</b></td>
+                <td align="center"><b>{{number_format($total->totalbalcost, 2)}}</b></td>
+                <td><b>TOTAL</b></td>
+                <td align="center"><b>{{number_format($total->totalissbalcost, 2)}}</b></td>
+                <td><b>TOTAL</b></td>
+                <td align="center"><b>{{number_format($total->totalendbalcost, 2)}}</b></td>
             </tr>
           </tbody>
           </table>

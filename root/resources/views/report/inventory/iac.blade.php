@@ -41,7 +41,7 @@
     <hr>
     <div class="row">
       <div class="col-md-3">
-        <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Generate IAC Report</button>
+        <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Generate COA Report</button>
       </div>
     </div>
     </form>
