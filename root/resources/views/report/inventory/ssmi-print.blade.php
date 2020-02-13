@@ -85,47 +85,6 @@
            
             </tbody>
           </table>
-
-          {{-- <table  class="table table-bordered table-striped" style="margin:8px 0 8px 0 !important;">
-            <tfoot>
-              <tr>
-                <th colspan="8">Office/Department: </th>
-              </tr>
-            </tfoot>
-          </table> --}}
-
-          {{-- <table class="table table-bordered table-striped">
-            <tr>
-             <th colspan="3">Received From:</th>
-             <th colspan="2">Received By: </th>
-             <th colspan="3">Issued To:</th>
-           </tr>
-           <tr>
-             <th colspan="3">
-              <br>
-               </div>
-             </th>
-             <th colspan="2">
-              <br>
-               <div></div>
-             </th>
-             <th colspan="3">
-              <br>
-               </div>
-             </th>
-           </tr>
-           <tr>
-             <th colspan="3">
-               <div><center>____________________</center></div><div><center><font size="1">Date</font></center></div>
-             </th>
-             <th colspan="2">
-               <div><center>____________________</center></div><div><center><font size="1">Date</font></center></div>
-             </th>
-             <th colspan="3">
-               <div><center>____________________</center></div><div><center><font size="1">Date</font></center></div>
-             </th>
-           </tr>
-          </table> --}}
         </div>
       </div>
       
