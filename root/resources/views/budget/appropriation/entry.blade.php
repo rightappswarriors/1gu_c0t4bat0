@@ -492,7 +492,7 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <button id="btn_additem_{{$data[10][$i]->subgrpid}}" class="btn btn-success pull-right" onclick="addItem()"><i class="fa fa-plus-circle"></i></button>
-                                        <button id="btn_additemwithsub_{{$data[10][$i]->subgrpid}}" class="btn btn-info pull-right" onclick="addItemwithSub()">Add SPA <i class="fa fa-plus-circle"></i></button>
+                                        {{-- <button id="btn_additemwithsub_{{$data[10][$i]->subgrpid}}" class="btn btn-info pull-right" onclick="addLineItem()">Add SPA <i class="fa fa-plus-circle"></i></button> --}}
                                     </div>
                                 </div>
                                 <br>
@@ -508,7 +508,7 @@
                                                 {{-- <th width="25%">&nbsp;</th> --}}
                                                 <th></th>
                                                 {{-- <th><center>Allocated</center></th> --}}
-                                                <th width="10;"><center>Options</center></th>
+                                                <th width="50;"><center>Options</center></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -671,17 +671,6 @@
 
 
 <style>
-div.a {
-  text-indent: 15px;
-}
-
-div.b {
-  text-indent: 25px;
-}
-
-div.c {
-  text-indent: 35px;
-}
 </style>
 
 
@@ -822,98 +811,7 @@ div.c {
 
                 '',
 
-                '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
-            ]).draw();
-           $('select.select2').select2();
-
-           loadTotal();
-           loadSubTotal(SelectedTabPPA);
-        }
-        else
-        {
-          alert('Entered Account Title/PPA already exists.');
-        }
-    }
-
-    function addItemwithSub()
-    {
-        var howMany = $('li.tabHD').length;
-        var SelectedTabPPA = '';
-        if(howMany > 0)
-        {
-            for(var i = 0; i < howMany;i++)
-            {
-                if($($('li.tabHD')[i]).hasClass('active'))
-                {
-                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
-                    break;
-                }
-            }
-        }
-
-        var line = ($('#table_'+SelectedTabPPA).DataTable().rows().count()) + 1;
-        var table = $('#table_'+SelectedTabPPA).DataTable();
-
-        if(checkAcctDescExist)
-        {
-           table.row.add([
-                '<input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 80%;" onchange="getAccountCode(value); getAccountTitleDesc(value);"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist>',
-
-                '<input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value); checkIfAcctDescExist('+line+', value);" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span> <span id="validate_ifAlreadyExist'+ SelectedTabPPA+line+'" style="color: red;"></span>',
-
-                '<textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea>',
-
-                '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text">',
-
-                '<select class="form-control" style="white-space: normal;width:100%;" name="select_ppasub"  aria-hidden="true"><option><i style="word-break:break-all;">'+ppasubgrp(SelectedTabPPA)+'</i></option></select>',
-
-                '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
-            ]).draw();
-           $('select.select2').select2();
-
-           loadTotal();
-           loadSubTotal(SelectedTabPPA);
-        }
-        else
-        {
-          alert('Entered Account Title/PPA already exists.');
-        }
-    }
-
-    function addLineItem(atDescValue, level, issamelvl)
-    {
-        var howMany = $('li.tabHD').length;
-        var SelectedTabPPA = '';
-        if(howMany > 0)
-        {
-            for(var i = 0; i < howMany;i++)
-            {
-                if($($('li.tabHD')[i]).hasClass('active'))
-                {
-                    SelectedTabPPA = $($('li.tabHD')[i]).attr('leppa');
-                    break;
-                }
-            }
-        }
-
-        var line = ($('#table_'+SelectedTabPPA).DataTable().rows().count()) + 1;
-        var table = $('#table_'+SelectedTabPPA).DataTable();
-
-        if(checkAcctDescExist)
-        {
-           table.row.add([
-                '<div class="a"><input list="select_acctCode" name="select_acctCode" subgrpid="'+SelectedTabPPA+'" style="width: 80%;" onchange="getAccountCode(value); getAccountTitleDesc(value);"> <datalist id="select_acctCode">@foreach($data[8] as $m4) <option value="{{$m4->at_code}}"> @endforeach</datalist></div>',
-
-                '<div class="b"><input list="select_acctDesc" name="select_acctDesc" style="width: 100%;" onchange="getAccountCode(value); checkIfAcctDescExist('+line+', value);" data-parsley-required-message="Please input Account Title/PPA." data-parsley-errors-container="#validate_select_acctDesc'+ SelectedTabPPA+line+'" required> <datalist id="select_acctDesc">@foreach($data[8] as $m4) <option value="{{$m4->at_desc}}"> @endforeach</datalist> <span id="validate_select_acctDesc'+ SelectedTabPPA+line+'"></span> <span id="validate_ifAlreadyExist'+ SelectedTabPPA+line+'" style="color: red;"></span></div>',
-
-                '<div class="c"><textarea class="form-control" id="txt_desc" name="txt_desc" style="width:100%" type="text"></textarea></div>',
-
-                '<input class="form-control" id="txt_amt" name="txt_amt" style="width: 100%;" type="text">',
-
-                // '<select class="form-control" style="white-space: normal;width:100%;" name="select_ppasub"  aria-hidden="true"><option><i style="word-break:break-all;">'+ppasubgrp(SelectedTabPPA)+'</i></option></select>'
-                '',
-
-                '<center><button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button></center>'
+                '<button class="btn btn-danger removebtn"><i class="fa fa-minus-circle"></i></button>'
             ]).draw();
            $('select.select2').select2();
 
@@ -1047,32 +945,6 @@ div.c {
        @endisset
 
        $('input[name="total_line"]').val(formatNumberToMoney(total_amt));
-
-
-
-
-
-
-        // var tempAmount = 0; 
-        // var amt = $('input[name="txt_amt"]').map(function(){return $(this).val();}).get();
-
-
-        // if(amt.length > 0)
-        // {
-        //     for(let i = 0; i < amt.length; i++)
-        //     {
-        //         if(amt[i] != null && amt[i] != '')
-        //         {
-        //           tempAmount = tempAmount + parseFloat(amt[i].replace(/[^0-9.-]+/g,""));
-        //         }
-        //     }
-            
-        //     $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
-        // }
-        // else
-        // {
-        //   $('input[name="total_line"]').val(formatNumberToMoney(tempAmount));
-        // }  
     }
 
 
@@ -1096,28 +968,6 @@ div.c {
 
       $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(total_amt));
     }
-
-    /* src code of Mhel
-     * comment by: DAN 07/19/19
-     *
-    function loadSubTotal(acct_id)
-    {
-        var tempAmount = 0; // , appr = 0, totalBal = 0
-        // var truebal = $("#table_"+acct_id+" .truebal").map(function(){return $(this).attr("truebal");}).get();
-        // var appro = $("#table_"+acct_id+" .appro").map(function(){return $(this).attr("appro");}).get();
-        var amt = $("#table_"+acct_id+" .amt").map(function(){return $(this).attr("amt");}).get();
-        if(amt.length > 0){
-            for(let i = 0; i < amt.length; i++){
-                 tempAmount = tempAmount + parseFloat(amt[i]);
-            }
-            // totalBal = parseFloat(appr) - parseFloat(tempAmount);
-            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(tempAmount));
-        } else {
-            $('input[name="sub_total_'+acct_id+'"]').val(formatNumberToMoney(0));
-        }
-    }
-
-    */
 
     function emptyHeader()
     {
@@ -1174,8 +1024,6 @@ div.c {
                 }
             }
         }
-
-
 
         $('select[name="itm_ppa"]').val(SelectedTabPPA).trigger('change');
         $('input[name="itm_line"]').val(line);

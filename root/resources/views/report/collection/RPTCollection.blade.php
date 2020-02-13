@@ -75,11 +75,11 @@
 			  @foreach($data as $key => $det)
 			  @foreach($det as $orkey => $ordata)
 			  @foreach($ordata as $qtrkey => $qtrdata)
-			  <?php $forGross = $forDiscount = $prioryear = 0; ?>
+			  <?php $forGross = $forDiscount = $prioryear = $newprioryear = 0; ?>
 			  <tr>
 			    <td class="tg-0pky">
 			    	{{-- date --}}
-			    	{{$key}}
+			    	{{Date('m-d-Y',strtotime($key))}}
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- payer --}}
@@ -97,30 +97,52 @@
 			    	{{-- bus --}}
 			    	{{$qtrdata[0][0]->bus}}
 			    </td>
-			    <td class="tg-0pky">NOT SPECIFIED</td>
+
+			    <td class="tg-0pky">
+			    	{{-- barangay --}}
+			    	<?php 
+			    		if(isset($qtrdata[0][0]->bus)){
+			    			echo Core::getBarangayName($qtrdata[0][0]->bus);
+			    		}
+			    	?>
+			    	
+			    </td>
 			    <td class="tg-0pky">
 			    	{{-- gorss --}}
+			    	@if($qtrdata[0][0]->periodcoveredyear != Date('Y'))
 			    	@foreach($qtrdata as $insdeData)
 			    		@if(strtolower($insdeData[0]->flag) == 'gross')
 			    		<?php $forGross +=  $insdeData[0]->sum;?>
 			    		@endif
 			    	@endforeach
+			    	@endif
 			    	{{number_format($forGross,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][7] = $forGross; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- discount --}}
-			    	@foreach($qtrdata as $insdeData)
-			    		@if(strtolower($insdeData[0]->flag) == 'discount')
-			    		<?php $forDiscount +=  $insdeData[0]->sum;?>
-			    		@endif
-			    	@endforeach
+			    	{{-- @foreach($qtrdata as $insdeData) --}}
+			    		{{-- @if(strtolower($insdeData[0]->flag) == 'discount') --}}
+			    		{{-- @php $forDiscount +=  $insdeData[0]->sum; @endphp --}}
+			    		{{-- @endif --}}
+			    	{{-- @endforeach --}}
+			    	<?php 
+			    		$forDiscount = ((strpos($qtrkey, 'Qtr') !== false) ? ($forGross * .10) : 0);
+			    	?>
 			    	{{number_format($forDiscount,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][8] = $forDiscount; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- prior year --}}
-			    	<?php $forTotal[$orkey][$qtrkey][9] = 0; ?>
+			    	@if($qtrdata[0][0]->periodcoveredyear == Date('Y'))
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'gross')
+			    		<?php $newprioryear +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	@endif
+			    	{{number_format($newprioryear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][9] = $newprioryear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- penalties current year --}}
@@ -152,27 +174,38 @@
 
 			    <td class="tg-0pky">
 			    	{{-- gross --}}
+			    	@if($qtrdata[0][0]->periodcoveredyear != Date('Y'))
 			    	@foreach($qtrdata as $insdeData)
 			    		@if(strtolower($insdeData[0]->flag) == 'gross')
 			    		<?php $forGross +=  $insdeData[0]->sum;?>
 			    		@endif
 			    	@endforeach
+			    	@endif
 			    	{{number_format($forGross,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][14] = $forGross; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- discount --}}
-			    	@foreach($qtrdata as $insdeData)
+			    	{{-- @foreach($qtrdata as $insdeData)
 			    		@if(strtolower($insdeData[0]->flag) == 'discount')
-			    		<?php $forDiscount +=  $insdeData[0]->sum;?>
+			    		@php $forDiscount +=  $insdeData[0]->sum; @endphp
 			    		@endif
-			    	@endforeach
+			    	@endforeach --}}
+			    	<?php $forDiscount = ((strpos($qtrkey, 'Qtr') !== false) ? ($forGross * .10) : 0); ?>
 			    	{{number_format($forDiscount,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][15] = $forDiscount; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- prior year --}}
-			    	<?php $forTotal[$orkey][$qtrkey][16] = 0; ?>
+			    	@if($qtrdata[0][0]->periodcoveredyear == Date('Y'))
+			    	@foreach($qtrdata as $insdeData)
+			    		@if(strtolower($insdeData[0]->flag) == 'gross')
+			    		<?php $newprioryear +=  $insdeData[0]->sum;?>
+			    		@endif
+			    	@endforeach
+			    	@endif
+			    	{{number_format($newprioryear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][16] = $newprioryear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- penalties current year --}}

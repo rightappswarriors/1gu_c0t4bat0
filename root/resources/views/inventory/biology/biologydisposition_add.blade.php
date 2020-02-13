@@ -308,13 +308,13 @@
                           </div>
                         </div>
                         <div class="row">
-                          {{-- <div class="col-sm-6">
+                          <div class="col-sm-6">
                             <div class="form-group">
                               <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
                                 <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
                                 <span id="limit2" style="color: red; font-size: 11px;"></span>
                             </div>
-                          </div> --}}
+                          </div>
                           <div class="col-sm-6">
                             <div class="form-group">
                               <label>Number Disposed of <span style="color:red"><strong>*</strong></span></label>
@@ -526,7 +526,7 @@
           $('input[name="txt_itemdesc"]').val(data[4]);
           $('input[name="txt_qty"]').val(data[5]);
           $('input[name="txt_nature"]').val(data[7]);
-          $('input[name="txt_remarks"]').val(data[8]);
+          // $('input[name="txt_remarks"]').val(data[8]);
           $('input[name="txt_off"]').val(data[6]);
           $.ajax({
              url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
@@ -536,6 +536,16 @@
                 var max = data[0].qty_onhand_su;
                 var maxs = parseInt(max);
                 if(data.length > 0){
+                  $("input[name='txt_qty'").on('keyup keydown', function(e){
+                      console.log($(this).val() > maxs)
+                      if ($(this).val() > maxs 
+                          && e.keyCode !== 46
+                          && e.keyCode !== 8
+                         ) {
+                         e.preventDefault();     
+                         $(this).val(maxs);
+                      }
+                  });
                   $("input[name='txt_off']").attr({
                      "max" : max,        // substitute your own
                   });
@@ -546,6 +556,7 @@
                   // $("#limit").text("You Can Only Dispose " + maxs + " Animals");
                   // $("#limit2").text("You Can Only Dispose " + maxs + " Animals");
                   var sample = $('input[name="txt_max"]').val(maxs);
+                  
                 }
              }
            });
@@ -596,12 +607,12 @@
           {
 
             // table.row.add([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();  
-            table.row.add([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+            table.row.add([line, date, item_code,part_no, item_desc, qty, qty, nature, remarks, buttons]).draw();
           }
           else if($('#ENTER_ITEM').text() == 'Edit')
           {
             // table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
-            table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, nature, remarks, buttons]).draw();
+            table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, qty, nature, remarks, buttons]).draw();
           }
           else // remove item
           {
@@ -834,7 +845,7 @@
 
       function total_amount()
       {
-        var total_amt = 0.00;
+        // var total_amt = 0.00;
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
         var tbl_itemdata = tbl_itemlist.data().toArray(); //get all data of the table itemlist
 

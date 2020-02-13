@@ -1892,5 +1892,34 @@ class Inventory extends Model
 			return false;
 		}
 	}
+
+    // Print SSMI
+	public static function printSSMI($itmgrp, $frmdt, $todt) 
+	{
+		try
+		{
+            $sql = "SELECT *, (total_qty * unit_cost) as total_cost FROM(SELECT item_code, item_desc, unit_desc as unit, SUM(CASE WHEN mo = 1 THEN ROUND(recv_qty) END) as jan, SUM(CASE WHEN mo = 2 THEN ROUND(recv_qty) END) as feb, SUM(CASE WHEN mo = 3 THEN ROUND(recv_qty) END) as mar, SUM(CASE WHEN mo = 4 THEN ROUND(recv_qty) END) as apr, SUM(CASE WHEN mo = 5 THEN ROUND(recv_qty) END) as may, SUM(CASE WHEN mo = 6 THEN ROUND(recv_qty) END) as jun, SUM(CASE WHEN mo = 7 THEN ROUND(recv_qty) END) as jul, SUM(CASE WHEN mo = 8 THEN ROUND(recv_qty) END) as aug, SUM(CASE WHEN mo = 9 THEN ROUND(recv_qty) END) as sep, SUM(CASE WHEN mo = 10 THEN ROUND(recv_qty) END) as oct, SUM(CASE WHEN mo = 11 THEN ROUND(recv_qty) END) as nov, SUM(CASE WHEN mo = 12 THEN ROUND(recv_qty) END) as dec, ROUND(SUM(recv_qty)) as total_qty, unit_cost FROM(SELECT rl.item_code, rl.item_desc, rl.recv_qty, rl.unit, rh.trnx_date, EXTRACT(MONTH FROM rh.trnx_date) as mo, i.unit_cost, it.unit_desc FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.items i ON rl.item_code = i.item_code LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE rh.trn_type IN ('SR', 'R') AND (rh.cancel != 'Y' OR rh.cancel isnull) AND ig.item_grp = '$itmgrp' AND rh.trnx_date BETWEEN '$frmdt' AND '$todt' ORDER BY item_code) second WHERE mo is not null GROUP BY item_code, item_desc, unit_desc, unit_cost ORDER BY item_code) final ORDER BY item_desc";
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+    // get Item Cat
+	public static function getItemGrp($code) 
+	{	
+		try 
+		{
+			$sql = 'SELECT * FROM rssys.itmgrp WHERE item_grp = \''.$code.'\' LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
 	
 }

@@ -189,6 +189,8 @@
                         <ul class="treeview-menu" style="white-space: normal;" id="TreeView_MasterFile_Others2">
                             @if($LA_GRP["M2000001"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/Miscellaneous/bank') }}"><i class="fa fa-circle-o" id="SideBar_MFile_BRAND_NAME"></i> Banks</a></li>
+                            {{-- <li><a href="{{ url('master-file/Miscellaneous/Barangay') }}"><i class="fa fa-circle-o" id="SideBar_MFile_BARANGAY"></i> Barangay</a></li> --}}
+                            <li><a href="{{ url('master-file/general/barangay') }}"><i class="fa fa-circle-o" id="SideBar_MFile_GEN_BAR"></i> Barangay</a></li>
                             @endif
                         </ul>
                     </li>
@@ -566,6 +568,7 @@
                                 {{-- @if($LA_GRP["R2000001"]["restrict"] == 'Y') --}}
                                 {{-- <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li> --}}
                                 <li><a href="{{ route('inventory.bioreportsview') }}"><i class="fa fa-circle-o"></i>Biology</a></li>
+                                <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
                                 {{-- @endif --}}
                             </ul>
                         </a>

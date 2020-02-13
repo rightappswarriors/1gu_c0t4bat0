@@ -107,33 +107,7 @@
 
 <script>
 
-function generate()
-{
-     if($('#generate-form').parsley().validate()) // check appro form
-     {
-        var data = { 
-                     _token : $('meta[name="csrf-token"]').attr('content'),
-                     fy: $('select[name="select_fy"]').select2('data')[0].id,
-                     fund: $('select[name="select_fund"]').select2('data')[0].id,
-                   };
-        $.ajax({
-                 url: '{{route('report.generatesaaob')}}',
-                 method: 'POST',
-                 data: data,
-                 success : function(flag)
-                          {
-                             if(flag == 'true')
-                             {
-                               //location.href= "{{route('budget.allotment')}}";
-                             }
-                             else
-                             {
-                               alert('SYSTEM ERROR:\n'+flag);
-                             }
-                          }
-                 });           
-     }
-}
+
 
 </script>
 </section>
