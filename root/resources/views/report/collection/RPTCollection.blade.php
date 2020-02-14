@@ -12,7 +12,38 @@
 	.tg .tg-dvpl{border-color:inherit;text-align:right;vertical-align:top}
 	</style>
 
-	<?php $dateFlag = null; $forGross = $forDiscount = $prioryear = $totalTothis = 0; $forTotal = [];?>
+	<?php 
+		$dateFlag = null; $forGross = $forDiscount = $prioryear = $totalTothis = 0; $forTotal = [];
+		function getPenalty($date,$qtr,$gross,$selection){
+			/* selection current year 1, previous 2 */
+			$toReturn = 0;
+			if(isset($date) && isset($qtr) && isset($gross) && isset($selection)){
+				/*$base = (int)((Date('d',strtotime($date))  / 3) < 0 ? (Date('d',strtotime($date))  / 3) : 1);*/
+				$base = ltrim(Date('d',strtotime($date)), '0');
+				$yearFromDate = Date('Y',strtotime($date));
+				$yearFromQtr = substr($qtr, -4);
+				switch ($selection) {
+					case 1:
+						if($yearFromQtr > $yearFromDate){
+							return $toReturn;
+						}
+						break;
+					case 2:
+						if($yearFromQtr < $yearFromDate){
+							return $toReturn;
+						}
+						break;
+				}
+
+				$data = DB::table('rssys.rptpenalty')->where('year',$yearFromQtr)->first();
+				if(isset($data)){
+					$toReturn = $gross * ((json_decode($data->value)->$base ?? 0) / 100);
+				}
+			}
+			return $toReturn;
+		}
+		
+	?>
 
 	<section class="content">
 		<h4>Daily Report on Real Property Tax Collections</h4>
@@ -75,7 +106,7 @@
 			  @foreach($data as $key => $det)
 			  @foreach($det as $orkey => $ordata)
 			  @foreach($ordata as $qtrkey => $qtrdata)
-			  <?php $forGross = $forDiscount = $prioryear = $newprioryear = 0; ?>
+			  <?php $forGross = $forDiscount = $prioryear = $newprioryear = $tPriorYear = 0; ?>
 			  <tr>
 			    <td class="tg-0pky">
 			    	{{-- date --}}
@@ -151,12 +182,15 @@
 			    	@else
 						<?php $prioryear = ($forTotal[$orkey][$qtrkey][7] * .12); ?>
 			    	@endif
+			    	<?php $prioryear = getPenalty(Date('m-d-Y',strtotime($key)), $qtrkey, ($forGross > 0 ? $forGross : $newprioryear),2); ?>
 			    	{{number_format($prioryear,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][10] = $prioryear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- penalties prior year --}}
-			    	<?php $forTotal[$orkey][$qtrkey][11] = 0; ?>
+			    	<?php $tPriorYear = getPenalty(Date('m-d-Y',strtotime($key)), $qtrkey, ($forGross > 0 ? $forGross : $newprioryear),1); ?>
+			    	{{number_format($tPriorYear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][11] = $tPriorYear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- sub total gross collections --}}
@@ -170,7 +204,7 @@
 			    </td>
 
 
-				<?php $forGross = $forDiscount = $prioryear = 0; ?>
+				<?php $forGross = $forDiscount = $prioryear = $tPriorYear = 0; ?>
 
 			    <td class="tg-0pky">
 			    	{{-- gross --}}
@@ -197,6 +231,7 @@
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- prior year --}}
+
 			    	@if($qtrdata[0][0]->periodcoveredyear == Date('Y'))
 			    	@foreach($qtrdata as $insdeData)
 			    		@if(strtolower($insdeData[0]->flag) == 'gross')
@@ -214,12 +249,15 @@
 			    	@else
 						<?php $prioryear = ($forTotal[$orkey][$qtrkey][14] * .12); ?>
 			    	@endif
+			    	<?php $prioryear = getPenalty(Date('m-d-Y',strtotime($key)), $qtrkey, ($forGross > 0 ? $forGross : $newprioryear),2); ?>
 			    	{{number_format($prioryear,2)}}
 			    	<?php $forTotal[$orkey][$qtrkey][17] = $prioryear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- penalties prior year --}}
-			    	<?php $forTotal[$orkey][$qtrkey][18] = 0; ?>
+			    	<?php $tPriorYear = getPenalty(Date('m-d-Y',strtotime($key)), $qtrkey, ($forGross > 0 ? $forGross : $newprioryear),1); ?>
+			    	{{number_format($tPriorYear,2)}}
+			    	<?php $forTotal[$orkey][$qtrkey][18] = $tPriorYear; ?>
 			    </td>
 			    <td class="tg-0pky">
 			    	{{-- sub total gross collections --}}
@@ -267,6 +305,7 @@
 			  </tr>
 
 			</table>
+		</div>
 		
 	</section>
 
