@@ -93,24 +93,39 @@
                             @if($LA_GRP["M1000013"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/accounting/charges') }}"><i class="fa fa-circle-o" id="SideBar_MFile_Accounting_Charge"></i> Charges</a></li>
                             @endif
-                            @if($LA_GRP["M1000014"]["restrict"] == 'Y')
-                            <li><a href="{{url('master-file/accounting/or_types')}}"><i class="fa fa-circle-o" id="SideBar_MFile_OR_TYPE"></i> OR Types</a></li>
-                            @endif
                             @if($LA_GRP["M1000015"]["restrict"] == 'Y')
                             <li><a href="{{url('master-file/accounting/sector')}}"><i class="fa fa-circle-o" id="SideBar_MFile_SECTOR"></i> Sector</a></li>
                             @endif
                             <li><a href="{{url('master-file/accounting/function')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FUNCTION"></i> Function</a></li>
                             <li><a href="{{url('master-file/accounting/fpp')}}"><i class="fa fa-circle-o" id="SideBar_MFile_FPP"></i> FPP</a></li>
+
+                        </ul>
+                    </li>
+                    <li id="TreeView_MasterFile_Collection" class="treeview">
+                        <a href="#">
+                            <i class="fa fa-circle-o" id="SideBar_MFile_Collection"></i>
+                            <span>Collection</span>
+                            <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                              <!-- <span class="label label-primary pull-right">4</span> -->
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" id="TreeView_MasterFile_Collection_Menu" style="white-space: normal;">
+                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
+                            <li><a href="{{ url('master-file/real-property-classification') }}"><i class="fa fa-circle-o" id="SideBar_MFile_RPCLASS"></i> Real type classification </a></li>
+                            @endif
                             @if($LA_GRP["M2000001"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/tax/group') }}"><i class="fa fa-circle-o" id="SideBar_MFile_TAXGROUP"></i> Tax Group</a></li>
                             @endif
                             @if($LA_GRP["M2000001"]["restrict"] == 'Y')
                             <li><a href="{{ url('master-file/tax/type') }}"><i class="fa fa-circle-o" id="SideBar_MFile_TAXTYPE"></i> Tax Type </a></li>
                             @endif
-                            @if($LA_GRP["M2000001"]["restrict"] == 'Y')
-                            <li><a href="{{ url('master-file/real-property-classification') }}"><i class="fa fa-circle-o" id="SideBar_MFile_RPCLASS"></i> Real type classification </a></li>
+                            @if($LA_GRP["M1000014"]["restrict"] == 'Y')
+                            <li><a href="{{url('master-file/accounting/or_types')}}"><i class="fa fa-circle-o" id="SideBar_MFile_OR_TYPE"></i> OR Types</a></li>
                             @endif
-
+                            @if($LA_GRP["M1000014"]["restrict"] == 'Y')
+                            <li><a href="{{url('master-file/Collection/RPT-Penalty')}}"><i class="fa fa-circle-o" id="SideBar_MFile_OR_TYPE"></i> RPT Penalty</a></li>
+                            @endif
                         </ul>
                     </li>
                     @endif

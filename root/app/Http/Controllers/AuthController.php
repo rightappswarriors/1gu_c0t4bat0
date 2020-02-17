@@ -35,6 +35,14 @@ class AuthController extends Controller
         $this->validateLogin($r);
         if ($this->attemptLogin($r)) {
             $this->authenticated($r);
+
+
+            // $data = DB::table('rssys.rptpenalty')->orderBy('year','DESC')->first();
+            // if(isset($data)){
+                
+            // }   
+
+
             return redirect($this->redirectTo);
             // if ($this->authenticated($r)) {
             //     return redirect($this->redirectTo);

@@ -91,11 +91,7 @@
     </section>
 
     <style>
-      @media print {
-	.logo{
-		margin-top: -95%;
-	}
-              .table td{
+    	    .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
@@ -104,6 +100,12 @@
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
+      @media print (orientation: landscape){
+      	#Header, #Footer { display: none !important; }
+	.logo{
+		margin-top: -95%;
+	}
+          
         * {
 
         }
@@ -125,6 +127,8 @@
         bottom: 0;
         left:0;
       }
+
+      @page { size: 8.5in 13in; margin: 0;}
       } 
       textarea {
     border: none;
@@ -138,6 +142,7 @@
 
     resize: none; /*remove the resize handle on the bottom right*/
     }
+
       
     </style>
 

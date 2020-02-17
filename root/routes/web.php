@@ -295,6 +295,17 @@ Route::group(['middleware'=>['checkauth']], function () {
 			});
 			/* --- INVENTORY ----------*/
 
+			Route::prefix('Collection')->group(function(){
+			/* --- VAT ----------*/
+				Route::prefix('RPT-Penalty')->group(function(){ // DONE -m
+					Route::get('/', 'MFile\Collection\RPTPenaltiesController@view');
+					Route::post('/', 'MFile\Collection\RPTPenaltiesController@add');
+					Route::post('/update', 'MFile\Collection\RPTPenaltiesController@update');
+					Route::post('/delete', 'MFile\Collection\RPTPenaltiesController@delete');
+				});
+				/* --- VAT ----------*/
+			});
+
 
 			/* --- COLLECTION ----------*/
 			Route::prefix('tax')->group(function(){

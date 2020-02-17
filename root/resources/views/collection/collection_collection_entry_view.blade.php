@@ -25,13 +25,13 @@
         <div class="box-body" style="">
           <form id="HdrForm" data-parsley-validate novalidate>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Collection Entry #</label>
                         <input type="text" class="form-control" name="hdr_b_num"  disabled="" value="@isset($colhdr){{$colhdr[0]->col_code}}@endisset">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Collection Code <span style="color:red"><strong>*</strong></span></label>
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec_txt" disabled> --}}
@@ -49,7 +49,7 @@
                         <span id="hdr_sec_span"></span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="form-group">
                         <label>Fund <span style="color:red"><strong>*</strong></span></label>
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_fund" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#budget_period_span" required>
@@ -64,7 +64,7 @@
                         </select>
                         <span id="budget_period_span"></span>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="row">
                 <div class="col-md-4">
@@ -115,11 +115,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+               {{--  <div class="col-md-4">
                     <div class="form-group">
                         <label>OR Type <span style="color:red"><strong>*</strong></span></label>
-                        {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_fid_txt" disabled>
-                        <input type="text" class="form-control EditBudgetapproved" name="hdr_fid" disabled style="display: none"> --}}
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_or" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_fid_span" data-parsley-required-message="<strong>OR Type</strong> is required." required>
                             @isset($or_type)
                               <option value="">Select OR Type...</option>
@@ -132,14 +130,14 @@
                         </select>
                         <span id="hdr_fid_span"></span>
                     </div>
-                </div>
-                <div class="col-md-4">
+                </div> --}}
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>OR. No. <span style="color:red"><strong>*</strong></span></label>
                         <input type="text" class="form-control EditBudgetapproved" value="@isset($colhdr){{$colhdr[0]->or_no}}@endisset" name="hdr_or_frm" data-parsley-required-message="<strong>OR No.</strong> is required." readonly required>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Reference <span style="color:red"><strong>*</strong></span></label>
                         <input type="text" class="form-control EditBudgetapproved" value="@isset($colhdr){{$colhdr[0]->or_ref}}@endisset" name="hdr_ref" data-parsley-required-message="<strong>Reference</strong> is required." required>
@@ -508,9 +506,9 @@
                 $('select[name="hdr_col"]').val('{{$colhdr[0]->j_code}}').trigger('change');
             @endisset
 
-            @isset($colhdr[0]->fid)
-                $('select[name="hdr_fund"]').val('{{$colhdr[0]->fid}}').trigger('change');
-            @endisset
+            {{-- @isset($colhdr[0]->fid) --}}
+                // $('select[name="hdr_fund"]').val('{{$colhdr[0]->fid}}').trigger('change');
+            {{-- @endisset --}}
 
             @isset($colhdr[0]->or_type)
                 $('select[name="hdr_or"]').val('{{$colhdr[0]->or_type}}').trigger('change');
@@ -613,7 +611,7 @@
       var tin = $('input[name="itm_tin"]').val(); // local_tin
       var td_bus = $('input[name="itm_tdbd"]').val();
       var payment = $('select[name="itm_payment"]').val(); // tax type
-      var payment_typ = $('select[name="itm_payment"]').select2('data')[0].text;
+      var payment_typ = ($('select[name="itm_payment"]').select2('data').length ? $('select[name="itm_payment"]').select2('data')[0].text : '');
       var payment_desc = $('input[name="itm_desc"]').val(); // description
       var amt = $('input[name="itm_amt"]').val(); // balance
       var payer = $('input[name="itm_payer"]').val(); // Payer
@@ -728,6 +726,7 @@
   }
   function DeleteMode(line, tin, td_bus, payer, itm_type, payment, payment_desc, soa_code, amt)
   {
+    $('[name=itm_payment], [name=itm_desc], [name=itm_tin], [name=itm_type], [name=itm_payer]').removeAttr('required');
     $('input[name="itm_line"]').val(line);
     $('input[name="itm_soa"]').val(soa_code);
     $('select[name="itm_payment"]').val(payment).trigger('change');
