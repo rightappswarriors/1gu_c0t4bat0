@@ -411,6 +411,7 @@
                     <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
                     <hr>
+                    <li><a href="{{route('inventory.par')}}"><i class="fa fa-circle-o"></i>Property Acknowledgment Receipt</a></li>
                     <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
                     <hr>
                     <li><a href="{{route('inventory.wastematerial')}}"><i class="fa fa-circle-o"></i>Waste Material</a></li>

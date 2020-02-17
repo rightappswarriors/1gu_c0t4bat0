@@ -1951,5 +1951,121 @@ class Inventory extends Model
 			return $e->getMessage();
 		}
 	}
+
+	// get all PAR Transactions Header.
+	public static function getPAR()
+    {
+    	try
+    	{
+    	   $sql = "SELECT rec_num, purc_ord, _reference, trnx_date, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, are_status FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.whs_code = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE trn_type = 'H' AND (rh.cancel != 'Y' OR rh.cancel isnull)";
+   
+    	   return DB::select(DB::raw($sql));
+        }
+        catch(\Exception $e)
+        {
+        	return $e->getMessage();
+        }
+    }
+
+    // get specific PAR Transaction header.
+    public static function getPARHeader($rec_num)
+	{	
+		try 
+		{
+			$sql = 'SELECT rec_num, purc_ord, _reference, trnx_date, cc_code, whs_code, branch, recipient, are_receivedby, are_receivedfrom, are_issuedto, are_receivebydesig, are_receivedfromdesig, are_issuedtodesig FROM rssys.rechdr WHERE rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+
+			return DB::select(DB::raw($sql))[0];
+		} 
+		catch (\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	// get specific PAR Transaction line.
+	public static function getPARLine($rec_num) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.part_no, rl.serial_no, rl.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc, rl.ir_date FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$rec_num.'\'';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// cancel a ARE Transactions.
+	public static function cancelPAR($code, $table, $col, $module)
+	{
+		try 
+		{
+			$datetime = Carbon::now();
+
+            $data = ['cancel' => "Y",
+                     'canc_user' => strtoupper(Session::get('_user')['id']),
+                     'canc_date' => $datetime->toDateString(),
+                     'canc_time' => $datetime->toTimeString()
+                    ];        
+
+			if (isset($table) && isset($col) && isset($code) ) 
+			{
+				if (!empty($data)) 
+				{
+					if (DB::table(DB::raw($table))->where($col, '=', $code)->update($data)) 
+					{
+						return true;
+          //               if (DB::table(DB::raw('rssys.stkcrd'))->where('reference', '=', $stk_ref)->delete())
+				      //   {
+				      //   	if (isset($module)) 
+				      //       {
+						    // 	//Inventory::alert(1, 'modified  data in '.$module);
+						    // }
+						    // return true;
+				      //   }
+					}
+				}
+			}
+			if (isset($module)) {
+			//Inventory::alert(2, 'occured upon modiification of data in '.$module);
+			}
+			return false;
+		}
+		catch (\Exception $e)
+		{
+			return $e->getMessage();
+			Inventory::alert(0, '');
+			return false;
+		}
+	}
+
+	public static function print_par($rec_num) // print PAR
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.part_no, rl.serial_no, rl.item_code, rl.item_desc, ROUND(rl.issued_qty, 2) as qty, it.unit_shortcode as unit_desc, ROUND(rl.price, 2) as price, ROUND(rl.ln_amnt, 2) as ln_amnt, rl.ir_date FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE rec_num = \''.$rec_num.'\' ORDER BY rl.ln_num ASC';
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	public static function print_parheader($rec_num) // print ARE
+	{
+		try
+		{
+            $sql = 'SELECT rh.purc_ord as parno, rh._reference as entity, m8.cc_desc as office, are_receivedfrom as receivedfrom, are_receivedby as receivedby, are_issuedto as issuedto, are_receivedfromdesig as receivedfromdesig, are_receivebydesig as receivedbydesig, are_issuedtodesig as issuedtodesig FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rec_num = \''.$rec_num.'\'';
+            
+            return DB::select(DB::raw($sql))[0];
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
 	
 }
