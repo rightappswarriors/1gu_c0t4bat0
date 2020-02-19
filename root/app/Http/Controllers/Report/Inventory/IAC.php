@@ -20,13 +20,14 @@ class IAC extends Controller
 
     public function print(Request $request)
     {
-    	$date = $request->dtp_date;
+    	$frmdate = $request->dtp_frmdate;
+        $todate = $request->dtp_todate;
         $itmgrp = $request->select_itmgrp;
 
-        $data = Inventory::printIAC($date, $itmgrp);
-        $total = Inventory::printIACTotal($date, $itmgrp);
+        $data = Inventory::printIAC($frmdate, $todate, $itmgrp);
+        $total = Inventory::printIACTotal($frmdate, $todate, $itmgrp);
 
-        $date = date_create($date);
+        $date = date_create($todate);
         $asofdt = date_format($date, "F d, Y");
 
         $itmgrpdesc = Inventory::getItemGrp($itmgrp);

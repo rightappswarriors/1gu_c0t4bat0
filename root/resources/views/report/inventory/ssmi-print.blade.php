@@ -8,8 +8,8 @@
     $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT"; // Module Name
 @endphp
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       <div class="graph-image graph-7">
@@ -63,6 +63,7 @@
             
             @foreach($data as $d)
             <tr>
+              
                  <td>{{$d->item_desc}}</td>
                  <td align="center">{{$d->unit}}</td>
                  <td align="center">{{$d->jan}}</td>
@@ -104,21 +105,21 @@
             <tr>
               <td align="right">TOTAL:</td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td colspan="3"></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{$total->jan}}</td>
+              <td>{{$total->feb}}</td>
+              <td>{{$total->mar}}</td>
+              <td>{{$total->apr}}</td>
+              <td>{{$total->may}}</td>
+              <td>{{$total->jun}}</td>
+              <td>{{$total->jul}}</td>
+              <td>{{$total->aug}}</td>
+              <td>{{$total->sep}}</td>
+              <td>{{$total->oct}}</td>
+              <td>{{$total->nov}}</td>
+              <td colspan="3">{{$total->dec}}</td>
+              <td>{{$total->total_qty}}</td>
+              <td align="right">{{number_format($total->unit_cost, 2)}}</td>
+              <td align="right">{{number_format($total->total_cost, 2)}}</td>
             </tr>
             </tbody>
           </table>
@@ -128,7 +129,7 @@
     </section>
 
     <style>
-    	    .table td{
+          .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
         padding: 0 8px 0 8px !important;
@@ -142,9 +143,9 @@
         #Headers, #Footers {
           display: none !important;
         }
-    	.logo{
-    		margin-top: -95%;
-    	}
+      .logo{
+        margin-top: -95%;
+      }
 
         #sidebar-parent {
           display: none;
@@ -193,5 +194,5 @@
 
 
     </script>
-	
+  
 @endsection
