@@ -78,6 +78,21 @@
             </tr>
             @endforeach
             <tr>
+              <td>..*NOTHING FOLLOWS*..</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -103,18 +118,20 @@
     	   .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
+         padding: 0 8px 0 8px !important;
       }
        .table th{
         white-space: nowrap;
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
-      @media print (orientation: landscape){
+      @media print{
+        #Headers, #Footers {
+          display: none !important;
+        }
 	.logo{
 		margin-top: -95%;
 	}
-  
-
         #sidebar-parent {
           display: none;
         }
@@ -131,7 +148,7 @@
         left:0;
       }
       } 
-        @page {size: 8.5in 13in; size: landscape; margin: 0;}
+        @page {size: 8.5in 13in; size: landscape; margin: 0.75in 0.4in 0 0.4in;}
       textarea {
     border: none;
     overflow: hidden;

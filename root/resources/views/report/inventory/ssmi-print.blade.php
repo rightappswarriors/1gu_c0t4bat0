@@ -17,29 +17,29 @@
       </div>
       <div class="row" >
         <div class="col-sm-12" >
-          <table style="border: 1px solid #000;margin:10px 0 10px 0 !important;"  id="tbl_list" class="table table-bordered table-striped">
+          <table style="border: 1px solid #000;margin:10px 0 0 0 !important;"  id="tbl_list" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <div class="image">
                   <th style="border: none !important;">
                     {{-- <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="width: 145px;"> --}}</th>
                   <th style="border: none !important;">
-                    <center><h3>SUMMARY OF SUPPLIES AND MATERIALS ISSUED</h3><h4>LGU-GUIHULNGAN CITY</h4><h4>{{$itmgrpdesc->grp_desc}}</h4><h4>AS OF {{$asofdt}}</h4></center></th>
+                    <center><h3><strong>SUMMARY OF SUPPLIES AND MATERIALS ISSUED</strong></h3><h4>LGU-GUIHULNGAN CITY</h4><h4>{{$itmgrpdesc->grp_desc}}</h4><h4>AS OF {{$asofdt}}</h4></center></th>
                   <th style="border: none !important;">{{-- <img src="{{url('images/guihulngan.png')}}" class="img-circle logo" alt="logo" style="width:152px;"> --}}</th>
                 </div>
                 </tr>
               </thead>
           </table>
 
-          <table  class="table table-bordered table-striped" style="margin:10px 0 10px 0 !important;">
+          <table  class="table table-bordered table-striped" style="margin:0 0 10px 0 !important;">
             <thead>
             <tr>
-                 <th width="30%" style="font-size:14px;" rowspan="3" colspan=""><center>Item Description</center></th>
-                 <th width="10%" style="font-size:14px;" rowspan="3" colspan=""><center>Unit</center></th>
+                 <th width="30%" style="font-size:14px;" rowspan="3" colspan=""><center>ITEM No. Description</center></th>
+                 <th width="10%" style="font-size:14px;white-space: normal;" rowspan="3" colspan=""><center>Unit of Measurement</center></th>
                  <th width="40%" style="font-size:14px;" rowspan="" colspan="14"><center>REQUISITION & ISSUE SLIP NUMBERS</center></th>
-                 <th width="20%" style="font-size:14px;" rowspan="3" colspan=""><center>TOTAL QTY</center></th>
-                 <th width="20%" style="font-size:14px;" rowspan="3" colspan=""><center>COST</center></th>
-                 <th width="20%" style="font-size:14px;" rowspan="3" colspan=""><center>TOTAL</center></th>
+                 <th  style="font-size:12px;white-space: normal;" rowspan="3" colspan=""><center>TOTAL QUANTITY ISSUED</center></th>
+                 <th  style="font-size:12px;white-space: normal;" rowspan="3" colspan=""><center>UNIT COST</center></th>
+                 <th style="font-size:12px;" rowspan="3" colspan=""><center>TOTAL COST</center></th>
             </tr>
             <tr>
               <td width="40%" style="font-size:14px;" rowspan="1" colspan="14" align="center"><b>QUANTITY ISSUED</b></td>
@@ -82,7 +82,44 @@
                  <td align="right">{{number_format($d->total_cost, 2)}}</td>
             </tr>
             @endforeach
-           
+            <tr>
+              <td>..*NOTHING FOLLOWS*..</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td colspan="3"></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td align="right">TOTAL:</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td colspan="3"></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -94,6 +131,7 @@
     	    .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
+        padding: 0 8px 0 8px !important;
       }
        .table th{
         white-space: nowrap;
@@ -101,6 +139,9 @@
         border: 1px solid #000 !important;
       }
       @media print {
+        #Headers, #Footers {
+          display: none !important;
+        }
     	.logo{
     		margin-top: -95%;
     	}
@@ -123,7 +164,7 @@
       }
       } 
 
-      @page {size: 8.5in 13in; size: landscape; margin: 0;}
+      @page {size: 8.5in 13in; size: landscape; margin: 0.75in 0.4in 0 0.4in;}
       textarea {
     border: none;
     overflow: hidden;

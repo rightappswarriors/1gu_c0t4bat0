@@ -45,7 +45,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Entity Name</label>
+                <label>Fund Cluster</label>
                 @if($isnew)
                 <input type="text" class="form-control" name="txt_reference" data-parsley-errors-container="#validate_txtreference" {{-- data-parsley-required-message="<strong>Reference is required.</strong>" required --}}>
                 @else
@@ -72,7 +72,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Fund Cluster</label>
+                <label>Entity Name</label>
                 <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_costcenter" data-parsley-errors-container="#validate_selectcostcenter" data-parsley-required-message="<strong>Office is required.</strong>" required>
                   @if($isnew)
                     <option value="" selected="selected">--- Select Office ---</option>
