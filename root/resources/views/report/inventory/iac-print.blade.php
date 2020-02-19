@@ -109,6 +109,20 @@
             </tr>
           </tbody>
           </table>
+          <table style="width:100%; margin: 80px 0 0 0 !important;">
+            <tr>
+              <td style="width: 50%;padding: 0 0 0 10%;">Prepare by:</td>
+              <td style="width: 50%;padding: 0 0 0 10%;">Approved by:</td>
+            </tr>
+             <tr>
+              <td class="text-center"><strong>LELIBETH U. ALIPAN</strong></td>
+              <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
+            </tr>
+             <tr>
+              <td class="text-center">Supply Officer III</td>
+              <td class="text-center">City Administrator/GSO Designate</td>
+            </tr>
+          </table>
         </div>
       </div>
       
