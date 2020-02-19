@@ -100,17 +100,10 @@
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
-      @media print (orientation: landscape){
-      	#Header, #Footer { display: none !important; }
-	.logo{
-		margin-top: -95%;
-	}
-          
-        * {
-
-        }
-        
-        #Header, #Footer {display: none ! important;}
+      @media print {
+    	.logo{
+    		margin-top: -95%;
+    	}
 
         #sidebar-parent {
           display: none;
@@ -126,10 +119,11 @@
         top: 0;
         bottom: 0;
         left:0;
-      }
 
-      @page { size: 8.5in 13in; margin: 0;}
+      }
       } 
+
+      @page {size: 8.5in 13in; size: landscape; margin: 0;}
       textarea {
     border: none;
     overflow: hidden;

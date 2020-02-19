@@ -39,7 +39,7 @@
             <tr>
                  <th width="30%" style="font-size:14px;" rowspan="2" colspan=""><center>PARTICULARS</center></th>
                  <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT</center></th>
-                 <th width="20%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT AMOUNT</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT AMOUNT</center></th>
                  <th width="20%" style="font-size:14px;" rowspan="" colspan="2"><center>BEGINNING BALANCES</center></th>
                  <th width="20%" style="font-size:14px;" rowspan="" colspan="2"><center>ADDITIONAL BALANCES</center></th>
                  <th width="20%" style="font-size:14px;" rowspan="" colspan="2"><center>TOTAL BALANCES</center></th>
@@ -47,16 +47,16 @@
                  <th width="20%" style="font-size:14px;" rowspan="" colspan="2"><center>ENDING BALANCES</center></th>
             </tr>
             <tr>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
-                 <th width="30%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>QUANTITY</center></th>
+                 <th width="10%" style="font-size:14px;" rowspan="" colspan=""><center>COST</center></th>
             </tr>
           </thead>
           <tbody>
@@ -100,11 +100,7 @@
     </section>
 
     <style>
-      @media print {
-	.logo{
-		margin-top: -95%;
-	}
-              .table td{
+    	   .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
@@ -113,11 +109,11 @@
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
-        * {
-
-        }
-        
-        #Header, #Footer {display: none ! important;}
+      @media print (orientation: landscape){
+	.logo{
+		margin-top: -95%;
+	}
+  
 
         #sidebar-parent {
           display: none;
@@ -135,6 +131,7 @@
         left:0;
       }
       } 
+        @page {size: 8.5in 13in; size: landscape; margin: 0;}
       textarea {
     border: none;
     overflow: hidden;
