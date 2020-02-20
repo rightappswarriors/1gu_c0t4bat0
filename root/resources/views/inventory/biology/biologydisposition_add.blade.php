@@ -526,16 +526,15 @@
           $('input[name="txt_itemdesc"]').val(data[4]);
           $('input[name="txt_qty"]').val(data[5]);
           $('input[name="txt_nature"]').val(data[7]);
-          // $('input[name="txt_remarks"]').val(data[8]);
+          $('input[name="txt_remarks"]').val(data[8]);
           $('input[name="txt_off"]').val(data[6]);
           $.ajax({
-             url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
+             url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode+'/'+code,
              method: 'GET',
              success : function(data)
              {  
-                var maxOffspring = data[1][0].sum;
-                console.log(maxOffspring)
-;                var max = data[0][0].qty_onhand_su;
+                var maxOffspring = parseInt(data[1][0].sum) + parseInt(data[2][0].numberofoffspring);    
+                var max = parseInt(data[0][0].qty_onhand_su) + parseInt(data[2][0].numberofdisposition);
                 var maxs = parseInt(max);
                 if(data.length > 0){
                   // $("input[name='txt_qty'").on('keyup keydown', function(e){
@@ -560,6 +559,10 @@
 
                   $('#maxoff').text(maxOffspring);
                   $('#maxacq').text(max);
+                  if(maxOffspring <= 0 || maxOffspring == null)
+                  {
+                    $("#txt_off").attr('disabled', true);
+                  }
                   $("input[name='txt_off']").attr({
                      "max" : maxOffspring,        // substitute your own
                   });
@@ -576,7 +579,7 @@
            });
 
 
-
+          
           $('#enteritem-modal').modal('toggle');
 
           //console.log(data);
@@ -593,9 +596,6 @@
 
         $('#enteritem-modal').modal('toggle');
       }
-
-
-      
 
       function set_tbl_itemlist(type)
       {
