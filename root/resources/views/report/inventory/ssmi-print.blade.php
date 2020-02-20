@@ -17,7 +17,7 @@
       </div>
       <div class="row" >
         <div class="col-sm-12" >
-          <table style="border: 1px solid #000;margin:10px 0 0 0 !important;"  id="tbl_list" class="table table-bordered table-striped">
+          <table style="border: 1px solid #000;margin:10px 0 0 0 !important;"  id="tbl_list" class="table table-bordered">
               <thead>
                 <tr>
                   <div class="image">
@@ -31,7 +31,7 @@
               </thead>
           </table>
 
-          <table  class="table table-bordered table-striped" style="margin:0 0 10px 0 !important;">
+          <table  class="table table-bordered" style="margin:0 0 10px 0 !important;">
             <thead>
             <tr>
                  <th width="30%" style="font-size:14px;" rowspan="3" colspan=""><center>ITEM No. Description</center></th>
@@ -122,6 +122,23 @@
               <td align="right">{{number_format($total->total_cost, 2)}}</td>
             </tr>
             </tbody>
+          </table>
+          <table style="width:100%; margin: 80px 0 0 0 !important;">
+            <tr>
+              <td style="width: 33.33%">Prepare by:</td>
+              <td style="width: 33.33%">Certified by:</td>
+              <td style="width: 33.33%">Posted in the SLC by/date</td>
+            </tr>
+             <tr>
+              <td class="text-center"><strong>LELIBETH U. ALIPAN</strong></td>
+              <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
+              <td class="text-center"><strong>MARIA JOFERDINE Y. QUE, CPA, CESE</strong></td>
+            </tr>
+             <tr>
+              <td class="text-center">Supply Officer III</td>
+              <td class="text-center">City Administrator/GSO Designate</td>
+              <td class="text-center">City Accountant</td>
+            </tr>
           </table>
         </div>
       </div>
