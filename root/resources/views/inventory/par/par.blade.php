@@ -37,9 +37,9 @@
                 <tr>
                   <td hidden="">{{$d->rec_num}}</td>
                   <td>{{$d->purc_ord}}</td>
-                  <td>{{$d->_reference}}</td>
-                  <td>{{$d->trnx_date}}</td>
                   <td>{{$d->cc_code}}</td>
+                  <td>{{$d->trnx_date}}</td>
+                  <td>{{$d->_reference}}</td>
                   <td>
                     <center>
                       <a class="btn btn-social-icon btn-warning" href="{{route('inventory.par_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-primary" href="{{route('inventory.par_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;

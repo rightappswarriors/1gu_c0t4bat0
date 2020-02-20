@@ -7,8 +7,8 @@
     $_ch = "Property Acknowledgment Receipt"; // Module Name
 @endphp
 @section('content')
-		<!-- Content Header (Page header) -->
-		@include('layout._contentheader')
+    <!-- Content Header (Page header) -->
+    @include('layout._contentheader')
     <!-- Main content -->
     <section class="content">
       <div class="graph-image graph-7">
@@ -16,7 +16,7 @@
       </div>
       <div class="row" >
         <div class="col-sm-12" >
-          <table style="border: 1px solid #000;margin:10px 0 10px 0 !important;"  id="tbl_list" class="table table-bordered table-striped">
+          <table style="border: 0 !important;margin:10px 0 10px 0 !important;"  id="tbl_list" class="table table-striped">
               <thead>
                 <tr>
                   <div class="image">
@@ -24,7 +24,7 @@
                     <img src="{{url('images/logo1.jpg')}}" class="img-circle" alt="logo" style="width: 145px;"></th>
                   <th style="border: none !important;">
                     <center><h3>PROPERTY ACKNOWLEDGMENT RECEIPT</h3><h4>Local Government Unit - City of Guihulngan</h4><h4>General Services Office</h4></center></th>
-                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle logo" alt="logo" style="width:152px;"></th>
+                  <th style="border: none !important;"><img src="{{url('images/guihulngan.png')}}" class="img-circle logo" alt="logo" style="width:133px;margin-top: -10%;"></th>
                 </div>
                 </tr>
               </thead>
@@ -46,11 +46,11 @@
 
           <table class="table">
             <tr>
-             <th colspan="12" class="noBorder"><h4>Entity Name: {{$par_header->entity}}</h4></th>
+             <td colspan="12" class="noBorder">Entity Name: {{$par_header->office}}</td>
            </tr>
            <tr>
-             <th colspan="3" class="noBorder"><h4>Fund Cluster: {{$par_header->office}}</h4></th>
-             <th colspan="3" class="noBorder"><h4>PAR No: {{$par_header->parno}}</h4></th>
+             <td  class="noBorder">Fund Cluster: {{$par_header->entity}}</td>
+             <td align="right"  class="noBorder">PAR No: {{$par_header->parno}}</td>
            </tr>
 
           <table  class="table table-bordered table-striped" style="margin:10px 0 10px 0 !important;">
@@ -93,7 +93,7 @@
           <table class="table table-bordered table-striped">
             <tr>
              {{-- <th colspan="3">Received From:</th> --}}
-             <th colspan="3">Issued To:</th>
+             <th colspan="3">Issued By:</th>
              <th colspan="2">Received By: </th>
              
            </tr>
@@ -131,22 +131,25 @@
 
     <style>
       @media print {
-	.logo{
-		margin-top: -95%;
-	}
+  .logo{
+    margin-top: -95%;
+  }
               .table td{
         background-color: transparent !important;
         border: 1px solid #000 !important;
+
       }
        .table th{
         white-space: nowrap;
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
-      th.noBorder{
+
+      td.noBorder{
         white-space: nowrap;
         background-color: transparent !important;
         border: 0 !important;
+  padding: 0 8px 0 8px !important;
       }
         * {
 
@@ -170,6 +173,7 @@
         left:0;
       }
       } 
+  @page { margin: 0;}
       textarea {
     border: none;
     overflow: hidden;
@@ -200,5 +204,5 @@
 
 
     </script>
-	
+  
 @endsection
