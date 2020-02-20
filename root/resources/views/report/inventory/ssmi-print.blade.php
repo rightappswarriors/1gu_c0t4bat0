@@ -163,6 +163,7 @@
         left:0;
 
       }
+      
       } 
 
       @page {size: 8.5in 13in; size: landscape; margin: 0.75in 0.4in 0 0.4in;}

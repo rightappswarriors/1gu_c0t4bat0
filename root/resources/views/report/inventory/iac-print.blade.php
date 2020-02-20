@@ -37,6 +37,7 @@
           <table  class="table table-bordered table-striped" style="margin:10px 0 10px 0 !important;">
             <thead>
             <tr>
+                 <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>ITEM NO</center></th>
                  <th width="30%" style="font-size:14px;" rowspan="2" colspan=""><center>PARTICULARS</center></th>
                  <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT</center></th>
                  <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT AMOUNT</center></th>
@@ -60,8 +61,10 @@
             </tr>
           </thead>
           <tbody>
+            <?php $row = 1 ?>
             @foreach($data as $d)
             <tr>
+                 <td><center>{{$row++}}</center></td>
                  <td>{{$d->item_desc}}</td>
                  <td align="center">{{$d->unit}}</td>
                  <td align="center">{{$d->cost}}</td>
@@ -78,6 +81,7 @@
             </tr>
             @endforeach
             <tr>
+              <td></td>
               <td>..*NOTHING FOLLOWS*..</td>
               <td></td>
               <td></td>
@@ -93,6 +97,7 @@
               <td></td>
             </tr>
             <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
