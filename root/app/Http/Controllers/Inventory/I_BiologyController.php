@@ -9,6 +9,7 @@ use Session;
 use isMethod;
 use App\Inventory;
 use Carbon\Carbon;
+use DB;
 
 class I_BiologyController extends Controller
 {
@@ -777,18 +778,22 @@ public function acqItemDetails($code)
       // $qty = $itemdetails->qty;
       // $remarks = $itemdetails->remarks;
 
-      $dummydata = 'hello';
-      $itemdetailsdata = array($itemdetails, $dummydata);
+      
+
+      $itemdetailsdata = array($itemdetails);
 
       return $itemdetailsdata;
     }
 
-public function acqInventoryDetails($itemcode)
-{
-  
-  $inventorydetails = Inventory::acqInventoryDetails($itemcode);
-  return $inventorydetails;
-}    
+  public function acqInventoryDetails($itemcode)
+  {
+
+    $offspring_data = DB::select("SELECT SUM(ln.numberofoffspring) FROM rssys.biology_offspringhd hd LEFT JOIN rssys.biology_offspringln ln ON hd.code = ln.code WHERE hd.cancel = false AND ln.item_code = '$itemcode'");
+    $inventorydetails = Inventory::acqInventoryDetails($itemcode);
+    $itemdetailsdata = array($inventorydetails, $offspring_data);
+
+    return $itemdetailsdata;
+  }  
 
 }
 

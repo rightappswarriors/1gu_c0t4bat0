@@ -183,8 +183,8 @@
                   <th>Item Code</th>
                   <th>Property No.</th>
                   <th>Description</th>
-                  <th>Number Disposed Of</th>
-                  {{-- <th>Number of Disposed Offspring</th> --}}
+                  <th>Number Of Disposed Acquisition</th>
+                  <th>Number of Disposed Offspring</th>
                   <th>Nature Of Disposition</th>
                   <th>Remarks</th>
                   <th>Actions</th>
@@ -201,7 +201,7 @@
                        <td>{{$rl->property_no}}</td>
                        <td>{{$rl->item_desc}}</td>
                        <td>{{$rl->numberofdisposition}}</td>
-                       {{-- <td>{{$rl->numberofoffspring}}</td> --}}
+                       <td>{{$rl->numberofoffspring}}</td>
                        <td>{{$rl->natureofdisposition}}</td>
                        <td>{{$rl->remarks}}</td>
                        <td style="white-space: nowrap;"><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
@@ -312,14 +312,14 @@
                             <div class="form-group">
                               <label>Number of Disposed Offspring <span style="color:red"><strong>*</strong></span></label>
                                 <input type="number" id="txt_off" class="form-control" name="txt_off" min="0">
-                                <span id="limit2" style="color: red; font-size: 11px;"></span>
+                                <span id="limit2" style="color: red; font-size: 11px;">Disposed offspring max input ( <span id="maxoff"></span> ) </span>
                             </div>
                           </div>
                           <div class="col-sm-6">
                             <div class="form-group">
-                              <label>Number Disposed of <span style="color:red"><strong>*</strong></span></label>
+                              <label>Number of Disposed Acquisition <span style="color:red"><strong>*</strong></span></label>
                                 <input type="number" id="txt_qty" class="form-control" name="txt_qty" min="0">
-                                <span id="limit" style="color: red; font-size: 11px;"></span>
+                                <span id="limit" style="color: red; font-size: 11px;">Disposed acquired max input ( <span id="maxacq"></span> ) </span>
                             </div>
                           </div>
                           <div class="col-sm-6">
@@ -532,22 +532,36 @@
              url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode,
              method: 'GET',
              success : function(data)
-             {
-                var max = data[0].qty_onhand_su;
+             {  
+                var maxOffspring = data[1][0].sum;
+                console.log(maxOffspring)
+;                var max = data[0][0].qty_onhand_su;
                 var maxs = parseInt(max);
                 if(data.length > 0){
-                  $("input[name='txt_qty'").on('keyup keydown', function(e){
-                      console.log($(this).val() > maxs)
-                      if ($(this).val() > maxs 
-                          && e.keyCode !== 46
-                          && e.keyCode !== 8
-                         ) {
-                         e.preventDefault();     
-                         $(this).val(maxs);
-                      }
-                  });
+                  // $("input[name='txt_qty'").on('keyup keydown', function(e){
+                  //     if ($(this).val() > maxs 
+                  //         && e.keyCode !== 46
+                  //         && e.keyCode !== 8
+                  //        ) {
+                  //        e.preventDefault();     
+                  //        $(this).val(maxs);
+                  //     }
+                  // });
+
+                  // $("input[name='txt_off'").on('keyup keydown', function(e){
+                  //     if ($(this).val() > maxOffspring 
+                  //         && e.keyCode !== 46
+                  //         && e.keyCode !== 8
+                  //        ) {
+                  //        e.preventDefault();     
+                  //        $(this).val(maxOffspring);
+                  //     }
+                  // });
+
+                  $('#maxoff').text(maxOffspring);
+                  $('#maxacq').text(max);
                   $("input[name='txt_off']").attr({
-                     "max" : max,        // substitute your own
+                     "max" : maxOffspring,        // substitute your own
                   });
 
                   $("input[name='txt_qty']").attr({
@@ -587,7 +601,7 @@
       {
         if($('#add-form').parsley().validate()) // check required fields of the Add Item Form
         {
-          var max = $('input[name="txt_max"]').val();
+          var off = $('input[name="txt_off"]').val();
           var qty = $('input[name="txt_qty"]').val();
           var table = $('#tbl_itemlist').DataTable();
           var line = $('input[name="txt_lineno"]').val();
@@ -607,12 +621,12 @@
           {
 
             // table.row.add([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();  
-            table.row.add([line, date, item_code,part_no, item_desc, qty, qty, nature, remarks, buttons]).draw();
+            table.row.add([line, date, item_code,part_no, item_desc, qty, off, nature, remarks, buttons]).draw();
           }
           else if($('#ENTER_ITEM').text() == 'Edit')
           {
             // table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, offspring, nature, remarks, buttons]).draw();
-            table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, qty, nature, remarks, buttons]).draw();
+            table.row(selectedRow).data([line, date, item_code,part_no, item_desc, qty, off, nature, remarks, buttons]).draw();
           }
           else // remove item
           {
@@ -736,7 +750,7 @@
                                   '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
                                   '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+a.ln_num+'\');"></i></a>' +
                                 '</center>';
-                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null, null, null, buttons]).draw();
+                  table.row.add([line, null, a.item_code, a.property_no, a.item_desc, null,null, null, null, buttons]).draw();
                 }
             });
           }
@@ -845,7 +859,7 @@
 
       function total_amount()
       {
-        // var total_amt = 0.00;
+        var total_amt = 0.00;
         var tbl_itemlist = $('#tbl_itemlist').DataTable();
         var tbl_itemdata = tbl_itemlist.data().toArray(); //get all data of the table itemlist
 
