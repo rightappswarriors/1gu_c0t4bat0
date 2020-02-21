@@ -790,8 +790,9 @@ public function acqItemDetails($code)
 
     $offspring_data = DB::select("SELECT SUM(ln.numberofoffspring) FROM rssys.biology_offspringhd hd LEFT JOIN rssys.biology_offspringln ln ON hd.code = ln.code WHERE hd.cancel = false AND ln.item_code = '$itemcode'");
     $off_num = DB::select("SELECT ln.numberofoffspring, ln.numberofdisposition FROM rssys.biology_dispositionhd hd LEFT JOIN rssys.biology_dispositionln ln ON hd.code = ln.code WHERE hd.cancel = false AND ln.item_code = '$itemcode' AND ln.code = '$code'");
+    $disposition_data = DB::select("SELECT SUM(ln.numberofoffspring) FROM rssys.biology_dispositionhd hd LEFT JOIN rssys.biology_dispositionln ln ON hd.code = ln.code WHERE hd.cancel = false AND ln.item_code = '$itemcode'");
     $inventorydetails = Inventory::acqInventoryDetails($itemcode);
-    $itemdetailsdata = array($inventorydetails, $offspring_data, $off_num);
+    $itemdetailsdata = array($inventorydetails, $offspring_data, $off_num, $disposition_data);
 
     return $itemdetailsdata;
   }  

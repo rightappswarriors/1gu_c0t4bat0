@@ -532,49 +532,53 @@
              url: '{{asset('inventory/biology/bio_getinventorydetails')}}/'+itemcode+'/'+code,
              method: 'GET',
              success : function(data)
-             {  
-                var maxOffspring = parseInt(data[1][0].sum) + parseInt(data[2][0].numberofoffspring);    
-                var max = parseInt(data[0][0].qty_onhand_su) + parseInt(data[2][0].numberofdisposition);
-                var maxs = parseInt(max);
-                if(data.length > 0){
-                  // $("input[name='txt_qty'").on('keyup keydown', function(e){
-                  //     if ($(this).val() > maxs 
-                  //         && e.keyCode !== 46
-                  //         && e.keyCode !== 8
-                  //        ) {
-                  //        e.preventDefault();     
-                  //        $(this).val(maxs);
-                  //     }
-                  // });
-
-                  // $("input[name='txt_off'").on('keyup keydown', function(e){
-                  //     if ($(this).val() > maxOffspring 
-                  //         && e.keyCode !== 46
-                  //         && e.keyCode !== 8
-                  //        ) {
-                  //        e.preventDefault();     
-                  //        $(this).val(maxOffspring);
-                  //     }
-                  // });
-
-                  $('#maxoff').text(maxOffspring);
-                  $('#maxacq').text(max);
-                  if(maxOffspring <= 0 || maxOffspring == null)
+             { 
+                console.log(data);
+                if(data[2][0] == null || data[2][0].length <= 0)
                   {
-                    $("#txt_off").attr('disabled', true);
-                  }
-                  $("input[name='txt_off']").attr({
-                     "max" : maxOffspring,        // substitute your own
-                  });
+                    var maxOffspring = parseInt(data[1][0].sum) - parseInt(data[3][0].sum);
+                    var max = parseInt(data[0][0].qty_onhand_su);
+                    $('#maxoff').text(maxOffspring);
+                    $('#maxacq').text(max);
+                    if(maxOffspring <= 0 || maxOffspring == null)
+                      {
+                        $("#txt_off").attr('disabled', true);
+                      }
+                      $("input[name='txt_off']").attr({
+                         "max" : maxOffspring,        // substitute your own
+                      });
 
-                  $("input[name='txt_qty']").attr({
-                     "max" : max,        // substitute your own
-                  });
-                  // $("#limit").text("You Can Only Dispose " + maxs + " Animals");
-                  // $("#limit2").text("You Can Only Dispose " + maxs + " Animals");
-                  var sample = $('input[name="txt_max"]').val(maxs);
+                      $("input[name='txt_qty']").attr({
+                         "max" : max,        // substitute your own
+                      });
+                  }
+                  else
+                  {
+                    var maxOffspring = parseInt(data[1][0].sum) + parseInt(data[2][0].numberofoffspring) - parseInt(data[3][0].sum);    
+                    var max = parseInt(data[0][0].qty_onhand_su) + parseInt(data[2][0].numberofdisposition);
+                    var maxs = parseInt(max);
+                    if(data.length > 0){
+                      
+                      $('#maxoff').text(maxOffspring);
+                      $('#maxacq').text(max);
+                      if(maxOffspring <= 0 || maxOffspring == null)
+                      {
+                        $("#txt_off").attr('disabled', true);
+                      }
+                      $("input[name='txt_off']").attr({
+                         "max" : maxOffspring,        // substitute your own
+                      });
+
+                      $("input[name='txt_qty']").attr({
+                         "max" : max,        // substitute your own
+                      });
+                      // $("#limit").text("You Can Only Dispose " + maxs + " Animals");
+                      // $("#limit2").text("You Can Only Dispose " + maxs + " Animals");
+                      var sample = $('input[name="txt_max"]').val(maxs);
                   
-                }
+                    }
+                  } 
+               
              }
            });
 
