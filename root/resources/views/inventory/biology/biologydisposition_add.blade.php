@@ -534,7 +534,7 @@
              success : function(data)
              { 
                 console.log(data);
-                if(data[2][0] == null || data[2][0].length <= 0)
+                if(data[2][0] == null || data[2][0].length >= 0)
                   {
                     var maxOffspring = parseInt(data[1][0].sum) - parseInt(data[3][0].sum);
                     var max = parseInt(data[0][0].qty_onhand_su);
