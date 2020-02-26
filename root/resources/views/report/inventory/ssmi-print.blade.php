@@ -15,7 +15,15 @@
       <div class="graph-image graph-7">
         {{-- <img src="{{url('images/Carabao.jpg')}}" alt="Graph Description" /> --}}
       </div>
+      <!-- <div id="pageCounter">
+          <span></span>
+          <span></span>
+      </div> -->  <!--  page counter -->   
       <div class="row" >
+        <div id="pageCounter">
+        <div id="mainDivForCount">
+          
+
         <div class="col-sm-12" >
           <table style="border: 1px solid #000;margin:10px 0 0 0 !important;"  id="tbl_list" class="table table-bordered">
               <thead>
@@ -30,6 +38,8 @@
                 </tr>
               </thead>
           </table>
+
+          
 
           <table  class="table table-bordered" style="margin:0 0 10px 0 !important;">
             <thead>
@@ -61,9 +71,26 @@
           </thead>
             <tbody>
             
+            <?php 
+            $count = 8;
+            ?>
+
             @foreach($data as $d)
-            <tr>
-              
+
+            <?php 
+            $count += 1;
+
+            if($count == 21)
+            {
+               $count = 0;
+               ?> 
+               <tr class="page page-break"><span></span></tr>
+               <tr class="page-break"></tr>
+
+               <?php
+            }
+            ?>
+              <tr>
                  <td>{{$d->item_desc}}</td>
                  <td align="center">{{$d->unit}}</td>
                  <td align="center">{{$d->jan}}</td>
@@ -81,6 +108,7 @@
                  <td align="center">{{$d->total_qty}}</td>
                  <td align="right">{{number_format($d->unit_cost, 2)}}</td>
                  <td align="right">{{number_format($d->total_cost, 2)}}</td>
+                 
             </tr>
             @endforeach
             <tr>
@@ -139,8 +167,13 @@
               <td class="text-center">City Administrator/GSO Designate</td>
               <td class="text-center">City Accountant</td>
             </tr>
+            <tr class="page"></tr>
           </table>
         </div>
+      
+      </div> <!-- FOR PRINT -->
+      </div>
+
       </div>
       
     </section>
@@ -156,32 +189,55 @@
         background-color: transparent !important;
         border: 1px solid #000 !important;
       }
+
       @media print {
-        #Headers, #Footers {
-          display: none !important;
-        }
-      .logo{
-        margin-top: -95%;
-      }
+                   #Headers, #Footers {
+                     display: none !important;
+                   }
+                 .logo{
+                   margin-top: -95%;
+                 }
 
-        #sidebar-parent {
-          display: none;
-        }
+                   #sidebar-parent {
+                     display: none;
+                   }
 
-        #print_hide, #print_name_hide {
-          display: none;
-        }
-         .graph-image img{
-        opacity: 0.2; /* set your opacity */ 
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        left:0;
+                   #print_hide, #print_name_hide {
+                     display: none;
+                   }
+                    .graph-image img{
+                   opacity: 0.2; /* set your opacity */ 
+                   position: absolute;
+                   right: 0;
+                   top: 0;
+                   bottom: 0;
+                   left:0;
 
-      }
+                 }
+
+                  #pageCounter {
+                   counter-reset: pageTotal;
+                  }
+                  #pageCounter span {
+                   counter-increment: pageTotal;
+                  }
+                  #mainDivForCount {
+                   counter-reset: currentPage;
+                  }
+                  #mainDivForCount tr.page:before {
+                   counter-increment: currentPage;
+                   content: "Page " counter(currentPage) " of ";
+                  }
+                  #mainDivForCount tr.page:after {
+                   content: counter(currentPage);
+                  }
+                  .breakPage{
+                  page-break-before: always;
+                  }
+
+                  tr.page-break  { display: block; page-break-before: always; }
       
-      } 
+        } 
 
       @page {size: 8.5in 13in; size: landscape; margin: 0.75in 0.4in 0 0.4in;}
       textarea {

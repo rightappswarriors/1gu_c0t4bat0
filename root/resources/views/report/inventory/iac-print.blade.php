@@ -16,6 +16,8 @@
         {{-- <img src="{{url('images/Carabao.jpg')}}" alt="Graph Description" /> --}}
       </div>
       <div class="row" >
+        <div id="pageCounter">
+        <div id="mainDivForCount">
         <div class="col-sm-12" >
           <table id="tbl_list" class="table table-striped">
               <thead>
@@ -61,8 +63,12 @@
             </tr>
           </thead>
           <tbody>
-            <?php $row = 1 ?>
+            <?php 
+              $row = 1; 
+            ?>
+
             @foreach($data as $d)
+
             <tr>
                  <td><center>{{$row++}}</center></td>
                  <td>{{$d->item_desc}}</td>
@@ -127,8 +133,11 @@
               <td class="text-center">Supply Officer III</td>
               <td class="text-center">City Administrator/GSO Designate</td>
             </tr>
+            <tr class="page"></tr>
           </table>
         </div>
+      </div> {{-- main div count --}}
+    </div> {{-- page counter --}}
       </div>
       
     </section>
@@ -166,6 +175,27 @@
         bottom: 0;
         left:0;
       }
+                 #pageCounter {
+                   counter-reset: pageTotal;
+                  }
+                  #pageCounter span {
+                   counter-increment: pageTotal;
+                  }
+                  #mainDivForCount {
+                   counter-reset: currentPage;
+                  }
+                  #mainDivForCount tr.page:before {
+                   counter-increment: currentPage;
+                   content: "Page " counter(currentPage) " of ";
+                  }
+                  #mainDivForCount tr.page:after {
+                   content: counter(currentPage);
+                  }
+                  .breakPage{
+                  page-break-before: always;
+                  }
+
+                  tr.page-break  { display: block; page-break-before: always; }
       } 
         @page {size: 8.5in 13in; size: landscape; margin: 0.75in 0.4in 0 0.4in;}
       textarea {
