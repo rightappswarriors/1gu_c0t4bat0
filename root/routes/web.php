@@ -612,7 +612,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					// Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
 					Route::match(['get', 'post'], '/biologyacqusition', 'Inventory\I_BiologyController@add')->name('inventory.biologyacqusition');
 					Route::get('/bio_getacqdetails/{code}', 'Inventory\I_BiologyController@acqItemDetails')->name('inventory.biology_getacqdetails');
-					Route::get('/bio_getinventorydetails/{itemcode}', 'Inventory\I_BiologyController@acqInventoryDetails')->name('inventory.biology_getinventorydetails');
+					Route::get('/bio_getinventorydetails/{itemcode}/{code}', 'Inventory\I_BiologyController@acqInventoryDetails')->name('inventory.biology_getinventorydetails');
 					// Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
 					// Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
 				});
