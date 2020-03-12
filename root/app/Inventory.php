@@ -1266,11 +1266,18 @@ class Inventory extends Model
 	}
 
 	// get all Stock Release Transactions Header.
-	public static function getStockRelease()
+	public static function getStockRelease($dtfrm = "", $dtto = "")
     {
     	try
     	{
-    	   $sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, approve FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.\"locationFrom\" = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE (trn_type = 'R' OR trn_type = 'SR') AND (rh.cancel != 'Y' OR rh.cancel isnull)";
+    	   $AND = "";
+
+           if($dtfrm != "" || $dtto != "")
+           {
+               $AND = "AND trnx_date BETWEEN '".$dtfrm."' AND '".$dtto."'";
+           }
+
+    	   $sql = "SELECT rec_num, _reference, trnx_date, ris_no, sai_no, m8.cc_desc as cc_code, b.name as branch, w.whs_desc as whs_code, recipient, approve FROM rssys.rechdr rh LEFT JOIN rssys.branch b ON rh.branch = b.code LEFT JOIN rssys.whouse w ON rh.\"locationFrom\" = w.whs_code LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE (trn_type = 'R' OR trn_type = 'SR') AND (rh.cancel != 'Y' OR rh.cancel isnull) ".$AND."";
    
     	   return DB::select(DB::raw($sql));
         }

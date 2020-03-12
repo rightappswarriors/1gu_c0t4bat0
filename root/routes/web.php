@@ -498,6 +498,7 @@ Route::group(['middleware'=>['checkauth']], function () {
         /* ----- STOCK RELEASE */
 				Route::prefix('stockrelease')->group(function() {
 					Route::get('/', 'Inventory\I_StockReleaseController@view')->name('inventory.stockrelease');
+					Route::get('/view/{date}', 'Inventory\I_StockReleaseController@viewFilterDate');
 					Route::match(['get', 'post'], '/stockrelease_add', 'Inventory\I_StockReleaseController@add')->name('inventory.stockrelease_add');
 					Route::match(['get', 'post'], '/stockrelease_edit/{code}', 'Inventory\I_StockReleaseController@edit')->name('inventory.stockrelease_edit');
 				});
@@ -505,7 +506,6 @@ Route::group(['middleware'=>['checkauth']], function () {
 		/* ----- Requisition Issuance Slip */
 				Route::prefix('ris')->group(function() {
 					Route::get('/', 'Inventory\I_RISController@view')->name('inventory.ris');
-					Route::get('/view/{date}', 'Inventory\I_RISController@viewFilterDate');
 					Route::match(['get', 'post'], '/ris_add', 'Inventory\I_RISController@add')->name('inventory.ris_add');
 					Route::match(['get', 'post'], '/ris_edit/{code}', 'Inventory\I_RISController@edit')->name('inventory.ris_edit');
 					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');
@@ -514,6 +514,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 
 				Route::prefix('ris_02')->group(function() {
 					Route::get('/', 'Inventory\I_RISController@view_02')->name('inventory.ris_02');
+					Route::get('/view/{date}', 'Inventory\I_RISController@viewFilterDate');
 					Route::match(['get', 'post'], '/ris_add', 'Inventory\I_RISController@add_02')->name('inventory.ris_add_02');
 					Route::match(['get', 'post'], '/ris_edit/{code}', 'Inventory\I_RISController@edit_02')->name('inventory.ris_edit_02');
 					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');

@@ -18,8 +18,22 @@ class I_StockReleaseController extends Controller
     public function view()
     {  
         $data = Inventory::getStockRelease();
+        $dtfrm = date("Y-m-01");
+        $dtto = date("Y-m-d");
 
-        return view('inventory.stockrelease.stockrelease', compact('data'));
+        return view('inventory.stockrelease.stockrelease', compact('data', 'dtfrm', 'dtto'));
+    }
+
+    public function viewFilterDate($date)
+    {
+        $date = explode(",", $date);
+
+        $dtfrm = $date[0];
+        $dtto = $date[1];
+        
+        $data = Inventory::getStockRelease($dtfrm, $dtto);
+
+        return $data;
     }
 
     public function add(Request $request)

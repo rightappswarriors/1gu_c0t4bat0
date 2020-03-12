@@ -169,7 +169,7 @@
              tbl_list.clear().draw();
              
              $.ajax({
-                url: '{{asset('inventory/ris/view')}}/'+date,
+                url: '{{asset('inventory/ris_02/view')}}/'+date,
                 success: function(data)
                 {
                   console.log(data);
