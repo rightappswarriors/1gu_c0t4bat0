@@ -15,8 +15,30 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Stock In List</h3>
-              <a href="{{route('inventory.stockin_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+              
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="col-sm-12">
+                       <h3 class="box-title">Stock In List</h3>
+                       <a href="{{route('inventory.stockin_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="col-sm-1">
+                      <label>From:</label> 
+                  </div>  
+                  <div class="col-sm-5">
+                      <input type="date" name="dtp_frmdate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtfrm}}">
+                  </div>
+                  <div class="col-sm-1">
+                      <label>To:</label> 
+                  </div>  
+                  <div class="col-sm-5">
+                      <input type="date" name="dtp_todate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtto}}">
+                  </div>
+                </div>
+              </div>
+
               <!-- <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button> -->
             </div>
             <!-- /.box-header -->
@@ -34,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                  @foreach($data as $d)
+                 {{--  @foreach($data as $d)
                 <tr>
                   <td>{{$d->rec_num}}</td>
                   <td>{{$d->purc_ord}}</td>
@@ -45,7 +67,7 @@
                   <td>
                     <center><a class="btn btn-social-icon btn-primary" href="{{route('inventory.stockin_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{route('inventory.stockin_edit', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>
                 </tr>
-                @endforeach
+                @endforeach --}}
                 </tbody>
               </table>
             </div>
@@ -128,6 +150,49 @@
                               } 
 
                   });
+        }
+
+        function onchangedt()
+        {
+             var frmdt = $('input[name="dtp_frmdate"]').val();
+             var todt = $('input[name="dtp_todate"]').val();
+
+             var date = [frmdt, todt];
+
+             var tbl_list = $('#tbl_list').DataTable();
+
+             tbl_list.clear().draw();
+             
+             $.ajax({
+                url: '{{asset('inventory/stockin/view')}}/'+date,
+                success: function(data)
+                {
+                  console.log(data);
+                  if(data.length > 0)
+                  {
+                    for(var i = 0; i < data.length; i++)
+                    {
+                       rec_num = data[i]["rec_num"];
+                       purc_ord = data[i]["purc_ord"];
+                       supl_name = data[i]["supl_name"];
+                       reference = data[i]["_reference"];
+                       trnx_date = data[i]["trnx_date"];
+                       recipient = data[i]["recipient"];
+
+                       //print = "route('inventory.stockin_print', "+rec_num+")";
+
+                       buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/stockin/stockin_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockin/stockin_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+
+                       tbl_list.row.add([rec_num, purc_ord, supl_name, reference, trnx_date, recipient, buttons]).draw();
+                    }
+                  }
+                }
+             });
+        }
+
+        window.onload = function() 
+        {
+          onchangedt(); 
         }
 
       </script>

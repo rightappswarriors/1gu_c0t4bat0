@@ -640,12 +640,20 @@ class Inventory extends Model
 	}
 
 	// get all Stock In Transactions Header.
-	public static function getStockIn()
+	public static function getStockIn($dtfrm = "", $dtto = "")
     {
     	try
     	{
-    	   $sql = "SELECT * FROM rssys.rechdr WHERE trn_type = 'P' AND (cancel != 'Y' OR cancel isnull)";
-   
+    	   $AND = "";
+
+           if($dtfrm != "" || $dtto != "")
+           {
+               $AND = "AND trnx_date BETWEEN '".$dtfrm."' AND '".$dtto."'";
+           }
+
+    	   $sql = "SELECT * FROM rssys.rechdr WHERE trn_type = 'P' AND (cancel != 'Y' OR cancel isnull) ".$AND." ORDER BY trnx_date DESC";
+
+           
     	   return DB::select(DB::raw($sql));
         }
         catch(\Exception $e)
@@ -2105,6 +2113,21 @@ class Inventory extends Model
             $sql = 'SELECT rh.purc_ord as parno, rh._reference as entity, m8.cc_desc as office, are_receivedfrom as receivedfrom, are_receivedby as receivedby, are_issuedto as issuedto, are_receivedfromdesig as receivedfromdesig, are_receivebydesig as receivedbydesig, are_issuedtodesig as issuedtodesig FROM rssys.rechdr rh LEFT JOIN rssys.m08 m8 ON rh.cc_code = m8.cc_code WHERE rec_num = \''.$rec_num.'\'';
             
             return DB::select(DB::raw($sql))[0];
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// get specific Stock In Transaction line from RIS.
+	public static function getStockInLineFromRIS($code) 
+	{
+		try
+		{
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc, issued_qty FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\' ORDER BY rl.ln_num::integer ASC';
+            
+            return DB::select(DB::raw($sql));
 		}
 		catch(\Exception $e)
 		{

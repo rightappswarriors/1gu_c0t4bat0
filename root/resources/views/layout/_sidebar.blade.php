@@ -423,6 +423,7 @@
                     <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
                     <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
+                    <li><a href="{{route('inventory.ris_02')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip (02)</a></li>
                     <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
                     <hr>

@@ -18,8 +18,23 @@ class I_StockInController extends Controller
     public function view()
     {
         $data = Inventory::getStockIn();
+        $dtfrm = date("Y-m-01");
+        $dtto = date("Y-m-d");
 
-        return view('inventory.stockin.stockin', compact('data'));
+        return view('inventory.stockin.stockin', compact('data', 'dtfrm', 'dtto'));
+    }
+
+    public function viewFilterDate($date)
+    {
+        $date = explode(",", $date);
+
+        $dtfrm = $date[0];
+        $dtto = $date[1];
+        
+        $data = Inventory::getStockIn($dtfrm, $dtto);
+
+        return $data;
+
     }
 
     public function add(Request $request)
