@@ -505,6 +505,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 		/* ----- Requisition Issuance Slip */
 				Route::prefix('ris')->group(function() {
 					Route::get('/', 'Inventory\I_RISController@view')->name('inventory.ris');
+					Route::get('/view/{date}', 'Inventory\I_RISController@viewFilterDate');
 					Route::match(['get', 'post'], '/ris_add', 'Inventory\I_RISController@add')->name('inventory.ris_add');
 					Route::match(['get', 'post'], '/ris_edit/{code}', 'Inventory\I_RISController@edit')->name('inventory.ris_edit');
 					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');

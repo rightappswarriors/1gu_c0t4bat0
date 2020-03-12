@@ -15,9 +15,28 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Requisition Issuance Slip List</h3>
-              <a href="{{route('inventory.ris_add_02')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
-              <!-- <button class="btn btn-primary"><i class="fa fa-print"></i> Print</button> -->
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="col-sm-12">
+                       <h3 class="box-title">Requisition Issuance Slip List</h3>
+                       <a href="{{route('inventory.ris_add_02')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="col-sm-1">
+                      <label>From:</label> 
+                  </div>  
+                  <div class="col-sm-5">
+                      <input type="date" name="dtp_frmdate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtfrm}}">
+                  </div>
+                  <div class="col-sm-1">
+                      <label>To:</label> 
+                  </div>  
+                  <div class="col-sm-5">
+                      <input type="date" name="dtp_todate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtto}}">
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -37,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                  @foreach($data as $d)
+                  {{-- @foreach($data as $d)
                 <tr>
                   <td>{{$d->rec_num}}</td>
                   <td>{{$d->_reference}}</td>
@@ -51,7 +70,7 @@
                   <td>
                     <center><a class="btn btn-social-icon btn-primary" href="{{route('inventory.ris_print', $d->rec_num)}}"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{route('inventory.ris_edit_02', $d->rec_num)}}"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>
                 </tr>
-                @endforeach
+                @endforeach --}}
                 </tbody>
                 <tfoot>
                 <tr>
@@ -136,6 +155,50 @@
                               } 
 
                   });
+        }
+
+        function onchangedt()
+        {
+             var frmdt = $('input[name="dtp_frmdate"]').val();
+             var todt = $('input[name="dtp_todate"]').val();
+
+             var date = [frmdt, todt];
+
+             var tbl_list = $('#tbl_list').DataTable();
+
+             tbl_list.clear().draw();
+             
+             $.ajax({
+                url: '{{asset('inventory/ris/view')}}/'+date,
+                success: function(data)
+                {
+                  console.log(data);
+                  if(data.length > 0)
+                  {
+                    for(var i = 0; i < data.length; i++)
+                    {
+                       rec_num = data[i]["rec_num"];
+                       reference = data[i]["_reference"];
+                       ris_no = data[i]["ris_no"];
+                       sai_no = data[i]["sai_no"];
+                       trnx_date = data[i]["trnx_date"];
+                       cc_code = data[i]["cc_code"];
+                       whs_code = data[i]["whs_code"];
+                       branch = data[i]["branch"];
+                       recipient = data[i]["recipient"];
+
+                       buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/ris_02/ris_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+
+                       tbl_list.row.add([rec_num, reference, ris_no, sai_no, trnx_date, cc_code, recipient, buttons]).draw();
+                    }
+                  }
+                }
+             });
+        }
+
+        window.onload = function() 
+        {
+          onchangedt(); 
         }
 
       </script>

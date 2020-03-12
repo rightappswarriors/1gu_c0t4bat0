@@ -25,8 +25,22 @@ class I_RISController extends Controller
     public function view_02()
     {  
         $data = Inventory::getRIS();
+        $dtfrm = date("Y-m-01");
+        $dtto = date("Y-m-d");
 
-        return view('inventory.ris.ris_02', compact('data'));
+        return view('inventory.ris.ris_02', compact('data', 'dtfrm', 'dtto'));
+    }
+
+    public function viewFilterDate($date)
+    {
+        $date = explode(",", $date);
+
+        $dtfrm = $date[0];
+        $dtto = $date[1];
+        
+        $data = Inventory::getRIS($dtfrm, $dtto);
+
+        return $data;
     }
 
     public function add(Request $request)
