@@ -4,7 +4,7 @@
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Requisition Issuance Slip','icon'=>'none','st'=>true]
     ];
-    $_ch = "Requisition Issuance Slip"; // Module Name
+    $_ch = "Requisition Issuance Slip (02)"; // Module Name
 @endphp
 @section('content')
 		<!-- Content Header (Page header) -->

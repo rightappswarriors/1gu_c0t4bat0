@@ -732,6 +732,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 		   /* ----- SSMI */
 				Route::get('reports/inventory/ssmi', 'Report\Inventory\SSMI@view')->name('inventoryreports.ssmi');
 				Route::post('reports/inventory/ssmiprint', 'Report\Inventory\SSMI@print')->name('inventoryreports.ssmiprint');
+				Route::get('reports/inventory/ssmi_02', 'Report\Inventory\SSMI@view_02')->name('inventoryreports.ssmi_02');
+				Route::post('reports/inventory/ssmiprint_02', 'Report\Inventory\SSMI@print_02')->name('inventoryreports.ssmiprint_02');
 			/* ----- SSMI */
 			/* ----- IAC */
 				Route::get('reports/inventory/iac', 'Report\Inventory\IAC@view')->name('inventoryreports.iac');

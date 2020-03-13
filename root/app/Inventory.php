@@ -1939,7 +1939,22 @@ class Inventory extends Model
 		}
 	}
 
-	// Print SSMI
+	// Print SSMI 02
+	public static function printSSMI_02($itmgrp, $frmdt, $todt) 
+	{
+		try
+		{
+            $sql = "SELECT *, (total_qty * unit_cost) as total_cost FROM(SELECT code, item_code, item_desc, unit_desc as unit, SUM(CASE WHEN mo = 1 THEN ROUND(recv_qty) END) as jan, SUM(CASE WHEN mo = 2 THEN ROUND(recv_qty) END) as feb, SUM(CASE WHEN mo = 3 THEN ROUND(recv_qty) END) as mar, SUM(CASE WHEN mo = 4 THEN ROUND(recv_qty) END) as apr, SUM(CASE WHEN mo = 5 THEN ROUND(recv_qty) END) as may, SUM(CASE WHEN mo = 6 THEN ROUND(recv_qty) END) as jun, SUM(CASE WHEN mo = 7 THEN ROUND(recv_qty) END) as jul, SUM(CASE WHEN mo = 8 THEN ROUND(recv_qty) END) as aug, SUM(CASE WHEN mo = 9 THEN ROUND(recv_qty) END) as sep, SUM(CASE WHEN mo = 10 THEN ROUND(recv_qty) END) as oct, SUM(CASE WHEN mo = 11 THEN ROUND(recv_qty) END) as nov, SUM(CASE WHEN mo = 12 THEN ROUND(recv_qty) END) as dec, ROUND(SUM(recv_qty)) as total_qty, unit_cost FROM(SELECT rh.purc_ord as code, rl.item_code, rl.item_desc, rl.recv_qty, rl.unit, rh.trnx_date, EXTRACT(MONTH FROM rh.trnx_date) as mo, rl.price as unit_cost, it.unit_desc FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.items i ON rl.item_code = i.item_code LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE rh.trn_type IN ('P') AND (rh.cancel != 'Y' OR rh.cancel isnull) AND ig.item_grp = '$itmgrp' AND rh.trnx_date BETWEEN '$frmdt' AND '$todt' ORDER BY item_code) second WHERE mo is not null GROUP BY code, item_code, item_desc, unit_desc, unit_cost ORDER BY item_code) final ORDER BY item_desc";
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// Print SSMI Total
 	public static function printSSMITotal($itmgrp, $frmdt, $todt) 
 	{
 		try
@@ -1954,6 +1969,21 @@ class Inventory extends Model
              */
 
             $sql = "SELECT SUM(jan) as jan, SUM(feb) as feb, SUM(mar) as mar, SUM(apr) as apr, SUM(may) as may, SUM(jun) as jun, SUM(jul) as jul, SUM(aug) as aug, SUM(sep) as sep, SUM(oct) as oct, SUM(nov) as nov, SUM(dec) as dec, SUM(total_qty) as total_qty, SUM(unit_cost) as unit_cost, SUM(total_cost) as total_cost FROM(SELECT *, (total_qty * unit_cost) as total_cost FROM(SELECT item_code, item_desc, unit_desc as unit, SUM(CASE WHEN mo = 1 THEN ROUND(recv_qty) END) as jan, SUM(CASE WHEN mo = 2 THEN ROUND(recv_qty) END) as feb, SUM(CASE WHEN mo = 3 THEN ROUND(recv_qty) END) as mar, SUM(CASE WHEN mo = 4 THEN ROUND(recv_qty) END) as apr, SUM(CASE WHEN mo = 5 THEN ROUND(recv_qty) END) as may, SUM(CASE WHEN mo = 6 THEN ROUND(recv_qty) END) as jun, SUM(CASE WHEN mo = 7 THEN ROUND(recv_qty) END) as jul, SUM(CASE WHEN mo = 8 THEN ROUND(recv_qty) END) as aug, SUM(CASE WHEN mo = 9 THEN ROUND(recv_qty) END) as sep, SUM(CASE WHEN mo = 10 THEN ROUND(recv_qty) END) as oct, SUM(CASE WHEN mo = 11 THEN ROUND(recv_qty) END) as nov, SUM(CASE WHEN mo = 12 THEN ROUND(recv_qty) END) as dec, ROUND(SUM(recv_qty)) as total_qty, unit_cost FROM(SELECT rl.item_code, rl.item_desc, rl.recv_qty, rl.unit, rh.trnx_date, EXTRACT(MONTH FROM rh.trnx_date) as mo, i.unit_cost, it.unit_desc FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.items i ON rl.item_code = i.item_code LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE rh.trn_type IN ('P') AND (rh.cancel != 'Y' OR rh.cancel isnull) AND ig.item_grp = '$itmgrp' AND rh.trnx_date BETWEEN '$frmdt' AND '$todt' ORDER BY item_code) second WHERE mo is not null GROUP BY item_code, item_desc, unit_desc, unit_cost ORDER BY item_code) final ORDER BY item_desc) total";
+            
+            return DB::select(DB::raw($sql))[0];
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// Print SSMI Total 02
+	public static function printSSMITotal_02($itmgrp, $frmdt, $todt) 
+	{
+		try
+		{
+            $sql = "SELECT SUM(jan) as jan, SUM(feb) as feb, SUM(mar) as mar, SUM(apr) as apr, SUM(may) as may, SUM(jun) as jun, SUM(jul) as jul, SUM(aug) as aug, SUM(sep) as sep, SUM(oct) as oct, SUM(nov) as nov, SUM(dec) as dec, SUM(total_qty) as total_qty, SUM(unit_cost) as unit_cost, SUM(total_cost) as total_cost FROM(SELECT *, (total_qty * unit_cost) as total_cost FROM(SELECT code, item_code, item_desc, unit_desc as unit, SUM(CASE WHEN mo = 1 THEN ROUND(recv_qty) END) as jan, SUM(CASE WHEN mo = 2 THEN ROUND(recv_qty) END) as feb, SUM(CASE WHEN mo = 3 THEN ROUND(recv_qty) END) as mar, SUM(CASE WHEN mo = 4 THEN ROUND(recv_qty) END) as apr, SUM(CASE WHEN mo = 5 THEN ROUND(recv_qty) END) as may, SUM(CASE WHEN mo = 6 THEN ROUND(recv_qty) END) as jun, SUM(CASE WHEN mo = 7 THEN ROUND(recv_qty) END) as jul, SUM(CASE WHEN mo = 8 THEN ROUND(recv_qty) END) as aug, SUM(CASE WHEN mo = 9 THEN ROUND(recv_qty) END) as sep, SUM(CASE WHEN mo = 10 THEN ROUND(recv_qty) END) as oct, SUM(CASE WHEN mo = 11 THEN ROUND(recv_qty) END) as nov, SUM(CASE WHEN mo = 12 THEN ROUND(recv_qty) END) as dec, ROUND(SUM(recv_qty)) as total_qty, unit_cost FROM(SELECT rh.purc_ord as code, rl.item_code, rl.item_desc, rl.recv_qty, rl.unit, rh.trnx_date, EXTRACT(MONTH FROM rh.trnx_date) as mo, rl.price as unit_cost, it.unit_desc FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.items i ON rl.item_code = i.item_code LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE rh.trn_type IN ('P') AND (rh.cancel != 'Y' OR rh.cancel isnull) AND ig.item_grp = '$itmgrp' AND rh.trnx_date BETWEEN '$frmdt' AND '$todt' ORDER BY item_code) second WHERE mo is not null GROUP BY code, item_code, item_desc, unit_desc, unit_cost ORDER BY item_code) final ORDER BY item_desc) total";
             
             return DB::select(DB::raw($sql))[0];
 		}
