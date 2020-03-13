@@ -114,6 +114,7 @@
             </tr>
             @endforeach
             <tr>
+              <td></td>
               <td>..*NOTHING FOLLOWS*..</td>
               <td></td>
               <td></td>
@@ -133,6 +134,7 @@
               <td></td>
             </tr>
             <tr>
+              <td></td>
               <td align="right">TOTAL:</td>
               <td></td>
               <td>{{$total->jan}}</td>

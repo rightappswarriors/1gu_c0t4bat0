@@ -5,7 +5,7 @@
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
         ['link'=>'','desc'=>'SSMI Report','icon'=>'none','st'=>true]
     ];
-    $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT (02)"; // Module Name
+    $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT"; // Module Name
 @endphp
 @section('content')
 <!-- Content Header (Page header) -->

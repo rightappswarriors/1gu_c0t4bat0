@@ -507,8 +507,23 @@
                       <form id="add-form">
                        
                       <div class="box-body">
-                        
-                        
+                        <div class="row">
+                          <div class="col-sm-8">
+                            <div class="col-sm-1">
+                                <label>From:</label> 
+                            </div>  
+                            <div class="col-sm-5">
+                                <input type="date" name="dtp_frmdate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtfrm}}">
+                            </div>
+                            <div class="col-sm-1">
+                                <label>To:</label> 
+                            </div>  
+                            <div class="col-sm-5">
+                                <input type="date" name="dtp_todate" class="form-control pull-right" id="datepicker" onchange="onchangedt()" value="{{$dtto}}">
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
@@ -860,7 +875,7 @@
                   {
                     
                     tbl_additemfrmlist.row.add(['<input type="checkbox" id="chk_item" class="chk_item" value="'+data[i]["ln_num"]+'">',
-                                             data[i]["ln_num"], 
+                                             i + 1, 
                                              data[i]["item_code"],
                                              data[i]["part_no"],
                                              data[i]["serial_no"],
@@ -875,6 +890,10 @@
 
                   rec_num = data[0]["purc_ord"];
                   $('input[name="txt_purcord"]').val(rec_num);
+                }
+                else
+                {
+                  alert('Item(s) of the PO Selected already issued.');
                 }
              }
            });
@@ -928,7 +947,52 @@
         }
 
         $('#additemfromstockin-modal').modal('toggle');
-      } 
+      }
+
+        function onchangedt()
+        {
+             var frmdt = $('input[name="dtp_frmdate"]').val();
+             var todt = $('input[name="dtp_todate"]').val();
+
+             var date = [frmdt, todt];
+
+
+             if(!Date.parse(frmdt))
+             {
+               alert('Selected From Date is invalid.');
+             }
+             else if(!Date.parse(todt))
+             {
+               alert('Selected To Date is invalid.');
+             }
+             else
+             {
+                    $.ajax({
+                       url: '{{asset('inventory/ris_02/getDataSelectionStkin')}}/'+date,
+                       success: function(d)
+                       {
+                         $('select[name="select_codefrm"]').empty();
+                         if(d.length> 0)
+                         {
+                             $('select[name="select_codefrm"]').append('<option value="">--- Select Stock In ---</option>');
+                             for(var i = 0; i < d.length;i++)
+                             {
+                                 $('select[name="select_codefrm"]').append('<option value="'+d[i].rec_num+'">'+d[i].purc_ord+' - '+d[i]._reference+'</option>');
+                             }
+                         } 
+                         else 
+                         {
+                             $('select[name="select_codefrm"]').append('<option value="">No data available.</option>');
+                         }
+                       }
+                    });
+              }
+        }
+
+        window.onload = function() 
+        {
+          onchangedt(); 
+        } 
 
     </script>
 

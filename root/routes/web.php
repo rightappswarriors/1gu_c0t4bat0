@@ -520,6 +520,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');
 					Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 					Route::get('/getDataFromStockIn/{code}', 'Inventory\I_RISController@getDataFromStockIn')->name('inventory.ris_getDataFromStockIn');
+					Route::get('/getDataSelectionStkin/{code}', 'Inventory\I_RISController@getDataSelectionStkin');
 				});
 		/* ----- Requisition Issuance Slip */
 		/* ----- Acknowledgement Receipt Equipment */

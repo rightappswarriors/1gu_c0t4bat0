@@ -422,8 +422,8 @@
                     <li><a href=""><i class="fa fa-circle-o"></i> Purchase Orders</a></li> -->
                     <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
-                    <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
-                    <li><a href="{{route('inventory.ris_02')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip (02)</a></li>
+                    {{-- <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li> --}}
+                    <li><a href="{{route('inventory.ris_02')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
                     <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
                     <hr>
@@ -585,10 +585,10 @@
                                 {{-- @if($LA_GRP["R2000001"]["restrict"] == 'Y') --}}
                                 {{-- <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li> --}}
                                 <li><a href="{{ route('inventory.bioreportsview') }}"><i class="fa fa-circle-o"></i>Biology</a></li>
-                                <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
-                                <li><a href="{{ route('inventoryreports.ssmi_02') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued (02)</a></li>
-                                <li><a href="{{ route('inventoryreports.iac') }}"><i class="fa fa-circle-o"></i>COA Report</a></li>
-                                <li><a href="{{ route('inventoryreports.iac_02') }}"><i class="fa fa-circle-o"></i>COA Report (02)</a></li>
+                                {{-- <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li> --}}
+                                <li><a href="{{ route('inventoryreports.ssmi_02') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
+                                {{-- <li><a href="{{ route('inventoryreports.iac') }}"><i class="fa fa-circle-o"></i>COA Report</a></li> --}}
+                                <li><a href="{{ route('inventoryreports.iac_02') }}"><i class="fa fa-circle-o"></i>COA Report</a></li>
                                 {{-- @endif --}}
                             </ul>
                         </a>

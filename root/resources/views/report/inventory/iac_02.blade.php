@@ -5,7 +5,7 @@
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
         ['link'=>'','desc'=>'COA Report','icon'=>'none','st'=>true]
     ];
-    $_ch = "COA REPORT (02)"; // Module Name
+    $_ch = "COA REPORT"; // Module Name
 @endphp
 @section('content')
 <!-- Content Header (Page header) -->

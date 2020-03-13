@@ -209,7 +209,7 @@
                            recipient = data[i]["recipient"];
                            approve = data[i]["approve"];
     
-                           if(approve == 'true')
+                           if(approve == true)
                            {
                                btnstatus = '<a class="btn btn-social-icon btn-success" href="#"><i class="fa fa-check"></i></a>';
                                btnaction = '<a class="btn btn-social-icon btn-warning disabled" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
