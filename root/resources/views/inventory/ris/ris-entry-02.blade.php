@@ -873,7 +873,7 @@
                                             ]).draw();
                   }
 
-                  rec_num = data[0]["rec_num"];
+                  rec_num = data[0]["purc_ord"];
                   $('input[name="txt_purcord"]').val(rec_num);
                 }
              }

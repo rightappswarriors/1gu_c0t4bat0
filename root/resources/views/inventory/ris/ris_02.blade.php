@@ -44,6 +44,7 @@
                 <thead>
                 <tr>
                   <th>Code #</th>
+                  <th>PO Number</th>
                   <th>Reference</th>
                   <th>RIS NO</th>
                   <th>SAI NO</th>
@@ -75,6 +76,7 @@
                 <tfoot>
                 <tr>
                   <th>Code #</th>
+                  <th>PO Number</th>
                   <th>Reference</th>
                   <th>RIS NO</th>
                   <th>SAI NO</th>
@@ -166,34 +168,47 @@
 
              var tbl_list = $('#tbl_list').DataTable();
 
-             tbl_list.clear().draw();
-             
-             $.ajax({
-                url: '{{asset('inventory/ris_02/view')}}/'+date,
-                success: function(data)
-                {
-                  console.log(data);
-                  if(data.length > 0)
-                  {
-                    for(var i = 0; i < data.length; i++)
-                    {
-                       rec_num = data[i]["rec_num"];
-                       reference = data[i]["_reference"];
-                       ris_no = data[i]["ris_no"];
-                       sai_no = data[i]["sai_no"];
-                       trnx_date = data[i]["trnx_date"];
-                       cc_code = data[i]["cc_code"];
-                       whs_code = data[i]["whs_code"];
-                       branch = data[i]["branch"];
-                       recipient = data[i]["recipient"];
 
-                       buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/ris_02/ris_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+             if(!Date.parse(frmdt))
+             {
+               alert('Selected From Date is invalid.');
+             }
+             else if(!Date.parse(todt))
+             {
+               alert('Selected To Date is invalid.');
+             }
+             else
+             {
+                    tbl_list.clear().draw();
+                    
+                    $.ajax({
+                       url: '{{asset('inventory/ris_02/view')}}/'+date,
+                       success: function(data)
+                       {
+                         console.log(data);
+                         if(data.length > 0)
+                         {
+                           for(var i = 0; i < data.length; i++)
+                           {
+                              rec_num = data[i]["rec_num"];
+                              purc_ord = data[i]["purc_ord"];
+                              reference = data[i]["_reference"];
+                              ris_no = data[i]["ris_no"];
+                              sai_no = data[i]["sai_no"];
+                              trnx_date = data[i]["trnx_date"];
+                              cc_code = data[i]["cc_code"];
+                              whs_code = data[i]["whs_code"];
+                              branch = data[i]["branch"];
+                              recipient = data[i]["recipient"];
+       
+                              buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/ris_02/ris_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
 
-                       tbl_list.row.add([rec_num, reference, ris_no, sai_no, trnx_date, cc_code, recipient, buttons]).draw();
-                    }
-                  }
-                }
-             });
+                              tbl_list.row.add([rec_num, purc_ord, reference, ris_no, sai_no, trnx_date, cc_code, recipient, buttons]).draw();
+                           }
+                         }
+                       }
+                    });
+              }
         }
 
         window.onload = function() 

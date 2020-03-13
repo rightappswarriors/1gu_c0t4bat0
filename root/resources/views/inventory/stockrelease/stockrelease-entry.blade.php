@@ -31,7 +31,8 @@
                 @if($isnew)
                   <input type="text" class="form-control" name="txt_code" readonly="">
                 @else
-                  <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" readonly="">
+                  <input type="text" class="form-control" name="" value="{{$rechdr->purc_ord}}" readonly="">
+                  <input type="hidden" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" readonly="">
                 @endif
               </div>
             </div>

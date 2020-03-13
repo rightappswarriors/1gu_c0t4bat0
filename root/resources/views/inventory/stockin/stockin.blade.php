@@ -161,33 +161,44 @@
 
              var tbl_list = $('#tbl_list').DataTable();
 
-             tbl_list.clear().draw();
+             if(!Date.parse(frmdt))
+             {
+               alert('Selected From Date is invalid.');
+             }
+             else if(!Date.parse(todt))
+             {
+               alert('Selected To Date is invalid.');
+             }
+             else
+             {
+                tbl_list.clear().draw();
              
-             $.ajax({
-                url: '{{asset('inventory/stockin/view')}}/'+date,
-                success: function(data)
-                {
-                  console.log(data);
-                  if(data.length > 0)
-                  {
-                    for(var i = 0; i < data.length; i++)
-                    {
-                       rec_num = data[i]["rec_num"];
-                       purc_ord = data[i]["purc_ord"];
-                       supl_name = data[i]["supl_name"];
-                       reference = data[i]["_reference"];
-                       trnx_date = data[i]["trnx_date"];
-                       recipient = data[i]["recipient"];
+                $.ajax({
+                   url: '{{asset('inventory/stockin/view')}}/'+date,
+                   success: function(data)
+                   {
+                     console.log(data);
+                     if(data.length > 0)
+                     {
+                       for(var i = 0; i < data.length; i++)
+                       {
+                          rec_num = data[i]["rec_num"];
+                          purc_ord = data[i]["purc_ord"];
+                          supl_name = data[i]["supl_name"];
+                          reference = data[i]["_reference"];
+                          trnx_date = data[i]["trnx_date"];
+                          recipient = data[i]["recipient"];
 
-                       //print = "route('inventory.stockin_print', "+rec_num+")";
+                          //print = "route('inventory.stockin_print', "+rec_num+")";
 
-                       buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/stockin/stockin_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockin/stockin_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+                          buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/stockin/stockin_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockin/stockin_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
 
-                       tbl_list.row.add([rec_num, purc_ord, supl_name, reference, trnx_date, recipient, buttons]).draw();
-                    }
-                  }
-                }
-             });
+                          tbl_list.row.add([rec_num, purc_ord, supl_name, reference, trnx_date, recipient, buttons]).draw();
+                       }
+                     }
+                   }
+                });
+             }
         }
 
         window.onload = function() 

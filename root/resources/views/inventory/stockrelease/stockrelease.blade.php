@@ -44,6 +44,7 @@
                 <thead>
                 <tr>
                   <th>Code #</th>
+                  <th>PO No</th>
                   <th>Reference</th>
                   <th>RIS NO</th>
                   <th>SAI NO</th>
@@ -175,43 +176,56 @@
 
              var tbl_list = $('#tbl_list').DataTable();
 
-             tbl_list.clear().draw();
-             
-             $.ajax({
-                url: '{{asset('inventory/stockrelease/view')}}/'+date,
-                success: function(data)
-                {
-                  console.log(data);
-                  if(data.length > 0)
-                  {
-                    for(var i = 0; i < data.length; i++)
+             if(!Date.parse(frmdt))
+             {
+               alert('Selected From Date is invalid.');
+             }
+             else if(!Date.parse(todt))
+             {
+               alert('Selected To Date is invalid.');
+             }
+             else
+             {
+
+                 tbl_list.clear().draw();
+                 
+                 $.ajax({
+                    url: '{{asset('inventory/stockrelease/view')}}/'+date,
+                    success: function(data)
                     {
-                       rec_num = data[i]["rec_num"];
-                       reference = data[i]["_reference"];
-                       ris_no = data[i]["ris_no"];
-                       sai_no = data[i]["sai_no"];
-                       trnx_date = data[i]["trnx_date"];
-                       cc_code = data[i]["cc_code"];
-                       whs_code = data[i]["whs_code"];
-                       recipient = data[i]["recipient"];
-                       approve = data[i]["approve"];
-
-                       if(approve == 'true')
-                       {
-                           btnstatus = '<a class="btn btn-social-icon btn-success" href="#"><i class="fa fa-check"></i></a>';
-                           btnaction = '<a class="btn btn-social-icon btn-warning disabled" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
-                       }
-                       else
-                       {
+                      console.log(data);
+                      if(data.length > 0)
+                      {
+                        for(var i = 0; i < data.length; i++)
+                        {
+                           rec_num = data[i]["rec_num"];
+                           purc_ord = data[i]["purc_ord"];
+                           reference = data[i]["_reference"];
+                           ris_no = data[i]["ris_no"];
+                           sai_no = data[i]["sai_no"];
+                           trnx_date = data[i]["trnx_date"];
+                           cc_code = data[i]["cc_code"];
+                           whs_code = data[i]["whs_code"];
+                           recipient = data[i]["recipient"];
+                           approve = data[i]["approve"];
+    
+                           if(approve == 'true')
+                           {
+                               btnstatus = '<a class="btn btn-social-icon btn-success" href="#"><i class="fa fa-check"></i></a>';
+                               btnaction = '<a class="btn btn-social-icon btn-warning disabled" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
+                           }
+                           else
+                           {
                            btnstatus = '<a class="btn btn-social-icon btn-info" href="#"><i class="fa fa-spinner"></i></a>';
-                           btnaction = '<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
-                       }
+                               btnaction = '<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
+                           }
 
-                       tbl_list.row.add([rec_num, reference, ris_no, sai_no, trnx_date, cc_code, whs_code, recipient, btnstatus, btnaction]).draw();
+                           tbl_list.row.add([rec_num, purc_ord, reference, ris_no, sai_no, trnx_date, cc_code, whs_code, recipient, btnstatus, btnaction]).draw();
+                        }
+                      }
                     }
-                  }
-                }
-             });
+                });
+              }   
         }
 
         window.onload = function() 
