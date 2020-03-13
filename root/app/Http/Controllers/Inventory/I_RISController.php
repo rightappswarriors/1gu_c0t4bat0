@@ -202,6 +202,8 @@ class I_RISController extends Controller
             $receivedbydesig = $request->receivedbydesig;
             Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
             Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
+
+            $purcord = $request->purcord;
             
             $data = ['rec_num' => $code,  
                      '_reference' => $reference, 
@@ -217,7 +219,8 @@ class I_RISController extends Controller
                      'are_receivedfrom' => $receivedfrom,
                      'are_receivedfromdesig' => $receivedfromdesig,
                      'are_receivedby' => $receivedby,
-                     'are_receivebydesig' => $receivedbydesig
+                     'are_receivebydesig' => $receivedbydesig,
+                     'purc_ord' => $purcord
                      // 'branch' => $branch
                     ];
 
@@ -454,6 +457,8 @@ class I_RISController extends Controller
           $receivedbydesig = $request->receivedbydesig;
           Inventory::checkIfExistInsert('rssys.are_users', 'name', $receivedby);
           Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
+
+          $purcord = $request->purcord;
             
           $data = ['_reference' => $reference, 
                    'trnx_date' => $invoicedt, 
@@ -467,7 +472,8 @@ class I_RISController extends Controller
                    'are_receivedfrom' => $receivedfrom,
                    'are_receivedfromdesig' => $receivedfromdesig,
                    'are_receivedby' => $receivedby,
-                   'are_receivebydesig' => $receivedbydesig
+                   'are_receivebydesig' => $receivedbydesig,
+                   'purc_ord' => $purcord
                    // 'branch' => $branch
                   ];
 

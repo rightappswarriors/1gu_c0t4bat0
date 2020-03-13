@@ -1132,7 +1132,7 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\'';
+            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\' ORDER BY rl.ln_num::integer ASC';
             
             return DB::select(DB::raw($sql));
 		}
@@ -1998,6 +1998,21 @@ class Inventory extends Model
 		}
 	}
 
+	// Print IAC 02
+	public static function printIAC_02($frmdate, $todate, $itmgrp) 
+	{
+		try
+		{
+			$sql = "SELECT iaf2.code, iaf2.item_code, iaf2.item_desc, iaf2.price as cost, it.unit_desc as unit, ROUND(iaf2.begbal) as begbal, ROUND(iaf2.begbal * iaf2.price, 2) as begbalcost, ROUND(iaf2.addbal) as addbal, ROUND(iaf2.addbal * iaf2.price, 2) as addbalcost, ROUND(iaf2.totalbal) as totalbal, ROUND(iaf2.totalbal * iaf2.price, 2) as totalbalcost, ROUND(iaf2.issbal) as issbal, ROUND(iaf2.issbal * iaf2.price, 2) as issbalcost, ROUND(iaf2.endbal) as endbal, ROUND(iaf2.endbal * iaf2.price, 2) as endbalcost FROM (SELECT code, item_code, item_desc, price, SUM(begbal) as begbal, SUM(addbal) as addbal, SUM(begbal + addbal) as totalbal, SUM(issbal) as issbal, SUM((begbal + addbal) - issbal) as endbal FROM (SELECT p.purc_ord as code, p.item_code, p.item_desc, p.recv_qty as begbal, 0.00 as addbal, r.recv_qty as issbal, p.price, r.trnx_date as date FROM(SELECT rh.rec_num, rh.purc_ord, rl.item_code, rl.item_desc, rl.recv_qty, rl.price FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num WHERE rh.trn_type = 'P' AND (rh.cancel != 'Y' OR rh.cancel isnull)) p LEFT JOIN (SELECT rh.purc_ord as rec_num, rl.item_code, rl.item_desc, rl.recv_qty, rl.price, rh.trnx_date FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num WHERE rh.trn_type IN ('SR', 'R') AND (rh.cancel != 'Y' OR rh.cancel isnull)) r ON p.rec_num = r.rec_num AND p.item_code = r.item_code ) iaf1 WHERE date BETWEEN '$frmdate' AND '$todate' GROUP BY code, item_code, item_desc, price ORDER BY item_desc ) iaf2 LEFT JOIN rssys.items i ON iaf2.item_code = i.item_code LEFT JOIN rssys.itmunit it ON i.purc_unit_id = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE ig.item_grp = '$itmgrp' ORDER BY item_desc";
+            
+            return DB::select(DB::raw($sql));
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
 	// Print IAC Total
 	public static function printIACTotal($frmdate, $todate, $itmgrp)  
 	{
@@ -2009,6 +2024,21 @@ class Inventory extends Model
             */
 
             $sql = "SELECT SUM(begbalcost) as totalbegbalcost, SUM(addbalcost) as totaladdbalcost, SUM(totalbalcost) as totalbalcost, SUM(issbalcost) as totalissbalcost, SUM(endbalcost) as totalendbalcost FROM (SELECT iaf2.item_code, iaf2.item_desc, i.unit_cost as cost, it.unit_desc as unit, ROUND(iaf2.begbal) as begbal, ROUND(iaf2.begbal * i.unit_cost, 2) as begbalcost, ROUND(iaf2.addbal) as addbal, ROUND(iaf2.addbal * i.unit_cost, 2) as addbalcost, ROUND(iaf2.totalbal) as totalbal, ROUND(iaf2.totalbal * i.unit_cost, 2) as totalbalcost, ROUND(iaf2.issbal) as issbal, ROUND(iaf2.issbal * i.unit_cost, 2) as issbalcost, ROUND(iaf2.endbal) as endbal, ROUND(iaf2.endbal * i.unit_cost, 2) as endbalcost FROM (SELECT item_code, item_desc, SUM(begbal) as begbal, SUM(addbal) as addbal, SUM(begbal + addbal) as totalbal, SUM(issbal) as issbal, SUM((begbal + addbal) - issbal) as endbal FROM(SELECT rl.item_code, rl.item_desc, CASE WHEN rh.trn_type = 'P' THEN rl.recv_qty ELSE 0.00 END as begbal, CASE WHEN rh.trn_type = 'A' THEN rl.recv_qty ELSE 0.00 END as addbal, CASE WHEN rh.trn_type IN ('SR', 'R') THEN rl.recv_qty ELSE 0.00 END as issbal,rh.trnx_date as date, rh.trn_type as type FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id WHERE trn_type IN ('P', 'A', 'SR', 'R') AND item_code != 'TEXT-ITEM' ORDER BY type DESC) iaf1 WHERE date BETWEEN '$frmdate' AND '$todate' GROUP BY item_code, item_desc ORDER BY item_desc) iaf2 LEFT JOIN rssys.items i ON iaf2.item_code = i.item_code LEFT JOIN rssys.itmunit it ON i.purc_unit_id = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE ig.item_grp = '$itmgrp' ORDER BY item_desc) total";
+            
+            return DB::select(DB::raw($sql))[0];
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+
+	// Print IAC Total 02
+	public static function printIACTotal_02($frmdate, $todate, $itmgrp)  
+	{
+		try
+		{
+			$sql = "SELECT SUM(begbalcost) as totalbegbalcost, SUM(addbalcost) as totaladdbalcost, SUM(totalbalcost) as totalbalcost, SUM(issbalcost) as totalissbalcost, SUM(endbalcost) as totalendbalcost FROM (SELECT iaf2.code, iaf2.item_code, iaf2.item_desc, iaf2.price as cost, it.unit_desc as unit, ROUND(iaf2.begbal) as begbal, ROUND(iaf2.begbal * iaf2.price, 2) as begbalcost, ROUND(iaf2.addbal) as addbal, ROUND(iaf2.addbal * iaf2.price, 2) as addbalcost, ROUND(iaf2.totalbal) as totalbal, ROUND(iaf2.totalbal * iaf2.price, 2) as totalbalcost, ROUND(iaf2.issbal) as issbal, ROUND(iaf2.issbal * iaf2.price, 2) as issbalcost, ROUND(iaf2.endbal) as endbal, ROUND(iaf2.endbal * iaf2.price, 2) as endbalcost FROM (SELECT code, item_code, item_desc, price, SUM(begbal) as begbal, SUM(addbal) as addbal, SUM(begbal + addbal) as totalbal, SUM(issbal) as issbal, SUM((begbal + addbal) - issbal) as endbal FROM (SELECT p.purc_ord as code, p.item_code, p.item_desc, p.recv_qty as begbal, 0.00 as addbal, r.recv_qty as issbal, p.price, r.trnx_date as date FROM(SELECT rh.rec_num, rh.purc_ord, rl.item_code, rl.item_desc, rl.recv_qty, rl.price FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num WHERE rh.trn_type = 'P' AND (rh.cancel != 'Y' OR rh.cancel isnull)) p LEFT JOIN (SELECT rh.purc_ord as rec_num, rl.item_code, rl.item_desc, rl.recv_qty, rl.price, rh.trnx_date FROM rssys.reclne rl LEFT JOIN rssys.rechdr rh ON rl.rec_num = rh.rec_num WHERE rh.trn_type IN ('SR', 'R') AND (rh.cancel != 'Y' OR rh.cancel isnull)) r ON p.rec_num = r.rec_num AND p.item_code = r.item_code ) iaf1 WHERE date BETWEEN '$frmdate' AND '$todate' GROUP BY code, item_code, item_desc, price ORDER BY item_desc ) iaf2 LEFT JOIN rssys.items i ON iaf2.item_code = i.item_code LEFT JOIN rssys.itmunit it ON i.purc_unit_id = it.unit_id LEFT JOIN rssys.itmgrp ig ON i.item_grp = ig.item_grp WHERE ig.item_grp = '$itmgrp' ORDER BY item_desc) total";
             
             return DB::select(DB::raw($sql))[0];
 		}
@@ -2139,7 +2169,7 @@ class Inventory extends Model
 	{
 		try
 		{
-            $sql = 'SELECT rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc, issued_qty FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\' ORDER BY rl.ln_num::integer ASC';
+            $sql = 'SELECT rl.rec_num, rl.ln_num, rl.part_no, i.serial_no, i.tag_no, rl.item_code, rl.item_desc, rl.recv_qty as qty, rl.unit as unit_code, it.unit_shortcode as unit_desc, rl.price, rl.discount, rl.ln_amnt, rl.net_amnt, rl.ln_vat, rl.ln_vatamt, rl.cnt_code as cc_code, m8.cc_desc, rl.scc_code, st.scc_desc, issued_qty FROM rssys.reclne rl LEFT JOIN rssys.itmunit it ON rl.unit = it.unit_id LEFT JOIN rssys.m08 m8 ON rl.cnt_code = m8.cc_code LEFT JOIN rssys.subctr st ON rl.scc_code = st.scc_code LEFT JOIN rssys.items i ON rl.item_code = i.item_code WHERE rec_num = \''.$code.'\' ORDER BY rl.ln_num::integer ASC';
             
             return DB::select(DB::raw($sql));
 		}

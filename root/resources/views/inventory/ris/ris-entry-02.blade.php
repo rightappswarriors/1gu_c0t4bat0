@@ -32,6 +32,7 @@
                 @else
                 <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" disabled="">
                 @endif
+                <input type="hidden" class="form-control" name="txt_purcord">
               </div>
             </div>
             <div class="col-md-4">
@@ -307,7 +308,7 @@
                     <td>{{$rl->unit_code}}</td>
                     <td>{{$rl->unit_desc}}</td>
                     <td>{{$rl->price}}</td>
-                    <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
+                    <td><center><a class="btn btn-social-icon btn-warning editbtn"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center>
                   </td>
                   </tr>  
                   @endforeach
@@ -519,7 +520,7 @@
                                   
                                   {{-- <option personneltoreceive="{{$risa->uid}}" value="{{$risa->rec_num}}">{{$risa->ris_no}} {{$risa->cc_code}} {{$risa->nameofpersonnel}}</option> --}}
 
-                                  <option value="{{$s->rec_num}}">{{$s->rec_num}} - {{$s->_reference}}</option>
+                                  <option value="{{$s->rec_num}}">{{$s->purc_ord}} - {{$s->_reference}}</option>
 
                                   @endforeach
                                 </select>
@@ -608,6 +609,15 @@
       } );
       } );
 
+      /* UPDATE ROW
+     */
+      $('#tbl_itemlist tbody').on( 'click', '.editbtn', function () {
+                    
+      let index = $(this).closest('tr').index();
+             
+      EnterItem_Edit(index);
+       } );
+
 
       function EnterItem_Add(code, part_no, item_desc, unit, serial_no, tag_no)
       {
@@ -641,8 +651,8 @@
           $('.DeleteMode').hide();
 
           var table = $('#tbl_itemlist').DataTable();
-          var row = line - 1;
-          var data = table.row(row).data();
+          //var row = line - 1;
+          var data = table.row(line).data();
           
           $('input[name="txt_lineno"]').val(data[0]);
           $('input[name="txt_itemcode"]').val(data[1]);
@@ -686,7 +696,7 @@
         var unit_desc = $('select[name="select_unit"]').select2('data')[0].text;
         var price = $('input[name="txt_cost"]').val();
         var buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+              '<a class="btn btn-social-icon btn-warning editbtn"><i class="fa fa-pencil"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
             '</center>';
 
@@ -760,7 +770,8 @@
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
                       receivedby: $('select[name="select_personnel"]').val(),
-                      receivedbydesig: $('input[name="select_receivedbydesig"]').val()
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                      purcord: $('input[name="txt_purcord"]').val()
                    };
 
            $.ajax({
@@ -800,7 +811,8 @@
                       receivedfrom: $('input[name="select_receivedfrom"]').val(),
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
                       receivedby: $('select[name="select_personnel"]').val(),
-                      receivedbydesig: $('input[name="select_receivedbydesig"]').val()
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                      purcord: $('input[name="txt_purcord"]').val()
 
                    };
 
@@ -860,6 +872,9 @@
                                              data[i]["price"]
                                             ]).draw();
                   }
+
+                  rec_num = data[0]["rec_num"];
+                  $('input[name="txt_purcord"]').val(rec_num);
                 }
              }
            });
@@ -902,7 +917,7 @@
                   unit_desc = a.unit_desc;
                   price = a.price;
                   buttons = '<center>' +
-              '<a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit( \''+line+'\');"></i></a>&nbsp;' +
+              '<a class="btn btn-social-icon btn-warning editbtn"><i class="fa fa-pencil"></i></a>&nbsp;' +
                             '<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete(\''+line+'\');"></i></a>' +
             '</center>';
 

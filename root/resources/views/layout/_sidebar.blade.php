@@ -587,6 +587,7 @@
                                 <li><a href="{{ route('inventory.bioreportsview') }}"><i class="fa fa-circle-o"></i>Biology</a></li>
                                 <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
                                 <li><a href="{{ route('inventoryreports.iac') }}"><i class="fa fa-circle-o"></i>COA Report</a></li>
+                                <li><a href="{{ route('inventoryreports.iac_02') }}"><i class="fa fa-circle-o"></i>COA Report (02)</a></li>
                                 {{-- @endif --}}
                             </ul>
                         </a>
