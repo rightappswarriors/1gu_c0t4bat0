@@ -69,7 +69,6 @@
             ?>
 
             @foreach($data as $d)
-            @if($d->begbalcost > 0)
             <tr>
                  <td align="center">{{$d->code}}</td>
                  <td><center>{{$row++}}</center></td>
@@ -87,7 +86,6 @@
                  <td align="center">{{$d->endbal}}</td>
                  <td align="center">{{number_format($d->endbalcost, 2)}}</td>
             </tr>
-            @endif
             @endforeach
             <tr>
               <td></td>

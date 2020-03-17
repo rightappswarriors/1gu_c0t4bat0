@@ -26,13 +26,13 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label>Invoice No</label>
+                <label>Purchase Order No</label>
                 @if($isnew)
                 <input type="text" class="form-control" name="" disabled="">
                 <input type="hidden" class="form-control" name="txt_purcord">
                 @else
-                <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" disabled="">
-                <input type="hidden" class="form-control" name="txt_purcord" value="{{$rechdr->purc_ord}}">
+                <input type="hidden" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" disabled="">
+                <input type="text" class="form-control" name="txt_purcord" value="{{$rechdr->purc_ord}}" disabled="">
                 @endif
               </div>
             </div>

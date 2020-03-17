@@ -209,7 +209,8 @@
                            recipient = data[i]["recipient"];
                            approve = data[i]["approve"];
 
-                           btnaction = '<a class="btn btn-social-icon btn-success" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>';
+                           //btnaction = '<a class="btn btn-social-icon btn-success" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>';
+                           btnaction = '<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
     
                            if(approve == true)
                            {
