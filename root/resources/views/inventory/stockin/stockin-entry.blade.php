@@ -466,7 +466,7 @@
                         <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Save & close</button>
                       </span>
                       <span class="DeleteMode">
-                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Delete</button>
+                        <button type="button" class="btn btn-primary" onclick="set_tbl_itemlist('sc')">Remove</button>
                       </span>
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                     </div>
@@ -658,7 +658,7 @@
             r++;
           }
 
-          alert('Successfully deleted.');
+          alert('Successfully remove.');
         }
 
         total_amount();

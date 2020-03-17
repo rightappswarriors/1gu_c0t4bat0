@@ -29,10 +29,11 @@
                 <label>Invoice No</label>
                 @if($isnew)
                 <input type="text" class="form-control" name="" disabled="">
+                <input type="hidden" class="form-control" name="txt_purcord">
                 @else
                 <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" disabled="">
+                <input type="hidden" class="form-control" name="txt_purcord" value="{{$rechdr->purc_ord}}">
                 @endif
-                <input type="hidden" class="form-control" name="txt_purcord">
               </div>
             </div>
             <div class="col-md-4">
@@ -329,9 +330,18 @@
             <div class="col-sm-3">
               <div class="form-group" style="display: flex;">
                 @if($isnew)
-                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="Save()"><i class="fa fa-save"></i> Save</a>
+                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="Save()"><i class="fa fa-save"></i> Save as draft</a>
                 @else
-                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="EditSave()"><i class="fa fa-save"></i> Save</a>
+                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="EditSave()"><i class="fa fa-save"></i> Save as draft</a>
+                @endif
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group" style="display: flex;">
+                @if($isnew)
+                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="SaveApproved()"><i class="fa fa-save"></i> Save & Approved</a>
+                @else
+                <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="EditSaveApproved()"><i class="fa fa-save"></i> Save & Approved</a>
                 @endif
               </div>
             </div>
@@ -786,7 +796,8 @@
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
                       receivedby: $('select[name="select_personnel"]').val(),
                       receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
-                      purcord: $('input[name="txt_purcord"]').val()
+                      purcord: $('input[name="txt_purcord"]').val(),
+                      approve: 'false'
                    };
 
            $.ajax({
@@ -795,7 +806,47 @@
                   data: data,
                   success : function(flag)
                            {
-                              if(flag)
+                              if(flag == 'true')
+                              {
+                                console.log(flag);
+                                location.href= "{{route('inventory.ris_02')}}";
+                              }
+                              else
+                              {
+                                alert(flag);
+                              }
+                           }
+                  });
+      }
+
+      function SaveApproved()
+      {
+        var tbl_itemlist = $('#tbl_itemlist').DataTable();
+        var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
+
+        var data = { 
+                      _token : $('meta[name="csrf-token"]').attr('content'),
+                      tbl_itemlist: tbl_itemdata,
+                      invoicedt: $('input[name="dtp_invoicedt"]').val(),
+                      costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
+                      reference: $('input[name="txt_reference"]').val(),
+                      ris_no: $('input[name="txt_ris_no"]').val(),
+                      sai_no: $('input[name="txt_sai_no"]').val(),
+                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                      receivedby: $('select[name="select_personnel"]').val(),
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                      purcord: $('input[name="txt_purcord"]').val(),
+                      approve: 'true'
+                   };
+
+           $.ajax({
+                  url: '{{route('inventory.ris_add_02')}}',
+                  method: 'POST',
+                  data: data,
+                  success : function(flag)
+                           {
+                              if(flag == 'true')
                               {
                                 console.log(flag);
                                 location.href= "{{route('inventory.ris_02')}}";
@@ -827,24 +878,68 @@
                       receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
                       receivedby: $('select[name="select_personnel"]').val(),
                       receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
-                      purcord: $('input[name="txt_purcord"]').val()
+                      purcord: $('input[name="txt_purcord"]').val(),
+                      approve: 'false'
 
                    };
 
            $.ajax({
-                  url: '{{asset('inventory/ris/ris_edit')}}/'+rec_num,
+                  url: '{{asset('inventory/ris_02/ris_edit')}}/'+rec_num,
                   method: 'POST',
                   data: data,
                   success : function(flag)
                            {
-                              if(flag)
+                              if(flag == 'true')
                               {
                                 console.log(flag);
                                 location.href= "{{route('inventory.ris_02')}}";
                               }
                               else
                               {
-                                alert('ERROR in saving.');
+                                alert(flag);
+                              }
+                           }
+                  });
+      }
+
+      function EditSaveApproved()
+      {
+        var tbl_itemlist = $('#tbl_itemlist').DataTable();
+        var tbl_itemdata = tbl_itemlist.data().toArray(); // tbl_itemlist data
+
+        var rec_num = $('input[name="txt_code"]').val();
+
+        var data = { 
+                      _token : $('meta[name="csrf-token"]').attr('content'),
+                      tbl_itemlist: tbl_itemdata,
+                      invoicedt: $('input[name="dtp_invoicedt"]').val(),
+                      costcenter: $('select[name="select_costcenter"]').select2('data')[0].id,
+                      reference: $('input[name="txt_reference"]').val(),
+                      ris_no: $('input[name="txt_ris_no"]').val(),
+                      sai_no: $('input[name="txt_sai_no"]').val(),
+                      receivedfrom: $('input[name="select_receivedfrom"]').val(),
+                      receivedfromdesig: $('input[name="select_receivedfromdesig"]').val(),
+                      receivedby: $('select[name="select_personnel"]').val(),
+                      receivedbydesig: $('input[name="select_receivedbydesig"]').val(),
+                      purcord: $('input[name="txt_purcord"]').val(),
+                      approve: 'true'
+
+                   };
+
+           $.ajax({
+                  url: '{{asset('inventory/ris_02/ris_edit')}}/'+rec_num,
+                  method: 'POST',
+                  data: data,
+                  success : function(flag)
+                           {
+                              if(flag == 'true')
+                              {
+                                console.log(flag);
+                                location.href= "{{route('inventory.ris_02')}}";
+                              }
+                              else
+                              {
+                                alert(flag);
                               }
                            }
                   });

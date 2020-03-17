@@ -19,7 +19,7 @@
                 <div class="col-sm-6">
                   <div class="col-sm-12">
                        <h3 class="box-title">Stock Release List</h3>
-                      <a href="{{route('inventory.stockrelease_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+                     {{--  <a href="{{route('inventory.stockrelease_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a> --}}
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -208,16 +208,18 @@
                            whs_code = data[i]["whs_code"];
                            recipient = data[i]["recipient"];
                            approve = data[i]["approve"];
+
+                           btnaction = '<a class="btn btn-social-icon btn-success" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>';
     
                            if(approve == true)
                            {
                                btnstatus = '<a class="btn btn-social-icon btn-success" href="#"><i class="fa fa-check"></i></a>';
-                               btnaction = '<a class="btn btn-social-icon btn-warning disabled" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
+                               // btnaction = '<a class="btn btn-social-icon btn-warning disabled" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
                            }
                            else
                            {
                            btnstatus = '<a class="btn btn-social-icon btn-info" href="#"><i class="fa fa-spinner"></i></a>';
-                               btnaction = '<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
+                               // btnaction = '<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockrelease/stockrelease_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>';
                            }
 
                            tbl_list.row.add([rec_num, purc_ord, reference, ris_no, sai_no, trnx_date, cc_code, whs_code, recipient, btnstatus, btnaction]).draw();

@@ -14,6 +14,7 @@ class I_RISController extends Controller
 {
     private $stk_trns_type = "R";
     private $module = "Requisition Issuance Slip";
+    private $table = 'rssys.rechdr';
 
     public function view()
     {  
@@ -195,6 +196,7 @@ class I_RISController extends Controller
             $ris_no = $request->ris_no;
             $sai_no = $request->sai_no;
             //$stk_ref = $this->stk_trns_type."#".$code;
+            $approve = $request->approve;
 
             $receivedfrom = $request->receivedfrom;
             $receivedfromdesig = $request->receivedfromdesig;
@@ -223,44 +225,56 @@ class I_RISController extends Controller
                      'are_receivedfromdesig' => $receivedfromdesig,
                      'are_receivedby' => $receivedby,
                      'are_receivebydesig' => $receivedbydesig,
-                     'purc_ord' => $purcord
+                     'purc_ord' => $purcord,
+                     'approve' => $approve
                      // 'branch' => $branch
                     ];
 
-            $insertRIShd = Core::insertTable($table, $data, $this->module);        
+            // check if ris_no entered already exist
+            $cond = "trn_type = 'R' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND ris_no = '$ris_no'";
+            $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
 
-            if($insertRIShd == 'true')
+            if($checkifDataExist) // check if ris_no entered already exist
             {
-                Core::updatem99('ris_code', Inventory::get_nextincrementwithchar($code));
-
-                foreach($request->tbl_itemlist as $tb)
-                {
-                    $data2 = ['rec_num' => $code, 
-                              'ln_num' => $tb[0], 
-                              'part_no' => $tb[2], 
-                              'item_code' => $tb[1], 
-                              'item_desc' => $tb[5], 
-                              'recv_qty' => $tb[6], 
-                              'issued_qty' => $tb[6], 
-                              'unit' => $tb[7],
-                              'price' => $tb[9]
-                            ];
-
-                    if(Core::insertTable($tableln, $data2, $this->module))
-                    {       
-                    }
-                    else
-                    {
-                        $flag = 'false';
-                        break;
-                    }          
-                }
-
-                $flag = 'true';
+               return 'RIS No entered already exist.';
             }
             else
             {
-                return $insertRIShd;
+              $insertRIShd = Core::insertTable($table, $data, $this->module);        
+
+              if($insertRIShd == 'true')
+              {
+                  Core::updatem99('ris_code', Inventory::get_nextincrementwithchar($code));
+  
+                  foreach($request->tbl_itemlist as $tb)
+                  {
+                      $data2 = ['rec_num' => $code, 
+                                'ln_num' => $tb[0], 
+                                'part_no' => $tb[2], 
+                                'item_code' => $tb[1], 
+                                'item_desc' => $tb[5], 
+                                'recv_qty' => $tb[6], 
+                                'issued_qty' => $tb[6], 
+                                'unit' => $tb[7],
+                                'price' => $tb[9]
+                              ];
+  
+                      if(Core::insertTable($tableln, $data2, $this->module))
+                      {       
+                      }
+                      else
+                      {
+                          $flag = 'false';
+                          break;
+                      }          
+                  }
+  
+                  $flag = 'true';
+              }
+              else
+              {
+                  return $insertRIShd;
+              }
             }
 
             return $flag;    
@@ -465,6 +479,7 @@ class I_RISController extends Controller
           Inventory::checkIfExistInsert('rssys.are_position', 'name', $receivedbydesig);
 
           $purcord = $request->purcord;
+          $approve = $request->approve;
             
           $data = ['_reference' => $reference, 
                    'trnx_date' => $invoicedt, 
@@ -479,73 +494,84 @@ class I_RISController extends Controller
                    'are_receivedfromdesig' => $receivedfromdesig,
                    'are_receivedby' => $receivedby,
                    'are_receivebydesig' => $receivedbydesig,
-                   'purc_ord' => $purcord
+                   'purc_ord' => $purcord,
+                   'approve' => $approve
                    // 'branch' => $branch
                   ];
 
-          if(Core::updateTable($table, 'rec_num', $code, $data, $this->module) == true)
+          $cond = "trn_type = 'R' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND ris_no = '$ris_no' AND rec_num != '$code'";
+          $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+
+          if($checkifDataExist) // check if ris_no entered already exist
           {
-              $del_dataln = [['rec_num', '=', $code]];
-              //$del_datastkcrd = [['reference', '=', $stk_ref]];
-
-              Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
-              //Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
-
-              foreach($request->tbl_itemlist as $tb)
-              {
-                $data2 = ['rec_num' => $code, 
-                          'ln_num' => $tb[0], 
-                          'part_no' => $tb[2], 
-                          'item_code' => $tb[1], 
-                          'item_desc' => $tb[5], 
-                          'recv_qty' => $tb[6], 
-                          'issued_qty' => $tb[6], 
-                          'unit' => $tb[7],
-                          'price' => $tb[9]
-                        ];          
-
-                if(Core::insertTable($tableln, $data2, $this->module))
-                {
-                    // $stk_qty_in = $tb[4];
-                    // $stk_qty_out = "0";
-
-                    // $stkcrd = ['item_code' => $tb[2],
-                    //            'item_desc' => $tb[3],
-                    //            'unit' => $tb[5],
-                    //            'trnx_date' => $invoicedt,
-                    //            'reference' => $stk_ref,
-                    //            'qty_in' => $stk_qty_in,
-                    //            'qty_out' => $stk_qty_out,
-                    //            'fcp' => $tb[7],
-                    //            'price' => $tb[7],
-                    //            'whs_code' => $stock_loc,
-                    //            'supl_code' => $supl_code,
-                    //            'supl_name' => $supl_name,
-                    //            'trn_type' => $this->stk_trns_type,
-                    //            'branch' => $branch];
-
-                    //  if(Inventory::saveToStkcrd($stkcrd))
-                    //  {
-
-                    //  }
-                    //  else
-                    //  {
-                    //    $flag = 'false';
-                    //    break;
-                    //  }          
-                }
-                else
-                {
-                    $flag = 'false';
-                    break;
-                }          
-              }
-
-              $flag = 'true';
+             return 'RIS No entered already exist.';
           }
           else
           {
-              $flag = 'false';
+             if(Core::updateTable($table, 'rec_num', $code, $data, $this->module) == true)
+             {
+                 $del_dataln = [['rec_num', '=', $code]];
+                 //$del_datastkcrd = [['reference', '=', $stk_ref]];
+   
+                 Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+                 //Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
+   
+                 foreach($request->tbl_itemlist as $tb)
+                 {
+                   $data2 = ['rec_num' => $code, 
+                             'ln_num' => $tb[0], 
+                             'part_no' => $tb[2], 
+                             'item_code' => $tb[1], 
+                             'item_desc' => $tb[5], 
+                             'recv_qty' => $tb[6], 
+                             'issued_qty' => $tb[6], 
+                             'unit' => $tb[7],
+                             'price' => $tb[9]
+                           ];          
+   
+                   if(Core::insertTable($tableln, $data2, $this->module))
+                   {
+                       // $stk_qty_in = $tb[4];
+                       // $stk_qty_out = "0";
+   
+                       // $stkcrd = ['item_code' => $tb[2],
+                       //            'item_desc' => $tb[3],
+                       //            'unit' => $tb[5],
+                       //            'trnx_date' => $invoicedt,
+                       //            'reference' => $stk_ref,
+                       //            'qty_in' => $stk_qty_in,
+                       //            'qty_out' => $stk_qty_out,
+                       //            'fcp' => $tb[7],
+                       //            'price' => $tb[7],
+                       //            'whs_code' => $stock_loc,
+                       //            'supl_code' => $supl_code,
+                       //            'supl_name' => $supl_name,
+                       //            'trn_type' => $this->stk_trns_type,
+                       //            'branch' => $branch];
+   
+                       //  if(Inventory::saveToStkcrd($stkcrd))
+                       //  {
+   
+                       //  }
+                       //  else
+                       //  {
+                       //    $flag = 'false';
+                       //    break;
+                       //  }          
+                   }
+                   else
+                   {
+                       $flag = 'false';
+                       break;
+                   }          
+                 }
+   
+                 $flag = 'true';
+             }
+             else
+             {
+                 $flag = 'false';
+             }
           }
 
           return $flag;   
@@ -593,5 +619,33 @@ class I_RISController extends Controller
         $data = Inventory::getStockIn($dtfrm, $dtto);
 
         return $data;
+    }
+
+    public function override(Request $request)
+    {
+      $code = $request->code;
+      $user = strtoupper($request->user);
+      $pass = strtoupper($request->pass);
+
+      $cond = "upper(uid) = upper('$user') AND upper(pwd) = upper('$pass') AND grp_id = '001'";
+      $checkifDataExist = Inventory::checkIfDataExist('rssys.x08', $cond);
+
+      $data = ['approve' => false];
+
+      if($checkifDataExist)
+      {
+        if(Core::updateTable($this->table, 'rec_num', $code, $data, $this->module) == true)
+        {
+          return 'true';
+        }
+        else
+        {
+          return 'false';
+        }
+      }
+      else
+      {
+        return 'User account not authorized to override. Please contact Admin.';
+      }
     }
 }

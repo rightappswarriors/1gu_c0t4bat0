@@ -121,6 +121,49 @@
       </div>
       </div>
 
+      {{-- OVERRIDE --}}
+      <div class="row">
+      <div class="modal fade in" id="override-modal">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Override Transaction</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12">
+                  Please enter username & password.
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" class="form-control" name="txt_user">
+                  </div>
+                </div>
+              </div>  
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" class="form-control" name="txt_pass">
+                  </div>
+                </div>
+              </div>  
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="override()">Submit</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
       <script>
         
         var selectedRow = 0;
@@ -147,7 +190,7 @@
                                 if(flag == 'true')
                                 {
                                   console.log(flag);
-                                  location.href = "{{route('inventory.ris')}}";
+                                  location.href = "{{route('inventory.ris_02')}}";
                                 }
                                 else
                                 {
@@ -200,8 +243,16 @@
                               whs_code = data[i]["whs_code"];
                               branch = data[i]["branch"];
                               recipient = data[i]["recipient"];
+                              approve = data[i]["approve"];
        
-                              buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/ris_02/ris_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+                              if(approve == true)
+                              {
+                                buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-success" data-toggle="modal" data-target="#override-modal"><i class="fa fa-folder-open"></i></a></center></td>';
+                              }
+                              else
+                              {
+                                buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/ris_02/ris_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/ris_02/ris_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+                              }
 
                               tbl_list.row.add([rec_num, purc_ord, reference, ris_no, sai_no, trnx_date, cc_code, recipient, buttons]).draw();
                            }
@@ -214,6 +265,41 @@
         window.onload = function() 
         {
           onchangedt(); 
+        }
+
+        function override()
+        {
+           var tbl_list = $('#tbl_list').DataTable();
+           var data = tbl_list.row(selectedRow).data();
+           var code = data[0];
+
+           var data = {
+                        _token : $('meta[name="csrf-token"]').attr('content'),
+                        code: code,
+                        user: $('input[name="txt_user"]').val(),
+                        pass: $('input[name="txt_pass"]').val()
+                      };
+           
+           $.ajax({
+                     url: '{{route('inventory.ris_override')}}',
+                     method: 'POST',
+                     data: data,
+                     success: function(flag)
+                              {
+                                if(flag == 'true')
+                                {
+                                  console.log(flag);
+                                  onchangedt(); 
+                                  alert('Successfully override.');
+                                  $('#override-modal').modal('toggle');
+                                }
+                                else
+                                {
+                                  alert(flag);
+                                }
+                              } 
+
+                  });
         }
 
       </script>

@@ -521,6 +521,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 					Route::get('/getDataFromStockIn/{code}', 'Inventory\I_RISController@getDataFromStockIn')->name('inventory.ris_getDataFromStockIn');
 					Route::get('/getDataSelectionStkin/{code}', 'Inventory\I_RISController@getDataSelectionStkin');
+					Route::post('/ris_override', 'Inventory\I_RISController@override')->name('inventory.ris_override');
 				});
 		/* ----- Requisition Issuance Slip */
 		/* ----- Acknowledgement Receipt Equipment */
