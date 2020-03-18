@@ -164,7 +164,7 @@
              <tr>
               <td class="text-center"><strong>LELYBETH U. ALIPAN</strong></td>
               <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
-              <td class="text-center"><strong>MARIA JOFERDINE Y. QUE, CPA, CESE</strong></td>
+              <td class="text-center"><strong>MARIA JOFERDINE Y. CUI, CPA, CESE</strong></td>
             </tr>
              <tr>
               <td class="text-center">Supply Officer III</td>

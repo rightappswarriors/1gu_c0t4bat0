@@ -128,7 +128,7 @@
               <td style="width: 50%;padding: 0 0 0 10%;">Prepared by:</td>
               <td style="width: 50%;padding: 0 0 0 10%;">Approved by:</td>
             </tr>
-             <tr>
+            <tr>
               <td class="text-center"><strong>LELYBETH U. ALIPAN</strong></td>
               <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
             </tr>
