@@ -246,10 +246,11 @@ class I_RISController extends Controller
               {
                   Core::updatem99('ris_code', Inventory::get_nextincrementwithchar($code));
   
+                  $ln_num = 1;
                   foreach($request->tbl_itemlist as $tb)
                   {
                       $data2 = ['rec_num' => $code, 
-                                'ln_num' => $tb[0], 
+                                'ln_num' => $ln_num, 
                                 'part_no' => $tb[2], 
                                 'item_code' => $tb[1], 
                                 'item_desc' => $tb[5], 
@@ -266,7 +267,9 @@ class I_RISController extends Controller
                       {
                           $flag = 'false';
                           break;
-                      }          
+                      }
+
+                      $ln_num++;          
                   }
   
                   $flag = 'true';
@@ -515,11 +518,13 @@ class I_RISController extends Controller
    
                  Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
                  //Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
-   
+                 
+                 $ln_num = 1;
                  foreach($request->tbl_itemlist as $tb)
                  {
+                   
                    $data2 = ['rec_num' => $code, 
-                             'ln_num' => $tb[0], 
+                             'ln_num' => $ln_num, 
                              'part_no' => $tb[2], 
                              'item_code' => $tb[1], 
                              'item_desc' => $tb[5], 
@@ -563,7 +568,9 @@ class I_RISController extends Controller
                    {
                        $flag = 'false';
                        break;
-                   }          
+                   }
+
+                   $ln_num++;          
                  }
    
                  $flag = 'true';

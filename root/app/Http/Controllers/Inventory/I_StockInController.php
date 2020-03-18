@@ -94,77 +94,88 @@ class I_StockInController extends Controller
                      'branch' => $branch
                     ];
 
-            $insertHeader = Core::insertTable($table, $data, $this->module);        
-            
-            if($insertHeader == 'true')
+            // check if po_no entered already exist
+            $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord'";
+            $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+
+            if($checkifDataExist) // check if po_no entered already exist
             {
-                $updateM99 = Core::updatem99('stockin_code', Inventory::get_nextincrementwithchar($code));
-
-                if($updateM99 == 'true')
+               return 'PO No entered already exist.';
+            }
+            else
+            {   
+                $insertHeader = Core::insertTable($table, $data, $this->module);        
+                
+                if($insertHeader == 'true')
                 {
-                  foreach($request->tbl_itemlist as $tb)
-                  {
-                      $data2 = ['rec_num' => $code, 
-                                'ln_num' => $tb[0], 
-                                'part_no' => $tb[1], 
-                                'item_code' => $tb[2], 
-                                'item_desc' => $tb[3], 
-                                'recv_qty' => $tb[4], 
-                                'unit' => $tb[5], 
-                                'price' => $tb[7], 
-                                'discount' => $tb[8], 
-                                'ln_amnt' => $tb[9],
-                                'net_amnt' => $tb[10], 
-                                'ln_vat' => $tb[11],
-                                'ln_vatamt' => $tb[12]];
-                      
-                      $insertLine = Core::insertTable($tableln, $data2, $this->module);
-
-                      if($insertLine == 'true')
+                    $updateM99 = Core::updatem99('stockin_code', Inventory::get_nextincrementwithchar($code));
+    
+                    if($updateM99 == 'true')
+                    {
+                      foreach($request->tbl_itemlist as $tb)
                       {
-                           $stk_qty_in = $tb[4];
-                           $stk_qty_out = "0";
-  
-                           $stkcrd = ['item_code' => $tb[2],
-                                      'item_desc' => $tb[3],
-                                      'unit' => $tb[5],
-                                      'trnx_date' => $invoicedt,
-                                      'reference' => $stk_ref,
-                                      'qty_in' => $stk_qty_in,
-                                      'qty_out' => $stk_qty_out,
-                                      'fcp' => $tb[7],
-                                      'price' => $tb[7],
-                                      'whs_code' => $stock_loc,
-                                      'supl_code' => $supl_code,
-                                      'supl_name' => $supl_name,
-                                      'trn_type' => $this->stk_trns_type,
-                                      'branch' => $branch];
-  
-                           $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
-
-                           if($insertStkcrd == 'true')
-                           {
-                             $flag = 'true'; 
-                           }
-                           else
-                           {
-                             return $insertStkcrd;
-                           }          
+                          $data2 = ['rec_num' => $code, 
+                                    'ln_num' => $tb[0], 
+                                    'part_no' => $tb[1], 
+                                    'item_code' => $tb[2], 
+                                    'item_desc' => $tb[3], 
+                                    'recv_qty' => $tb[4], 
+                                    'unit' => $tb[5], 
+                                    'price' => $tb[7], 
+                                    'discount' => $tb[8], 
+                                    'ln_amnt' => $tb[9],
+                                    'net_amnt' => $tb[10], 
+                                    'ln_vat' => $tb[11],
+                                    'ln_vatamt' => $tb[12]];
+                          
+                          $insertLine = Core::insertTable($tableln, $data2, $this->module);
+    
+                          if($insertLine == 'true')
+                          {
+                               $stk_qty_in = $tb[4];
+                               $stk_qty_out = "0";
+      
+                               $stkcrd = ['item_code' => $tb[2],
+                                          'item_desc' => $tb[3],
+                                          'unit' => $tb[5],
+                                          'trnx_date' => $invoicedt,
+                                          'reference' => $stk_ref,
+                                          'qty_in' => $stk_qty_in,
+                                          'qty_out' => $stk_qty_out,
+                                          'fcp' => $tb[7],
+                                          'price' => $tb[7],
+                                          'whs_code' => $stock_loc,
+                                          'supl_code' => $supl_code,
+                                          'supl_name' => $supl_name,
+                                          'trn_type' => $this->stk_trns_type,
+                                          'branch' => $branch];
+      
+                               $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+    
+                               if($insertStkcrd == 'true')
+                               {
+                                 $flag = 'true'; 
+                               }
+                               else
+                               {
+                                 return $insertStkcrd;
+                               }          
+                          }
+                          else
+                          {
+                              return $insertLine;
+                          }          
                       }
-                      else
-                      {
-                          return $insertLine;
-                      }          
-                  }
+                    }
+                    else
+                    {
+                      return $updateM99;
+                    }
                 }
                 else
                 {
-                  return $updateM99;
+                  return $insertHeader;
                 }
-            }
-            else
-            {
-              return $insertHeader;
             }
 
             return $flag;    
@@ -225,75 +236,86 @@ class I_StockInController extends Controller
                    'branch' => $branch
                   ];
 
-          $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);
-          
-          if($updHeader == 'true')
+          // check if po_no entered already exist
+          $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord' AND rec_num != '$code'";
+          $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+
+          if($checkifDataExist) // check if po_no entered already exist
           {
-              $del_dataln = [['rec_num', '=', $code]];
-              $del_datastkcrd = [['reference', '=', $stk_ref]];
-
-              $delLine = Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
-              $delStkcrd = Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
-
-              
-              foreach($request->tbl_itemlist as $tb)
-              {
-                $data2 = ['rec_num' => $code, 
-                          'ln_num' => $tb[0], 
-                          'part_no' => $tb[1], 
-                          'item_code' => $tb[2], 
-                          'item_desc' => $tb[3], 
-                          'recv_qty' => $tb[4], 
-                          'unit' => $tb[5], 
-                          'price' => $tb[7], 
-                          'discount' => $tb[8], 
-                          'ln_amnt' => $tb[9],
-                          'net_amnt' => $tb[10], 
-                          'ln_vat' => $tb[11],
-                          'ln_vatamt' => $tb[12]];
-
-                $insertLine = Core::insertTable($tableln, $data2, $this->module);
-                if($insertLine == 'true')
-                {
-                    $stk_qty_in = $tb[4];
-                    $stk_qty_out = "0";
-
-                    $stkcrd = ['item_code' => $tb[2],
-                               'item_desc' => $tb[3],
-                               'unit' => $tb[5],
-                               'trnx_date' => $invoicedt,
-                               'reference' => $stk_ref,
-                               'qty_in' => $stk_qty_in,
-                               'qty_out' => $stk_qty_out,
-                               'fcp' => $tb[7],
-                               'price' => $tb[7],
-                               'whs_code' => $stock_loc,
-                               'supl_code' => $supl_code,
-                               'supl_name' => $supl_name,
-                               'trn_type' => $this->stk_trns_type,
-                               'branch' => $branch];
-
-                     $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
-                     if($insertStkcrd == 'true')
-                     {
-                       $flag = 'true';
-                     }
-                     else
-                     {
-                       return $insertStkcrd;
-                     }          
-                }
-                else
-                {
-                    return $insertLine;
-                }          
-              }
-              
+             return 'PO No entered already exist.';
           }
           else
-          {
-              return $updHeader;
-          }
+          { 
+             $updHeader = Core::updateTable($table, 'rec_num', $code, $data, $this->module);
+             
+             if($updHeader == 'true')
+             {
+                 $del_dataln = [['rec_num', '=', $code]];
+                 $del_datastkcrd = [['reference', '=', $stk_ref]];
+   
+                 $delLine = Core::deleteTableMultiWhere($tableln, $del_dataln, $this->module);
+                 $delStkcrd = Core::deleteTableMultiWhere('rssys.stkcrd', $del_datastkcrd, $this->module);
+   
+                 
+                 foreach($request->tbl_itemlist as $tb)
+                 {
+                   $data2 = ['rec_num' => $code, 
+                             'ln_num' => $tb[0], 
+                             'part_no' => $tb[1], 
+                             'item_code' => $tb[2], 
+                             'item_desc' => $tb[3], 
+                             'recv_qty' => $tb[4], 
+                             'unit' => $tb[5], 
+                             'price' => $tb[7], 
+                             'discount' => $tb[8], 
+                             'ln_amnt' => $tb[9],
+                             'net_amnt' => $tb[10], 
+                             'ln_vat' => $tb[11],
+                             'ln_vatamt' => $tb[12]];
+   
+                   $insertLine = Core::insertTable($tableln, $data2, $this->module);
+                   if($insertLine == 'true')
+                   {
+                       $stk_qty_in = $tb[4];
+                       $stk_qty_out = "0";
+   
+                       $stkcrd = ['item_code' => $tb[2],
+                                  'item_desc' => $tb[3],
+                                  'unit' => $tb[5],
+                                  'trnx_date' => $invoicedt,
+                                  'reference' => $stk_ref,
+                                  'qty_in' => $stk_qty_in,
+                                  'qty_out' => $stk_qty_out,
+                                  'fcp' => $tb[7],
+                                  'price' => $tb[7],
+                                  'whs_code' => $stock_loc,
+                                  'supl_code' => $supl_code,
+                                  'supl_name' => $supl_name,
+                                  'trn_type' => $this->stk_trns_type,
+                                  'branch' => $branch];
+   
+                        $insertStkcrd = Inventory::saveToStkcrd($stkcrd);
+                        if($insertStkcrd == 'true')
+                        {
+                          $flag = 'true';
+                        }
+                        else
+                        {
+                          return $insertStkcrd;
+                        }          
+                   }
+                   else
+                   {
+                       return $insertLine;
+                   }          
+                 }
+                 
+             }
+             else
+             {
+                 return $updHeader;
+             }
+           }
 
           return $flag;   
       } 
