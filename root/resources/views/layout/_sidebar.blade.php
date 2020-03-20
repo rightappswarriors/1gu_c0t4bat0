@@ -420,12 +420,13 @@
                 <ul class="treeview-menu" style="white-space: normal;">
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Purchase Request</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Purchase Orders</a></li> -->
-                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
+                    <li><a href="{{route('inventory.stockinpo')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
                     {{-- <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li> --}}
                     <li><a href="{{route('inventory.ris_02')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
                     <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
+                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Inspection and Acceptance</a></li>
                     <hr>
                     <li><a href="{{route('inventory.par')}}"><i class="fa fa-circle-o"></i>Property Acknowledgment Receipt</a></li>
                     <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>

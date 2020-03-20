@@ -485,6 +485,15 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/stockin_print/{code}', 'Inventory\I_StockInController@print')->name('inventory.stockin_print');
 					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockin_getitemdetails');
 				});
+				Route::prefix('stockinpo')->group(function() {
+					Route::get('/', 'Inventory\I_StockInController@viewpo')->name('inventory.stockinpo');
+					Route::get('/view/{date}', 'Inventory\I_StockInController@viewFilterDate');
+					Route::match(['get', 'post'], '/stockin_add', 'Inventory\I_StockInController@addpo')->name('inventory.stockinpo_add');
+					Route::match(['get', 'post'], '/stockin_edit/{code}', 'Inventory\I_StockInController@editpo')->name('inventory.stockinpo_edit');
+					Route::get('/stockin_cancel/{code}', 'Inventory\I_StockInController@cancelpo')->name('inventory.stockinpo_cancel');
+					Route::get('/stockin_print/{code}', 'Inventory\I_StockInController@printpo')->name('inventory.stockinpo_print');
+					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockinpo_getitemdetails');
+				});
 		/* ----- STOCK IN */
 		/* ----- WASTE MATERIAL */
 				Route::prefix('wastematerial')->group(function() {

@@ -896,7 +896,7 @@ class Inventory extends Model
 	{	
 		try 
 		{
-			$sql = 'SELECT rh.purc_ord, rh.supl_name as supplier, rh.trnx_date as date, wh.whs_desc as office FROM rssys.rechdr rh LEFT JOIN rssys.whouse wh ON rh.whs_code = wh.whs_code WHERE rh.rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
+			$sql = 'SELECT rh.purc_ord, rh.supl_name as supplier, m7.c_addr2 as supl_add, rh.trnx_date as date, wh.whs_desc as office FROM rssys.rechdr rh LEFT JOIN rssys.whouse wh ON rh.whs_code = wh.whs_code LEFT JOIN rssys.m07 m7 ON rh.supl_code = m7.c_code WHERE rh.rec_num = \''.$rec_num.'\' ORDER BY rec_num LIMIT 1';
 
 			return DB::select(DB::raw($sql))[0];
 		} 
@@ -926,7 +926,7 @@ class Inventory extends Model
 		{
             $sql = 'SELECT SUM(ln_amnt) as total FROM rssys.reclne WHERE rec_num = \''.$rec_num.'\'';
             
-            return DB::select(DB::raw($sql));
+            return DB::select(DB::raw($sql))[0];
 		}
 		catch(\Exception $e)
 		{
@@ -2248,5 +2248,83 @@ class Inventory extends Model
 			return $e->getMessage();
 		}
 	}
+
+	public static function numberTowords($num)
+    { 
+       $ones = array( 
+       1 => "one", 
+       2 => "two", 
+       3 => "three", 
+       4 => "four", 
+       5 => "five", 
+       6 => "six", 
+       7 => "seven", 
+       8 => "eight", 
+       9 => "nine", 
+       10 => "ten", 
+       11 => "eleven", 
+       12 => "twelve", 
+       13 => "thirteen", 
+       14 => "fourteen", 
+       15 => "fifteen", 
+       16 => "sixteen", 
+       17 => "seventeen", 
+       18 => "eighteen", 
+       19 => "nineteen" 
+       ); 
+       $tens = array( 
+       1 => "ten",
+       2 => "twenty", 
+       3 => "thirty", 
+       4 => "forty", 
+       5 => "fifty", 
+       6 => "sixty", 
+       7 => "seventy", 
+       8 => "eighty", 
+       9 => "ninety" 
+       ); 
+       $hundreds = array( 
+       "hundred", 
+       "thousand", 
+       "million", 
+       "billion", 
+       "trillion", 
+       "quadrillion" 
+       ); //limit t quadrillion 
+       $num = number_format($num,2,".",","); 
+       $num_arr = explode(".",$num); 
+       $wholenum = $num_arr[0]; 
+       $decnum = $num_arr[1]; 
+       $whole_arr = array_reverse(explode(",",$wholenum)); 
+       krsort($whole_arr); 
+       $rettxt = ""; 
+       foreach($whole_arr as $key => $i){ 
+       if($i < 20){ 
+       $rettxt .= $ones[$i]; 
+       }elseif($i < 100){ 
+       $rettxt .= $tens[substr($i,0,1)]; 
+       $rettxt .= " ".$ones[substr($i,1,1)]; 
+       }else{ 
+       $rettxt .= $ones[substr($i,0,1)]." ".$hundreds[0]; 
+       $rettxt .= " ".$tens[substr($i,1,1)]; 
+       $rettxt .= " ".$ones[substr($i,2,1)]; 
+       } 
+       if($key > 0){ 
+       $rettxt .= " ".$hundreds[$key]." "; 
+       } 
+       } 
+       if($decnum > 0){ 
+       $rettxt .= " and "; 
+       if($decnum < 20){ 
+       $rettxt .= $ones[$decnum]; 
+       }elseif($decnum < 100){ 
+       $rettxt .= $tens[substr($decnum,0,1)]; 
+       $rettxt .= " ".$ones[substr($decnum,1,1)]; 
+       } 
+       } 
+       return $rettxt; 
+    }
+
+    
 	
 }
