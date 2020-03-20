@@ -61,7 +61,7 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="7" ><h4 align="right">Grand Total:&nbsp;&nbsp;{{number_format($total[0]->total)}}</h4></th>
+                    <th colspan="7" ><h4 align="right">Grand Total:&nbsp;&nbsp;{{number_format($total->total)}}</h4></th>
                   </tr>
                   <tr>
                     <th colspan="4">INSPECTION:
