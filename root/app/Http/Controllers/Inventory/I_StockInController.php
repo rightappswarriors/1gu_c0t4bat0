@@ -103,8 +103,8 @@ class I_StockInController extends Controller
                     ];
 
             // check if po_no entered already exist
-            $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord'";
-            $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+            $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_code'";
+            $checkifDataExist = Inventory::checkIfDataExist($table, $cond);
 
             if($checkifDataExist) // check if po_no entered already exist
             {
@@ -249,8 +249,8 @@ class I_StockInController extends Controller
                     ];
 
             // check if po_no entered already exist
-            $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord'";
-            $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+            $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_code'";
+            $checkifDataExist = Inventory::checkIfDataExist($table, $cond);
 
             if($checkifDataExist) // check if po_no entered already exist
             {
@@ -391,8 +391,8 @@ class I_StockInController extends Controller
                   ];
 
           // check if po_no entered already exist
-          $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord' AND rec_num != '$code'";
-          $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+          $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_code' AND rec_num != '$code'";
+          $checkifDataExist = Inventory::checkIfDataExist($table, $cond);
 
           if($checkifDataExist) // check if po_no entered already exist
           {
@@ -529,8 +529,8 @@ class I_StockInController extends Controller
                   ];
 
           // check if po_no entered already exist
-          $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_ord' AND rec_num != '$code'";
-          $checkifDataExist = Inventory::checkIfDataExist($this->table, $cond);
+          $cond = "trn_type = 'P' AND (cancel != 'Y' OR cancel isnull OR cancel = '') AND purc_ord = '$purc_code' AND rec_num != '$code'";
+          $checkifDataExist = Inventory::checkIfDataExist($table, $cond);
 
           if($checkifDataExist) // check if po_no entered already exist
           {
