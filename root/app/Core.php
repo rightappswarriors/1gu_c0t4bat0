@@ -398,7 +398,8 @@ class Core extends Model
 
     public static function getBarangayName($code){
     	if(isset($code)){
-    		$test = substr($code, (array_count_values(str_split($code))['-'] <= 1 ? 0 : 3) ,2);
+    		// $test = substr($code, (array_count_values(str_split($code))['-'] <= 1 ? 0 : 3) ,2);
+    		$test = (explode('-', $code)[1] ?? 0);
     		return (DB::table('rssys.barangay')->where('brgy_id',$test)->first()->brgy_name ?? 'Not Found');
     	}
     	return null;

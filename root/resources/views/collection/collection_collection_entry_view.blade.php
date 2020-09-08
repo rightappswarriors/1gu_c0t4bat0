@@ -25,17 +25,15 @@
         <div class="box-body" style="">
           <form id="HdrForm" data-parsley-validate novalidate>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label>Collection Entry #</label>
                         <input type="text" class="form-control" name="hdr_b_num"  disabled="" value="@isset($colhdr){{$colhdr[0]->col_code}}@endisset">
                     </div>
                 </div>
-                <div class="col-md-6">
+               {{--  <div class="col-md-6">
                     <div class="form-group">
                         <label>Collection Code <span style="color:red"><strong>*</strong></span></label>
-                        {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec_txt" disabled> --}}
-                        {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec" disabled style="display: none"> --}}
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_col" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_sec_span" data-parsley-required-message="<strong>Collection</strong> is required." required>
                             @isset($m05)
                               <option value="">Select Collection...</option>
@@ -48,7 +46,7 @@
                         </select>
                         <span id="hdr_sec_span"></span>
                     </div>
-                </div>
+                </div> --}}
                 {{-- <div class="col-md-4">
                     <div class="form-group">
                         <label>Fund <span style="color:red"><strong>*</strong></span></label>

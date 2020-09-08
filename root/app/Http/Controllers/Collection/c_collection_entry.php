@@ -246,7 +246,7 @@ class c_collection_entry extends Controller
                 't_date' => $dt->toDateString(),
                 't_time' => $dt->toTimeString(),
                 'j_code' => $r->col_code,
-                'j_num' => $testData[0]->j_num,
+                'j_num' => ($testData[0]->j_num ?? 0),
                 't_ipaddress' => request()->ip(),
                 'fid' => $r->fund,
             ];
