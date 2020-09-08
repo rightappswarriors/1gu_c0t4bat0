@@ -3,9 +3,9 @@
     $_bc = [
         ['link'=>'#','desc'=>'Reports','icon'=>'none','st'=>false],
         ['link'=>'#','desc'=>'Inventory','icon'=>'none','st'=>false],
-        ['link'=>'','desc'=>'SSMI Report','icon'=>'none','st'=>true]
+        ['link'=>'','desc'=>'COA Report','icon'=>'none','st'=>true]
     ];
-    $_ch = "SUMMARY OF SUPPLIES AND MATERIALS ISSUED REPORT"; // Module Name
+    $_ch = "COA REPORT"; // Module Name
 @endphp
 @section('content')
 <!-- Content Header (Page header) -->
@@ -15,7 +15,7 @@
  <div class="box box-default">
  <div class="box-header with-border">
     <br>
-    <form id="generate-form" action="{{route('inventoryreports.ssmiprint')}}" method="POST" data-parsley-validate novalidate>
+    <form id="generate-form" action="{{route('inventoryreports.iacprint_02')}}" method="POST" data-parsley-validate novalidate>
     {{csrf_field()}}
     <div class="row">
       <div class="col-sm-3">
@@ -51,7 +51,7 @@
     <hr>
     <div class="row">
       <div class="col-md-3">
-        <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Generate SSMI Report</button>
+        <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i> Generate COA Report</button>
       </div>
     </div>
     </form>

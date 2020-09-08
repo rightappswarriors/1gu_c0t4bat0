@@ -39,6 +39,7 @@
           <table  class="table table-bordered table-striped" style="margin:10px 0 10px 0 !important;">
             <thead>
             <tr>
+                 <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>PURCHASE NO</center></th>
                  <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>ITEM NO</center></th>
                  <th width="30%" style="font-size:14px;" rowspan="2" colspan=""><center>PARTICULARS</center></th>
                  <th width="10%" style="font-size:14px;" rowspan="2" colspan=""><center>UNIT</center></th>
@@ -68,25 +69,26 @@
             ?>
 
             @foreach($data as $d)
-
             <tr>
+                 <td align="center">{{$d->code}}</td>
                  <td><center>{{$row++}}</center></td>
                  <td>{{$d->item_desc}}</td>
                  <td align="center">{{$d->unit}}</td>
-                 <td align="center">{{$d->cost}}</td>
-                 <td align="center">{{$d->begbal}}</td>
+                 <td align="center">{{number_format($d->cost, 2)}}</td>
+                 <td align="center">{{number_format($d->begbal)}}</td>
                  <td align="center">{{number_format($d->begbalcost, 2)}}</td>
-                 <td align="center">{{$d->addbal}}</td>
+                 <td align="center">{{number_format($d->addbal)}}</td>
                  <td align="center">{{number_format($d->addbalcost, 2)}}</td>
-                 <td align="center">{{$d->totalbal}}</td>
+                 <td align="center">{{number_format($d->totalbal)}}</td>
                  <td align="center">{{number_format($d->totalbalcost, 2)}}</td>
-                 <td align="center">{{$d->issbal}}</td>
+                 <td align="center">{{number_format($d->issbal)}}</td>
                  <td align="center">{{number_format($d->issbalcost, 2)}}</td>
-                 <td align="center">{{$d->endbal}}</td>
+                 <td align="center">{{number_format($d->endbal)}}</td>
                  <td align="center">{{number_format($d->endbalcost, 2)}}</td>
             </tr>
             @endforeach
             <tr>
+              <td></td>
               <td></td>
               <td>..*NOTHING FOLLOWS*..</td>
               <td></td>
@@ -107,6 +109,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
                 <td><b>TOTAL</b></td>
                 <td align="center"><b>{{number_format($total->totalbegbalcost, 2)}}</b></td>
                 <td><b>TOTAL</b></td>
@@ -122,18 +125,18 @@
           </table>
           <table style="width:100%; margin: 80px 0 0 0 !important;">
             <tr>
-              <td style="width: 50%;padding: 0 0 0 10%;">Prepare by:</td>
+              <td style="width: 50%;padding: 0 0 0 10%;">Prepared by:</td>
               <td style="width: 50%;padding: 0 0 0 10%;">Approved by:</td>
             </tr>
-             <tr>
-              <td class="text-center"><strong>LELIBETH U. ALIPAN</strong></td>
+            <tr>
+              <td class="text-center"><strong>LELYBETH U. ALIPAN</strong></td>
               <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
             </tr>
              <tr>
               <td class="text-center">Supply Officer III</td>
               <td class="text-center">City Administrator/GSO Designate</td>
             </tr>
-            <tr class="page"></tr>
+            {{-- <tr class="page"></tr> --}}
           </table>
         </div>
       </div> {{-- main div count --}}

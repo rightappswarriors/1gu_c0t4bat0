@@ -20,7 +20,7 @@
                 <div class="col-sm-6">
                   <div class="col-sm-12">
                        <h3 class="box-title">Stock In List</h3>
-                       <a href="{{route('inventory.stockin_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
+                       <a href="{{route('inventory.stockinpo_add')}}"><button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create</button></a>
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -134,14 +134,14 @@
            var code = data[0];
            
            $.ajax({
-                     url: '{{asset('inventory/stockin/stockin_cancel')}}/'+code,
+                     url: '{{asset('inventory/stockinpo/stockin_cancel')}}/'+code,
                      method: 'GET',
                      success: function(flag)
                               {
                                 if(flag == 'true')
                                 {
                                   console.log(flag);
-                                  location.href = "{{route('inventory.stockin')}}";
+                                  location.href = "{{route('inventory.stockinpo')}}";
                                 }
                                 else
                                 {
@@ -174,7 +174,7 @@
                 tbl_list.clear().draw();
              
                 $.ajax({
-                   url: '{{asset('inventory/stockin/view')}}/'+date,
+                   url: '{{asset('inventory/stockinpo/view')}}/'+date,
                    success: function(data)
                    {
                      console.log(data);
@@ -191,7 +191,7 @@
 
                           //print = "route('inventory.stockin_print', "+rec_num+")";
 
-                          buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/stockin/stockin_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockin/stockin_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
+                          buttons = '<center><a class="btn btn-social-icon btn-primary" href="{{asset('inventory/stockinpo/stockin_print')}}/'+rec_num+'"><i class="fa fa-print"></i></a>&nbsp;<a class="btn btn-social-icon btn-warning" href="{{asset('inventory/stockinpo/stockin_edit')}}/'+rec_num+'"><i class="fa fa-pencil"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger" data-toggle="modal" data-target="#cancel-modal"><i class="fa fa-close"></i></a></center></td>';
 
                           tbl_list.row.add([rec_num, purc_ord, supl_name, reference, trnx_date, recipient, buttons]).draw();
                        }

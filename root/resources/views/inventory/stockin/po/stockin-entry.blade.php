@@ -307,7 +307,7 @@
           <div class="row">
             <div class="col-sm-3">
               <div class="form-group" style="display: flex;">
-                <a href="{{route('inventory.stockin')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
+                <a href="{{route('inventory.stockinpo')}}" class="btn btn-block btn-primary"><i class="fa fa-arrow-left"></i> Go Back</a>
               </div>
             </div>
             <div class="col-sm-3">
@@ -553,7 +553,7 @@
         var line = ($('#tbl_itemlist').DataTable().rows().count()) + 1;
 
         $.ajax({
-                 url: '{{asset('inventory/stockin/stockin_getitemdetails')}}/'+code,
+                 url: '{{asset('inventory/stockinpo/stockin_getitemdetails')}}/'+code,
                  method: 'GET',
                  success : function(data)
                            {
@@ -771,7 +771,7 @@
                        };
 
             $.ajax({
-                   url: '{{route('inventory.stockin_add')}}',
+                   url: '{{route('inventory.stockinpo_add')}}',
                    method: 'POST',
                    data: data,
                    success : function(flag)
@@ -779,7 +779,7 @@
                                if(flag == 'true')
                                {
                                  console.log(flag);
-                                 location.href= "{{route('inventory.stockin')}}";
+                                 location.href= "{{route('inventory.stockinpo')}}";
                                }
                                else
                                {
@@ -821,7 +821,7 @@
                          };
 
               $.ajax({
-                     url: '{{asset('inventory/stockin/stockin_edit')}}/'+rec_num,
+                     url: '{{asset('inventory/stockinpo/stockin_edit')}}/'+rec_num,
                      method: 'POST',
                      data: data,
                      success : function(flag)
@@ -829,7 +829,7 @@
                                  if(flag == 'true')
                                  {
                                    console.log(flag);
-                                   location.href= "{{route('inventory.stockin')}}";
+                                   location.href= "{{route('inventory.stockinpo')}}";
                                  }
                                  else
                                  {

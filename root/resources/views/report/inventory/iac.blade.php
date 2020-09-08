@@ -20,15 +20,25 @@
     <div class="row">
       <div class="col-sm-3">
         <div class="form-group">
-          <label>As of Date :</label>
-          <span id="validate_dtpdate"></span>
-          <input type="date" name="dtp_date" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_dtpdate" data-parsley-required-message="<strong>Date is required.</strong>" required>
+          <label>From Date :</label>
+          <span id="validate_dtpfrmdate"></span>
+          <input type="date" name="dtp_frmdate" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_dtpfrmdate" data-parsley-required-message="<strong>From Date is required.</strong>" required>
+        </div>
+      </div>  
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label>To Date :</label>
+          <span id="validate_dtptodate"></span>
+          <input type="date" name="dtp_todate" class="form-control pull-right" id="datepicker" data-parsley-errors-container="#validate_dtptodate" data-parsley-required-message="<strong>To Date is required.</strong>" required>
         </div>
       </div>
-      <div class="col-sm-5">
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-5">
         <div class="form-group">
           <label>Item Category</label>
-            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_itmgrp" data-parsley-errors-container="#validate_select_itmgrp" data-parsley-required-message="<strong>Fund is required.</strong>" required>
+            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="select_itmgrp" data-parsley-errors-container="#validate_select_itmgrp" data-parsley-required-message="<strong>Item Category is required.</strong>" required>
               <option value="" selected="selected">--- Select Fund ---</option>
               @foreach($itmgrp as $ig)
               <option value="{{$ig->item_grp}}">{{$ig->grp_desc}}</option>

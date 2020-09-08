@@ -420,12 +420,15 @@
                 <ul class="treeview-menu" style="white-space: normal;">
                     <!-- <li><a href=""><i class="fa fa-circle-o"></i> Purchase Request</a></li>
                     <li><a href=""><i class="fa fa-circle-o"></i> Purchase Orders</a></li> -->
-                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
+                    <li><a href="{{route('inventory.stockinpo')}}"><i class="fa fa-circle-o"></i>Stock In</a></li> 
                     <hr>
-                    <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
+                    {{-- <li><a href="{{route('inventory.ris')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li> --}}
+                    <li><a href="{{route('inventory.ris_02')}}"><i class="fa fa-circle-o"></i>Requisition Issuance Slip</a></li>
                     <li><a href="{{route('inventory.stockrelease')}}"><i class="fa fa-circle-o"></i>Stock Release</a></li>
                     <li><a href="{{route('inventory.ics')}}"><i class="fa fa-circle-o"></i>Inventory Custodian Slip</a></li>
+                    <li><a href="{{route('inventory.stockin')}}"><i class="fa fa-circle-o"></i>Inspection and Acceptance</a></li>
                     <hr>
+                    <li><a href="{{route('inventory.par')}}"><i class="fa fa-circle-o"></i>Property Acknowledgment Receipt</a></li>
                     <li><a href="{{route('inventory.are')}}"><i class="fa fa-circle-o"></i>Acknowledgement Receipt Equipment</a></li>
                     <hr>
                     <li><a href="{{route('inventory.wastematerial')}}"><i class="fa fa-circle-o"></i>Waste Material</a></li>
@@ -583,8 +586,10 @@
                                 {{-- @if($LA_GRP["R2000001"]["restrict"] == 'Y') --}}
                                 {{-- <li><a href="{{ url('report/budget/saaob') }}"><i class="fa fa-circle-o"></i> SAAOB</a></li> --}}
                                 <li><a href="{{ route('inventory.bioreportsview') }}"><i class="fa fa-circle-o"></i>Biology</a></li>
-                                <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
-                                <li><a href="{{ route('inventoryreports.iac') }}"><i class="fa fa-circle-o"></i>COA Report</a></li>
+                                {{-- <li><a href="{{ route('inventoryreports.ssmi') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li> --}}
+                                <li><a href="{{ route('inventoryreports.ssmi_02') }}"><i class="fa fa-circle-o"></i>Summary of Supplies and Materials Issued</a></li>
+                                {{-- <li><a href="{{ route('inventoryreports.iac') }}"><i class="fa fa-circle-o"></i>COA Report</a></li> --}}
+                                <li><a href="{{ route('inventoryreports.iac_02') }}"><i class="fa fa-circle-o"></i>COA Report</a></li>
                                 {{-- @endif --}}
                             </ul>
                         </a>

@@ -15,7 +15,7 @@
  <div class="box box-default">
  <div class="box-header with-border">
     <br>
-    <form id="generate-form" action="{{route('inventoryreports.ssmiprint')}}" method="POST" data-parsley-validate novalidate>
+    <form id="generate-form" action="{{route('inventoryreports.ssmiprint_02')}}" method="POST" data-parsley-validate novalidate>
     {{csrf_field()}}
     <div class="row">
       <div class="col-sm-3">

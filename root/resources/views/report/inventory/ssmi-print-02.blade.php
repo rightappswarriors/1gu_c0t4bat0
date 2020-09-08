@@ -44,6 +44,7 @@
           <table  class="table table-bordered" style="margin:0 0 10px 0 !important;">
             <thead>
             <tr>
+                 <th width="10%" style="font-size:14px;white-space: normal;" rowspan="3" colspan=""><center>Purchase No</center></th>
                  <th width="30%" style="font-size:14px;" rowspan="3" colspan=""><center>ITEM No. Description</center></th>
                  <th width="10%" style="font-size:14px;white-space: normal;" rowspan="3" colspan=""><center>Unit of Measurement</center></th>
                  <th width="40%" style="font-size:14px;" rowspan="" colspan="14"><center>REQUISITION & ISSUE SLIP NUMBERS</center></th>
@@ -91,27 +92,29 @@
             }
             ?>
               <tr>
+                 <td align="center">{{$d->code}}</td>
                  <td>{{$d->item_desc}}</td>
                  <td align="center">{{$d->unit}}</td>
-                 <td align="center">{{$d->jan}}</td>
-                 <td align="center">{{$d->feb}}</td>
-                 <td align="center">{{$d->mar}}</td>
-                 <td align="center">{{$d->apr}}</td>
-                 <td align="center">{{$d->may}}</td>
-                 <td align="center">{{$d->jun}}</td>
-                 <td align="center">{{$d->jul}}</td>
-                 <td align="center">{{$d->aug}}</td>
-                 <td align="center">{{$d->sep}}</td>
-                 <td align="center">{{$d->oct}}</td>
-                 <td align="center">{{$d->nov}}</td>
-                 <td colspan="3" align="center">{{$d->dec}}</td>
-                 <td align="center">{{$d->total_qty}}</td>
+                 <td align="center">{{number_format($d->jan)}}</td>
+                 <td align="center">{{number_format($d->feb)}}</td>
+                 <td align="center">{{number_format($d->mar)}}</td>
+                 <td align="center">{{number_format($d->apr)}}</td>
+                 <td align="center">{{number_format($d->may)}}</td>
+                 <td align="center">{{number_format($d->jun)}}</td>
+                 <td align="center">{{number_format($d->jul)}}</td>
+                 <td align="center">{{number_format($d->aug)}}</td>
+                 <td align="center">{{number_format($d->sep)}}</td>
+                 <td align="center">{{number_format($d->oct)}}</td>
+                 <td align="center">{{number_format($d->nov)}}</td>
+                 <td colspan="3" align="center">{{number_format($d->dec)}}</td>
+                 <td align="center">{{number_format($d->total_qty)}}</td>
                  <td align="right">{{number_format($d->unit_cost, 2)}}</td>
                  <td align="right">{{number_format($d->total_cost, 2)}}</td>
                  
             </tr>
             @endforeach
             <tr>
+              <td></td>
               <td>..*NOTHING FOLLOWS*..</td>
               <td></td>
               <td></td>
@@ -131,21 +134,22 @@
               <td></td>
             </tr>
             <tr>
+              <td></td>
               <td align="right">TOTAL:</td>
               <td></td>
-              <td>{{$total->jan}}</td>
-              <td>{{$total->feb}}</td>
-              <td>{{$total->mar}}</td>
-              <td>{{$total->apr}}</td>
-              <td>{{$total->may}}</td>
-              <td>{{$total->jun}}</td>
-              <td>{{$total->jul}}</td>
-              <td>{{$total->aug}}</td>
-              <td>{{$total->sep}}</td>
-              <td>{{$total->oct}}</td>
-              <td>{{$total->nov}}</td>
-              <td colspan="3">{{$total->dec}}</td>
-              <td>{{$total->total_qty}}</td>
+              <td>{{number_format($total->jan)}}</td>
+              <td>{{number_format($total->feb)}}</td>
+              <td>{{number_format($total->mar)}}</td>
+              <td>{{number_format($total->apr)}}</td>
+              <td>{{number_format($total->may)}}</td>
+              <td>{{number_format($total->jun)}}</td>
+              <td>{{number_format($total->jul)}}</td>
+              <td>{{number_format($total->aug)}}</td>
+              <td>{{number_format($total->sep)}}</td>
+              <td>{{number_format($total->oct)}}</td>
+              <td>{{number_format($total->nov)}}</td>
+              <td colspan="3">{{number_format($total->dec)}}</td>
+              <td>{{number_format($total->total_qty)}}</td>
               <td align="right">{{number_format($total->unit_cost, 2)}}</td>
               <td align="right">{{number_format($total->total_cost, 2)}}</td>
             </tr>
@@ -153,21 +157,21 @@
           </table>
           <table style="width:100%; margin: 80px 0 0 0 !important;">
             <tr>
-              <td style="width: 33.33%">Prepare by:</td>
+              <td style="width: 33.33%">Prepared by:</td>
               <td style="width: 33.33%">Certified by:</td>
               <td style="width: 33.33%">Posted in the SLC by/date</td>
             </tr>
              <tr>
-              <td class="text-center"><strong>LELIBETH U. ALIPAN</strong></td>
+              <td class="text-center"><strong>LELYBETH U. ALIPAN</strong></td>
               <td class="text-center"><strong>GIAN CARLO A. MIJARES</strong></td>
-              <td class="text-center"><strong>MARIA JOFERDINE Y. QUE, CPA, CESE</strong></td>
+              <td class="text-center"><strong>MARIA JOFERDINE Y. CUI, CPA, CESE</strong></td>
             </tr>
              <tr>
               <td class="text-center">Supply Officer III</td>
               <td class="text-center">City Administrator/GSO Designate</td>
               <td class="text-center">City Accountant</td>
             </tr>
-            <tr class="page"></tr>
+            {{-- <tr class="page"></tr> --}}
           </table>
         </div>
       

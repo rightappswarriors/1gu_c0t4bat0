@@ -405,4 +405,54 @@ class Core extends Model
     	return null;
     }
 
+    protected static $moneyString = [ "first" => [ "0" => "", "1" => "One", "2" => "Two", "3" => "Three", "4" => "Four", "5" => "Five", "6" => "Six", "7" => "Seven", "8" => "Eight", "9" => "Nine" ], "second" => [ "10" => "Ten", "11" => "Eleven", "12" => "Twelve", "13" => "Thirteen", "14" => "Fourteen", "15" => "Fifteen", "16" => "Sixteen", "17" => "Seventeen", "18" => "Eighteen", "19" => "Nineteen", "20" => "Twenty", "30" => "Thirty", "40" => "Fourty", "50" => "Fifty", "60" => "Sixty", "70" => "Seventy", "80" => "Eighty", "90" => "Ninety" ], "every" => [ 3 => "Hundred" ], "count" => [ "", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quatttuor-decillion", "Quindecillion", "Sexdecillion", "Septen-decillion", "Octodecillion", "Novemdecillion", "Vigintillion", "Centillion" ] ];
+
+    public static function moneyToString($money = "") 
+    { 
+    	try { 
+    		   $sMoney = intval($money); 
+    		   $mString = static::$moneyString; $retData = ""; 
+    		   if(! empty($sMoney)) 
+    		   { 
+    		   		$nMoney = strrev($sMoney); 
+    		   		$spMoney = str_split($nMoney, 3); 
+    		   		for($i = 0; $i < count($spMoney); $i++) 
+    		   		{ 
+    		   			$thStr = strrev($spMoney[$i]); 
+    		   			$mLen = strlen($thStr); 
+    		   			$curStr = ""; 
+    		   			switch($mLen) 
+    		   			{ case 1: $curStr = $curStr . ' ' . $mString["first"][strval(substr($thStr, 0, 1))]; break; 
+    		   			  case 2: if(isset($mString["second"][strval(substr($thStr, 0, 2))])) 
+    		   			          { 
+    		   			          	 $curStr = $curStr . ' ' . $mString["second"][strval(substr($thStr, 0, 2))]; 
+    		   			          } 
+    		   			          else 
+    		   			          { 
+    		   			          	 $curStr = $curStr . ' ' . $mString["second"][strval(intval(substr($thStr, 0, 1)) * 10)] . ' ' . $mString["first"][strval(substr($thStr, 1, 1))]; 
+    		   			          } break; 
+    		   			  case 3: if(isset($mString["every"][$mLen])) 
+    		   			          { 
+    		   			          	 $sStr = $mString["first"][strval(substr($thStr, 0, 1))]; 
+    		   			          	 if(! empty($sStr)) 
+    		   			          	 { $curStr = $curStr . ' ' . $sStr . ' ' . $mString["every"][$mLen]; } 
+    		   			          } 
+    		   			          if(isset($mString["second"][strval(substr($thStr, 1, 2))])) 
+    		   			          { 
+    		   			          	$curStr = $curStr . ' ' . $mString["second"][strval(substr($thStr, 1, 2))]; 
+    		   			          } 
+    		   			          else 
+    		   			          { 
+    		   			          	$curStr = $curStr . ' ' . ((isset($mString["second"][strval(intval(substr($thStr, 1, 1)) * 10)])) ? $mString["second"][strval(intval(substr($thStr, 1, 1)) * 10)] : ' ') . ' ' . ((isset($mString["first"][strval(substr($thStr, 2, 1))])) ? $mString["first"][strval(substr($thStr, 2, 1))] : ' '); 
+    		   			          } 
+    		   			          break; 
+    		   			  default: break; 
+    		   			} 
+    		   			$retData = $curStr . ' ' . $mString["count"][$i] . $retData; 
+    		        } 
+    		   } 
+    		   return trim($retData); 
+        } catch (Exception $e) { return $e; } 
+   }
+
 }

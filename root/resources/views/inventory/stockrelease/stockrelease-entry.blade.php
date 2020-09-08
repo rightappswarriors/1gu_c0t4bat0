@@ -31,7 +31,8 @@
                 @if($isnew)
                   <input type="text" class="form-control" name="txt_code" readonly="">
                 @else
-                  <input type="text" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" readonly="">
+                  <input type="text" class="form-control" name="" value="{{$rechdr->purc_ord}}" readonly="">
+                  <input type="hidden" class="form-control" name="txt_code" value="{{$rechdr->rec_num}}" readonly="">
                 @endif
               </div>
             </div>
@@ -276,7 +277,7 @@
                   <th>Issued Qty</th>
                   <th>Unit Code</th>
                   <th>Unit Desc</th>
-                  <th>Actions</th>
+                  {{-- <th>Actions</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -293,7 +294,7 @@
                   <td>{{$rl->issued_qty}}</td>
                   <td>{{$rl->unit_code}}</td>
                   <td>{{$rl->unit_desc}}</td>
-                  <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a><!-- &nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a> --></center>
+                  {{-- <td><center><a class="btn btn-social-icon btn-warning"><i class="fa fa-pencil" onclick="EnterItem_Edit({{$rl->ln_num}});"></i></a>&nbsp;<a class="btn btn-social-icon btn-danger"><i class="fa fa-trash" onclick="EnterItem_Delete({{$rl->ln_num}});"></i></a></center> --}}
                   </td>
                 </tr>  
                 @endforeach
@@ -316,7 +317,7 @@
                 @if($isnew)
                   <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="Save()"><i class="fa fa-save"></i> Save & Approve</a>
                 @else
-                  <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="EditSave()"><i class="fa fa-save"></i> Approve</a>
+                  {{-- <a class="btn btn-block btn-success" style="margin-top: 0;"  onclick="EditSave()"><i class="fa fa-save"></i> Approve</a> --}}
                 @endif
               </div>
             </div>

@@ -478,39 +478,41 @@ Route::group(['middleware'=>['checkauth']], function () {
 			Route::prefix('inventory')->group(function() {
 				Route::prefix('stockin')->group(function() {
 					Route::get('/', 'Inventory\I_StockInController@view')->name('inventory.stockin');
+					Route::get('/view/{date}', 'Inventory\I_StockInController@viewFilterDate');
 					Route::match(['get', 'post'], '/stockin_add', 'Inventory\I_StockInController@add')->name('inventory.stockin_add');
 					Route::match(['get', 'post'], '/stockin_edit/{code}', 'Inventory\I_StockInController@edit')->name('inventory.stockin_edit');
 					Route::get('/stockin_cancel/{code}', 'Inventory\I_StockInController@cancel')->name('inventory.stockin_cancel');
 					Route::get('/stockin_print/{code}', 'Inventory\I_StockInController@print')->name('inventory.stockin_print');
 					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockin_getitemdetails');
 				});
-			});
+				Route::prefix('stockinpo')->group(function() {
+					Route::get('/', 'Inventory\I_StockInController@viewpo')->name('inventory.stockinpo');
+					Route::get('/view/{date}', 'Inventory\I_StockInController@viewFilterDate');
+					Route::match(['get', 'post'], '/stockin_add', 'Inventory\I_StockInController@addpo')->name('inventory.stockinpo_add');
+					Route::match(['get', 'post'], '/stockin_edit/{code}', 'Inventory\I_StockInController@editpo')->name('inventory.stockinpo_edit');
+					Route::get('/stockin_cancel/{code}', 'Inventory\I_StockInController@cancelpo')->name('inventory.stockinpo_cancel');
+					Route::get('/stockin_print/{code}', 'Inventory\I_StockInController@printpo')->name('inventory.stockinpo_print');
+					Route::get('/stockin_getitemdetails/{code}', 'Inventory\I_StockInController@getitemdetails')->name('inventory.stockinpo_getitemdetails');
+				});
 		/* ----- STOCK IN */
-
 		/* ----- WASTE MATERIAL */
-		    Route::prefix('inventory')->group(function() {
-		    	Route::prefix('wastematerial')->group(function() {
+				Route::prefix('wastematerial')->group(function() {
 		    		Route::get('/', 'Inventory\I_WasteMaterialController@view')->name('inventory.wastematerial');
 		    		Route::match(['get', 'post'], '/wastematerial_add', 'Inventory\I_WasteMaterialController@add')->name('inventory.wastematerial_add');
 		    		Route::match(['get', 'post'], '/wastematerial_edit/{code}', 'Inventory\I_WasteMaterialController@edit')->name('inventory.wastematerial_edit');
 		    		Route::get('/wastematerial_cancel/{code}', 'Inventory\I_WasteMaterialController@cancel')->name('inventory.wastematerial_cancel');
 		    		Route::get('/print/{code}', 'Inventory\I_WasteMaterialController@print')->name('inventory.wastematerial_print');
 		    	});
-		    });
-		/* ----- WASTE MATERIAL */
-
-		/* ----- STOCK RELEASE */
-			Route::prefix('inventory')->group(function() {
+        /* ----- WASTE MATERIAL */
+        /* ----- STOCK RELEASE */
 				Route::prefix('stockrelease')->group(function() {
 					Route::get('/', 'Inventory\I_StockReleaseController@view')->name('inventory.stockrelease');
+					Route::get('/view/{date}', 'Inventory\I_StockReleaseController@viewFilterDate');
 					Route::match(['get', 'post'], '/stockrelease_add', 'Inventory\I_StockReleaseController@add')->name('inventory.stockrelease_add');
 					Route::match(['get', 'post'], '/stockrelease_edit/{code}', 'Inventory\I_StockReleaseController@edit')->name('inventory.stockrelease_edit');
 				});
-			});
 		/* ----- STOCK RELEASE */
-
 		/* ----- Requisition Issuance Slip */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('ris')->group(function() {
 					Route::get('/', 'Inventory\I_RISController@view')->name('inventory.ris');
 					Route::match(['get', 'post'], '/ris_add', 'Inventory\I_RISController@add')->name('inventory.ris_add');
@@ -518,11 +520,20 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');
 					Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 				});
-			});
-		/* ----- Requisition Issuance Slip */
 
+				Route::prefix('ris_02')->group(function() {
+					Route::get('/', 'Inventory\I_RISController@view_02')->name('inventory.ris_02');
+					Route::get('/view/{date}', 'Inventory\I_RISController@viewFilterDate');
+					Route::match(['get', 'post'], '/ris_add', 'Inventory\I_RISController@add_02')->name('inventory.ris_add_02');
+					Route::match(['get', 'post'], '/ris_edit/{code}', 'Inventory\I_RISController@edit_02')->name('inventory.ris_edit_02');
+					Route::get('/ris_cancel/{code}', 'Inventory\I_RISController@cancel')->name('inventory.ris_cancel');
+					Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
+					Route::get('/getDataFromStockIn/{code}', 'Inventory\I_RISController@getDataFromStockIn')->name('inventory.ris_getDataFromStockIn');
+					Route::get('/getDataSelectionStkin/{code}', 'Inventory\I_RISController@getDataSelectionStkin');
+					Route::post('/ris_override', 'Inventory\I_RISController@override')->name('inventory.ris_override');
+				});
+		/* ----- Requisition Issuance Slip */
 		/* ----- Acknowledgement Receipt Equipment */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('are')->group(function() {
 					Route::get('/', 'Inventory\I_AREController@view')->name('inventory.are');
 					Route::get('/are_approve/{code}', 'Inventory\I_AREController@approve')->name('inventory.are_approve');
@@ -530,13 +541,18 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get', 'post'], '/are_add', 'Inventory\I_AREController@add')->name('inventory.are_add');
 					Route::match(['get', 'post'], '/are_edit/{code}', 'Inventory\I_AREController@edit')->name('inventory.are_edit');
 					Route::get('/are_cancel/{code}', 'Inventory\I_AREController@cancel')->name('inventory.are_cancel');
-					// Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 				});
-			});
 		/* ----- Acknowledgement Receipt Equipment */
-
+		/* ----- PAR */
+				Route::prefix('par')->group(function() {
+					Route::get('/', 'Inventory\I_PARController@view')->name('inventory.par');
+					Route::get('/par_print/{code}', 'Inventory\I_PARController@print')->name('inventory.par_print');
+					Route::match(['get', 'post'], '/par_add', 'Inventory\I_PARController@add')->name('inventory.par_add');
+					Route::match(['get', 'post'], '/par_edit/{code}', 'Inventory\I_PARController@edit')->name('inventory.par_edit');
+					Route::get('/par_cancel/{code}', 'Inventory\I_PARController@cancel')->name('inventory.par_cancel');
+				});
+		/* ----- PAR */
 		/* ----- Inventory Custodian Slip */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('ics')->group(function() {
 					Route::get('/', 'Inventory\I_ICSController@view')->name('inventory.ics');
 					Route::match(['get', 'post'], '/ics_add', 'Inventory\I_ICSController@add')->name('inventory.ics_add');
@@ -545,19 +561,13 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::get('/ics_print/{code}', 'Inventory\I_ICSController@print')->name('inventory.ics_print');
 					Route::get('/getDataFromRIS/{code}', 'Inventory\I_ICSController@getDataFromRIS')->name('inventory.ics_getDataFromRIS');
 				});
-			});
 		/* ----- Requisition Issuance Slip */
-
 		/* ----- Item Search */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('itemsearch')->group(function() {
 					Route::get('/', 'Inventory\I_ItemSearchController@view')->name('inventory.itemsearch');
 				});
-			});
 		/* ----- Item Search */
-
 		/* ----- Item Repair */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('itemrepair')->group(function() {
 					Route::get('/', 'Inventory\I_ItemRepairController@view')->name('inventory.itemrepair');
 					Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
@@ -565,13 +575,9 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get', 'post'], '/itemrepair_entry', 'Inventory\I_ItemRepairController@add')->name('inventory.itemrepair_entry');
 					Route::match(['get', 'post'], '/itemrepair_edit/{code}', 'Inventory\I_ItemRepairController@edit')->name('inventory.itemrepair_edit');
 					Route::get('/itemrepair_cancel/{code}', 'Inventory\I_ItemRepairController@cancel')->name('inventory.itemrepair_cancel');
-					// Route::get('/ris_print/{code}', 'Inventory\I_RISController@print')->name('inventory.ris_print');
 				});
-			});
 		/* ----- Item Repair */
-
 		/* ----- Turn Over */
-			Route::prefix('inventory')->group(function() {
 				Route::prefix('turnover')->group(function() {
 					Route::get('/', 'Inventory\I_TurnOverController@view')->name('inventory.turnover');
 					// Route::get('/itemrepair_approve/{code}', 'Inventory\I_ItemRepairController@approve')->name('inventory.itemrepair_approve');
@@ -580,8 +586,8 @@ Route::group(['middleware'=>['checkauth']], function () {
 					Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
 					Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
 				});
-			});
 		/* ----- Turn Over */
+			});
 
 
 		/* ----- Biology*/
@@ -629,7 +635,7 @@ Route::group(['middleware'=>['checkauth']], function () {
 					// Route::get('/turnover_print/{code}', 'Inventory\I_TurnOverControllerx@print')->name('inventory.turnover_print');
 					Route::match(['get', 'post'], '/biologyacqusition', 'Inventory\I_BiologyController@add')->name('inventory.biologyacqusition');
 					Route::get('/bio_getacqdetails/{code}', 'Inventory\I_BiologyController@acqItemDetails')->name('inventory.biology_getacqdetails');
-					Route::get('/bio_getinventorydetails/{itemcode}', 'Inventory\I_BiologyController@acqInventoryDetails')->name('inventory.biology_getinventorydetails');
+					Route::get('/bio_getinventorydetails/{itemcode}/{code}', 'Inventory\I_BiologyController@acqInventoryDetails')->name('inventory.biology_getinventorydetails');
 					// Route::match(['get', 'post'], '/turnover_edit/{code}', 'Inventory\I_TurnOverController@edit')->name('inventory.turnover_edit');
 					// Route::get('/turnover_cancel/{code}', 'Inventory\I_TurnOverController@cancel')->name('inventory.turnover_cancel');
 				});
@@ -737,10 +743,14 @@ Route::group(['middleware'=>['checkauth']], function () {
 		   /* ----- SSMI */
 				Route::get('reports/inventory/ssmi', 'Report\Inventory\SSMI@view')->name('inventoryreports.ssmi');
 				Route::post('reports/inventory/ssmiprint', 'Report\Inventory\SSMI@print')->name('inventoryreports.ssmiprint');
+				Route::get('reports/inventory/ssmi_02', 'Report\Inventory\SSMI@view_02')->name('inventoryreports.ssmi_02');
+				Route::post('reports/inventory/ssmiprint_02', 'Report\Inventory\SSMI@print_02')->name('inventoryreports.ssmiprint_02');
 			/* ----- SSMI */
 			/* ----- IAC */
 				Route::get('reports/inventory/iac', 'Report\Inventory\IAC@view')->name('inventoryreports.iac');
+				Route::get('reports/inventory/iac_02', 'Report\Inventory\IAC@view_02')->name('inventoryreports.iac_02');
 				Route::post('reports/inventory/iacprint', 'Report\Inventory\IAC@print')->name('inventoryreports.iacprint');
+				Route::post('reports/inventory/iacprint_02', 'Report\Inventory\IAC@print_02')->name('inventoryreports.iacprint_02');
 			/* ----- IAC */
 		/* ----- INVENTORY */
 	/* REPORT -------------------------------*/
