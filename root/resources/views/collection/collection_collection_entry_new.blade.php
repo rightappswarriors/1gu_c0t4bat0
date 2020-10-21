@@ -31,7 +31,7 @@
                         <input type="text" class="form-control" name="" disabled="">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <div class="form-group">
                         <label>Journal <span style="color:red"><strong>*</strong></span></label>
                         {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_sec_txt" disabled> --}}
@@ -48,8 +48,8 @@
                         </select>
                         <span id="hdr_sec_span"></span>
                     </div>
-                </div>
-                <div class="col-md-4">
+                </div> -->
+                <!-- <div class="col-md-4">
                     <div class="form-group">
                         <label>Fund <span style="color:red"><strong>*</strong></span></label>
                         <select class="form-control select2 select2-hidden-accessible" name="hdr_fund" value="" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Fund</strong> is required." data-parsley-errors-container="#budget_period_span" required>
@@ -64,8 +64,8 @@
                         </select>
                         <span id="budget_period_span"></span>
                     </div>
-                </div>
-                <div class="col-md-4">
+                </div> -->
+                <!-- <div class="col-md-4">
                     <div class="form-group">
                         <label>Date <span style="color:red"><strong>*</strong></span></label>
                         <div class="input-group date">
@@ -75,7 +75,7 @@
                             <input type="date" class="form-control pull-right" name="hdr_date" required data-parsley-required-message="<strong>Date</strong> is required.">
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="row">
                 {{-- <div class="col-md-3">
@@ -86,8 +86,8 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>OR No. <span style="color:red"><strong>*</strong></span></label>
-                        {{-- <input type="text" class="form-control EditBudgetapproved" name="hdr_or_frm" data-parsley-required-message="<strong>Reference</strong> is required."> --}}
-                        <select class="form-control select2 select2-hidden-accessible" onchange="loadORIssuance(1)" name="hdr_or_frm" style="width: 100%" data-parsley-errors-container="#hdr_or_frm_span" data-parsley-required-message="<strong>OR No.</strong> is required." required>
+                        <input type="text" class="form-control EditBudgetapproved" name="hdr_or_frm" data-parsley-required-message="<strong>OR No.</strong> is required." required>
+                        <!-- <select class="form-control select2 select2-hidden-accessible" onchange="loadORIssuance(1)" name="hdr_or_frm" style="width: 100%" data-parsley-errors-container="#hdr_or_frm_span" data-parsley-required-message="<strong>OR No.</strong> is required." required>
                             @isset($or_num)
                                 @if(count($or_num) > 0)
                                     <option value="">Select OR #..</option>
@@ -100,8 +100,8 @@
                             @else
                                 <option value="">No OR # registered..</option>
                             @endisset
-                        </select>
-                        <span id="hdr_or_frm_span"></span>
+                        </select> -->
+                        <!-- <span id="hdr_or_frm_span"></span> -->
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -129,7 +129,20 @@
                         </select>
                     </div>
                 </div> --}}
+
                 <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Date <span style="color:red"><strong>*</strong></span></label>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" class="form-control pull-right" name="hdr_date" required data-parsley-required-message="<strong>Date</strong> is required.">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-4">
                   <div class="form-group">
                       <label>Cashier <span style="color:red"><strong>*</strong></span></label>
                       <select class="form-control select2 select2-hidden-accessible" onchange="loadORIssuance()" name="hdr_cash" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_cashier_span" data-parsley-required-message="<strong>Cashier</strong> is required." required>
@@ -149,7 +162,7 @@
                         </select>
                         <span id="hdr_cashier_span"></span>
                   </div>
-                </div>
+                </div> -->
             </div>
             <div class="row">
                 <div class="col-md-4">
@@ -173,11 +186,33 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Reference <span style="color:red"><strong>*</strong></span></label>
-                        <input type="text" class="form-control EditBudgetapproved" name="hdr_ref" data-parsley-required-message="<strong>Reference</strong> is required." required>
+                        <label>Reference <!-- <span style="color:red"><strong>*</strong></span> --></label>
+                        <input type="text" class="form-control EditBudgetapproved" name="hdr_ref" data-parsley-required-message="<strong>Reference</strong> is required.">
                         {{-- <select class="form-control select2 select2-hidden-accessible" name="hdr_ref" style="width: 100%">
                         </select> --}}
                     </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label>Cashier <span style="color:red"><strong>*</strong></span></label>
+                      <select class="form-control select2 select2-hidden-accessible" onchange="loadORIssuance()" name="hdr_cash" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-errors-container="#hdr_cashier_span" data-parsley-required-message="<strong>Cashier</strong> is required." required>
+                            @isset($cashiers)
+                                @if(count($cashiers) > 0)
+                                  <option value="">Select Cashier...</option>
+
+                                  @foreach($cashiers as $o)
+                                      <option value="{{$o->uid}}">{{$o->name}}</option>
+                                  @endforeach
+                                @else
+                                    <option value="">No Cashier registered...</option>
+                                @endif
+                            @else
+                              <option value="">No Cashier registered...</option>
+                            @endisset
+                        </select>
+                        <span id="hdr_cashier_span"></span>
+                  </div>
                 </div>
             </div>
             </form>
@@ -506,6 +541,11 @@
 <!-- /.content -->
 <script>
   var selectedId = 0;
+  var $modalDefault = $('#modal-default');
+  var $hdrForm = $('#HdrForm');
+
+  var modalAddMode = false;
+
   $(document).ready(function(){
             // $('#SideBar_Budget').addClass('active');
             // $('#SideBar_Budget_Budget_Proposal_Entry_New').addClass('text-green');
@@ -525,6 +565,18 @@
                             var table = $('#example1').DataTable();
                             selectedId = table.row( this ).index() ;
                         } );
+
+    $modalDefault.on('show.bs.modal', (e) => {
+        if (modalAddMode) {
+            modalAddMode = false;
+
+            // prevent modal from showing when hdrform has invalid data
+            if (!$hdrForm.parsley().validate()) {
+                e.preventDefault();
+            }
+        }
+    });
+
     function ifCheck(){
       var test = $('select[name="itm_payment"]').val();
       if(test == '114'){
@@ -629,6 +681,8 @@
   function addMode(selected)
   {
     var line = parseInt(($('#example1').DataTable().data().count()/ 9) + 1);
+
+    modalAddMode = true;
 
     $('input[name="itm_line"]').val(line);
     $('input[name="itm_tin"]').val('');
@@ -865,7 +919,8 @@
                         or_typ : $('select[name="hdr_or"]').val(),
                         ref : $('input[name="hdr_ref"]').val(),
                         cashier : $('select[name="hdr_cash"]').val(),
-                        or_no : $('select[name="hdr_or_frm"]').val(),
+                        or_no : $('input[name="hdr_or_frm"]').val(),
+                        // or_no : $('select[name="hdr_or_frm"]').val(),
                     };
                         // console.log(data);
                     $.ajax({
