@@ -339,7 +339,7 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-laptop"></i>
-                    <span>City Treasure</span>
+                    <span>City Treasury</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -360,7 +360,7 @@
                             <li><a href="{{ asset('accounting/collection/import') }}"><i class="fa fa-circle-o"></i> Import iTax</a></li>
                             @endif
                             @if($LA_GRP["C1000002"]["restrict"] == 'Y')
-                            <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry/Imported iTax</a></li>
+                            <li><a href="{{ url('accounting/collection/entry') }}"><i class="fa fa-circle-o"></i> Collection Entry</a></li>
                             @endif
                             @if($LA_GRP["C1000001"]["restrict"] == 'Y')
                             <li><a href="{{ asset('accounting/collection/or_issuance') }}"><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
