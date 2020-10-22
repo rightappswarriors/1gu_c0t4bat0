@@ -469,6 +469,8 @@
                                 <th>Taxpayer</th>
                                 <th><center>Type</center></th>
                                 <th>Tax Type</th>
+                                <th><center>Quarter</center></th>
+                                <th><center>Year</center></th>
                                 <th><center>COA Acc</center></th>
                                 <th><center>Amount</center></th>
                                 <th><center>Options</center></th>
@@ -579,7 +581,7 @@
 
             // prevent modal from showing when hdrform has invalid data
             if (!$hdrForm.parsley().validate()) {
-                // e.preventDefault();
+                e.preventDefault();
             }
         }
     });
@@ -810,7 +812,7 @@
         //     '</center>'
           ]).draw();
 
-        alert('Added '+payment_desc+' to List');
+        // alert('Added '+payment_desc+' to List');
       } else if($('#MOD_MODE').text() == '(EDIT)'){
           table.row(selectedId).data([
             // line,
@@ -856,7 +858,7 @@
         //  }
         // }
 
-        alert('Successfully removed '+payment_desc+'.');
+        // alert('Successfully removed '+payment_desc+'.');
       }
       loadTotal();
             if(selected == 1)
@@ -944,13 +946,15 @@
                         pay_typ : pay_typ,
                         pay_desc : pay_desc,
                         amt : amt,
+                        qtr : qtr,
+                        year: year,
                         // chk_num : chk_num,
                         // chk_dt : chk_dt,
                         // is_dep : is_dep,
                         soa_code : soa_code,
 
-                        col_code : $('select[name="hdr_col"]').val(),
-                        fund : $('select[name="hdr_fund"]').val(),
+                        // col_code : $('select[name="hdr_col"]').val(),
+                        // fund : $('select[name="hdr_fund"]').val(),
                         dt : $('input[name="hdr_date"]').val(),
                         cust : $('select[name="hdr_cust"]').val(),
                         cust_name : urldecode($('#cust_' + $('select[name="hdr_cust"]').val()).attr('cust_name')),
@@ -960,14 +964,15 @@
                         or_no : $('input[name="hdr_or_frm"]').val(),
                         // or_no : $('select[name="hdr_or_frm"]').val(),
                     };
-                        // console.log(data);
+                    
+                    console.log('save entry data', data);
                     $.ajax({
                         url : '{{ url('accounting/collection/entry/save') }}',
                         method : 'POST',
                         data : data,
                         success : function(d){
                             if(d == 'DONE'){
-                                alert('Successfully Added new Collection Entry');
+                                // alert('Successfully Added new Collection Entry');
                                 location.href= "{{ url('accounting/collection/entry') }}";
 
                             } else {

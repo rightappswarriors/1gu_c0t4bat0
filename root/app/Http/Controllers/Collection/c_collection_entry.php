@@ -150,14 +150,18 @@ class c_collection_entry extends Controller
     }
     public function save(Request $r) // TO ADD NEW COLLECTION ENTRY
     {
-        // return dd($r->all());
+        $jCode = isset($r->col_code) ? $r->col_code : "OCR"; // OTHER CASH RECEIPTS
+        $fid = isset($r->fund) ? $r->fund : "00000014"; // GENERAL FUND
+
         $dt = Carbon::now();
     	$b_num = Core::getm99One('col_code');
-        $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$r->col_code'";
+        $colCode = Core::get_nextincrementlimitchar($b_num->col_code, 8);
+        $sql00 = "SELECT j_num FROM rssys.m05 WHERE j_code = '$jCode'";
         $testData = Core::sql($sql00);
+
     	$insertIntoBgt01 =
     		[
-                'col_code' => $b_num->col_code,
+                'col_code' => $colCode,
                 'debt_code' => $r->cust,
                 'debt_name' => $r->cust_name,
                 'trnx_date' => $r->dt,
@@ -169,14 +173,15 @@ class c_collection_entry extends Controller
                 'user_id' => strtoupper(Session::get('_user')['id']),
                 't_date' => $dt->toDateString(),
                 't_time' => $dt->toTimeString(),
-                'j_code' => $r->col_code,
+                'j_code' => $jCode,
                 'j_num' => $testData[0]->j_num,
                 't_ipaddress' => request()->ip(),
-                'fid' => $r->fund,
+                'fid' => $fid,
                 'or_no' => $r->or_no,
     		];
+
             if (Core::insertTable('rssys.colhdr', $insertIntoBgt01, 'Collection Entry')) {
-                Core::updatem99('col_code', Core::get_nextincrementlimitchar($b_num->col_code, 8));
+                Core::updatem99('col_code', $colCode);
              if (count($r->tin)) {
                  for ($i=0, $j = 1; $i < count($r->tin); $i++, $j++) {
                      $insertIntoBgt02 =
