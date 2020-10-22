@@ -239,12 +239,41 @@
                                     <div class="box-body">
                                       <form id="ItmForm" novalidate data-parsley-validate>
                                           <span class="AddMode EditMode">
-                                            <div class="row" style="display: none">
-                                                <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-3" style="display: none;">
                                                     <div class="form-group">
                                                         <label>Line</label>
                                                         <input type="text" class="form-control" disabled="" name="itm_line">
                                                             <input type="text" class="form-control" disabled="" name="true_bal" style="display:none">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Type <span style="color:red"><strong>*</strong></span></label>
+                                                        <input type="text" name="itm_type" class="form-control" data-parsley-required-message="<strong>Type</strong> is required." required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Quarter <span style="color:red"><strong>*</strong></span></label>
+                                                        <select name="qtr" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" data-parsley-required-message="<strong>Quarter</strong> is required." data-parsley-errors-container="#qtr_span" required>
+                                                         <option value="">Please Select</option>
+                                                         <option otherData="1st" value="1">1st</option>
+                                                         <option otherData="2nd" value="2">2nd</option>
+                                                         <option otherData="3rd" value="3">3rd</option>
+                                                         <option otherData="4th" value="4">4th</option>
+                                                        </select>
+
+                                                        <span id="qtr_span"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Year <span style="color:red"><strong>*</strong></span></label>
+                                                        <input type="number" min="1900" max="3000" step="1" value="{{Date('Y')}}" class="form-control" name="dp" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -309,7 +338,7 @@
                                                   </div>
                                               </div>
                                             </div>
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label>Type <span style="color:red"><strong>*</strong></span></label>
@@ -337,34 +366,12 @@
                                                             <option value="CT">Credit</option> --}}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <label>Payer <span style="color:red"><strong>*</strong></span></label>
                                                         <input type="text" class="form-control" name="itm_payer"  data-parsley-type-message="Should be a valid <strong>number</strong>." data-parsley-required-message="<strong>Payer</strong> is required." required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <label>Quarter <span style="color:red"><strong>*</strong></span></label>
-                                                        <select name="qtr" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" required>
-                                                         <option value="">Please Select</option>
-                                                         <option otherData="1" value="1st">1st</option>
-                                                         <option otherData="2" value="2nd">2nd</option>
-                                                         <option otherData="3" value="3rd">3rd</option>
-                                                         <option otherData="4" value="4th">4th</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <label>Year <span style="color:red"><strong>*</strong></span></label>
-                                                        <input type="number" min="1900" max="3000" step="1" value="{{Date('Y')}}" class="form-control" name="dp" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -572,10 +579,41 @@
 
             // prevent modal from showing when hdrform has invalid data
             if (!$hdrForm.parsley().validate()) {
-                e.preventDefault();
+                // e.preventDefault();
             }
         }
     });
+
+    $modalDefault.on('shown.bs.modal', (e) => {
+        var $quarter = $('select[name="qtr"]');
+        var $date = $('input[name="hdr_date"]');
+        var $selectedCustomer = $('select[name="hdr_cust"] option:selected');
+        var $payer = $('input[name="itm_payer"]');
+        var $type = $('input[name="itm_type"]');
+
+        // calculate and set quarter
+        var date = $date.val();
+        var quarter = getQuarter(new Date(date));
+
+        $quarter.val(quarter).change();
+
+        // get customer name from selected customer and set as payer
+        var customerValue = $selectedCustomer.val();
+        var customerName = $selectedCustomer.text().replace(customerValue + " ", "");
+
+        $payer.val(customerName);
+
+        // set default item type
+        var defaultType = "REG";
+
+        $type.val(defaultType);
+    });
+
+    function getQuarter(date) {
+        var q = [1, 2, 3, 4];
+
+        return q[Math.floor(date.getMonth() / 3)];
+    }
 
     function ifCheck(){
       var test = $('select[name="itm_payment"]').val();
