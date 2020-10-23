@@ -252,7 +252,7 @@
                             <li><a href=""><i class="fa fa-circle-o"></i> Issuance of OR</a></li>
                             <li><a href=""><i class="fa fa-circle-o"></i> Collection Entry/Important thru iTax</a></li>
                             <li><a href=""><i class="fa fa-circle-o"></i> Posting</a></li>
-                            <li><a href=""><i class="fa fa-circle-o"></i> Verification of Liquidating Office</a></li>
+                            <li><a href=""><i class="fa fa-circle-o"></i> Verification of Liquidating Officer</a></li>
                             <li><a href=""><i class="fa fa-circle-o"></i> Bank deposit</a></li>
                         </ul>
                     </li>

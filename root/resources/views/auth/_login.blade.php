@@ -54,6 +54,11 @@
                     </div>
 
                     @endforeach --}}
+
+                    <div class="w-full text-center p-t-27 p-b-70">
+                        <img src="{{url('images/guihulngan.png')}}" class="img-circle" alt="logo">
+                    </div>
+                    
                     <span class="login100-form-title p-b-20" style="margin-top: -8%;">
                        <strong>Account Login</strong>
                     </span>
