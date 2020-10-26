@@ -60,16 +60,7 @@
             <p>Obligation Request No.</p>
             <div class="row">
               <div class="col-md-12">
-                {{-- <input type="text" class="form-control" id="obrdata" readonly>
-              </div>
-              <div class="col-md-3"> --}}
-                {{-- <button class="btn btn-info" data-toggle="modal" data-target="#addObr"><i class="fa fa-plus"></i></button> --}}
-                <select class="form-control" onchange="loadRecord();" id="obr_code">
-                  <option value selected hidden disabled>Select</option>
-                  @foreach($collection AS $collectionEach)
-                  <option value="{{$collectionEach[0]->obr_code}}">{{$collectionEach[0]->obr_ref}} - {{$collectionEach[0]->payee}}</option>
-                  @endforeach
-                </select>
+                <input type="text" class="form-control" id="obrdata">
               </div>
             </div>
           </div>
@@ -81,7 +72,7 @@
             <div class="row">
               <div class="col-md-12">
                 <p>Address</p>
-                <p>GUIHULNGAN, OR. NEG.</p>
+                <input type="text" class="form-control" id="address" placeholder="GUIHULNGAN, OR. NEG.">
               </div>
             </div>
           </div>
@@ -108,30 +99,14 @@
         </div>
         <hr>
         <div class="row">
-          <div class="col-md-12">
-            <div id="tblErr"></div>
-            <table class="table table-bordered">
-              <thead class="thead-dark">
-                <tr>
-                  <th style="width: 30%;">Description</th>
-                  <th style="width: 30%;">Accounting Code</th>
-                  <th style="width: 30%;">Amount</th>
-                  <th style="width: 10%;">
-                    {{-- <button class="btn btn-info" onclick="thisInsRow('exTbody');"><i class="fa fa-plus"></i></button> --}}
-                  </th>
-                </tr>
-              </thead>
-              <tbody id="exTbody"></tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="2">
-                    {{-- <textarea class="form-control" placeholder="Remarks" id="col_code"></textarea> --}}
-                  </td>
-                  <td><input type="number" class="form-control" id="credit" placeholder="Total" value="0.00" disabled></td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
+          <div class="col-md-6">
+            <p>Description</p>
+            <textarea class="form-control" placeholder="Description" id="description"></textarea>
+          </div>
+
+          <div class="col-md-6">
+            <p>Amount</p>
+            <input type="number" class="form-control" id="credit" placeholder="Total" value="0.00">
           </div>
         </div>
         <hr>
