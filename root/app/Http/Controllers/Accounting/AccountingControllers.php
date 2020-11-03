@@ -49,6 +49,7 @@ class AccountingControllers extends Controller {
             'pom'=>DB::select("SELECT * FROM rssys.m04 WHERE payment != 'Y' AND dr_cr = 'D' ORDER BY at_desc ASC"),
             'cc_code'=>DB::select("SELECT * FROM rssys.m08"),
             'collection'=>FunctionsAccountingControllers::getAllOBR(true),
+            'header'=>DB::select('SELECT comp_name,comp_addr,comp_tel from rssys.m99')[0],
             '_bc'=>[
                 ['link'=>'#','desc'=>'City Treasure','icon'=>'none','st'=>false],
                 ['link'=>url("accounting/disbursement/disbursement_new"),'desc'=>'New Disbursement Entry','icon'=>'file-text','st'=>true]
