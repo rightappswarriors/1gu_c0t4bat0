@@ -6,8 +6,8 @@
       <div class="box-header with-border">
         <center>
           <h2 class="box-title">Republic of the Philippines</h2><br>
-          <h2 class="box-title">Province of Negros Oriental</h2><br>
-          <h3 class="box-title"><b>City of Guihulngan</b></h3>
+          <h2 class="box-title">{{$header->comp_addr}}</h2><br>
+          <h3 class="box-title"><b>{{$header->comp_name}}</b></h3>
         </center>
 
         <div class="box-tools pull-right">
@@ -213,25 +213,45 @@
       }
     }
     function submitForm() {
-      let idIns = ['j_code', 't_desc', 'at_code1', 'payee', 'empid', 'cc_code', 'scc_code', 'credit', 'col_code', 'obr_code'], insName = ['seq_desc[]', 'at_code[]', 'debit[]', 'obr_code[]'], doms = [], domIns = [['_token', 'j_num'], [$('meta[name="csrf-token"]').attr('content'), j_num]];
-      insErrMsg('warning', 'Sending request', 'dbsErr');
-      idIns.forEach(function(a, b, c) { let d = document.getElementById(a); if(checkFields([d])) { domIns[0].push(a); domIns[1].push(d.value); } });
-      insName.forEach(function(a, b, c) { let d = document.getElementsByName(a); for(let i = 0; i < d.length; i++) { if(checkFields([d[i]])) { if(a == 'obr_code[]') {if(d[i].checked) { domIns[0].push(a); domIns[1].push(d[i].value); } } else { domIns[0].push(a); domIns[1].push(d[i].value); } } } });
-      insDataFunction(domIns, "{{ asset('accounting/request/insDisbursement') }}", "POST", {
-        functionProcess: function(arr) {
-          let setBool = true;
-          arr.forEach(function(a, b, c) {
-            if(a != true) {
-              setBool = false;
-            }
-          });
-          if(setBool) {
-            window.location.href = "{{ asset('accounting/disbursement') }}";
-          } else {
-            insErrMsg('danger', arr[arr.length - 1], 'dbsErr');
-          }
-        }
-      });
+      let modeOfPayment = $('#at_code1').val();
+      let disbursementType = $('#j_code').val();
+      let payee = $('#payee').val();
+      let empId = $('#empid').val();
+      let obr = $('#obrdata').val();
+      let address = $('#address').val();
+      let costCenter = $('#cc_code').val();
+      let description = $('#description').val();
+      let amount = $('#credit').val();
+
+      console.log([
+          modeOfPayment,
+          disbursementType,
+          payee,
+          empId,
+          obr,
+          address,
+          costCenter,
+          description,
+          amount]);
+      // let idIns = ['j_code', 't_desc', 'at_code1', 'payee', 'empid', 'cc_code', 'scc_code', 'credit', 'col_code', 'obr_code'], insName = ['seq_desc[]', 'at_code[]', 'debit[]', 'obr_code[]'], doms = [], domIns = [['_token', 'j_num'], [$('meta[name="csrf-token"]').attr('content'), j_num]];
+      // insErrMsg('warning', 'Sending request', 'dbsErr');
+      // idIns.forEach(function(a, b, c) { let d = document.getElementById(a); if(checkFields([d])) { domIns[0].push(a); domIns[1].push(d.value); } });
+      // insName.forEach(function(a, b, c) { let d = document.getElementsByName(a); for(let i = 0; i < d.length; i++) { if(checkFields([d[i]])) { if(a == 'obr_code[]') {if(d[i].checked) { domIns[0].push(a); domIns[1].push(d[i].value); } } else { domIns[0].push(a); domIns[1].push(d[i].value); } } } });
+      // insDataFunction(domIns, "{{ asset('accounting/request/insDisbursement') }}", "POST", {
+      //   functionProcess: function(arr) {
+      //     let setBool = true;
+      //     arr.forEach(function(a, b, c) {
+      //       if(a != true) {
+      //         setBool = false;
+      //       }
+      //     });
+      //     if(setBool) {
+      //       window.location.href = "{{ asset('accounting/disbursement') }}";s
+      //     } else {
+      //       insErrMsg('danger', arr[arr.length - 1], 'dbsErr');
+      //     }
+      //   }
+      // });
     }
     @isset($dbAll)
     j_num = "{{$dbAll[0][0]->j_num}}";

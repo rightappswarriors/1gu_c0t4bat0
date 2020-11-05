@@ -670,36 +670,36 @@ class AccountingControllers extends Controller {
                     return json_encode($retArr);
                     break;
                 case 'insDisbursement':
-                    $newStd = new \stdClass; $asdf = 'j_num'; $newStd->$asdf = $request->j_num;
-                    $j_tbl = (($request->j_num != "") ? [$newStd] : DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->get());
+                    // $newStd = new \stdClass; $asdf = 'j_num'; $newStd->$asdf = $request->j_num;
+                    // $j_tbl = (($request->j_num != "") ? [$newStd] : DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->get());
                     
-                    if(count($j_tbl) > 0) {
-                        $seq_num = 0;
-                        $arrData = [['j_code', 't_desc', 'payee', 'empid', 'cc_code', 'obr_code'], ['j_code', 'at_code'], ['j_code', 'at_code', 'credit']]; //
-                        $validate = [[['j_code', 'payee'], ['j_code'=>'No code specified', 'payee'=>'No payee specified']], [['j_code', 'at_code', 'debit'], ['j_code'=>'No code specified', 'at_code'=>'No accounting selected', 'debit'=>'No amount specified']], [['j_code', 'at_code', 'credit'], ['j_code'=>'No code specified', 'at_code'=>'No accounting selected', 'credit'=>'No amount specified']]]; //
-                        $makeHash = [[], [], []]; //
-                        $haveAdd = [['fy'=>date('Y'), 'mo'=>date('m'), 'j_num'=>$j_tbl[0]->j_num, 't_date'=>Carbon::now()->toDateString(), 'user_id'=>strtoupper(FunctionsAccountingControllers::getSession("_user", "id"))], ['j_num'=>$j_tbl[0]->j_num, 'seq_num'=>0, 'debit'=>0, 'credit'=>0], ['j_num'=>$j_tbl[0]->j_num, 'seq_num'=>0, 'seq_desc'=>'Disburesement#'.$j_tbl[0]->j_num, 'debit'=>0]]; //
-                        $sMail = [[], [], []]; //
-                        $arrCheck = [[], [], []]; //
-                        $tbl = ['rssys.tr01', 'rssys.tr02', 'rssys.tr02']; //
-                        $numCount = [1, ((isset($request->debit)) ? count($request->debit) : 0), 1]; //
-                        $stat = [];
-                        for($i = 0; $i < count($tbl); $i++) { DB::table(DB::raw($tbl[$i]))->where([['j_code', $request->j_code], ['j_num', $j_tbl[0]->j_num]])->delete(); for($j = 0; $j < $numCount[$i]; $j++) { if($i > 0) { if(isset($haveAdd[$i]['seq_num'])) { $seq_num++; $haveAdd[$i]['seq_num'] = $seq_num; } }
-                            $arrSend = (($i == 1) ? ['j_code'=>$request->j_code, 'at_code'=>$request->at_code[$j]] : (($i == 2) ? ['j_code'=>$request->j_code, 'at_code'=>$request->at_code1, 'credit'=>$request->credit] : $request->all()));
-                            $bolStat = FunctionsAccountingControllers::fInsData($arrSend, $arrData[$i], $arrCheck[$i], $makeHash[$i], $haveAdd[$i], $sMail[$i], $validate[$i], $tbl[$i]);
-                            if(! in_array($bolStat, $stat)) {
-                                $stat = [$bolStat];
-                            }
-                        } }
-                        $statUpd = true; //foreach($stat AS $statEach) {if($statEach !== true) {$statUpd = false; } }
-                        if($statUpd) {
-                            DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->update([
-                                'j_num'=>FunctionsAccountingControllers::addNewIncrement($j_tbl[0]->j_num, 8)
-                            ]);
-                        }
-                        return json_encode($stat);
+                    // if(count($j_tbl) > 0) {
+                    //     $seq_num = 0;
+                    //     $arrData = [['j_code', 't_desc', 'payee', 'empid', 'cc_code', 'obr_code'], ['j_code', 'at_code'], ['j_code', 'at_code', 'credit']]; //
+                    //     $validate = [[['j_code', 'payee'], ['j_code'=>'No code specified', 'payee'=>'No payee specified']], [['j_code', 'at_code', 'debit'], ['j_code'=>'No code specified', 'at_code'=>'No accounting selected', 'debit'=>'No amount specified']], [['j_code', 'at_code', 'credit'], ['j_code'=>'No code specified', 'at_code'=>'No accounting selected', 'credit'=>'No amount specified']]]; //
+                    //     $makeHash = [[], [], []]; //
+                    //     $haveAdd = [['fy'=>date('Y'), 'mo'=>date('m'), 'j_num'=>$j_tbl[0]->j_num, 't_date'=>Carbon::now()->toDateString(), 'user_id'=>strtoupper(FunctionsAccountingControllers::getSession("_user", "id"))], ['j_num'=>$j_tbl[0]->j_num, 'seq_num'=>0, 'debit'=>0, 'credit'=>0], ['j_num'=>$j_tbl[0]->j_num, 'seq_num'=>0, 'seq_desc'=>'Disburesement#'.$j_tbl[0]->j_num, 'debit'=>0]]; //
+                    //     $sMail = [[], [], []]; //
+                    //     $arrCheck = [[], [], []]; //
+                    //     $tbl = ['rssys.tr01', 'rssys.tr02', 'rssys.tr02']; //
+                    //     $numCount = [1, ((isset($request->debit)) ? count($request->debit) : 0), 1]; //
+                    //     $stat = [];
+                    //     for($i = 0; $i < count($tbl); $i++) { DB::table(DB::raw($tbl[$i]))->where([['j_code', $request->j_code], ['j_num', $j_tbl[0]->j_num]])->delete(); for($j = 0; $j < $numCount[$i]; $j++) { if($i > 0) { if(isset($haveAdd[$i]['seq_num'])) { $seq_num++; $haveAdd[$i]['seq_num'] = $seq_num; } }
+                    //         $arrSend = (($i == 1) ? ['j_code'=>$request->j_code, 'at_code'=>$request->at_code[$j]] : (($i == 2) ? ['j_code'=>$request->j_code, 'at_code'=>$request->at_code1, 'credit'=>$request->credit] : $request->all()));
+                    //         $bolStat = FunctionsAccountingControllers::fInsData($arrSend, $arrData[$i], $arrCheck[$i], $makeHash[$i], $haveAdd[$i], $sMail[$i], $validate[$i], $tbl[$i]);
+                    //         if(! in_array($bolStat, $stat)) {
+                    //             $stat = [$bolStat];
+                    //         }
+                    //     } }
+                    //     $statUpd = true; //foreach($stat AS $statEach) {if($statEach !== true) {$statUpd = false; } }
+                    //     if($statUpd) {
+                    //         DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->update([
+                    //             'j_num'=>FunctionsAccountingControllers::addNewIncrement($j_tbl[0]->j_num, 8)
+                    //         ]);
+                    //     }
+                    //     return json_encode($stat);
 
-                    } return json_encode(['No j_code selected.']);
+                    // } return json_encode(['No j_code selected.']);
                     break;
                 case 'insOBR':
                     $obr_code = ((isset($request->obr_code)) ? $request->all() : DB::table(DB::raw('rssys.m99'))->first());
