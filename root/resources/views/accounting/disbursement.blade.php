@@ -79,6 +79,11 @@
   </section>
   <script type="text/javascript" src="{{ asset('root/public/js/forall.js') }}"></script>
 	<script type="text/javascript">
+
+    $(() => {
+      loadRecord();
+    });
+
     function loadRecord() {
       let example1 = $('#example1').DataTable();
       let    = document.getElementById('jname');

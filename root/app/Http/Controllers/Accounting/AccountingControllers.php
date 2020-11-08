@@ -45,6 +45,7 @@ class AccountingControllers extends Controller {
         }
         $arrRet = [
             'disbType'=>DB::select("SELECT m5.j_code, m5.j_desc FROM rssys.m05 m5 WHERE m5.j_type='D' AND m5.j_code = '$j_code'"),
+            'payees'=>DB::select('SELECT * from rssys.m07'),
             'mop'=>DB::select("SELECT * FROM rssys.m04 WHERE payment = 'Y' AND dr_cr = 'C' ORDER BY at_desc ASC"),
             'pom'=>DB::select("SELECT * FROM rssys.m04 WHERE payment != 'Y' AND dr_cr = 'D' ORDER BY at_desc ASC"),
             'cc_code'=>DB::select("SELECT * FROM rssys.m08"),
@@ -670,8 +671,10 @@ class AccountingControllers extends Controller {
                     return json_encode($retArr);
                     break;
                 case 'insDisbursement':
-                    // $newStd = new \stdClass; $asdf = 'j_num'; $newStd->$asdf = $request->j_num;
-                    // $j_tbl = (($request->j_num != "") ? [$newStd] : DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->get());
+                    $newStd = new \stdClass; 
+                    $asdf = 'j_num'; 
+                    $newStd->$asdf = $request->j_num;
+                    $j_tbl = (($request->j_num != "") ? [$newStd] : DB::table(DB::raw('rssys.m05'))->where([['j_code', $request->j_code]])->first());
                     
                     // if(count($j_tbl) > 0) {
                     //     $seq_num = 0;
@@ -700,6 +703,56 @@ class AccountingControllers extends Controller {
                     //     return json_encode($stat);
 
                     // } return json_encode(['No j_code selected.']);
+
+                    if ($j_tbl == null) {
+                        return json_encode(['No j_code selected.']);
+                    }
+
+                    $userId = strtoupper(FunctionsAccountingControllers::getSession("_user", "id"));
+
+                    $jCnum = $request->j_cnum;
+                    $tDesc = $request->t_desc;
+                    $jCode = $request->j_code;
+                    $payee = strtoupper($request->payee);
+                    $slCode = $request->sl_code;
+                    $ccCode = $request->cc_code;
+                    $credit = $request->credit;
+                    $payCode = $request->pay_code;
+                    $obrNo = $request->obr_no;
+                    $fy = $request->fy;
+                    $mo = $request->mo;
+                    $date = $request->date;
+
+                    $tr01Data = [
+                        'j_cnum' => $jCnum,
+                        't_desc' => $tDesc,
+                        'j_code' => $jCode,
+                        'j_num' => $j_tbl->j_num,
+                        'payee' => $payee,
+                        'mo' => $mo,
+                        'fy' => $fy,
+                        't_date' => $date,
+                        'obr_no' => $obrNo,
+                        'user_id'=> $userId
+                    ];
+
+                    $tr02Data = [
+                        'sl_code' => $slCode,
+                        'cc_code' => $ccCode ,
+                        'credit' => $credit,
+                        'pay_code' => $payCode,
+                        'j_num' => $j_tbl->j_num,
+                        'seq_num' => $jCnum,
+                    ];
+
+                    DB::table('rssys.tr01')->insert($tr01Data);
+                    DB::table('rssys.tr02')->insert($tr02Data);
+
+                    DB::table(DB::raw('rssys.m05'))->where([['j_code', $jCode]])->update([
+                            'j_num'=>FunctionsAccountingControllers::addNewIncrement($j_tbl->j_num, 8)
+                        ]);
+
+                    return json_encode('ok');
                     break;
                 case 'insOBR':
                     $obr_code = ((isset($request->obr_code)) ? $request->all() : DB::table(DB::raw('rssys.m99'))->first());

@@ -20,13 +20,21 @@
       <div class="box-body" style="">
         <div id="dbsErr"></div>
         <div class="row">
-          <div class="col-md-9">
+          <div class="col">
             <center><strong>DISBURSEMENT VOURCHER</strong></center>
           </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <p style="">No:</p>
+            <input type="text" class="form-control" id="t_desc" placeholder="Disbursement No.">
+          </div>
           <div class="col-md-3">
-            <p style="float: right;">No: <input type="text" id="t_desc" placeholder="Disbursement No."></p>
+            <p>Date</p>
+            <input type="date" class="form-control" id="date" placeholder="Date">
           </div>
         </div>
+        <hr/>
         <div class="row">
           <div class="col-md-6">
             <p>Mode of Payment</p>
@@ -50,11 +58,19 @@
         <div class="row">
           <div class="col-md-6">
             <p>Payee</p>
-            <input type="text" class="form-control" id="payee" placeholder="Payee">
+            <!-- <input type="text" class="form-control" id="payee" placeholder="Payee"> -->
+            <select class="form-control" id="payee">
+              <option value hidden selected disabled>Please select</option>
+              @isset($payees)
+                @foreach($payees AS $payee)
+                  <option value="{{$payee->c_code}}">{{$payee->c_name}}</option>
+                @endforeach
+              @endisset
+            </select>
           </div>
           <div class="col-md-3">
             <p>TIN/Employee No.</p>
-            <input type="text" class="form-control" id="empid" placeholder="TIN/Employee No.">
+            <input type="text" class="form-control" id="empid" placeholder="TIN/Employee No." disabled>
           </div>
           <div class="col-md-3">
             <p>Obligation Request No.</p>
@@ -72,12 +88,12 @@
             <div class="row">
               <div class="col-md-12">
                 <p>Address</p>
-                <input type="text" class="form-control" id="address" placeholder="GUIHULNGAN, OR. NEG.">
+                <input type="text" class="form-control" id="address" placeholder="Cotabato City" disabled>
               </div>
             </div>
           </div>
           <div class="col-md-6">
-            <center><span>TIN/Employee No.</span></center>
+            <!-- <center><span>TIN/Employee No.</span></center> -->
             <div class="row">
               <div class="col-md-12">
                 <p>Cost Center</p>
@@ -165,7 +181,20 @@
   </div><!-- /.modal -->
   <script type="text/javascript" src="{{ asset('root/public/js/forall.js') }}"></script>
 	<script type="text/javascript">
+    const $payeeSelect = $('#payee');
+    const $tinInput = $('#empid');
+    const $addressInput = $('#address');
+    const $dateInput = $('#date');
+
     var sNNum = 0, j_num = "";
+    const payees = {!! json_encode($payees) !!};
+    let selectedPayee = null;
+
+
+    $(function() {
+      $dateInput.val(new Date().toISOString().slice(0, 10));
+    })
+
     function thisInsRow(elId) {
       let insRow = '<tr> <td> <input type="text" class="form-control" placeholder="Description" name="seq_desc[]"> </td> <td> <select class="form-control" name="at_code[]"><option value hidden selected disabled>Please select</option> @isset($pom) @foreach($pom AS $eachPom) <option value="{{$eachPom->at_code}}">{{$eachPom->at_desc}}</option> @endforeach @endisset </select> </td> <td> <input type="number" class="form-control" placeholder="Amount" name="debit[]" onclick="giveTotal([\'debit[]\', \'addedDebit\'], \'credit\');" onkeyup="giveTotal([\'debit[]\', \'addedDebit\'], \'credit\');"> </td> <td> <button class="btn btn-danger" id="deleteButton'+sNNum+'" onclick="thisDelRow(this.id);"><i class="fa fa-times"></i></button> </td> </tr>'; sNNum++;
       addNewRow(elId, insRow);
@@ -215,43 +244,68 @@
     function submitForm() {
       let modeOfPayment = $('#at_code1').val();
       let disbursementType = $('#j_code').val();
-      let payee = $('#payee').val();
       let empId = $('#empid').val();
       let obr = $('#obrdata').val();
       let address = $('#address').val();
       let costCenter = $('#cc_code').val();
       let description = $('#description').val();
       let amount = $('#credit').val();
+      let jCnum = $('#t_desc').val();
+      let token = $('meta[name="csrf-token"]').attr('content');
+      let dateVal = $dateInput.val();
+      let date = new Date(dateVal); 
 
-      console.log([
-          modeOfPayment,
-          disbursementType,
-          payee,
-          empId,
-          obr,
-          address,
-          costCenter,
-          description,
-          amount]);
-      // let idIns = ['j_code', 't_desc', 'at_code1', 'payee', 'empid', 'cc_code', 'scc_code', 'credit', 'col_code', 'obr_code'], insName = ['seq_desc[]', 'at_code[]', 'debit[]', 'obr_code[]'], doms = [], domIns = [['_token', 'j_num'], [$('meta[name="csrf-token"]').attr('content'), j_num]];
-      // insErrMsg('warning', 'Sending request', 'dbsErr');
-      // idIns.forEach(function(a, b, c) { let d = document.getElementById(a); if(checkFields([d])) { domIns[0].push(a); domIns[1].push(d.value); } });
-      // insName.forEach(function(a, b, c) { let d = document.getElementsByName(a); for(let i = 0; i < d.length; i++) { if(checkFields([d[i]])) { if(a == 'obr_code[]') {if(d[i].checked) { domIns[0].push(a); domIns[1].push(d[i].value); } } else { domIns[0].push(a); domIns[1].push(d[i].value); } } } });
-      // insDataFunction(domIns, "{{ asset('accounting/request/insDisbursement') }}", "POST", {
-      //   functionProcess: function(arr) {
-      //     let setBool = true;
-      //     arr.forEach(function(a, b, c) {
-      //       if(a != true) {
-      //         setBool = false;
-      //       }
-      //     });
-      //     if(setBool) {
-      //       window.location.href = "{{ asset('accounting/disbursement') }}";s
-      //     } else {
-      //       insErrMsg('danger', arr[arr.length - 1], 'dbsErr');
-      //     }
-      //   }
-      // });
+      const url = "{{ asset('accounting/request/insDisbursement') }}";
+      const data = {
+        'j_cnum': jCnum,
+        't_desc': description,
+        'j_code': disbursementType,
+        'j_num': j_num,
+        'payee': selectedPayee['c_name'],
+        'sl_code': selectedPayee['c_code'],
+        'cc_code': costCenter,
+        'credit': amount,
+        'pay_code': modeOfPayment,
+        'obr_no': obr,
+        'fy': date.getFullYear(),
+        'mo': date.getMonth(),
+        'date': dateVal
+      };
+
+      $.ajax({
+        url: "{{ asset('accounting/request/insDisbursement') }}",
+        method: 'POST',
+        data: data,
+        success: (response) => {
+          // console.log(response);
+          // if (response == "ok") {
+            console.log("asdasd ", response);
+            window.location.href = "{{ asset('accounting/disbursement') }}"
+          // }
+        }
+      });
+    }
+
+    $payeeSelect.change(function() {
+      selectedPayee = getPayee(this.value);
+
+      const tin = selectedPayee['c_tin'] ? selectedPayee['c_tin'] : '';
+      const addr1 = selectedPayee['c_addr1'] ? selectedPayee['c_addr1'] : '';
+      const addr2 = selectedPayee['c_addr2'] ? selectedPayee['c_addr2'] : '';
+      const address = addr1 ? (addr1 + " " + addr2) : addr2;
+
+      $tinInput.val(tin);
+      $addressInput.val(address);
+    });
+
+    function getPayee(cCOde) {
+      for(let payee of payees) {
+        if (payee['c_code'] === cCOde) {
+          return payee;
+        }
+      }
+
+      return null;
     }
     @isset($dbAll)
     j_num = "{{$dbAll[0][0]->j_num}}";

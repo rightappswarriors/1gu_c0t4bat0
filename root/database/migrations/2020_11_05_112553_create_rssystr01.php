@@ -18,6 +18,7 @@ class CreateRssystr01 extends Migration
             $table->decimal('mo', 2, 0);
             $table->string('j_code', 4);
             $table->string('j_cnum', 8);
+            $table->string('j_num', 8);
             $table->date('t_date')->nullable();
             $table->string('t_desc', 750)->nullable();
             $table->string('payee', 450)->nullable();
@@ -38,6 +39,7 @@ class CreateRssystr01 extends Migration
             $table->string('ck_num', 16)->nullable();
             $table->string('branch', 15)->nullable();
             $table->string('collectorid', 15)->nullable();
+            $table->string('obr_no', 15)->nullable();
         });
     }
 
