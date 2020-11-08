@@ -20,7 +20,7 @@
               <select class="form-control select2 select2-hidden-accessible" id="jname" onchange="loadRecord();" style="width: 100%;" tabindex="-1" aria-hidden="true">
                 <option value hidden selected disabled>Please select</option>
                 @isset($disbType) @foreach($disbType AS $each)
-                <option value="{{$each->j_code}}" {{$each->j_code == 'CV' ? 'selected' : ''}}>{{$each->j_desc}}</option>
+                <option value="{{$each->j_code}}" {{ $each->j_code == 'CV' ? 'selected' : '' }}>{{$each->j_desc}}</option>
                 @endforeach @endisset
               </select>
             </div>
