@@ -649,7 +649,7 @@ class AccountingControllers extends Controller {
             switch($customQuery) {
                 case 'getDisbursementRecords':
                     $jname = ((isset($request->jname)) ? $request->jname : "");
-                    return json_encode(FunctionsAccountingControllers::getAllDisbursement($jname));
+                    return json_encode(FunctionsAccountingControllers::getAllDisbursementNew($jname));
                     break;
                 case 'getCollectionRecords':
                     $retArr = []; if(isset($request->obr_code)) { $retArr = FunctionsAccountingControllers::CollectionLinesWithTotal(['obr_code', $request->obr_code]); }
@@ -742,6 +742,7 @@ class AccountingControllers extends Controller {
                         'credit' => $credit,
                         'pay_code' => $payCode,
                         'j_num' => $j_tbl->j_num,
+                        'j_code' => $jCode,
                         'seq_num' => $jCnum,
                     ];
 

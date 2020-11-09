@@ -210,6 +210,16 @@ class FunctionsAccountingControllers extends Controller {
     	$sql = "SELECT t1.*, tc2.at_code, tc2.credit, t3.j_memo, m10.mp_desc,m04.at_desc FROM rssys.tr01 t1 LEFT JOIN (SELECT DISTINCT j_code, j_num, pay_code, at_code, credit FROM rssys.tr02 WHERE COALESCE(credit,0)>0  AND (SELECT COUNT(tr2.j_num) FROM rssys.tr02 tr2 WHERE COALESCE(credit,0)>0 AND tr2.j_num=tr02.j_num AND tr2.j_code=tr02.j_code)=1) tc2 ON tc2.j_num=t1.j_num AND tc2.j_code=t1.j_code LEFT JOIN rssys.tr03 t3 ON t3.j_num=t1.j_num AND t3.j_code=t1.j_code LEFT JOIN rssys.m10 m10 ON m10.mp_code=tc2.pay_code LEFT JOIN rssys.m04 m04 ON m04.at_code=tc2.at_code WHERE $WHERE ORDER BY t1.j_num DESC"; // AND tc2.j_num<>'' AND t1.t_date BETWEEN '$dateFrom' AND '$dateTo' AND (t1.cancel IS NULL OR t1.cancel = '') AND user_id = '$uId'
     	return DB::select($sql);
     }
+    public static function getAllDisbursementNew($jCode) {
+    	$sql = "SELECT t1.*, m04.at_desc, tc2.at_code, tc2.credit from rssys.tr01 t1
+				LEFT JOIN (SELECT DISTINCT j_code, j_num, pay_code, at_code, credit FROM rssys.tr02) tc2 
+					ON tc2.j_num=t1.j_num AND tc2.j_code=t1.j_code 
+				LEFT JOIN (select distinct at_desc, at_code from rssys.m04) m04 
+					ON m04.at_code=tc2.pay_code
+				WHERE t1.j_code IN (SELECT m5.j_code FROM rssys.m05 m5 WHERE m5.j_type='D') and t1.j_code = '$jCode' ORDER BY t1.t_date DESC";
+
+		return DB::select($sql);
+    }
     public static function getDisbursementData($where = [], $whereIn = []) {
     	$retArr = []; $tr01 = DB::table(DB::raw('rssys.tr01'));
     	if(count($where)) { $tr01 = $tr01->where($where); }

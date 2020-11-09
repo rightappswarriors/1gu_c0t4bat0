@@ -99,7 +99,7 @@
                     a.j_code + '-' + a.j_num,
                     a.t_desc,
                     a.t_date,
-                    a.at_code,
+                    a.at_desc,
                     a.credit,
                     a.payee,
                     a.user_id,
