@@ -822,10 +822,27 @@ Route::group(['middleware'=>['checkauth']], function () {
 
 		// Reancy
 		Route::prefix('accounting')->group(function() {
-			Route::prefix('disbursement')->group(function() {
-				Route::get('/', 'Accounting\AccountingControllers@__disbursement')->name('accounting.disbursement');
-				Route::get('/edit/{j_code}/{j_num}', 'Accounting\AccountingControllers@__disbursementedit')->name('accounting.disbursementedit');
-				Route::match(['get', 'post'], '/disbursement_new/{j_code}', 'Accounting\AccountingControllers@__disbursementnew')->name('accounting.disbursementnew');
+			// Route::prefix('disburse')->group(function() {
+			// 	Route::get('/', 'Accounting\AccountingControllers@__disbursement')->name('accounting.disbursement');
+			// 	Route::get('/edit/{j_code}/{j_num}', 'Accounting\AccountingControllers@__disbursementedit')->name('accounting.disbursementedit');
+			// 	Route::match(['get', 'post'], '/disbursement_new/{j_code}', 'Accounting\AccountingControllers@__disbursementnew')->name('accounting.disbursementnew');
+
+			// 	Route::prefix('check_issuance')->group(function() {
+			// 		Route::get('/', 'Accounting\AccountingControllers@__check_issuance')->name('accounting.check_issuance');
+			// 		Route::get('/new', 'Accounting\AccountingControllers@__check_issuance_new')->name('accounting.check_issuance_new');
+
+			// 	});
+			// 	Route::get('/check_release', 'Accounting\AccountingControllers@__check_release')->name('accounting.check_release');
+			// });
+
+			Route::prefix('disburse')->group(function(){
+				Route::prefix('entry')->group(function(){ // DONE -m
+					Route::get('/', 'Accounting\disbursement_entry@view');
+					Route::get('/entries/{j_code}', 'Accounting\disbursement_entry@entries');
+					Route::get('/edit/{j_code?}/{j_num?}', 'Accounting\disbursement_entry@edit');
+					Route::post('/save/{j_code?}/{j_num?}', 'Accounting\disbursement_entry@save');
+					Route::post('/cancel/', 'Accounting\disbursement_entry@cancel');
+				});
 
 				Route::prefix('check_issuance')->group(function() {
 					Route::get('/', 'Accounting\AccountingControllers@__check_issuance')->name('accounting.check_issuance');

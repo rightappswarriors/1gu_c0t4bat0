@@ -392,13 +392,13 @@
                         </a>
                         <ul class="treeview-menu" style="white-space: normal;">
                             @if($LA_GRP["C2000001"]["restrict"] == 'Y')
-                            <li><a href="{{asset('accounting/disbursement')}}"><i class="fa fa-circle-o"></i> Disbursement Entry</a></li>
+                            <li><a href="{{asset('accounting/disburse/entry')}}"><i class="fa fa-circle-o"></i> Disbursement Entry</a></li>
                             @endif
                             @if($LA_GRP["C2000002"]["restrict"] == 'Y')
-                            <li><a href="{{ asset('accounting/disbursement/check_issuance') }}"><i class="fa fa-circle-o"></i> Check Issuance</a></li>
+                            <li><a href="{{ asset('accounting/disburse/check_issuance') }}"><i class="fa fa-circle-o"></i> Check Issuance</a></li>
                             @endif
                             @if($LA_GRP["C2000003"]["restrict"] == 'Y')
-                            <li><a href="{{ asset('accounting/disbursement/check_release') }}"><i class="fa fa-circle-o"></i> Check Release</a></li>
+                            <li><a href="{{ asset('accounting/disburse/check_release') }}"><i class="fa fa-circle-o"></i> Check Release</a></li>
                             @endif
                             @if($LA_GRP["C2000004"]["restrict"] == 'Y')
                             <li><a href=""><i class="fa fa-circle-o"></i> Employee Claim</a></li>

@@ -48,6 +48,19 @@ class Core extends Model
 			return null;
 		}
 	}
+
+	public static function isDataExistOn($table,$whereClause = [], $get = false){
+    	/*
+			whereClause = where Clause of query, in array form
+			getAll($table,$select = '*',$whereClause = [],$distinct = null)
+    	*/
+    	if(isset($table) && !empty($whereClause)){
+    		return ($get ? [DB::table($table)->where($whereClause)->exists(), self::getAll($table,'*',$whereClause,true)] : DB::table($table)->where($whereClause)->exists());
+    	} else {
+    		return 'Please check fields';
+    	}
+    }
+    
 	// Created Update function - Mhel Jan 10, 2019
 	// Note: this is without WHERE option
 	// SAMPLE for $tableToJoin = [['tbl'=>'rssys.m00', 'BLnk' => 'rssys.m01.accttype_code', 'ALnk' => 'rssys.m00.code']];
